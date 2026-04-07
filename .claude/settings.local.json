@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npm --version)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\")",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//Users/osmansemihkose/.nvm/versions/**)",
+      "Bash(/bin/bash -l -c 'which node && node --version')",
+      "Bash(/bin/zsh -l -c 'which node && node --version && npm --version')",
+      "Bash(/bin/zsh -l -c 'echo $PATH')",
+      "Bash(/bin/zsh -l -c 'source ~/.zshrc 2>/dev/null; which node; node --version; which npm; npm --version')",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls /usr/local/bin/npm /opt/homebrew/bin/npm ~/.nvm/versions/node/*/bin/npm)",
+      "Bash(ls /Users/osmansemihkose/Desktop/MeridixLabs/.env*)",
+      "Bash(git -C /Users/osmansemihkose/Desktop/MeridixLabs status)"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="60" viewBox="0 0 320 60">
+  <!-- Icon container -->
+  <rect x="0" y="0" width="60" height="60" rx="14" fill="#3B5BDB"/>
+  <!-- Meridian arc -->
+  <path d="M12 40 Q30 7 48 40" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Vertical meridian tick -->
+  <line x1="30" y1="9" x2="30" y2="41" stroke="white" stroke-width="1.2" stroke-dasharray="2.5 2.5" opacity="0.5"/>
+  <!-- Heartbeat pulse -->
+  <path d="M10 31 L19 31 L23 17 L27 44 L31 24 L35 35 L49 35" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Peak dot -->
+  <circle cx="30" cy="31" r="3.5" fill="#93C5FD"/>
+
+  <!-- Wordmark -->
+  <text x="76" y="38" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="700" fill="white" letter-spacing="-0.5">Meridix</text>
+  <text x="207" y="38" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="700" fill="#93C5FD" letter-spacing="-0.5">Labs</text>
+</svg>

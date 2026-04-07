@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "meridix-dev",
+      "runtimeExecutable": "/usr/local/bin/node",
+      "runtimeArgs": ["/Users/osmansemihkose/Desktop/MeridixLabs/node_modules/.bin/next", "dev"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}
