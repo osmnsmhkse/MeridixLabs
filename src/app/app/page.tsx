@@ -48,77 +48,121 @@ const TIER_CONFIG: Record<Tier, { label: string; emoji: string; audience: string
 };
 
 const LOADING_STEPS_LAB = [
-  "Reading your lab report…",
-  "Identifying test markers…",
-  "Comparing values to reference ranges…",
-  "Flagging anything out of range…",
-  "Analyzing possible causes…",
-  "Explaining the biology behind your results…",
-  "Writing your Simple explanation…",
-  "Writing your Expert explanation…",
-  "Identifying which specialist to see…",
-  "Preparing your recommendations…",
-  "Almost done…",
-];
+  "Reading your report...",
+  "Identifying lab values...",
+  "Analyzing against clinical ranges...",
+  "Generating your explanation...",
+] as const;
 
 const LOADING_STEPS_RADIOLOGY = [
-  "Reading your radiology report…",
-  "Identifying the imaging modality and body area…",
-  "Cataloguing all findings…",
-  "Separating incidental from significant findings…",
-  "Assessing clinical significance…",
-  "Explaining the biology behind the findings…",
-  "Writing your Plain-Language explanation…",
-  "Writing your Expert clinical interpretation…",
-  "Identifying which specialist to see…",
-  "Preparing your recommendations…",
-  "Almost done…",
-];
+  "Reading your report...",
+  "Identifying imaging findings...",
+  "Analyzing clinical significance...",
+  "Generating your explanation...",
+] as const;
 
-function LoadingAnimation({ mode }: { mode: ReportMode }) {
-  const [stepIndex, setStepIndex] = useState(0);
-  const LOADING_STEPS = mode === "radiology" ? LOADING_STEPS_RADIOLOGY : LOADING_STEPS_LAB;
+// Delays (ms) at which each step becomes the active step
+const STEP_DELAYS = [0, 1500, 3000, 5000] as const;
 
+type StepStatus = "waiting" | "active" | "done";
+
+function StepRow({
+  label,
+  status,
+}: {
+  label: string;
+  status: StepStatus;
+}) {
+  // Slide-in: start offset on mount, transition to resting position after 1 frame
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStepIndex((i) => (i < LOADING_STEPS.length - 1 ? i + 1 : i));
-    }, 2000);
-    return () => clearInterval(interval);
+    const id = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
+  if (status === "waiting") return null;
+
   return (
-    <div className="flex flex-col items-center justify-center py-20 gap-6">
-      <div className="relative w-20 h-20">
-        <div className="absolute inset-0 border-4 border-brand-blue/20 rounded-full" />
-        <div className="absolute inset-0 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
-        <div className="absolute inset-2 border-2 border-brand-blue/30 border-b-transparent rounded-full animate-spin [animation-direction:reverse] [animation-duration:1.5s]" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 text-brand-blue" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" />
-          </svg>
-        </div>
+    <div
+      className={`flex items-center gap-3 transition-all duration-500 ease-out ${
+        visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
+      }`}
+    >
+      {/* Icon: spinner when active, checkmark when done */}
+      <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
+        {status === "active" ? (
+          <div className="w-5 h-5 rounded-full border-2 border-brand-blue/25 border-t-brand-blue animate-spin" />
+        ) : (
+          <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+            <svg viewBox="0 0 12 12" fill="none" className="w-3 h-3">
+              <path
+                d="M2.5 6l2.5 2.5 4.5-5"
+                stroke="white"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        )}
       </div>
 
-      <div className="text-center min-h-[52px]">
-        <p className="text-ink font-semibold text-lg transition-all duration-500">
-          {LOADING_STEPS[stepIndex]}
-        </p>
-        <p className="text-ink-tertiary text-sm mt-1">This usually takes 15–25 seconds</p>
-      </div>
+      {/* Label */}
+      <span
+        className={`text-sm leading-snug transition-colors duration-300 ${
+          status === "active"
+            ? "text-ink font-semibold"
+            : "text-ink-secondary"
+        }`}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
 
-      <div className="flex items-center gap-1.5">
-        {LOADING_STEPS.map((_, i) => (
-          <div key={i} className={`rounded-full transition-all duration-300 ${
-            i === stepIndex ? "w-4 h-2 bg-brand-blue" : i < stepIndex ? "w-2 h-2 bg-brand-blue/40" : "w-2 h-2 bg-surface-border"
-          }`} />
+function LoadingAnimation({ mode }: { mode: ReportMode }) {
+  const steps = mode === "radiology" ? LOADING_STEPS_RADIOLOGY : LOADING_STEPS_LAB;
+  // activeStep: the index currently spinning. Steps before it are "done".
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    const timers = STEP_DELAYS.slice(1).map((delay, i) =>
+      setTimeout(() => setActiveStep(i + 1), delay)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  const getStatus = (i: number): StepStatus => {
+    if (i > activeStep) return "waiting";
+    if (i === activeStep) return "active";
+    return "done";
+  };
+
+  return (
+    <div className="py-10 px-4 flex flex-col items-center gap-8">
+      {/* Step list */}
+      <div className="w-full max-w-xs space-y-4">
+        {steps.map((label, i) => (
+          <StepRow key={i} label={label} status={getStatus(i)} />
         ))}
       </div>
 
-      <div className="w-full max-w-md space-y-3 mt-2">
-        {[100, 75, 88].map((w, i) => (
-          <div key={i} className="h-3 rounded-full shimmer" style={{ width: `${w}%` }} />
+      {/* Connector line skeleton while waiting — subtle pulse */}
+      <div className="w-full max-w-xs space-y-2.5 pt-1">
+        {[92, 78, 85].map((w, i) => (
+          <div
+            key={i}
+            className="h-2.5 rounded-full shimmer"
+            style={{ width: `${w}%` }}
+          />
         ))}
       </div>
+
+      {/* Privacy reassurance */}
+      <p className="text-xs text-ink-tertiary text-center max-w-[260px] leading-relaxed">
+        Your file is never stored. This session is completely private.
+      </p>
     </div>
   );
 }
