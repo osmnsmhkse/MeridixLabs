@@ -13,6 +13,12 @@ import {
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
+interface ABVariantStats {
+  shown: number;
+  clicked: number;
+  rate: number;
+}
+
 interface AnalyticsData {
   interpretations: { today: number; thisWeek: number; allTime: number };
   tierDistribution: Record<string, number>;
@@ -27,6 +33,12 @@ interface AnalyticsData {
     shares: number;
     emails: number;
     specialistClicks: number;
+  };
+  abTest: {
+    variants: Record<string, ABVariantStats>;
+    winner: string | null;
+    variantText: Record<string, string>;
+    totalEvents: number;
   };
   generatedAt: string;
 }
@@ -353,6 +365,143 @@ export default function AdminAnalyticsPage() {
                 </div>
               </div>
             </div>
+
+            {/* ── A/B Test ─────────────────────────────────────────────── */}
+            <section>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                  Hero CTA A/B Test
+                </h2>
+                <span className="text-xs text-slate-600">
+                  {data.abTest.totalEvents} total events
+                </span>
+              </div>
+
+              {/* Status banner */}
+              {(() => {
+                const ab = data.abTest;
+                const minShown = Math.min(...Object.values(ab.variants).map((v) => v.shown));
+                const needMore = 200 - minShown;
+                if (ab.winner) {
+                  return (
+                    <div className="flex items-center gap-3 p-3 mb-4 rounded-xl bg-emerald-950/40 border border-emerald-800 text-emerald-300 text-sm">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0 text-emerald-400">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>
+                        <strong>Winner: Variant {ab.winner}</strong> — &ldquo;{ab.variantText[ab.winner]}&rdquo; has the highest conversion rate with 200+ shown per variant.
+                      </span>
+                    </div>
+                  );
+                }
+                if (needMore > 0) {
+                  return (
+                    <div className="flex items-center gap-3 p-3 mb-4 rounded-xl bg-amber-950/30 border border-amber-800/60 text-amber-400 text-sm">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                      <span>Need ~{needMore} more impressions on the lowest variant to reach 200 shown — keep collecting data.</span>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
+              {/* Variant table */}
+              <div className="rounded-2xl border border-slate-800 bg-slate-900 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-800">
+                      <th className="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Variant</th>
+                      <th className="text-left px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-widest hidden sm:table-cell">Button Text</th>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Shown</th>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Clicked</th>
+                      <th className="text-right px-5 py-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {["A", "B", "C"].map((v) => {
+                      const stats = data.abTest.variants[v] ?? { shown: 0, clicked: 0, rate: 0 };
+                      const isWinner = data.abTest.winner === v;
+                      const isLeading = !data.abTest.winner && stats.rate === Math.max(
+                        ...Object.values(data.abTest.variants).map((s) => s.rate)
+                      ) && stats.shown > 0;
+                      return (
+                        <tr key={v} className={`transition-colors ${isWinner ? "bg-emerald-950/20" : "hover:bg-slate-800/40"}`}>
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-2">
+                              <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold flex-shrink-0 ${
+                                isWinner
+                                  ? "bg-emerald-600 text-white"
+                                  : "bg-slate-800 text-slate-300"
+                              }`}>
+                                {v}
+                              </span>
+                              {isWinner && (
+                                <span className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 bg-emerald-950/50 border border-emerald-800 px-2 py-0.5 rounded-full">
+                                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                  Winner
+                                </span>
+                              )}
+                              {isLeading && !isWinner && (
+                                <span className="hidden sm:inline-flex text-xs font-semibold text-blue-400 bg-blue-950/50 border border-blue-800 px-2 py-0.5 rounded-full">
+                                  Leading
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-5 py-4 hidden sm:table-cell">
+                            <span className="text-xs text-slate-400 font-mono">
+                              {data.abTest.variantText[v]}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 text-right">
+                            <span className="text-sm font-semibold text-slate-300">{stats.shown.toLocaleString()}</span>
+                            {stats.shown < 200 && (
+                              <p className="text-[10px] text-slate-600">{200 - stats.shown} to go</p>
+                            )}
+                          </td>
+                          <td className="px-4 py-4 text-right">
+                            <span className="text-sm font-semibold text-slate-300">{stats.clicked.toLocaleString()}</span>
+                          </td>
+                          <td className="px-5 py-4 text-right">
+                            <div className="flex flex-col items-end gap-1.5">
+                              <span className={`text-base font-extrabold ${
+                                isWinner ? "text-emerald-400" :
+                                isLeading ? "text-blue-400" :
+                                "text-slate-300"
+                              }`}>
+                                {stats.shown > 0 ? `${stats.rate.toFixed(1)}%` : "—"}
+                              </span>
+                              {/* Mini bar */}
+                              {stats.shown > 0 && (() => {
+                                const maxRate = Math.max(
+                                  ...Object.values(data.abTest.variants).map((s) => s.rate), 1
+                                );
+                                const pct = Math.round((stats.rate / maxRate) * 100);
+                                return (
+                                  <div className="w-16 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                                    <div
+                                      className={`h-full rounded-full transition-all duration-700 ${isWinner ? "bg-emerald-500" : "bg-blue-500"}`}
+                                      style={{ width: `${pct}%` }}
+                                    />
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-slate-600 mt-2 pl-1">
+                Variant assigned once per visitor via localStorage · Rate = clicked ÷ shown · Winner declared at 200+ shown per variant
+              </p>
+            </section>
 
             {/* ── Footer ───────────────────────────────────────────────── */}
             <p className="text-xs text-slate-600 text-center pb-4">

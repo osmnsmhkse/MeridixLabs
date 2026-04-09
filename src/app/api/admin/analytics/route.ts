@@ -7,6 +7,11 @@ const DATA_FILE =
     ? "/tmp/meridix-events.json"
     : path.join(process.cwd(), "data", "events.json");
 
+const AB_DATA_FILE =
+  process.env.NODE_ENV === "production"
+    ? "/tmp/meridix-ab.json"
+    : path.join(process.cwd(), "data", "ab-test.json");
+
 interface AnalyticsEvent {
   event: string;
   timestamp: string;
@@ -19,6 +24,24 @@ interface AnalyticsEvent {
   fileSize?: number;
   [key: string]: unknown;
 }
+
+interface ABEvent {
+  variant: string;
+  action: "shown" | "clicked";
+  timestamp: string;
+}
+
+interface ABVariantStats {
+  shown: number;
+  clicked: number;
+  rate: number; // conversion rate 0–100
+}
+
+const VARIANT_TEXT: Record<string, string> = {
+  A: "Analyze My Results — Free",
+  B: "Understand My Lab Report",
+  C: "Get a Free Explanation",
+};
 
 function startOfDay(date: Date): Date {
   const d = new Date(date);
@@ -113,6 +136,33 @@ export async function GET(request: NextRequest) {
   const shares   = events.filter((e) => e.event === "share_whatsapp").length;
   const emails   = events.filter((e) => e.event === "email_sent").length;
 
+  // ── A/B test results ──────────────────────────────────────────────────────
+  let abEvents: ABEvent[] = [];
+  try {
+    const raw = await fs.readFile(AB_DATA_FILE, "utf-8");
+    abEvents = JSON.parse(raw) as ABEvent[];
+  } catch { /* file doesn't exist yet */ }
+
+  const abStats: Record<string, ABVariantStats> = {};
+  for (const v of ["A", "B", "C"]) {
+    const shown   = abEvents.filter((e) => e.variant === v && e.action === "shown").length;
+    const clicked = abEvents.filter((e) => e.variant === v && e.action === "clicked").length;
+    abStats[v] = {
+      shown,
+      clicked,
+      rate: shown > 0 ? Math.round((clicked / shown) * 1000) / 10 : 0,
+    };
+  }
+
+  // Determine winner: variant with highest rate where all have 200+ shown
+  const allSufficient = ["A", "B", "C"].every((v) => abStats[v].shown >= 200);
+  let winner: string | null = null;
+  if (allSufficient) {
+    winner = ["A", "B", "C"].reduce((best, v) =>
+      abStats[v].rate > abStats[best].rate ? v : best
+    , "A");
+  }
+
   return NextResponse.json({
     interpretations: { today, thisWeek, allTime },
     tierDistribution,
@@ -122,6 +172,7 @@ export async function GET(request: NextRequest) {
     topSpecialist,
     dailySeries,
     totals: { uploads, demos, shares, emails, specialistClicks: specialistEvents.length },
+    abTest: { variants: abStats, winner, variantText: VARIANT_TEXT, totalEvents: abEvents.length },
     generatedAt: new Date().toISOString(),
   });
 }

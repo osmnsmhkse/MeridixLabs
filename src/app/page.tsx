@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroCTA from "@/components/HeroCTA";
 
 export default function LandingPage() {
   return (
@@ -23,12 +24,7 @@ export default function LandingPage() {
             Upload your blood test, lipid panel, or urinalysis and get an instant, clear interpretation — in plain English or full clinical detail. No jargon unless you want it.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 reveal reveal-delay-3">
-            <Link href="/app" className="inline-flex items-center gap-2 px-8 py-4 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/25 hover:shadow-xl hover:shadow-brand-blue/30 hover:-translate-y-0.5">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-              </svg>
-              Analyze My Results — Free
-            </Link>
+            <HeroCTA />
             <a href="#how-it-works" className="inline-flex items-center gap-2 px-8 py-4 border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-semibold rounded-xl text-base transition-all duration-200 bg-white dark:bg-slate-800 hover:bg-surface-raised">
               See how it works
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
