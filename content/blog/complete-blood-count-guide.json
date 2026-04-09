@@ -1,0 +1,121 @@
+{
+  "title": "Complete Blood Count (CBC): A Plain-English Guide",
+  "slug": "complete-blood-count-guide",
+  "date": "2026-04-01",
+  "excerpt": "The Complete Blood Count is one of the most frequently ordered lab tests in medicine — and one of the most misunderstood by patients. Your CBC report might contain a dozen or more values, each with its own abbreviation and reference range, and very little explanation of what any of it means. In this guide, we break down every component of the CBC: what red blood cells, white blood cells, and platelets actually do, what it means when they're high or low, and why your doctor ordered this test in the first place.",
+  "content": [
+    {
+      "type": "p",
+      "text": "The Complete Blood Count is one of the most frequently ordered lab tests in medicine — and one of the most misunderstood by patients. Your CBC report might contain a dozen or more values with abbreviations like RBC, MCV, MCH, and WBC, each with its own reference range. Here's what all of it means."
+    },
+    {
+      "type": "h2",
+      "text": "What Is a CBC and Why Is It Ordered?"
+    },
+    {
+      "type": "p",
+      "text": "A Complete Blood Count measures the three main types of cells in your blood: red blood cells (which carry oxygen), white blood cells (which fight infection and disease), and platelets (which form clots to stop bleeding). It's used to screen for a wide range of conditions — from anemia and infections to blood cancers and immune disorders."
+    },
+    {
+      "type": "p",
+      "text": "Doctors order a CBC as part of routine wellness checks, before surgery, to monitor chronic conditions like anemia or autoimmune disease, or to investigate symptoms like fatigue, bruising, frequent infections, or unexplained weight loss."
+    },
+    {
+      "type": "h2",
+      "text": "Red Blood Cells: Oxygen Delivery"
+    },
+    {
+      "type": "p",
+      "text": "Your CBC includes several red blood cell measurements. Together they paint a picture of how well your blood is carrying oxygen throughout your body."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "RBC (Red Blood Cell Count): The number of red cells per microliter. Normal range: 4.5–5.5 million/µL in men; 4.0–5.0 million/µL in women.",
+        "Hemoglobin (Hgb): The protein inside red cells that actually binds oxygen. Low hemoglobin = anemia. Normal: 13.5–17.5 g/dL in men; 12.0–15.5 g/dL in women.",
+        "Hematocrit (Hct): The percentage of your blood volume made up of red cells. Mirrors hemoglobin trends.",
+        "MCV (Mean Corpuscular Volume): The average size of your red cells. Low MCV suggests iron-deficiency anemia; high MCV suggests B12 or folate deficiency."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "What Low Hemoglobin Means"
+    },
+    {
+      "type": "p",
+      "text": "Anemia — low hemoglobin — is one of the most common findings on a CBC. Symptoms include fatigue, shortness of breath, dizziness, and pale skin. But anemia is a symptom, not a diagnosis. The pattern of other CBC values (especially MCV and RDW) helps determine the cause: iron deficiency, chronic disease, vitamin deficiency, or something else entirely."
+    },
+    {
+      "type": "h2",
+      "text": "White Blood Cells: Your Immune Army"
+    },
+    {
+      "type": "p",
+      "text": "White blood cells (WBCs, also called leukocytes) are your immune system's frontline defenders. The total WBC count is reported, along with a 'differential' that breaks down the count by cell type."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Normal WBC range: 4,500–11,000 cells/µL",
+        "Neutrophils (50–70%): Fight bacterial infections. High neutrophils often indicate bacterial infection or physical stress.",
+        "Lymphocytes (20–40%): Key players in viral immunity and immune memory. High lymphocytes can suggest viral infection.",
+        "Monocytes (2–8%): Clean up debris and present pathogens to other immune cells.",
+        "Eosinophils (1–4%): Elevated in allergies, asthma, and parasitic infections.",
+        "Basophils (<1%): Rare; elevated in some allergic and inflammatory conditions."
+      ]
+    },
+    {
+      "type": "p",
+      "text": "A high total WBC usually indicates your immune system is actively fighting something — most commonly an infection. A very high WBC (over 30,000) may warrant further investigation to rule out blood disorders. A low WBC can indicate bone marrow problems, autoimmune disease, or the effect of certain medications."
+    },
+    {
+      "type": "h2",
+      "text": "Platelets: Clotting and Bleeding Control"
+    },
+    {
+      "type": "p",
+      "text": "Platelets (thrombocytes) are tiny cell fragments that aggregate at the site of blood vessel injuries to form clots. The normal platelet count is 150,000–400,000/µL."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Low platelets (thrombocytopenia): Can cause easy bruising, prolonged bleeding, and in severe cases, spontaneous hemorrhage. Causes include viral infections, autoimmune conditions, and some medications.",
+        "High platelets (thrombocytosis): Can increase clotting risk. Often a reactive response to iron deficiency, inflammation, or infection."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "The RDW: An Overlooked Marker"
+    },
+    {
+      "type": "p",
+      "text": "RDW (Red Cell Distribution Width) measures the variation in size among your red blood cells. A high RDW means your red cells vary significantly in size, which is a hallmark of nutritional deficiencies (iron, B12, or folate) and is also used in calculating certain anemia scores. It's often overlooked but provides useful diagnostic clues."
+    },
+    {
+      "type": "callout",
+      "text": "The CBC is rarely interpreted in isolation. A single abnormal value means far less than the pattern — and the pattern only makes sense in the context of your symptoms, history, and other lab results."
+    },
+    {
+      "type": "h2",
+      "text": "When Should You Be Concerned?"
+    },
+    {
+      "type": "p",
+      "text": "Most minor CBC abnormalities — slightly low hemoglobin, mildly elevated WBC — are common and often benign. Significant concern arises when multiple values are simultaneously abnormal, when values are far outside the reference range, or when the pattern suggests something systemic. Your doctor interprets your CBC in the context of your symptoms, medical history, and other tests ordered at the same time."
+    },
+    {
+      "type": "h2",
+      "text": "Key Takeaways"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "CBC measures red cells (oxygen), white cells (immunity), and platelets (clotting)",
+        "Hemoglobin is the most clinically important red cell marker — it defines anemia",
+        "MCV tells you the size of your red cells and helps identify the type of anemia",
+        "WBC differential breaks down immune cell types and helps identify the nature of any infection or immune response",
+        "No single CBC value should be interpreted in isolation — context is everything"
+      ]
+    }
+  ]
+}

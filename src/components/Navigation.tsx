@@ -95,6 +95,7 @@ export default function Navigation() {
   const navLinks = [
     { href: "/",      label: "Home"    },
     { href: "/app",   label: "Analyze" },
+    { href: "/blog",  label: "Blog"    },
     { href: "/about", label: "About"   },
   ];
 

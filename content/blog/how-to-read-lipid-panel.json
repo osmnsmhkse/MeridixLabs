@@ -1,0 +1,126 @@
+{
+  "title": "How to Read a Lipid Panel: LDL, HDL, and Triglycerides Explained",
+  "slug": "how-to-read-lipid-panel",
+  "date": "2026-03-22",
+  "excerpt": "Your lipid panel results arrive and you're staring at four numbers — Total Cholesterol, LDL, HDL, and Triglycerides — with no clear idea which direction is good and which is bad. It doesn't help that two of them are labelled 'bad cholesterol' and 'good cholesterol' without any explanation of why. In this guide we break down every component of the standard lipid panel in plain English: what each marker measures, what optimal levels look like, and what your results are actually telling you about your cardiovascular health.",
+  "content": [
+    {
+      "type": "p",
+      "text": "Your lipid panel results arrive and you're staring at four numbers — Total Cholesterol, LDL, HDL, and Triglycerides — with no clear idea which direction is good and which is bad. It doesn't help that two are labelled 'bad' and 'good' without any explanation of why. Let's change that."
+    },
+    {
+      "type": "h2",
+      "text": "What Is a Lipid Panel?"
+    },
+    {
+      "type": "p",
+      "text": "A lipid panel (also called a lipid profile or cholesterol test) is a blood test that measures the fats circulating in your bloodstream. It's one of the most widely used cardiovascular risk screening tools in medicine. Most guidelines recommend adults get a lipid panel at least every 4–6 years starting at age 20, and more frequently if you have risk factors like diabetes, high blood pressure, obesity, or a family history of heart disease."
+    },
+    {
+      "type": "p",
+      "text": "The test requires fasting for 9–12 hours beforehand to get accurate triglyceride readings. Some modern non-fasting panels exist, but fasting remains the standard for comprehensive assessment."
+    },
+    {
+      "type": "h2",
+      "text": "LDL: The 'Bad' Cholesterol"
+    },
+    {
+      "type": "p",
+      "text": "LDL stands for Low-Density Lipoprotein. It's called 'bad' because elevated LDL contributes to the buildup of plaques inside artery walls — a process called atherosclerosis. Over years, these plaques narrow the arteries, reducing blood flow and raising the risk of heart attack and stroke."
+    },
+    {
+      "type": "p",
+      "text": "Think of LDL as a delivery truck that drops cholesterol off in your arteries. When there are too many trucks and not enough pickups, cholesterol accumulates in the walls."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Optimal: below 100 mg/dL",
+        "Near optimal: 100–129 mg/dL",
+        "Borderline high: 130–159 mg/dL",
+        "High: 160–189 mg/dL",
+        "Very high: 190 mg/dL and above"
+      ]
+    },
+    {
+      "type": "p",
+      "text": "If you have diabetes, heart disease, or multiple cardiovascular risk factors, your doctor may target an LDL below 70 mg/dL — a stricter threshold based on your overall risk profile."
+    },
+    {
+      "type": "h2",
+      "text": "HDL: The 'Good' Cholesterol"
+    },
+    {
+      "type": "p",
+      "text": "HDL stands for High-Density Lipoprotein. It's called 'good' because it acts as a reverse transporter — picking up excess cholesterol from artery walls and ferrying it back to the liver for processing and elimination. Higher HDL is associated with lower cardiovascular risk."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Protective (high): 60 mg/dL and above — actually reduces heart disease risk",
+        "Acceptable: 40–59 mg/dL in men; 50–59 mg/dL in women",
+        "Low (risk factor): below 40 mg/dL in men; below 50 mg/dL in women"
+      ]
+    },
+    {
+      "type": "p",
+      "text": "Low HDL is an independent cardiovascular risk factor. Regular aerobic exercise is one of the few lifestyle interventions shown to reliably raise HDL levels."
+    },
+    {
+      "type": "h2",
+      "text": "Triglycerides: The Third Number"
+    },
+    {
+      "type": "p",
+      "text": "Triglycerides are the primary form in which fat is stored in your body. After a meal, excess calories that aren't immediately used are converted to triglycerides and stored in fat cells. High triglycerides are associated with metabolic syndrome, insulin resistance, fatty liver disease, and pancreatitis at very high levels."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Normal: below 150 mg/dL",
+        "Borderline high: 150–199 mg/dL",
+        "High: 200–499 mg/dL",
+        "Very high: 500 mg/dL and above (risk of pancreatitis)"
+      ]
+    },
+    {
+      "type": "p",
+      "text": "Triglycerides respond dramatically to lifestyle factors. A diet high in refined carbohydrates and sugar, alcohol consumption, and physical inactivity are the biggest drivers of elevated triglycerides. Many people see significant drops within weeks of reducing sugar and alcohol intake."
+    },
+    {
+      "type": "h2",
+      "text": "Total Cholesterol: The Overview Number"
+    },
+    {
+      "type": "p",
+      "text": "Total cholesterol is the sum of all cholesterol in your blood — LDL, HDL, VLDL, and other fractions. While a value over 200 mg/dL is generally flagged, total cholesterol alone is a poor predictor of cardiovascular risk. Someone with a total of 220 mg/dL but high HDL may have a better risk profile than someone with a total of 180 mg/dL and very low HDL. Context matters."
+    },
+    {
+      "type": "h2",
+      "text": "Reading Your Numbers Together"
+    },
+    {
+      "type": "p",
+      "text": "The most useful ratio is LDL to HDL — or the Total Cholesterol to HDL ratio. A ratio below 3.5 is considered favorable. Your doctor will also factor in your age, sex, blood pressure, smoking status, and whether you have diabetes to calculate your 10-year cardiovascular risk using tools like the Pooled Cohort Equations."
+    },
+    {
+      "type": "callout",
+      "text": "A lipid panel is a snapshot, not a verdict. Trends over time matter more than any single result — which is why consistent testing is valuable."
+    },
+    {
+      "type": "h2",
+      "text": "Steps to Improve Your Lipid Profile"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Replace saturated fats (red meat, full-fat dairy, tropical oils) with unsaturated fats (olive oil, nuts, avocado)",
+        "Increase soluble fiber intake — oats, beans, lentils, and fruit bind to LDL in the gut",
+        "Exercise regularly — 150 minutes per week of moderate cardio raises HDL and lowers triglycerides",
+        "Reduce refined carbohydrates and added sugars to lower triglycerides",
+        "Limit alcohol — even moderate drinking raises triglycerides in some individuals",
+        "If lifestyle changes are insufficient, statins and other medications are highly effective"
+      ]
+    }
+  ]
+}
