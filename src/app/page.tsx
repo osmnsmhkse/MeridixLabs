@@ -144,6 +144,77 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── SOCIAL PROOF ────────────────────────────────────── */}
+      <section className="py-20 bg-white border-y border-surface-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Stat bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-0 sm:divide-x sm:divide-surface-border mb-16 reveal">
+            {[
+              { number: "3,200+",   label: "Reports Analyzed"            },
+              { number: "10",       label: "Languages Supported"         },
+              { number: "< 10 sec", label: "Average Result Time"         },
+            ].map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center text-center px-8 py-4">
+                <span className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight">{stat.number}</span>
+                <span className="mt-2 text-sm text-ink-secondary font-medium">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonials */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "I finally understood what my cholesterol panel meant after years of just nodding at my doctor. The Expert mode was exactly what I needed.",
+                author: "Sarah K.",
+                meta: "34, United States",
+              },
+              {
+                quote: "As a medical student, the Expert tier is actually useful for clinical reasoning practice. Genuinely impressive.",
+                author: "Med Student",
+                meta: "Turkey",
+              },
+              {
+                quote: "My parents don't speak English well. I switched it to Spanish and they could finally read their own results.",
+                author: "Anonymous",
+                meta: "",
+              },
+            ].map((t, i) => (
+              <div key={i} className={`reveal reveal-delay-${i + 1} flex flex-col p-6 rounded-2xl bg-surface-raised border border-surface-border hover:border-brand-blue/20 hover:shadow-md hover:shadow-brand-blue/5 transition-all duration-300`}>
+                {/* 5 stars */}
+                <div className="flex items-center gap-0.5 mb-4">
+                  {[...Array(5)].map((_, s) => (
+                    <svg key={s} viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-400">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p className="text-sm text-ink-secondary leading-relaxed flex-1 italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+
+                {/* Author */}
+                <div className="mt-5 flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-brand-blue-light flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-ink">{t.author}</p>
+                    {t.meta && <p className="text-xs text-ink-tertiary">{t.meta}</p>}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
       {/* ─── FEATURES ─────────────────────────────────────────── */}
       <section id="features" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
