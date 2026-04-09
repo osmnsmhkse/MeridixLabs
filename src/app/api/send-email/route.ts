@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import Anthropic from "@anthropic-ai/sdk";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 interface FlagItem {
@@ -216,6 +215,8 @@ export async function POST(request: NextRequest) {
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json({ error: "Email service not configured." }, { status: 503 });
     }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const date = new Date().toLocaleDateString("en-US", {
       year: "numeric", month: "long", day: "numeric",
