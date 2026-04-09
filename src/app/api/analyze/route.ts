@@ -18,18 +18,25 @@ const LANGUAGE_NAMES: Record<string, string> = {
   zh: "Simplified Chinese",
 };
 
-function buildPatientContext(age: string | null, sex: string | null): string {
-  if (!age && !sex) return "";
+function buildPatientContext(age: string | null, sex: string | null, medications: string | null): string {
   const sexLabel = sex === "male" ? "male" : sex === "female" ? "female" : null;
-  let ctx = "";
+  const parts: string[] = [];
+
   if (age && sexLabel) {
-    ctx = `Patient is a ${age}-year-old ${sexLabel}. Adjust reference ranges and clinical interpretation accordingly. For example, note that creatinine ranges differ between males and females, and certain values like PSA are male-specific.`;
+    parts.push(`Patient is a ${age}-year-old ${sexLabel}. Adjust reference ranges and clinical interpretation accordingly. For example, note that creatinine ranges differ between males and females, and certain values like PSA are male-specific.`);
   } else if (age) {
-    ctx = `Patient is ${age} years old. Adjust clinical interpretation for age-related reference ranges where applicable.`;
+    parts.push(`Patient is ${age} years old. Adjust clinical interpretation for age-related reference ranges where applicable.`);
   } else if (sexLabel) {
-    ctx = `Patient is ${sexLabel}. Adjust reference ranges and clinical interpretation for sex-specific values (e.g., creatinine, hemoglobin, PSA).`;
+    parts.push(`Patient is ${sexLabel}. Adjust reference ranges and clinical interpretation for sex-specific values (e.g., creatinine, hemoglobin, PSA).`);
   }
-  return ctx ? `\n\nIMPORTANT PATIENT CONTEXT: ${ctx} Reference this context where clinically relevant throughout all interpretation tiers.` : "";
+
+  if (medications) {
+    parts.push(`The patient is currently taking: ${medications}. Flag any lab values that may be directly affected or caused by these medications. For example: statins affect liver enzymes (AST, ALT), metformin may affect B12 levels, ACE inhibitors may raise creatinine and potassium, corticosteroids raise glucose, diuretics affect electrolytes. Note these connections explicitly in the interpretation and in the "medication_context" field.`);
+  }
+
+  return parts.length > 0
+    ? `\n\nIMPORTANT PATIENT CONTEXT: ${parts.join(" ")} Reference this context where clinically relevant throughout all interpretation tiers.`
+    : "";
 }
 
 function buildSystemPrompt(languageName: string, patientContext = ""): string {
@@ -55,6 +62,8 @@ Fields required:
 
 9. "flags" — An array of notable lab markers: { marker, value, unit, reference, status } where status is "high", "low", or "normal". Only include clinically notable markers.
 
+10. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…"). If no medications were provided, omit this field entirely.
+
 Always be accurate, warm, thorough, and never alarmist. Never make a definitive diagnosis — you are explaining possibilities, not diagnosing. Be educational and empowering.
 
 Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
@@ -69,7 +78,8 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
   "action": "string",
   "flags": [
     { "marker": "Glucose", "value": "112", "unit": "mg/dL", "reference": "70–99", "status": "high" }
-  ]
+  ],
+  "medication_context": "string (optional — only when medications were provided)"
 }`;
 }
 
@@ -102,6 +112,8 @@ Fields required:
    - "status" is "high" (warrants attention/follow-up), "low" (incidental/benign, no action), or "normal" (expected finding)
    Only include findings explicitly mentioned in the report.
 
+10. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be relevant to the imaging findings (e.g., chronic steroid use and bone density, amiodarone and lung changes, immunosuppressants and infection risk). If no medications were provided, omit this field entirely.
+
 CRITICAL INSTRUCTIONS:
 - NEVER catastrophize incidental findings. A simple renal or hepatic cyst, adrenal adenoma, or small lung nodule below surveillance threshold is almost always benign — say so clearly.
 - ALWAYS recommend the patient discuss these results with their ordering physician before drawing any conclusions.
@@ -121,7 +133,8 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
   "action": "string",
   "flags": [
     { "marker": "Pulmonary Nodule", "value": "4", "unit": "mm", "reference": "< 6mm low risk (Fleischner)", "status": "low" }
-  ]
+  ],
+  "medication_context": "string (optional — only when medications were provided)"
 }`;
 }
 
@@ -154,7 +167,8 @@ export async function POST(request: NextRequest) {
     const mode = (formData.get("mode") as string) || "lab";
     const patientAge = formData.get("patientAge") as string | null;
     const patientSex = formData.get("patientSex") as string | null;
-    const patientContext = buildPatientContext(patientAge, patientSex);
+    const patientMedications = formData.get("patientMedications") as string | null;
+    const patientContext = buildPatientContext(patientAge, patientSex, patientMedications);
 
     let messageContent: Anthropic.MessageParam["content"];
 
@@ -238,6 +252,7 @@ export async function POST(request: NextRequest) {
       specialist?: string;
       action: string;
       flags: Array<{ marker: string; value: string; unit: string; reference: string; status: "high" | "low" | "normal" }>;
+      medication_context?: string;
     };
 
     try {

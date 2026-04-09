@@ -31,6 +31,7 @@ interface AnalysisResult {
   specialist?: string;
   action: string;
   flags: AnalysisFlag[];
+  medication_context?: string;
 }
 
 const TIER_CONFIG: Record<Tier, { label: string; emoji: string; audience: string; activeClass: string }> = {
@@ -1072,6 +1073,24 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
         </div>
       </div>
 
+      {/* Medication context */}
+      {result.medication_context && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+          <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2">
+            <span className="text-base leading-none">📋</span>
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Medication context</p>
+          </div>
+          <div className="p-5 flex items-start gap-3">
+            <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+              </svg>
+            </div>
+            <p className="text-sm text-ink-secondary leading-relaxed">{result.medication_context}</p>
+          </div>
+        </div>
+      )}
+
       {/* Deep Dive */}
       <DeepDiveSection result={result} mode={mode} />
 
@@ -1419,11 +1438,12 @@ function ContextForm({
   onSkip,
 }: {
   fileName: string;
-  onContinue: (age: string, sex: PatientSex) => void;
+  onContinue: (age: string, sex: PatientSex, medications: string) => void;
   onSkip: () => void;
 }) {
   const [age, setAge] = useState("");
   const [sex, setSex] = useState<PatientSex>("");
+  const [medications, setMedications] = useState("");
 
   return (
     <div className="animate-fade-in space-y-6 py-1">
@@ -1487,6 +1507,18 @@ function ContextForm({
         </div>
       </div>
 
+      {/* Medications input */}
+      <div className="space-y-1.5">
+        <label className="text-sm font-semibold text-ink">Any medications you&apos;re currently taking? <span className="font-normal text-ink-tertiary">(optional)</span></label>
+        <input
+          type="text"
+          placeholder="e.g. metformin, lisinopril, atorvastatin"
+          value={medications}
+          onChange={(e) => setMedications(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all text-sm"
+        />
+      </div>
+
       {/* Privacy note */}
       <div className="flex items-center gap-1.5">
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary flex-shrink-0">
@@ -1498,7 +1530,7 @@ function ContextForm({
       {/* Actions */}
       <div className="space-y-2.5 pt-1">
         <button
-          onClick={() => onContinue(age, sex)}
+          onClick={() => onContinue(age, sex, medications)}
           className="w-full py-3.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-sm transition-all duration-200 shadow-md shadow-brand-blue/20 hover:shadow-brand-blue/30 hover:-translate-y-0.5 flex items-center justify-center gap-2"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -1536,7 +1568,7 @@ export default function AppPage() {
     setState("error");
   };
 
-  const runAnalysis = async (file: File | null, sampleMode: boolean, age = "", sex = "") => {
+  const runAnalysis = async (file: File | null, sampleMode: boolean, age = "", sex = "", medications = "") => {
     setState("loading");
     try {
       const formData = new FormData();
@@ -1550,6 +1582,7 @@ export default function AppPage() {
       formData.append("language", lang);
       if (age)  formData.append("patientAge", age);
       if (sex && sex !== "prefer_not") formData.append("patientSex", sex);
+      if (medications.trim()) formData.append("patientMedications", medications.trim());
 
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const json = await res.json();
@@ -1656,7 +1689,7 @@ export default function AppPage() {
           ) : state === "context" ? (
             <ContextForm
               fileName={fileName}
-              onContinue={(age, sex) => runAnalysis(pendingFile, isSample, age, sex)}
+              onContinue={(age, sex, medications) => runAnalysis(pendingFile, isSample, age, sex, medications)}
               onSkip={() => runAnalysis(pendingFile, isSample)}
             />
           ) : state === "idle" ? (
