@@ -157,15 +157,16 @@ export async function POST(request: NextRequest) {
       const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"];
       if (!allowedTypes.includes(file.type)) {
         return NextResponse.json(
-          { error: "Unsupported file type. Please upload a PDF, JPG, or PNG." },
+          { error: "Unsupported file type.", errorCode: "WRONG_FILE_TYPE" },
           { status: 400 }
         );
       }
 
       const MAX_SIZE = 10 * 1024 * 1024;
       if (file.size > MAX_SIZE) {
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1);
         return NextResponse.json(
-          { error: "File too large. Maximum size is 10MB." },
+          { error: "File too large.", errorCode: "FILE_TOO_LARGE", fileSizeMB },
           { status: 400 }
         );
       }
@@ -240,8 +241,20 @@ export async function POST(request: NextRequest) {
     }
 
     if (!parsed.simple || !parsed.medium || !parsed.expert || !parsed.action) {
+      // Try to distinguish "not a medical doc at all" from "medical but values unreadable"
+      const lowerRaw = rawText.toLowerCase();
+      const nonMedicalPhrases = [
+        "not a medical", "not a lab", "not a radiology", "not a pathology",
+        "doesn't appear to be", "does not appear to be", "doesn't contain",
+        "cannot identify any", "no medical", "not appear to contain",
+        "unable to identify any medical", "this is not",
+      ];
+      const isNonMedical = nonMedicalPhrases.some((p) => lowerRaw.includes(p));
       return NextResponse.json(
-        { error: "The AI could not parse this document as a medical lab result. Please ensure you're uploading a lab report." },
+        {
+          error: "Could not parse document.",
+          errorCode: isNonMedical ? "NON_MEDICAL" : "NO_LAB_VALUES",
+        },
         { status: 422 }
       );
     }
@@ -255,30 +268,30 @@ export async function POST(request: NextRequest) {
       const message = error.message ?? "";
       if (message.toLowerCase().includes("credit balance is too low")) {
         return NextResponse.json(
-          { error: "The AI service is temporarily unavailable. Please try again shortly." },
+          { error: "AI service temporarily unavailable.", errorCode: "SERVER_ERROR" },
           { status: 503 }
         );
       }
       if (error.status === 401) {
         return NextResponse.json(
-          { error: "AI service configuration error. Please contact support." },
+          { error: "AI service configuration error.", errorCode: "SERVER_ERROR" },
           { status: 500 }
         );
       }
       if (error.status === 429) {
         return NextResponse.json(
-          { error: "Too many requests right now. Please wait a few seconds and try again." },
+          { error: "Too many requests.", errorCode: "SERVER_ERROR" },
           { status: 429 }
         );
       }
       if (error.status >= 500) {
         return NextResponse.json(
-          { error: "The AI service is having issues. Please try again in a moment." },
+          { error: "AI service error.", errorCode: "SERVER_ERROR" },
           { status: 503 }
         );
       }
     }
 
-    return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
+    return NextResponse.json({ error: "Something went wrong.", errorCode: "SERVER_ERROR" }, { status: 500 });
   }
 }

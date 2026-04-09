@@ -5,6 +5,13 @@ import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 
 type Tier = "simple" | "medium" | "expert";
 type ReportMode = "lab" | "radiology";
+type ErrorCode =
+  | "FILE_TOO_LARGE"
+  | "WRONG_FILE_TYPE"
+  | "NO_LAB_VALUES"
+  | "NON_MEDICAL"
+  | "NETWORK_ERROR"
+  | "SERVER_ERROR";
 
 interface AnalysisFlag {
   marker: string;
@@ -46,6 +53,134 @@ const TIER_CONFIG: Record<Tier, { label: string; emoji: string; audience: string
     activeClass: "bg-purple-500/10 text-purple-700 border-b-2 border-purple-500",
   },
 };
+
+// ── Error configuration ──────────────────────────────────────────────────────
+interface ErrorConfig {
+  icon: React.ReactNode;
+  title: string;
+  message: string;
+  accent: string; // border + bg accent class pair
+}
+
+function getErrorConfig(code: ErrorCode, fileSizeMB?: string): ErrorConfig {
+  const amberAccent = "border-amber-200 bg-amber-50";
+  const redAccent   = "border-red-200   bg-red-50";
+
+  const fileIcon = (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+    </svg>
+  );
+
+  switch (code) {
+    case "FILE_TOO_LARGE":
+      return {
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+        ),
+        title: "File too large",
+        message: `Your file is ${fileSizeMB ?? "over 10"}MB — we accept up to 10MB. Try compressing the PDF or taking a cleaner photo.`,
+        accent: amberAccent,
+      };
+    case "WRONG_FILE_TYPE":
+      return {
+        icon: fileIcon,
+        title: "Unsupported file type",
+        message: "We accept PDF, JPG, and PNG files. If your report is in another format, take a screenshot and upload that instead.",
+        accent: amberAccent,
+      };
+    case "NO_LAB_VALUES":
+      return {
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803a7.5 7.5 0 0010.607 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 9.75l-6 6M9 9.75l6 6" />
+          </svg>
+        ),
+        title: "No lab values found",
+        message:
+          "We couldn't find recognizable lab values in this file. Make sure the image is clear and the report is a standard lab result (blood test, urine test, metabolic panel, etc.).",
+        accent: amberAccent,
+      };
+    case "NON_MEDICAL":
+      return {
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+          </svg>
+        ),
+        title: "Doesn't look like a lab report",
+        message:
+          "This doesn't look like a lab report. Meridix Labs works with blood tests, urine tests, metabolic panels, and similar clinical lab results.",
+        accent: amberAccent,
+      };
+    case "NETWORK_ERROR":
+    case "SERVER_ERROR":
+    default:
+      return {
+        icon: (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+          </svg>
+        ),
+        title: "Something went wrong",
+        message:
+          "Something went wrong on our end. This happens occasionally — please try again. If it keeps happening, email us at hello@meridixlabs.com",
+        accent: redAccent,
+      };
+  }
+}
+
+function ErrorCard({
+  code,
+  fileSizeMB,
+  onReset,
+}: {
+  code: ErrorCode;
+  fileSizeMB?: string;
+  onReset: () => void;
+}) {
+  const cfg = getErrorConfig(code, fileSizeMB);
+  const isAmber = cfg.accent.includes("amber");
+
+  return (
+    <div className={`rounded-2xl border p-6 ${cfg.accent} flex flex-col items-center text-center gap-4`}>
+      {/* Icon circle */}
+      <div className={`w-14 h-14 rounded-full flex items-center justify-center ${
+        isAmber ? "bg-amber-100 text-amber-600" : "bg-red-100 text-red-600"
+      }`}>
+        {cfg.icon}
+      </div>
+
+      {/* Text */}
+      <div className="space-y-1.5 max-w-sm">
+        <p className={`text-base font-bold ${isAmber ? "text-amber-900" : "text-red-900"}`}>
+          {cfg.title}
+        </p>
+        <p className={`text-sm leading-relaxed ${isAmber ? "text-amber-800" : "text-red-800"}`}>
+          {cfg.message}
+        </p>
+      </div>
+
+      {/* Try Again */}
+      <button
+        onClick={onReset}
+        className={`mt-1 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
+          isAmber
+            ? "bg-white border border-amber-200 text-amber-800 hover:bg-amber-50 hover:border-amber-300"
+            : "bg-white border border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300"
+        }`}
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+        </svg>
+        Try Again
+      </button>
+    </div>
+  );
+}
 
 const LOADING_STEPS_LAB = [
   "Reading your report...",
@@ -1016,14 +1151,40 @@ export default function AppPage() {
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
+  const [fileSizeMB, setFileSizeMB] = useState<string | undefined>(undefined);
   const [fileName, setFileName] = useState<string>("");
   const [isSample, setIsSample] = useState(false);
   const [reportMode, setReportMode] = useState<ReportMode>("lab");
 
+  const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
+    setErrorCode(code);
+    setError(msg ?? code);
+    setFileSizeMB(sizeMB);
+    setState("error");
+  };
+
   const handleFileSelect = async (file: File) => {
+    // ── Client-side pre-validation (instant, no round-trip) ──────────────────
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      const mb = (file.size / (1024 * 1024)).toFixed(1);
+      setFileName(file.name);
+      setErrorState("FILE_TOO_LARGE", undefined, mb);
+      return;
+    }
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"];
+    if (!allowedTypes.includes(file.type)) {
+      setFileName(file.name);
+      setErrorState("WRONG_FILE_TYPE");
+      return;
+    }
+
     setFileName(file.name);
     setIsSample(false);
     setError(null);
+    setErrorCode(null);
+    setFileSizeMB(undefined);
     setState("loading");
 
     try {
@@ -1035,13 +1196,20 @@ export default function AppPage() {
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const json = await res.json();
 
-      if (!res.ok) throw new Error(json.error || "Analysis failed. Please try again.");
+      if (!res.ok) {
+        setErrorState(
+          (json.errorCode as ErrorCode) ?? "SERVER_ERROR",
+          json.error,
+          json.fileSizeMB,
+        );
+        return;
+      }
 
       setResult(json.data);
       setState("success");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
-      setState("error");
+    } catch {
+      // fetch() itself threw — network failure / timeout
+      setErrorState("NETWORK_ERROR");
     }
   };
 
@@ -1049,6 +1217,8 @@ export default function AppPage() {
     setFileName("Sample — Basic Metabolic Panel");
     setIsSample(true);
     setError(null);
+    setErrorCode(null);
+    setFileSizeMB(undefined);
     setState("loading");
 
     try {
@@ -1060,17 +1230,27 @@ export default function AppPage() {
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const json = await res.json();
 
-      if (!res.ok) throw new Error(json.error || "Analysis failed. Please try again.");
+      if (!res.ok) {
+        setErrorState((json.errorCode as ErrorCode) ?? "SERVER_ERROR", json.error);
+        return;
+      }
 
       setResult(json.data);
       setState("success");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
-      setState("error");
+    } catch {
+      setErrorState("NETWORK_ERROR");
     }
   };
 
-  const handleReset = () => { setState("idle"); setResult(null); setError(null); setFileName(""); setIsSample(false); };
+  const handleReset = () => {
+    setState("idle");
+    setResult(null);
+    setError(null);
+    setErrorCode(null);
+    setFileSizeMB(undefined);
+    setFileName("");
+    setIsSample(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white pt-24 pb-20">
@@ -1115,7 +1295,9 @@ export default function AppPage() {
 
         {/* Main card */}
         <div className="bg-white rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8">
-          {state === "idle" || state === "error" ? (
+          {state === "error" && errorCode ? (
+            <ErrorCard code={errorCode} fileSizeMB={fileSizeMB} onReset={handleReset} />
+          ) : state === "idle" ? (
             <div className="space-y-4">
               {/* Report mode toggle */}
               <div className="flex p-1 bg-surface-raised rounded-2xl border border-surface-border gap-1">
@@ -1148,7 +1330,7 @@ export default function AppPage() {
                 </div>
               )}
 
-              <UploadZone onFileSelect={handleFileSelect} error={state === "error" ? error : null} />
+              <UploadZone onFileSelect={handleFileSelect} error={null} />
               {reportMode === "lab" && (
                 <>
                   <div className="flex items-center gap-3">
@@ -1176,8 +1358,8 @@ export default function AppPage() {
           ) : null}
         </div>
 
-        {/* "Here's what you'll get" preview — only shown on idle/error */}
-        {(state === "idle" || state === "error") && (
+        {/* "Here's what you'll get" preview — only shown on idle */}
+        {state === "idle" && (
           <div className="mt-8">
             <p className="text-center text-xs font-semibold text-ink-tertiary uppercase tracking-widest mb-4">Here's what you'll get</p>
             <div className="bg-white rounded-2xl border border-surface-border shadow-sm overflow-hidden">
