@@ -900,6 +900,84 @@ function DoctorQuestionsSection({
   );
 }
 
+function ShareSection({ simple }: { simple: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const shareText = `Here's a summary of my lab results from Meridix Labs:\n\n${simple}\n\nFull interpretation at meridixlabs.com`;
+
+  const handleWhatsApp = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(shareText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-800 overflow-hidden shadow-sm print:hidden">
+      <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2">
+        {/* Share icon */}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-ink-tertiary">
+          <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+        </svg>
+        <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Share with family</p>
+      </div>
+      <div className="p-5 space-y-3">
+        <div className="flex flex-col sm:flex-row gap-2.5">
+          {/* WhatsApp */}
+          <button
+            onClick={handleWhatsApp}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-[#25D366]/50 hover:bg-[#25D366]/5 dark:hover:bg-[#25D366]/10 text-ink-secondary hover:text-[#128C7E] dark:hover:text-[#25D366] text-sm font-semibold transition-all duration-200"
+          >
+            {/* WhatsApp logo */}
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#25D366] flex-shrink-0">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            Share via WhatsApp
+          </button>
+
+          {/* Copy summary */}
+          <button
+            onClick={handleCopy}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
+              copied
+                ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
+                : "border-surface-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue"
+            }`}
+          >
+            {copied ? (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                </svg>
+                Copy summary
+              </>
+            )}
+          </button>
+        </div>
+
+        <p className="text-[11px] text-ink-tertiary flex items-center gap-1.5">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
+            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+          </svg>
+          Only the simple summary is shared — never the full report or file.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean; mode: ReportMode; lang: string }) {
   const [activeTier, setActiveTier] = useState<Tier>("simple");
   const [copied, setCopied] = useState(false);
@@ -1194,6 +1272,9 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
 
       {/* Doctor questions */}
       <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
+
+      {/* Share with family */}
+      <ShareSection simple={result.simple} />
 
       {/* Disclaimer */}
       <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 print:hidden">
