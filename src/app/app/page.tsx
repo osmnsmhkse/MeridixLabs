@@ -900,6 +900,126 @@ function DoctorQuestionsSection({
   );
 }
 
+function EmailSection({ result }: { result: AnalysisResult }) {
+  const [open, setOpen]       = useState(false);
+  const [email, setEmail]     = useState("");
+  const [status, setStatus]   = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errMsg, setErrMsg]   = useState("");
+
+  const handleSend = async () => {
+    if (!email.trim()) return;
+    setStatus("sending");
+    setErrMsg("");
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email:           email.trim(),
+          mode:            "lab",
+          overall_status:  result.overall_status,
+          summary_headline: result.summary_headline,
+          urgency:         result.urgency,
+          simple:          result.simple,
+          specialist:      result.specialist,
+          action:          result.action,
+          flags:           result.flags ?? [],
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to send.");
+      setStatus("sent");
+    } catch (err) {
+      setErrMsg(err instanceof Error ? err.message : "Something went wrong.");
+      setStatus("error");
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-800 overflow-hidden shadow-sm print:hidden">
+      {/* Header toggle */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-surface-raised/60 transition-colors"
+      >
+        <div className="flex items-center gap-2.5">
+          {/* Mail icon */}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-brand-blue flex-shrink-0">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
+          </svg>
+          <span className="text-sm font-semibold text-ink">Email this to myself</span>
+          {status === "sent" && (
+            <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">Sent!</span>
+          )}
+        </div>
+        <svg
+          viewBox="0 0 20 20" fill="currentColor"
+          className={`w-4 h-4 text-ink-tertiary transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="px-5 pb-5 space-y-3 border-t border-surface-border pt-4">
+          {status === "sent" ? (
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-500 flex-shrink-0">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">Sent! Check your inbox.</p>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Your interpretation has been sent to {email}</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  disabled={status === "sending"}
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all text-sm disabled:opacity-50"
+                />
+                <button
+                  onClick={handleSend}
+                  disabled={status === "sending" || !email.trim()}
+                  className="px-5 py-2.5 bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm transition-all duration-200 flex items-center gap-2 flex-shrink-0"
+                >
+                  {status === "sending" ? (
+                    <>
+                      <svg className="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Sending…
+                    </>
+                  ) : "Send"}
+                </button>
+              </div>
+
+              {status === "error" && (
+                <p className="text-xs text-red-600 dark:text-red-400">{errMsg}</p>
+              )}
+
+              <p className="text-[11px] text-ink-tertiary flex items-center gap-1.5">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                We don&apos;t store your email. The full report file is never sent — only the AI interpretation.
+              </p>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ShareSection({ simple }: { simple: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -1275,6 +1395,9 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
 
       {/* Share with family */}
       <ShareSection simple={result.simple} />
+
+      {/* Email to myself */}
+      <EmailSection result={result} />
 
       {/* Disclaimer */}
       <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 print:hidden">
