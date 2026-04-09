@@ -128,6 +128,26 @@ function FlagBadge({ flag }: { flag: AnalysisFlag }) {
   );
 }
 
+// Pulls the first recognisable specialist title out of free-form AI text.
+// e.g. "Consider seeing an Endocrinologist for…" → "Endocrinologist"
+function extractSpecialist(text: string): string {
+  const known = [
+    "Endocrinologist","Cardiologist","Nephrologist","Gastroenterologist",
+    "Neurologist","Pulmonologist","Rheumatologist","Oncologist","Urologist",
+    "Dermatologist","Ophthalmologist","Orthopedist","Psychiatrist",
+    "Hematologist","Hepatologist","Allergist","Immunologist","Gynecologist",
+    "Obstetrician","Pediatrician","Geriatrician","Vascular Surgeon",
+    "General Practitioner","Internal Medicine Physician","Primary Care Physician",
+    "Infectious Disease Specialist","Sleep Specialist",
+  ];
+  for (const s of known) {
+    if (text.toLowerCase().includes(s.toLowerCase())) return s;
+  }
+  // Fallback: grab first word ending in common specialist suffixes
+  const m = text.match(/\b([A-Z][a-z]+(?:ologist|iatrist|ician|surgeon|ist))\b/);
+  return m ? m[1] : "specialist";
+}
+
 function DeepDiveSection({ result }: { result: AnalysisResult }) {
   const [open, setOpen] = useState(true);
 
@@ -187,21 +207,59 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
       {open && (
         <div className="divide-y divide-surface-border">
           {/* Specialist — prominent card at top */}
-          {result.specialist && (
-            <div className="p-5 bg-brand-blue-light/50">
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-white">
-                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1">Which Specialist to See</p>
-                  <p className="text-sm text-ink-secondary leading-relaxed">{result.specialist}</p>
+          {result.specialist && (() => {
+            const specialist = extractSpecialist(result.specialist);
+            const mapsUrl  = `https://www.google.com/maps/search/${encodeURIComponent(specialist + " near me")}`;
+            const zocdocUrl = `https://www.zocdoc.com/search?dr_specialty=${encodeURIComponent(specialist)}`;
+            return (
+              <div className="p-5 bg-brand-blue-light/50">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-white">
+                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1">Which Specialist to See</p>
+                    <p className="text-sm text-ink-secondary leading-relaxed mb-3">{result.specialist}</p>
+
+                    {/* Action buttons */}
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        href={mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-blue/30 text-brand-blue hover:bg-brand-blue hover:text-white text-xs font-semibold transition-all duration-150"
+                      >
+                        {/* Map pin icon */}
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
+                        Find one near you →
+                      </a>
+                      <a
+                        href={zocdocUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-ink-secondary hover:border-brand-blue/30 hover:text-brand-blue hover:bg-brand-blue-light text-xs font-semibold transition-all duration-150"
+                      >
+                        {/* Calendar icon */}
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
+                          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                        </svg>
+                        Book on Zocdoc →
+                      </a>
+                    </div>
+
+                    {/* Non-endorsement note */}
+                    <p className="mt-2 text-[10px] text-ink-tertiary">
+                      Meridix Labs does not endorse any specific provider.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Other deep dive sections */}
           {sections.map((section, i) => (
