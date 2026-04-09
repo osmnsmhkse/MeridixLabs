@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 
 type Tier = "simple" | "medium" | "expert";
+type ReportMode = "lab" | "radiology";
 
 interface AnalysisFlag {
   marker: string;
@@ -46,7 +47,7 @@ const TIER_CONFIG: Record<Tier, { label: string; emoji: string; audience: string
   },
 };
 
-const LOADING_STEPS = [
+const LOADING_STEPS_LAB = [
   "Reading your lab report…",
   "Identifying test markers…",
   "Comparing values to reference ranges…",
@@ -60,8 +61,23 @@ const LOADING_STEPS = [
   "Almost done…",
 ];
 
-function LoadingAnimation() {
+const LOADING_STEPS_RADIOLOGY = [
+  "Reading your radiology report…",
+  "Identifying the imaging modality and body area…",
+  "Cataloguing all findings…",
+  "Separating incidental from significant findings…",
+  "Assessing clinical significance…",
+  "Explaining the biology behind the findings…",
+  "Writing your Plain-Language explanation…",
+  "Writing your Expert clinical interpretation…",
+  "Identifying which specialist to see…",
+  "Preparing your recommendations…",
+  "Almost done…",
+];
+
+function LoadingAnimation({ mode }: { mode: ReportMode }) {
   const [stepIndex, setStepIndex] = useState(0);
+  const LOADING_STEPS = mode === "radiology" ? LOADING_STEPS_RADIOLOGY : LOADING_STEPS_LAB;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -148,8 +164,10 @@ function extractSpecialist(text: string): string {
   return m ? m[1] : "specialist";
 }
 
-function DeepDiveSection({ result }: { result: AnalysisResult }) {
+function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: ReportMode }) {
   const [open, setOpen] = useState(true);
+
+  const isRadiology = mode === "radiology";
 
   const sections = [
     {
@@ -159,8 +177,8 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
         </svg>
       ),
       color: "text-amber-600 bg-amber-50",
-      label: "Possible Causes",
-      sublabel: "What could lead to these results?",
+      label: isRadiology ? "What Could Cause This Finding" : "Possible Causes",
+      sublabel: isRadiology ? "Conditions that can produce this imaging appearance" : "What could lead to these results?",
       content: result.etiology,
     },
     {
@@ -170,8 +188,8 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
         </svg>
       ),
       color: "text-brand-blue bg-brand-blue-light",
-      label: "Body Mechanism",
-      sublabel: "What's happening inside your body?",
+      label: isRadiology ? "What's Happening in the Tissue" : "Body Mechanism",
+      sublabel: isRadiology ? "The biological process behind the imaging finding" : "What's happening inside your body?",
       content: result.mechanism,
     },
     {
@@ -181,8 +199,8 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
         </svg>
       ),
       color: "text-purple-600 bg-purple-50",
-      label: "Associated Conditions",
-      sublabel: "What conditions could be related?",
+      label: isRadiology ? "Possible Diagnoses" : "Associated Conditions",
+      sublabel: isRadiology ? "What conditions are on the differential?" : "What conditions could be related?",
       content: result.diseases,
     },
   ].filter((s) => s.content);
@@ -282,7 +300,7 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
   );
 }
 
-function ResultsPanel({ result, fileName, onReset, isSample }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean }) {
+function ResultsPanel({ result, fileName, onReset, isSample, mode }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean; mode: ReportMode }) {
   const [activeTier, setActiveTier] = useState<Tier>("simple");
   const [copied, setCopied] = useState(false);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
@@ -290,10 +308,13 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
   const handleCopy = async () => {
     const flagLines = result.flags?.length
       ? result.flags.map(f => `  ${f.status === "high" ? "↑" : f.status === "low" ? "↓" : "✓"} ${f.marker}: ${f.value} ${f.unit} (ref: ${f.reference})`).join("\n")
-      : "  No flagged values.";
+      : mode === "radiology" ? "  No significant findings." : "  No flagged values.";
+
+    const reportLabel = mode === "radiology" ? "Radiology / Pathology Interpretation" : "Lab Interpretation";
+    const flagsLabel  = mode === "radiology" ? "KEY FINDINGS" : "FLAGGED VALUES";
 
     const text = [
-      "MERIDIX LABS — Lab Interpretation",
+      `MERIDIX LABS — ${reportLabel}`,
       `File: ${fileName}`,
       `Date: ${new Date().toLocaleDateString()}`,
       "",
@@ -306,12 +327,12 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
       "━━━ EXPERT ━━━",
       result.expert,
       "",
-      "━━━ FLAGGED VALUES ━━━",
+      `━━━ ${flagsLabel} ━━━`,
       flagLines,
       ...(result.specialist ? ["", "━━━ WHICH SPECIALIST TO SEE ━━━", result.specialist] : []),
-      ...(result.etiology   ? ["", "━━━ POSSIBLE CAUSES ━━━",        result.etiology]   : []),
-      ...(result.mechanism  ? ["", "━━━ BODY MECHANISM ━━━",         result.mechanism]  : []),
-      ...(result.diseases   ? ["", "━━━ ASSOCIATED CONDITIONS ━━━",  result.diseases]   : []),
+      ...(result.etiology   ? ["", mode === "radiology" ? "━━━ WHAT COULD CAUSE THIS FINDING ━━━" : "━━━ POSSIBLE CAUSES ━━━", result.etiology]   : []),
+      ...(result.mechanism  ? ["", mode === "radiology" ? "━━━ TISSUE MECHANISM ━━━" : "━━━ BODY MECHANISM ━━━",                                    result.mechanism]  : []),
+      ...(result.diseases   ? ["", mode === "radiology" ? "━━━ POSSIBLE DIAGNOSES ━━━" : "━━━ ASSOCIATED CONDITIONS ━━━",                           result.diseases]   : []),
       "",
       "━━━ WHAT SHOULD YOU DO? ━━━",
       result.action,
@@ -352,15 +373,23 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-blue/10 rounded-xl flex items-center justify-center">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-            </svg>
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${mode === "radiology" ? "bg-purple-50" : "bg-brand-blue/10"}`}>
+            {mode === "radiology" ? (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-purple-600">
+                <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+              </svg>
+            )}
           </div>
           <div>
             <p className="text-sm font-semibold text-ink truncate max-w-[200px] sm:max-w-sm">{fileName}</p>
-            <p className="text-xs text-ink-tertiary">Analysis complete</p>
+            <p className="text-xs text-ink-tertiary">
+              {mode === "radiology" ? "Radiology / Pathology — Analysis complete" : "Analysis complete"}
+            </p>
           </div>
         </div>
         <button
@@ -374,11 +403,13 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
         </button>
       </div>
 
-      {/* Flagged values */}
+      {/* Flagged values / Key findings */}
       {result.flags && result.flags.length > 0 && (
         <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
           <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised">
-            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Flagged values</p>
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+              {mode === "radiology" ? "Key Findings" : "Flagged Values"}
+            </p>
           </div>
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
             {result.flags.map((flag, i) => <FlagBadge key={i} flag={flag} />)}
@@ -421,7 +452,7 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
       </div>
 
       {/* Deep Dive */}
-      <DeepDiveSection result={result} />
+      <DeepDiveSection result={result} mode={mode} />
 
       {/* Action recommendation */}
       <div className="bg-brand-blue-light border border-brand-blue-mid rounded-2xl p-5">
@@ -762,6 +793,7 @@ export default function AppPage() {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [isSample, setIsSample] = useState(false);
+  const [reportMode, setReportMode] = useState<ReportMode>("lab");
 
   const handleFileSelect = async (file: File) => {
     setFileName(file.name);
@@ -773,6 +805,7 @@ export default function AppPage() {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("language", lang);
+      formData.append("mode", reportMode);
 
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const json = await res.json();
@@ -797,6 +830,7 @@ export default function AppPage() {
       const formData = new FormData();
       formData.append("sample", "true");
       formData.append("language", lang);
+      formData.append("mode", "lab"); // sample is always a lab report
 
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const json = await res.json();
@@ -858,27 +892,62 @@ export default function AppPage() {
         <div className="bg-white rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8">
           {state === "idle" || state === "error" ? (
             <div className="space-y-4">
-              <UploadZone onFileSelect={handleFileSelect} error={state === "error" ? error : null} />
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-surface-border" />
-                <span className="text-xs text-ink-tertiary font-medium">or</span>
-                <div className="flex-1 h-px bg-surface-border" />
+              {/* Report mode toggle */}
+              <div className="flex p-1 bg-surface-raised rounded-2xl border border-surface-border gap-1">
+                {([
+                  { mode: "lab",       emoji: "🩸", label: "Lab Results"                },
+                  { mode: "radiology", emoji: "🩻", label: "Radiology / Pathology"      },
+                ] as { mode: ReportMode; emoji: string; label: string }[]).map((opt) => (
+                  <button
+                    key={opt.mode}
+                    onClick={() => setReportMode(opt.mode)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                      reportMode === opt.mode
+                        ? "bg-white shadow-sm border border-surface-border text-ink"
+                        : "text-ink-tertiary hover:text-ink-secondary"
+                    }`}
+                  >
+                    <span>{opt.emoji}</span>
+                    <span>{opt.label}</span>
+                  </button>
+                ))}
               </div>
-              <button
-                onClick={handleSample}
-                className="w-full py-3 px-5 rounded-xl border border-surface-border hover:border-brand-blue/40 bg-surface-raised hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2"
-              >
-                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 opacity-60">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                  <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                </svg>
-                Try with a sample report
-              </button>
+
+              {/* Mode hint */}
+              {reportMode === "radiology" && (
+                <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-purple-50 border border-purple-100">
+                  <span className="text-purple-500 text-sm mt-px flex-shrink-0">🩻</span>
+                  <p className="text-xs text-purple-700 leading-relaxed">
+                    <strong>Radiology &amp; Pathology mode:</strong> Upload a CT, MRI, X-ray, ultrasound, or biopsy report. The AI will identify every finding, flag what needs follow-up, and explain incidental findings clearly.
+                  </p>
+                </div>
+              )}
+
+              <UploadZone onFileSelect={handleFileSelect} error={state === "error" ? error : null} />
+              {reportMode === "lab" && (
+                <>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-surface-border" />
+                    <span className="text-xs text-ink-tertiary font-medium">or</span>
+                    <div className="flex-1 h-px bg-surface-border" />
+                  </div>
+                  <button
+                    onClick={handleSample}
+                    className="w-full py-3 px-5 rounded-xl border border-surface-border hover:border-brand-blue/40 bg-surface-raised hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 opacity-60">
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                      <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                    </svg>
+                    Try with a sample report
+                  </button>
+                </>
+              )}
             </div>
           ) : state === "loading" ? (
-            <LoadingAnimation />
+            <LoadingAnimation mode={reportMode} />
           ) : result ? (
-            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} />
+            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} />
           ) : null}
         </div>
 
@@ -888,65 +957,123 @@ export default function AppPage() {
             <p className="text-center text-xs font-semibold text-ink-tertiary uppercase tracking-widest mb-4">Here's what you'll get</p>
             <div className="bg-white rounded-2xl border border-surface-border shadow-sm overflow-hidden">
 
-              {/* Flagged value chip */}
-              <div className="px-5 pt-5 pb-3 flex items-center gap-3">
-                <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Flagged Values</span>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
-                  <span className="text-amber-500 text-xs font-bold">↑</span>
-                  <span className="text-xs font-semibold text-ink">Glucose</span>
-                  <span className="text-xs font-bold text-amber-600">112 mg/dL</span>
-                  <span className="text-xs text-ink-tertiary">ref: 70–99</span>
-                </div>
-              </div>
+              {reportMode === "lab" ? (
+                <>
+                  {/* Lab — Flagged value chip */}
+                  <div className="px-5 pt-5 pb-3 flex items-center gap-3">
+                    <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Flagged Values</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
+                      <span className="text-amber-500 text-xs font-bold">↑</span>
+                      <span className="text-xs font-semibold text-ink">Glucose</span>
+                      <span className="text-xs font-bold text-amber-600">112 mg/dL</span>
+                      <span className="text-xs text-ink-tertiary">ref: 70–99</span>
+                    </div>
+                  </div>
 
-              {/* Tabs */}
-              <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
-                {[
-                  { label: "💬 Simple",  active: true  },
-                  { label: "📋 Medium", active: false },
-                  { label: "🔬 Expert",  active: false },
-                ].map((tab) => (
-                  <span
-                    key={tab.label}
-                    className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${
-                      tab.active
-                        ? "bg-white text-brand-blue border-b-2 border-brand-blue -mb-px"
-                        : "text-ink-tertiary"
-                    }`}
-                  >
-                    {tab.label}
-                  </span>
-                ))}
-              </div>
+                  {/* Tabs */}
+                  <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
+                    {[
+                      { label: "💬 Simple",  active: true  },
+                      { label: "📋 Medium", active: false },
+                      { label: "🔬 Expert",  active: false },
+                    ].map((tab) => (
+                      <span key={tab.label} className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${tab.active ? "bg-white text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary"}`}>
+                        {tab.label}
+                      </span>
+                    ))}
+                  </div>
 
-              {/* Sample tab content */}
-              <div className="px-5 py-4 space-y-2">
-                <p className="text-xs text-ink-secondary leading-relaxed">
-                  <span className="font-semibold text-emerald-600">Simple: </span>
-                  Your blood sugar is a little high — like having more sugar in your blood than ideal. Worth mentioning to your doctor.
-                </p>
-                <p className="text-xs text-ink-tertiary leading-relaxed">
-                  <span className="font-semibold text-brand-blue">Medium: </span>
-                  Fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125). Your insulin response may be losing efficiency.
-                </p>
-                <p className="text-xs text-ink-tertiary leading-relaxed">
-                  <span className="font-semibold text-purple-600">Expert: </span>
-                  IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components.
-                </p>
-              </div>
+                  {/* Lab sample content */}
+                  <div className="px-5 py-4 space-y-2">
+                    <p className="text-xs text-ink-secondary leading-relaxed">
+                      <span className="font-semibold text-emerald-600">Simple: </span>
+                      Your blood sugar is a little high — like having more sugar in your blood than ideal. Worth mentioning to your doctor.
+                    </p>
+                    <p className="text-xs text-ink-tertiary leading-relaxed">
+                      <span className="font-semibold text-brand-blue">Medium: </span>
+                      Fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125). Your insulin response may be losing efficiency.
+                    </p>
+                    <p className="text-xs text-ink-tertiary leading-relaxed">
+                      <span className="font-semibold text-purple-600">Expert: </span>
+                      IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components.
+                    </p>
+                  </div>
 
-              {/* Specialist */}
-              <div className="px-5 py-3 border-t border-surface-border bg-brand-blue-light/50 flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-lg bg-brand-blue flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
-                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                  </svg>
-                </div>
-                <p className="text-xs text-ink-secondary">
-                  <span className="font-bold text-brand-blue uppercase tracking-wider text-[10px]">Which specialist? </span>
-                  Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism.
-                </p>
-              </div>
+                  {/* Specialist */}
+                  <div className="px-5 py-3 border-t border-surface-border bg-brand-blue-light/50 flex items-center gap-2.5">
+                    <div className="w-6 h-6 rounded-lg bg-brand-blue flex items-center justify-center flex-shrink-0">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                      </svg>
+                    </div>
+                    <p className="text-xs text-ink-secondary">
+                      <span className="font-bold text-brand-blue uppercase tracking-wider text-[10px]">Which specialist? </span>
+                      Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Radiology — Key finding chip */}
+                  <div className="px-5 pt-5 pb-3 flex items-center gap-3 flex-wrap">
+                    <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Key Findings</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
+                      <span className="text-amber-500 text-xs font-bold">↑</span>
+                      <span className="text-xs font-semibold text-ink">Pulmonary Nodule</span>
+                      <span className="text-xs font-bold text-amber-600">4 mm</span>
+                      <span className="text-xs text-ink-tertiary">ref: &lt;6mm low risk</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-green-50 border border-green-200">
+                      <span className="text-green-600 text-xs font-bold">✓</span>
+                      <span className="text-xs font-semibold text-ink">Hepatic Cyst</span>
+                      <span className="text-xs font-bold text-green-600">incidental</span>
+                      <span className="text-xs text-ink-tertiary">benign</span>
+                    </div>
+                  </div>
+
+                  {/* Tabs */}
+                  <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
+                    {[
+                      { label: "💬 Simple",  active: true  },
+                      { label: "📋 Medium", active: false },
+                      { label: "🔬 Expert",  active: false },
+                    ].map((tab) => (
+                      <span key={tab.label} className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${tab.active ? "bg-white text-purple-600 border-b-2 border-purple-500 -mb-px" : "text-ink-tertiary"}`}>
+                        {tab.label}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Radiology sample content */}
+                  <div className="px-5 py-4 space-y-2">
+                    <p className="text-xs text-ink-secondary leading-relaxed">
+                      <span className="font-semibold text-emerald-600">Simple: </span>
+                      This is a CT scan of your chest. The scan found a tiny spot on your lung (4 mm) — this is very common and almost always harmless. There&apos;s also a small fluid-filled cyst on your liver, which is an incidental finding requiring no action.
+                    </p>
+                    <p className="text-xs text-ink-tertiary leading-relaxed">
+                      <span className="font-semibold text-brand-blue">Medium: </span>
+                      A 4 mm pulmonary nodule is below the Fleischner Society threshold for routine follow-up in low-risk patients. The 8 mm hepatic cyst has benign morphology and is incidental.
+                    </p>
+                    <p className="text-xs text-ink-tertiary leading-relaxed">
+                      <span className="font-semibold text-purple-600">Expert: </span>
+                      4 mm solid RUL nodule — no follow-up recommended per Fleischner (low risk, &lt;6 mm). Simple hepatic cyst, homogeneous, no septations — Bosniak I, benign.
+                    </p>
+                  </div>
+
+                  {/* Specialist */}
+                  <div className="px-5 py-3 border-t border-surface-border bg-purple-50/50 flex items-center gap-2.5">
+                    <div className="w-6 h-6 rounded-lg bg-purple-500 flex items-center justify-center flex-shrink-0">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                      </svg>
+                    </div>
+                    <p className="text-xs text-ink-secondary">
+                      <span className="font-bold text-purple-600 uppercase tracking-wider text-[10px]">Which specialist? </span>
+                      Discuss with your <strong>ordering physician</strong> first. A <strong>Pulmonologist</strong> may advise on the nodule if clinically indicated.
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
