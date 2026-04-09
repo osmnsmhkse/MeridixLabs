@@ -224,12 +224,22 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
   );
 }
 
-function ResultsPanel({ result, fileName, onReset }: { result: AnalysisResult; fileName: string; onReset: () => void }) {
+function ResultsPanel({ result, fileName, onReset, isSample }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean }) {
   const [activeTier, setActiveTier] = useState<Tier>("simple");
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
   return (
     <div className="animate-fade-in space-y-5">
+      {/* Sample banner */}
+      {isSample && (
+        <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          <p className="text-sm text-amber-800 font-medium">This is a sample report for demonstration purposes</p>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -449,9 +459,11 @@ export default function AppPage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>("");
+  const [isSample, setIsSample] = useState(false);
 
   const handleFileSelect = async (file: File) => {
     setFileName(file.name);
+    setIsSample(false);
     setError(null);
     setState("loading");
 
@@ -473,7 +485,31 @@ export default function AppPage() {
     }
   };
 
-  const handleReset = () => { setState("idle"); setResult(null); setError(null); setFileName(""); };
+  const handleSample = async () => {
+    setFileName("Sample — Basic Metabolic Panel");
+    setIsSample(true);
+    setError(null);
+    setState("loading");
+
+    try {
+      const formData = new FormData();
+      formData.append("sample", "true");
+      formData.append("language", lang);
+
+      const res = await fetch("/api/analyze", { method: "POST", body: formData });
+      const json = await res.json();
+
+      if (!res.ok) throw new Error(json.error || "Analysis failed. Please try again.");
+
+      setResult(json.data);
+      setState("success");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
+      setState("error");
+    }
+  };
+
+  const handleReset = () => { setState("idle"); setResult(null); setError(null); setFileName(""); setIsSample(false); };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white pt-24 pb-20">
@@ -500,11 +536,28 @@ export default function AppPage() {
         {/* Main card */}
         <div className="bg-white rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8">
           {state === "idle" || state === "error" ? (
-            <UploadZone onFileSelect={handleFileSelect} error={state === "error" ? error : null} />
+            <div className="space-y-4">
+              <UploadZone onFileSelect={handleFileSelect} error={state === "error" ? error : null} />
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-surface-border" />
+                <span className="text-xs text-ink-tertiary font-medium">or</span>
+                <div className="flex-1 h-px bg-surface-border" />
+              </div>
+              <button
+                onClick={handleSample}
+                className="w-full py-3 px-5 rounded-xl border border-surface-border hover:border-brand-blue/40 bg-surface-raised hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 opacity-60">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                  <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                </svg>
+                Try with a sample report
+              </button>
+            </div>
           ) : state === "loading" ? (
             <LoadingAnimation />
           ) : result ? (
-            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} />
+            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} />
           ) : null}
         </div>
 

@@ -59,55 +59,85 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
 }`;
 }
 
+const SAMPLE_REPORT_TEXT = `
+BASIC METABOLIC PANEL
+Patient: Demo Patient
+Date: 2026-04-09
+
+TEST              RESULT    UNITS     REFERENCE RANGE   FLAG
+-------------------------------------------------------------
+Glucose           112       mg/dL     70 - 99           HIGH
+Sodium            134       mEq/L     136 - 145         LOW
+Potassium         3.4       mEq/L     3.5 - 5.1         LOW
+Chloride          101       mEq/L     98 - 107          Normal
+CO2 (Bicarbonate) 21        mEq/L     22 - 29           LOW
+BUN               22        mg/dL     7 - 20            HIGH
+Creatinine        0.9       mg/dL     0.7 - 1.2         Normal
+Calcium           10.8      mg/dL     8.5 - 10.2        HIGH
+
+eGFR: >60 mL/min/1.73m²
+`.trim();
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+    const isSample = formData.get("sample") === "true";
     const file = formData.get("file") as File | null;
     const langCode = (formData.get("language") as string) || "en";
     const languageName = LANGUAGE_NAMES[langCode] || "English";
 
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
-    }
-
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"];
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { error: "Unsupported file type. Please upload a PDF, JPG, or PNG." },
-        { status: 400 }
-      );
-    }
-
-    const MAX_SIZE = 10 * 1024 * 1024;
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json(
-        { error: "File too large. Maximum size is 10MB." },
-        { status: 400 }
-      );
-    }
-
-    const fileBuffer = await file.arrayBuffer();
-    const base64Data = Buffer.from(fileBuffer).toString("base64");
-
     let messageContent: Anthropic.MessageParam["content"];
 
-    if (file.type === "application/pdf") {
+    if (isSample) {
+      // Use the pre-defined sample report as plain text — no file needed
       messageContent = [
         {
-          type: "document",
-          source: { type: "base64", media_type: "application/pdf", data: base64Data },
-        } as Anthropic.DocumentBlockParam,
-        { type: "text", text: "Please analyze this medical lab report and return the full JSON interpretation as instructed." },
+          type: "text",
+          text: `Please analyze this medical lab report and return the full JSON interpretation as instructed.\n\n${SAMPLE_REPORT_TEXT}`,
+        },
       ];
     } else {
-      const mediaType = file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
-      messageContent = [
-        {
-          type: "image",
-          source: { type: "base64", media_type: mediaType, data: base64Data },
-        } as Anthropic.ImageBlockParam,
-        { type: "text", text: "Please analyze this medical lab report and return the full JSON interpretation as instructed." },
-      ];
+      if (!file) {
+        return NextResponse.json({ error: "No file provided" }, { status: 400 });
+      }
+
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"];
+      if (!allowedTypes.includes(file.type)) {
+        return NextResponse.json(
+          { error: "Unsupported file type. Please upload a PDF, JPG, or PNG." },
+          { status: 400 }
+        );
+      }
+
+      const MAX_SIZE = 10 * 1024 * 1024;
+      if (file.size > MAX_SIZE) {
+        return NextResponse.json(
+          { error: "File too large. Maximum size is 10MB." },
+          { status: 400 }
+        );
+      }
+
+      const fileBuffer = await file.arrayBuffer();
+      const base64Data = Buffer.from(fileBuffer).toString("base64");
+
+      if (file.type === "application/pdf") {
+        messageContent = [
+          {
+            type: "document",
+            source: { type: "base64", media_type: "application/pdf", data: base64Data },
+          } as Anthropic.DocumentBlockParam,
+          { type: "text", text: "Please analyze this medical lab report and return the full JSON interpretation as instructed." },
+        ];
+      } else {
+        const mediaType = file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
+        messageContent = [
+          {
+            type: "image",
+            source: { type: "base64", media_type: mediaType, data: base64Data },
+          } as Anthropic.ImageBlockParam,
+          { type: "text", text: "Please analyze this medical lab report and return the full JSON interpretation as instructed." },
+        ];
+      }
     }
 
     const response = await client.messages.create({
