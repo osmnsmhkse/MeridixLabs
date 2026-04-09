@@ -787,6 +787,180 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
   );
 }
 
+// ── Clinical Trials Section ───────────────────────────────────────────────────
+
+interface TrialCategory {
+  condition: string;
+  condition_query: string;
+  description: string;
+  url: string;
+}
+
+function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
+  const [open, setOpen]           = useState(false);
+  const [trials, setTrials]       = useState<TrialCategory[] | null>(null);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState<string | null>(null);
+
+  const abnormalFlags = flags.filter((f) => f.status !== "normal");
+  if (abnormalFlags.length === 0) return null;
+
+  const fetchTrials = async () => {
+    if (trials) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/clinical-trials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flags }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Could not load trial categories.");
+      setTrials(json.trials as TrialCategory[]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (next && !trials && !loading) fetchTrials();
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm print:hidden">
+      {/* Header */}
+      <button
+        onClick={handleToggle}
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-surface-raised/60 transition-colors"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className="text-base leading-none">📋</span>
+          <span className="text-sm font-semibold text-ink">Relevant clinical trials</span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-xs text-ink-tertiary border border-surface-border rounded-full px-2.5 py-0.5 bg-surface-raised ml-1">
+            {open && trials ? `${trials.length} condition${trials.length !== 1 ? "s" : ""}` : "Click to explore"}
+          </span>
+        </div>
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={`w-4 h-4 text-ink-tertiary transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="border-t border-surface-border">
+          {/* Loading */}
+          {loading && (
+            <div className="flex flex-col items-center justify-center gap-3 py-10 px-5">
+              <div className="relative w-10 h-10">
+                <div className="absolute inset-0 border-[3px] border-brand-blue/20 rounded-full" />
+                <div className="absolute inset-0 border-[3px] border-brand-blue border-t-transparent rounded-full animate-spin" />
+              </div>
+              <p className="text-sm text-ink-secondary font-medium">Finding relevant trial categories…</p>
+              <p className="text-xs text-ink-tertiary">Matching your flagged values to known condition types</p>
+            </div>
+          )}
+
+          {/* Error */}
+          {error && !loading && (
+            <div className="p-5 space-y-3">
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-red-50 border border-red-100">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+              <button
+                onClick={() => { setError(null); fetchTrials(); }}
+                className="w-full py-2.5 rounded-xl border border-surface-border text-sm font-semibold text-ink-secondary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light transition-all duration-150"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+
+          {/* Results */}
+          {trials && !loading && (
+            <div className="p-5 space-y-4">
+              {/* Context note */}
+              <p className="text-xs text-ink-tertiary leading-relaxed">
+                Based on your flagged lab values, the following condition categories commonly have active clinical trials you may be eligible to explore.
+              </p>
+
+              {/* Trial cards */}
+              <div className="space-y-3">
+                {trials.map((trial, i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl border border-surface-border bg-surface-raised/50 hover:border-brand-blue/30 hover:bg-brand-blue-light/30 transition-all duration-150 overflow-hidden"
+                  >
+                    <div className="px-4 py-3.5 flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        {/* Condition name */}
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-blue/10 text-brand-blue text-[10px] font-bold flex items-center justify-center">
+                            {i + 1}
+                          </span>
+                          <p className="text-sm font-semibold text-ink truncate">{trial.condition}</p>
+                        </div>
+                        {/* Description */}
+                        <p className="text-xs text-ink-secondary leading-relaxed pl-7">
+                          {trial.description}
+                        </p>
+                      </div>
+
+                      {/* External link */}
+                      <a
+                        href={trial.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold transition-colors mt-0.5"
+                        aria-label={`Search ClinicalTrials.gov for ${trial.condition}`}
+                      >
+                        Search trials
+                        <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 flex-shrink-0">
+                          <path fillRule="evenodd" d="M4.22 11.78a.75.75 0 010-1.06l5.72-5.72H6.75a.75.75 0 010-1.5h5.5a.75.75 0 01.75.75v5.5a.75.75 0 01-1.5 0V6.06l-5.72 5.72a.75.75 0 01-1.06 0z" clipRule="evenodd" />
+                        </svg>
+                      </a>
+                    </div>
+
+                    {/* ClinicalTrials.gov footer strip */}
+                    <div className="px-4 py-2 border-t border-surface-border/60 bg-surface-raised flex items-center gap-1.5">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-ink-tertiary flex-shrink-0">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
+                      </svg>
+                      <p className="text-[10px] text-ink-tertiary">
+                        Opens <strong>ClinicalTrials.gov</strong> — NIH&apos;s official registry of clinical studies
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Disclaimer */}
+              <div className="flex items-start gap-2.5 px-4 py-3.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
+                  <strong>Eligibility for any trial must be determined by a physician.</strong> Meridix Labs does not endorse any specific trial or institution. These links open an independent, publicly accessible database maintained by the NIH.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DoctorQuestionsSection({
   result,
   mode,
@@ -1477,6 +1651,11 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
 
       {/* Doctor questions */}
       <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
+
+      {/* Clinical trials */}
+      {result.flags && result.flags.length > 0 && (
+        <ClinicalTrialsSection flags={result.flags} />
+      )}
 
       {/* Share with family */}
       <ShareSection simple={result.simple} />
