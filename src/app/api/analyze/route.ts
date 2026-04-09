@@ -44,30 +44,39 @@ function buildSystemPrompt(languageName: string, patientContext = ""): string {
 
 Fields required:
 
-1. "simple" — A warm, plain-language explanation for someone with no medical background. Avoid all jargon. Explain like you would to a worried friend.
+1. "overall_status" — ONE of exactly three string values: "normal" (all values within reference range or clinically insignificant deviations), "amber" (one or two values mildly abnormal and worth discussing with a doctor), or "red" (multiple or significantly abnormal values that need medical attention). Choose based on clinical significance, not just raw flag count.
 
-2. "medium" — An explanation for an educated patient who wants context and understands basic biology. Use some medical terms but explain them briefly.
+2. "summary_headline" — A single plain-English sentence (max 2 sentences) summarizing the most important finding(s). Write as if speaking directly to the patient. Example: "Your glucose is slightly elevated and your sodium is a little low — both are worth a conversation with your doctor." Never use alarmist language.
 
-3. "expert" — Full clinical-level interpretation for a physician or medical student. Use standard medical terminology, reference ranges, clinical implications, and relevant guidelines.
+3. "urgency" — ONE of exactly three string values: "routine" (no urgent action needed, standard follow-up), "weeks" (schedule an appointment within a few weeks), or "soon" (discuss with a doctor soon — not urgent but don't delay). Never suggest emergency care.
 
-4. "etiology" — A detailed explanation of the POSSIBLE CAUSES of any abnormal values found. What lifestyle factors, conditions, medications, or diseases could cause these specific results? Be comprehensive and educational.
+4. "simple" — A warm, plain-language explanation for someone with no medical background. Avoid all jargon. Explain like you would to a worried friend.
 
-5. "mechanism" — Explain the BIOLOGICAL MECHANISM behind the abnormal findings. What is happening at the physiological or cellular level? Why does the body produce these values when something is wrong?
+5. "medium" — An explanation for an educated patient who wants context and understands basic biology. Use some medical terms but explain them briefly.
 
-6. "diseases" — List and briefly explain the POSSIBLE CONDITIONS OR DISEASES this pattern of results may be associated with. Include both common and important rare ones. Do not diagnose — explain possibilities.
+6. "expert" — Full clinical-level interpretation for a physician or medical student. Use standard medical terminology, reference ranges, clinical implications, and relevant guidelines.
 
-7. "specialist" — State clearly WHICH MEDICAL SPECIALIST(S) the patient should consider seeing based on these results. Be specific (e.g., "Endocrinologist for glucose/thyroid issues", "Cardiologist for lipid abnormalities", "Nephrologist for kidney markers"). If results are normal, say so.
+7. "etiology" — A detailed explanation of the POSSIBLE CAUSES of any abnormal values found. What lifestyle factors, conditions, medications, or diseases could cause these specific results? Be comprehensive and educational.
 
-8. "action" — A concise, practical recommendation: what should the patient do next? Is it urgent, semi-urgent, or routine?
+8. "mechanism" — Explain the BIOLOGICAL MECHANISM behind the abnormal findings. What is happening at the physiological or cellular level? Why does the body produce these values when something is wrong?
 
-9. "flags" — An array of notable lab markers: { marker, value, unit, reference, status } where status is "high", "low", or "normal". Only include clinically notable markers.
+9. "diseases" — List and briefly explain the POSSIBLE CONDITIONS OR DISEASES this pattern of results may be associated with. Include both common and important rare ones. Do not diagnose — explain possibilities.
 
-10. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…"). If no medications were provided, omit this field entirely.
+10. "specialist" — State clearly WHICH MEDICAL SPECIALIST(S) the patient should consider seeing based on these results. Be specific (e.g., "Endocrinologist for glucose/thyroid issues", "Cardiologist for lipid abnormalities", "Nephrologist for kidney markers"). If results are normal, say so.
+
+11. "action" — A concise, practical recommendation: what should the patient do next? Is it urgent, semi-urgent, or routine?
+
+12. "flags" — An array of notable lab markers: { marker, value, unit, reference, status } where status is "high", "low", or "normal". Only include clinically notable markers.
+
+13. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…"). If no medications were provided, omit this field entirely.
 
 Always be accurate, warm, thorough, and never alarmist. Never make a definitive diagnosis — you are explaining possibilities, not diagnosing. Be educational and empowering.
 
 Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
 {
+  "overall_status": "amber",
+  "summary_headline": "Your glucose is slightly elevated and your sodium is a little low — both are worth a conversation with your doctor.",
+  "urgency": "weeks",
   "simple": "string",
   "medium": "string",
   "expert": "string",
@@ -88,23 +97,29 @@ function buildRadiologySystemPrompt(languageName: string, patientContext = ""): 
 
 Fields required:
 
-1. "simple" — A warm, plain-language explanation for someone with no medical background. Begin by identifying the imaging modality and body area (e.g., "This is a CT scan of your chest"). Then explain all findings in plain language. Clearly distinguish what is normal, what is a harmless incidental finding, and what may need follow-up. Never use alarming language for incidental findings. End with reassurance to confirm everything with their ordering physician.
+1. "overall_status" — ONE of exactly three string values: "normal" (report is entirely normal or findings are incidental/benign with no follow-up needed), "amber" (one or two findings that warrant a conversation with a physician but are not urgent), or "red" (findings that need prompt medical attention or specialist referral). Choose based on clinical significance.
 
-2. "medium" — An explanation for an educated patient who understands basic anatomy. Name findings using proper anatomical terms and explain what they mean clinically. Clearly state which findings are incidental (very common, clinically insignificant) and which warrant further evaluation. Use phrases like "incidental finding," "benign appearance," or "warrants follow-up."
+2. "summary_headline" — A single plain-English sentence (max 2 sentences) summarizing the most important finding. Write directly to the patient. Example: "Your scan showed a tiny lung nodule — this is extremely common, likely benign, and just needs a routine check in a year." Never use alarming language.
 
-3. "expert" — Full clinical-level interpretation for a physician or radiology resident. Use standard radiological terminology (e.g., "hypodense lesion," "ground-glass opacity," "T2 hyperintense signal"). Describe each finding with location, size (if stated), morphology, and clinical significance. Reference appropriate imaging guidelines (e.g., Fleischner Society, ACR, BI-RADS, LI-RADS) where applicable.
+3. "urgency" — ONE of exactly three string values: "routine" (no urgent action, standard follow-up or surveillance), "weeks" (schedule an appointment within a few weeks), or "soon" (discuss with a doctor soon — not an emergency but prompt follow-up warranted). Never suggest emergency care.
 
-4. "etiology" — For the most significant finding(s), explain the POSSIBLE CAUSES. What conditions, processes, or risk factors could produce this imaging appearance? Be comprehensive but measured — do not imply the worst-case scenario is likely.
+4. "simple" — A warm, plain-language explanation for someone with no medical background. Begin by identifying the imaging modality and body area (e.g., "This is a CT scan of your chest"). Then explain all findings in plain language. Clearly distinguish what is normal, what is a harmless incidental finding, and what may need follow-up. Never use alarming language for incidental findings. End with reassurance to confirm everything with their ordering physician.
 
-5. "mechanism" — Explain the PATHOPHYSIOLOGICAL MECHANISM of the key finding(s). What is happening at the tissue or organ level that produces this appearance on imaging?
+5. "medium" — An explanation for an educated patient who understands basic anatomy. Name findings using proper anatomical terms and explain what they mean clinically. Clearly state which findings are incidental (very common, clinically insignificant) and which warrant further evaluation. Use phrases like "incidental finding," "benign appearance," or "warrants follow-up."
 
-6. "diseases" — List POSSIBLE CONDITIONS OR DIAGNOSES associated with the key findings. Include the most common (benign) explanation first, then progressively less likely ones. Always note if malignancy is on the differential only to acknowledge it exists — never lead with it for ambiguous findings.
+6. "expert" — Full clinical-level interpretation for a physician or radiology resident. Use standard radiological terminology (e.g., "hypodense lesion," "ground-glass opacity," "T2 hyperintense signal"). Describe each finding with location, size (if stated), morphology, and clinical significance. Reference appropriate imaging guidelines (e.g., Fleischner Society, ACR, BI-RADS, LI-RADS) where applicable.
 
-7. "specialist" — State which SPECIALIST(S) the patient should see to discuss these results. Be specific (e.g., "Pulmonologist for the lung nodule," "Gastroenterologist for the liver finding," "Radiologist for follow-up imaging"). Always add: recommend discussing these results with the ordering physician first.
+7. "etiology" — For the most significant finding(s), explain the POSSIBLE CAUSES. What conditions, processes, or risk factors could produce this imaging appearance? Be comprehensive but measured — do not imply the worst-case scenario is likely.
 
-8. "action" — A concise, practical next-step recommendation. Distinguish clearly: is this urgent (e.g., finding requires same-day evaluation), semi-urgent (e.g., follow-up within weeks), routine (e.g., annual surveillance), or reassuring (no action needed)? Always emphasize confirming with the ordering physician.
+8. "mechanism" — Explain the PATHOPHYSIOLOGICAL MECHANISM of the key finding(s). What is happening at the tissue or organ level that produces this appearance on imaging?
 
-9. "flags" — An array of the key imaging findings as structured items: { marker, value, unit, reference, status } where:
+9. "diseases" — List POSSIBLE CONDITIONS OR DIAGNOSES associated with the key findings. Include the most common (benign) explanation first, then progressively less likely ones. Always note if malignancy is on the differential only to acknowledge it exists — never lead with it for ambiguous findings.
+
+10. "specialist" — State which SPECIALIST(S) the patient should see to discuss these results. Be specific (e.g., "Pulmonologist for the lung nodule," "Gastroenterologist for the liver finding," "Radiologist for follow-up imaging"). Always add: recommend discussing these results with the ordering physician first.
+
+11. "action" — A concise, practical next-step recommendation. Distinguish clearly: is this urgent (e.g., finding requires same-day evaluation), semi-urgent (e.g., follow-up within weeks), routine (e.g., annual surveillance), or reassuring (no action needed)? Always emphasize confirming with the ordering physician.
+
+12. "flags" — An array of the key imaging findings as structured items: { marker, value, unit, reference, status } where:
    - "marker" is the finding name (e.g., "Pulmonary Nodule", "Hepatic Cyst", "Adrenal Adenoma")
    - "value" is the size or key descriptor (e.g., "4", "1.2", "incidental")
    - "unit" is the measurement unit or qualifier (e.g., "mm", "cm", "finding")
@@ -112,7 +127,7 @@ Fields required:
    - "status" is "high" (warrants attention/follow-up), "low" (incidental/benign, no action), or "normal" (expected finding)
    Only include findings explicitly mentioned in the report.
 
-10. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be relevant to the imaging findings (e.g., chronic steroid use and bone density, amiodarone and lung changes, immunosuppressants and infection risk). If no medications were provided, omit this field entirely.
+13. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be relevant to the imaging findings (e.g., chronic steroid use and bone density, amiodarone and lung changes, immunosuppressants and infection risk). If no medications were provided, omit this field entirely.
 
 CRITICAL INSTRUCTIONS:
 - NEVER catastrophize incidental findings. A simple renal or hepatic cyst, adrenal adenoma, or small lung nodule below surveillance threshold is almost always benign — say so clearly.
@@ -123,6 +138,9 @@ CRITICAL INSTRUCTIONS:
 
 Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
 {
+  "overall_status": "normal",
+  "summary_headline": "Your chest CT looks reassuring — the small nodule found is very common and almost certainly harmless.",
+  "urgency": "routine",
   "simple": "string",
   "medium": "string",
   "expert": "string",
@@ -243,6 +261,9 @@ export async function POST(request: NextRequest) {
     const rawText = response.content[0].type === "text" ? response.content[0].text : "";
 
     let parsed: {
+      overall_status?: "normal" | "amber" | "red";
+      summary_headline?: string;
+      urgency?: "routine" | "soon" | "weeks";
       simple: string;
       medium: string;
       expert: string;

@@ -21,6 +21,9 @@ interface AnalysisFlag {
   status: "high" | "low" | "normal";
 }
 
+type OverallStatus = "normal" | "amber" | "red";
+type UrgencyLevel = "routine" | "soon" | "weeks";
+
 interface AnalysisResult {
   simple: string;
   medium: string;
@@ -32,6 +35,9 @@ interface AnalysisResult {
   action: string;
   flags: AnalysisFlag[];
   medication_context?: string;
+  overall_status?: OverallStatus;
+  summary_headline?: string;
+  urgency?: UrgencyLevel;
 }
 
 const TIER_CONFIG: Record<Tier, { label: string; emoji: string; audience: string; activeClass: string }> = {
@@ -996,6 +1002,83 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
           New upload
         </button>
       </div>
+
+      {/* Overall summary card */}
+      {result.overall_status && result.summary_headline && (() => {
+        const STATUS_CONFIG = {
+          normal: {
+            border: "border-emerald-300 dark:border-emerald-700",
+            bg: "bg-emerald-50 dark:bg-emerald-900/20",
+            iconBg: "bg-emerald-100 dark:bg-emerald-800/40",
+            iconColor: "text-emerald-600 dark:text-emerald-400",
+            labelColor: "text-emerald-800 dark:text-emerald-300",
+            label: "All values look normal",
+            icon: (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            ),
+          },
+          amber: {
+            border: "border-amber-300 dark:border-amber-700",
+            bg: "bg-amber-50 dark:bg-amber-900/20",
+            iconBg: "bg-amber-100 dark:bg-amber-800/40",
+            iconColor: "text-amber-600 dark:text-amber-400",
+            labelColor: "text-amber-800 dark:text-amber-300",
+            label: "One or two values to discuss with your doctor",
+            icon: (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            ),
+          },
+          red: {
+            border: "border-red-300 dark:border-red-700",
+            bg: "bg-red-50 dark:bg-red-900/20",
+            iconBg: "bg-red-100 dark:bg-red-800/40",
+            iconColor: "text-red-600 dark:text-red-400",
+            labelColor: "text-red-800 dark:text-red-300",
+            label: "Multiple values need medical attention",
+            icon: (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            ),
+          },
+        } as const;
+
+        const URGENCY_CONFIG = {
+          routine: { label: "Routine follow-up", color: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
+          soon:    { label: "Discuss with a doctor soon", color: "text-red-700 dark:text-red-400", dot: "bg-red-500" },
+          weeks:   { label: "Schedule an appointment within a few weeks", color: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
+        } as const;
+
+        const sc = STATUS_CONFIG[result.overall_status!];
+        const uc = result.urgency ? URGENCY_CONFIG[result.urgency] : null;
+
+        return (
+          <div className={`rounded-2xl border-2 ${sc.border} ${sc.bg} p-5 space-y-3`}>
+            {/* Status label + icon */}
+            <div className="flex items-center gap-3">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${sc.iconBg} ${sc.iconColor}`}>
+                {sc.icon}
+              </div>
+              <p className={`text-sm font-bold ${sc.labelColor}`}>{sc.label}</p>
+            </div>
+
+            {/* Headline summary */}
+            <p className="text-sm text-ink-secondary leading-relaxed pl-12">{result.summary_headline}</p>
+
+            {/* Urgency signal */}
+            {uc && (
+              <div className="pl-12 flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full flex-shrink-0 ${uc.dot}`} />
+                <p className={`text-xs font-semibold ${uc.color}`}>{uc.label}</p>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Flagged values / Key findings */}
       {result.flags && result.flags.length > 0 && (() => {
