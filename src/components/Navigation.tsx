@@ -93,10 +93,11 @@ export default function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   const navLinks = [
-    { href: "/",      label: "Home"    },
-    { href: "/app",   label: "Analyze" },
-    { href: "/blog",  label: "Blog"    },
-    { href: "/about", label: "About"   },
+    { href: "/",        label: "Home"          },
+    { href: "/app",     label: "Analyze"       },
+    { href: "/trends",  label: "Trend Tracker" },
+    { href: "/blog",    label: "Blog"          },
+    { href: "/about",   label: "About"         },
   ];
 
   return (
