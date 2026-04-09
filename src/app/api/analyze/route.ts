@@ -39,7 +39,19 @@ function buildPatientContext(age: string | null, sex: string | null, medications
     : "";
 }
 
-function buildSystemPrompt(languageName: string, patientContext = ""): string {
+function buildHealthCrossRefInstruction(hasHealth: boolean): string {
+  if (!hasHealth) return "";
+  return `
+
+WEARABLE / APPLE HEALTH DATA INCLUDED: The user has also provided an export from Apple Health or a wearable device alongside their lab report. You MUST:
+1. Cross-reference the wearable data with the lab results where clinically relevant. Look for patterns such as: elevated resting heart rate correlating with anemia or thyroid issues; poor sleep patterns that may explain elevated cortisol or blood sugar; low daily step counts that may relate to metabolic markers; HRV trends that may reflect autonomic or cardiovascular context.
+2. In the "health_insights" field (see below), write 2–4 sentences describing specific connections you found between the wearable data and the lab values. Be specific — mention actual metrics from both sources. Example: "Your Apple Health data shows an elevated resting heart rate of 88 bpm over the past 30 days, which may be consistent with your low hemoglobin level of 10.2 g/dL — anemia can cause the heart to work harder to compensate for reduced oxygen delivery."
+3. If no meaningful connections exist, say so briefly and explain why the data is still useful for their overall health picture.
+14. "health_insights" — ONLY include this field when wearable/Apple Health data was provided alongside the lab report. Write 2–4 sentences identifying specific patterns or connections between the wearable data and the lab values. Be concrete and reference actual values from both sources. If no clear connection exists, write a brief note explaining what the wearable data suggests about lifestyle factors relevant to these results.`;
+}
+
+function buildSystemPrompt(languageName: string, patientContext = "", hasHealthData = false): string {
+  const healthInstruction = buildHealthCrossRefInstruction(hasHealthData);
   return `You are a senior medical expert at Meridix Labs.${patientContext} You will receive an image or PDF of a medical lab result. Your job is to analyze the results thoroughly and return a JSON object with the following fields. All text content MUST be written in ${languageName}.
 
 Fields required:
@@ -88,8 +100,9 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
   "flags": [
     { "marker": "Glucose", "value": "112", "unit": "mg/dL", "reference": "70–99", "status": "high" }
   ],
-  "medication_context": "string (optional — only when medications were provided)"
-}`;
+  "medication_context": "string (optional — only when medications were provided)",
+  "health_insights": "string (optional — only when Apple Health/wearable data was provided)"
+}${healthInstruction}`;
 }
 
 function buildRadiologySystemPrompt(languageName: string, patientContext = ""): string {
@@ -186,7 +199,9 @@ export async function POST(request: NextRequest) {
     const patientAge = formData.get("patientAge") as string | null;
     const patientSex = formData.get("patientSex") as string | null;
     const patientMedications = formData.get("patientMedications") as string | null;
+    const healthFile = formData.get("healthFile") as File | null;
     const patientContext = buildPatientContext(patientAge, patientSex, patientMedications);
+    const hasHealthData = !!(healthFile && healthFile.size > 0);
 
     let messageContent: Anthropic.MessageParam["content"];
 
@@ -227,29 +242,56 @@ export async function POST(request: NextRequest) {
         ? "Please analyze this radiology or pathology report and return the full JSON interpretation as instructed."
         : "Please analyze this medical lab report and return the full JSON interpretation as instructed.";
 
-      if (file.type === "application/pdf") {
-        messageContent = [
-          {
+      // Build the lab report content block
+      const labBlock: Anthropic.ContentBlockParam = file.type === "application/pdf"
+        ? ({
             type: "document",
             source: { type: "base64", media_type: "application/pdf", data: base64Data },
-          } as Anthropic.DocumentBlockParam,
-          { type: "text", text: analyzePrompt },
+          } as Anthropic.DocumentBlockParam)
+        : ({
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+              data: base64Data,
+            },
+          } as Anthropic.ImageBlockParam);
+
+      // Optionally append health export
+      if (hasHealthData && healthFile) {
+        const healthBuffer = await healthFile.arrayBuffer();
+        const healthBase64 = Buffer.from(healthBuffer).toString("base64");
+        const healthType = healthFile.type || "application/pdf";
+
+        const healthBlock: Anthropic.ContentBlockParam = healthType === "application/pdf"
+          ? ({
+              type: "document",
+              source: { type: "base64", media_type: "application/pdf", data: healthBase64 },
+            } as Anthropic.DocumentBlockParam)
+          : ({
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: healthType as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
+                data: healthBase64,
+              },
+            } as Anthropic.ImageBlockParam);
+
+        messageContent = [
+          { type: "text", text: "DOCUMENT 1 — LAB REPORT:" },
+          labBlock,
+          { type: "text", text: "DOCUMENT 2 — APPLE HEALTH / WEARABLE EXPORT:" },
+          healthBlock,
+          { type: "text", text: `${analyzePrompt} Cross-reference both documents carefully and populate the "health_insights" field with specific connections you find between the wearable data and the lab values.` },
         ];
       } else {
-        const mediaType = file.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
-        messageContent = [
-          {
-            type: "image",
-            source: { type: "base64", media_type: mediaType, data: base64Data },
-          } as Anthropic.ImageBlockParam,
-          { type: "text", text: analyzePrompt },
-        ];
+        messageContent = [labBlock, { type: "text", text: analyzePrompt }];
       }
     }
 
     const systemPrompt = mode === "radiology"
       ? buildRadiologySystemPrompt(languageName, patientContext)
-      : buildSystemPrompt(languageName, patientContext);
+      : buildSystemPrompt(languageName, patientContext, hasHealthData);
 
     const response = await client.messages.create({
       model: "claude-sonnet-4-0",
@@ -274,6 +316,7 @@ export async function POST(request: NextRequest) {
       action: string;
       flags: Array<{ marker: string; value: string; unit: string; reference: string; status: "high" | "low" | "normal" }>;
       medication_context?: string;
+      health_insights?: string;
     };
 
     try {

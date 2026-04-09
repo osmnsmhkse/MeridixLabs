@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
+import AppleHealthSection from "@/components/AppleHealthSection";
 
 // ── Returning-user localStorage hook ─────────────────────────────────────────
 const LS_KEY = "meridix_user";
@@ -98,6 +99,7 @@ interface AnalysisResult {
   action: string;
   flags: AnalysisFlag[];
   medication_context?: string;
+  health_insights?: string;
   overall_status?: OverallStatus;
   summary_headline?: string;
   urgency?: UrgencyLevel;
@@ -1435,6 +1437,26 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
         </div>
       )}
 
+      {/* Apple Health / Wearable cross-reference */}
+      {result.health_insights && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-red-200 dark:border-red-900/50 overflow-hidden shadow-sm">
+          <div className="px-5 py-3.5 border-b border-red-100 dark:border-red-900/30 bg-red-50/60 dark:bg-red-950/20 flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-red-700 dark:text-red-400 uppercase tracking-wider">Apple Health · Wearable Insights</p>
+              <p className="text-[10px] text-red-500/80 dark:text-red-500">Cross-referenced with your lab results</p>
+            </div>
+          </div>
+          <div className="p-5">
+            <p className="text-sm text-ink-secondary leading-relaxed">{result.health_insights}</p>
+          </div>
+        </div>
+      )}
+
       {/* Deep Dive */}
       <DeepDiveSection result={result} mode={mode} />
 
@@ -1911,6 +1933,7 @@ export default function AppPage() {
   const [isSample, setIsSample] = useState(false);
   const [reportMode, setReportMode] = useState<ReportMode>("lab");
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [healthFile, setHealthFile] = useState<File | null>(null);
 
   const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
     setErrorCode(code);
@@ -1919,7 +1942,7 @@ export default function AppPage() {
     setState("error");
   };
 
-  const runAnalysis = async (file: File | null, sampleMode: boolean, age = "", sex = "", medications = "") => {
+  const runAnalysis = async (file: File | null, sampleMode: boolean, age = "", sex = "", medications = "", healthData: File | null = null) => {
     setState("loading");
     try {
       const formData = new FormData();
@@ -1934,6 +1957,7 @@ export default function AppPage() {
       if (age)  formData.append("patientAge", age);
       if (sex && sex !== "prefer_not") formData.append("patientSex", sex);
       if (medications.trim()) formData.append("patientMedications", medications.trim());
+      if (healthData) formData.append("healthFile", healthData);
 
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const json = await res.json();
@@ -1991,6 +2015,7 @@ export default function AppPage() {
     setFileName("");
     setIsSample(false);
     setPendingFile(null);
+    setHealthFile(null);
   };
 
   return (
@@ -2067,8 +2092,8 @@ export default function AppPage() {
           ) : state === "context" ? (
             <ContextForm
               fileName={fileName}
-              onContinue={(age, sex, medications) => runAnalysis(pendingFile, isSample, age, sex, medications)}
-              onSkip={() => runAnalysis(pendingFile, isSample)}
+              onContinue={(age, sex, medications) => runAnalysis(pendingFile, isSample, age, sex, medications, healthFile)}
+              onSkip={() => runAnalysis(pendingFile, isSample, "", "", "", healthFile)}
             />
           ) : state === "idle" ? (
             <div className="space-y-4">
@@ -2123,6 +2148,12 @@ export default function AppPage() {
                   </button>
                 </>
               )}
+
+              {/* Apple Health import */}
+              <AppleHealthSection
+                onHealthFileChange={setHealthFile}
+                healthFile={healthFile}
+              />
             </div>
           ) : state === "loading" ? (
             <LoadingAnimation mode={reportMode} />
