@@ -398,7 +398,120 @@ function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; s
   );
 }
 
-// ── Flag badge (single row) ───────────────────────────────────────────────────
+// ── Range Gauge ───────────────────────────────────────────────────────────────
+
+function RangeGauge({
+  value,
+  min,
+  max,
+  unit,
+}: {
+  value: number;
+  min: number;
+  max: number;
+  unit: string;
+}) {
+  const range = max - min;
+  if (range <= 0) return null;
+
+  // Display range: 25% padding beyond reference range on each side
+  const pad = range * 0.25;
+  const dispMin = min - pad;
+  const dispMax = max + pad;
+  const dispRange = dispMax - dispMin;
+
+  // Value position as % of display range (clamped near edges)
+  const clampedVal = Math.max(dispMin + dispRange * 0.01, Math.min(dispMax - dispRange * 0.01, value));
+  const valPct     = ((clampedVal - dispMin) / dispRange) * 100;
+  const refMinPct  = ((min        - dispMin) / dispRange) * 100; // ≈ 20%
+  const refMaxPct  = ((max        - dispMin) / dispRange) * 100; // ≈ 80%
+
+  // Fill: from reference-range start to value (or reversed when below range)
+  const fillStartPct = Math.min(refMinPct, valPct);
+  const fillWidthPct = Math.abs(valPct - refMinPct);
+
+  // Color
+  const threshold = range * 0.15;
+  const color =
+    value < min || value > max               ? "red"
+    : value <= min + threshold ||
+      value >= max - threshold               ? "amber"
+    :                                          "green";
+
+  const c = {
+    green: {
+      fill:  "bg-emerald-400 dark:bg-emerald-500",
+      dot:   "bg-emerald-500 dark:bg-emerald-400",
+      label: "text-emerald-700 dark:text-emerald-400",
+    },
+    amber: {
+      fill:  "bg-amber-400 dark:bg-amber-500",
+      dot:   "bg-amber-500 dark:bg-amber-400",
+      label: "text-amber-700 dark:text-amber-400",
+    },
+    red: {
+      fill:  "bg-red-400 dark:bg-red-500",
+      dot:   "bg-red-500 dark:bg-red-400",
+      label: "text-red-600 dark:text-red-400",
+    },
+  }[color];
+
+  // Clamp label so it never overflows the bar edges
+  const labelPct = Math.max(6, Math.min(94, valPct));
+
+  return (
+    <div className="mt-2.5 select-none">
+      {/* Value label above dot */}
+      <div className="relative h-4 mb-0.5">
+        <span
+          className={`absolute -translate-x-1/2 text-[10px] font-bold leading-none ${c.label}`}
+          style={{ left: `${labelPct}%` }}
+        >
+          {value} {unit}
+        </span>
+      </div>
+
+      {/* Track */}
+      <div className="relative h-1.5 rounded-full bg-gray-200 dark:bg-slate-600">
+        {/* Reference range band */}
+        <div
+          className="absolute top-0 h-full rounded-full bg-gray-300 dark:bg-slate-500"
+          style={{ left: `${refMinPct}%`, width: `${refMaxPct - refMinPct}%` }}
+        />
+        {/* Colored fill */}
+        <div
+          className={`absolute top-0 h-full rounded-full opacity-80 ${c.fill}`}
+          style={{ left: `${fillStartPct}%`, width: `${fillWidthPct}%` }}
+        />
+        {/* Marker dot */}
+        <div
+          className="absolute top-1/2 z-10 -translate-y-1/2 -translate-x-1/2"
+          style={{ left: `${valPct}%` }}
+        >
+          <div className={`w-3.5 h-3.5 rounded-full ring-2 ring-white dark:ring-slate-800 shadow-sm ${c.dot}`} />
+        </div>
+      </div>
+
+      {/* Min / Max reference labels */}
+      <div className="relative mt-1 h-3">
+        <span
+          className="absolute -translate-x-1/2 text-[9px] leading-none text-ink-tertiary"
+          style={{ left: `${refMinPct}%` }}
+        >
+          {min}
+        </span>
+        <span
+          className="absolute -translate-x-1/2 text-[9px] leading-none text-ink-tertiary"
+          style={{ left: `${refMaxPct}%` }}
+        >
+          {max}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ── Flag badge ────────────────────────────────────────────────────────────────
 
 function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: ConfidenceLevel }) {
   const config = {
@@ -407,26 +520,41 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
     normal: { bg: "bg-green-50 dark:bg-green-900/20",  border: "border-green-200 dark:border-green-800",  text: "text-green-700 dark:text-green-400",  badge: "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300", icon: "✓" },
   }[flag.status];
 
+  const bounds    = parseRefBounds(flag.reference);
+  const numValue  = parseFloat(flag.value);
+  const showGauge =
+    bounds !== null &&
+    isFinite(bounds.lo) &&
+    isFinite(bounds.hi) &&
+    !isNaN(numValue) &&
+    bounds.hi > bounds.lo;
+
   return (
-    <div className={`flex items-center justify-between p-3.5 rounded-xl ${config.bg} border ${config.border}`}>
-      {/* Left: status icon + marker name */}
-      <div className="flex items-center gap-2.5 min-w-0">
-        <span className={`flex-shrink-0 w-6 h-6 rounded-full ${config.badge} flex items-center justify-center text-xs font-bold`}>
-          {config.icon}
-        </span>
-        <span className="text-sm font-semibold text-ink truncate">{flag.marker}</span>
+    <div className={`flex flex-col p-3.5 rounded-xl ${config.bg} border ${config.border}`}>
+      {/* Top row: icon + name | confidence pill + value */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className={`flex-shrink-0 w-6 h-6 rounded-full ${config.badge} flex items-center justify-center text-xs font-bold`}>
+            {config.icon}
+          </span>
+          <span className="text-sm font-semibold text-ink truncate">{flag.marker}</span>
+        </div>
+
+        <div className="flex flex-col items-end gap-0.5 ml-2 flex-shrink-0">
+          <div className="flex items-center gap-1.5">
+            <ConfidencePill confidence={confidence} status={flag.status} />
+            <span className={`text-sm font-bold ${config.text}`}>{flag.value} {flag.unit}</span>
+          </div>
+          {flag.reference && (
+            <p className="text-xs text-ink-tertiary">ref: {flag.reference}</p>
+          )}
+        </div>
       </div>
 
-      {/* Right: confidence pill + value + reference */}
-      <div className="flex flex-col items-end gap-0.5 ml-2 flex-shrink-0">
-        <div className="flex items-center gap-1.5">
-          <ConfidencePill confidence={confidence} status={flag.status} />
-          <span className={`text-sm font-bold ${config.text}`}>{flag.value} {flag.unit}</span>
-        </div>
-        {flag.reference && (
-          <p className="text-xs text-ink-tertiary">ref: {flag.reference}</p>
-        )}
-      </div>
+      {/* Range gauge */}
+      {showGauge && (
+        <RangeGauge value={numValue} min={bounds!.lo} max={bounds!.hi} unit={flag.unit} />
+      )}
     </div>
   );
 }
