@@ -18,8 +18,22 @@ const LANGUAGE_NAMES: Record<string, string> = {
   zh: "Simplified Chinese",
 };
 
-function buildSystemPrompt(languageName: string): string {
-  return `You are a senior medical expert at Meridix Labs. You will receive an image or PDF of a medical lab result. Your job is to analyze the results thoroughly and return a JSON object with the following fields. All text content MUST be written in ${languageName}.
+function buildPatientContext(age: string | null, sex: string | null): string {
+  if (!age && !sex) return "";
+  const sexLabel = sex === "male" ? "male" : sex === "female" ? "female" : null;
+  let ctx = "";
+  if (age && sexLabel) {
+    ctx = `Patient is a ${age}-year-old ${sexLabel}. Adjust reference ranges and clinical interpretation accordingly. For example, note that creatinine ranges differ between males and females, and certain values like PSA are male-specific.`;
+  } else if (age) {
+    ctx = `Patient is ${age} years old. Adjust clinical interpretation for age-related reference ranges where applicable.`;
+  } else if (sexLabel) {
+    ctx = `Patient is ${sexLabel}. Adjust reference ranges and clinical interpretation for sex-specific values (e.g., creatinine, hemoglobin, PSA).`;
+  }
+  return ctx ? `\n\nIMPORTANT PATIENT CONTEXT: ${ctx} Reference this context where clinically relevant throughout all interpretation tiers.` : "";
+}
+
+function buildSystemPrompt(languageName: string, patientContext = ""): string {
+  return `You are a senior medical expert at Meridix Labs.${patientContext} You will receive an image or PDF of a medical lab result. Your job is to analyze the results thoroughly and return a JSON object with the following fields. All text content MUST be written in ${languageName}.
 
 Fields required:
 
@@ -59,8 +73,8 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
 }`;
 }
 
-function buildRadiologySystemPrompt(languageName: string): string {
-  return `You are a senior radiologist and pathologist at Meridix Labs. You will receive an image or PDF of a radiology report (CT, MRI, X-ray, ultrasound, PET) or a pathology/biopsy report. Your job is to interpret it thoroughly for the patient and return a JSON object with the following fields. All text content MUST be written in ${languageName}.
+function buildRadiologySystemPrompt(languageName: string, patientContext = ""): string {
+  return `You are a senior radiologist and pathologist at Meridix Labs.${patientContext} You will receive an image or PDF of a radiology report (CT, MRI, X-ray, ultrasound, PET) or a pathology/biopsy report. Your job is to interpret it thoroughly for the patient and return a JSON object with the following fields. All text content MUST be written in ${languageName}.
 
 Fields required:
 
@@ -138,6 +152,9 @@ export async function POST(request: NextRequest) {
     const langCode = (formData.get("language") as string) || "en";
     const languageName = LANGUAGE_NAMES[langCode] || "English";
     const mode = (formData.get("mode") as string) || "lab";
+    const patientAge = formData.get("patientAge") as string | null;
+    const patientSex = formData.get("patientSex") as string | null;
+    const patientContext = buildPatientContext(patientAge, patientSex);
 
     let messageContent: Anthropic.MessageParam["content"];
 
@@ -199,8 +216,8 @@ export async function POST(request: NextRequest) {
     }
 
     const systemPrompt = mode === "radiology"
-      ? buildRadiologySystemPrompt(languageName)
-      : buildSystemPrompt(languageName);
+      ? buildRadiologySystemPrompt(languageName, patientContext)
+      : buildSystemPrompt(languageName, patientContext);
 
     const response = await client.messages.create({
       model: "claude-sonnet-4-0",

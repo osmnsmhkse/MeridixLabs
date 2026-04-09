@@ -1410,9 +1410,116 @@ function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => voi
   return <DesktopUploadZone onFileSelect={onFileSelect} error={error} />;
 }
 
+// ── Patient context collection form ──────────────────────────────────────────
+type PatientSex = "male" | "female" | "prefer_not" | "";
+
+function ContextForm({
+  fileName,
+  onContinue,
+  onSkip,
+}: {
+  fileName: string;
+  onContinue: (age: string, sex: PatientSex) => void;
+  onSkip: () => void;
+}) {
+  const [age, setAge] = useState("");
+  const [sex, setSex] = useState<PatientSex>("");
+
+  return (
+    <div className="animate-fade-in space-y-6 py-1">
+      {/* Header */}
+      <div className="flex items-start gap-3">
+        <div className="w-10 h-10 rounded-xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+            <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <div>
+          <h2 className="text-base font-bold text-ink">Personalize your interpretation</h2>
+          <p className="text-sm text-ink-secondary mt-0.5 leading-snug">
+            Optional — helps the AI apply the right reference ranges for your age and sex.
+          </p>
+        </div>
+      </div>
+
+      {/* File name chip */}
+      {fileName && (
+        <div className="flex items-center gap-2 px-3 py-2 bg-surface-raised rounded-xl border border-surface-border">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary flex-shrink-0">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+            <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+          </svg>
+          <span className="text-xs text-ink-secondary truncate font-medium">{fileName}</span>
+        </div>
+      )}
+
+      {/* Age input */}
+      <div className="space-y-1.5">
+        <label className="text-sm font-semibold text-ink">How old are you?</label>
+        <input
+          type="number"
+          placeholder="e.g. 35"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          min={1}
+          max={120}
+          className="w-full px-4 py-3 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all text-sm"
+        />
+      </div>
+
+      {/* Sex toggle */}
+      <div className="space-y-1.5">
+        <label className="text-sm font-semibold text-ink">Biological sex</label>
+        <div className="flex gap-2">
+          {(["male", "female", "prefer_not"] as const).map((option) => (
+            <button
+              key={option}
+              onClick={() => setSex(sex === option ? "" : option)}
+              className={`flex-1 py-2.5 px-2 rounded-xl text-xs font-semibold border transition-all duration-150 ${
+                sex === option
+                  ? "bg-brand-blue text-white border-brand-blue shadow-sm"
+                  : "bg-surface-raised dark:bg-slate-700 border-surface-border dark:border-slate-600 text-ink-secondary hover:border-brand-blue/40 hover:text-ink"
+              }`}
+            >
+              {option === "male" ? "Male" : option === "female" ? "Female" : "Prefer not to say"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Privacy note */}
+      <div className="flex items-center gap-1.5">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary flex-shrink-0">
+          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+        </svg>
+        <p className="text-xs text-ink-tertiary">Not stored. Used only to improve your interpretation.</p>
+      </div>
+
+      {/* Actions */}
+      <div className="space-y-2.5 pt-1">
+        <button
+          onClick={() => onContinue(age, sex)}
+          className="w-full py-3.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-sm transition-all duration-200 shadow-md shadow-brand-blue/20 hover:shadow-brand-blue/30 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+          </svg>
+          Continue
+        </button>
+        <button
+          onClick={onSkip}
+          className="w-full text-xs text-ink-tertiary hover:text-ink-secondary transition-colors py-1.5"
+        >
+          Skip — use standard ranges
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AppPage() {
   const { lang } = useLanguage();
-  const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [state, setState] = useState<"idle" | "context" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
@@ -1420,6 +1527,7 @@ export default function AppPage() {
   const [fileName, setFileName] = useState<string>("");
   const [isSample, setIsSample] = useState(false);
   const [reportMode, setReportMode] = useState<ReportMode>("lab");
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
     setErrorCode(code);
@@ -1428,13 +1536,40 @@ export default function AppPage() {
     setState("error");
   };
 
-  const handleFileSelect = async (file: File) => {
-    // ── Client-side pre-validation (instant, no round-trip) ──────────────────
+  const runAnalysis = async (file: File | null, sampleMode: boolean, age = "", sex = "") => {
+    setState("loading");
+    try {
+      const formData = new FormData();
+      if (sampleMode) {
+        formData.append("sample", "true");
+        formData.append("mode", "lab");
+      } else if (file) {
+        formData.append("file", file);
+        formData.append("mode", reportMode);
+      }
+      formData.append("language", lang);
+      if (age)  formData.append("patientAge", age);
+      if (sex && sex !== "prefer_not") formData.append("patientSex", sex);
+
+      const res = await fetch("/api/analyze", { method: "POST", body: formData });
+      const json = await res.json();
+
+      if (!res.ok) {
+        setErrorState((json.errorCode as ErrorCode) ?? "SERVER_ERROR", json.error, json.fileSizeMB);
+        return;
+      }
+      setResult(json.data);
+      setState("success");
+    } catch {
+      setErrorState("NETWORK_ERROR");
+    }
+  };
+
+  const handleFileSelect = (file: File) => {
     const MAX_SIZE = 10 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      const mb = (file.size / (1024 * 1024)).toFixed(1);
       setFileName(file.name);
-      setErrorState("FILE_TOO_LARGE", undefined, mb);
+      setErrorState("FILE_TOO_LARGE", undefined, (file.size / (1024 * 1024)).toFixed(1));
       return;
     }
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"];
@@ -1443,67 +1578,23 @@ export default function AppPage() {
       setErrorState("WRONG_FILE_TYPE");
       return;
     }
-
     setFileName(file.name);
     setIsSample(false);
+    setPendingFile(file);
     setError(null);
     setErrorCode(null);
     setFileSizeMB(undefined);
-    setState("loading");
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("language", lang);
-      formData.append("mode", reportMode);
-
-      const res = await fetch("/api/analyze", { method: "POST", body: formData });
-      const json = await res.json();
-
-      if (!res.ok) {
-        setErrorState(
-          (json.errorCode as ErrorCode) ?? "SERVER_ERROR",
-          json.error,
-          json.fileSizeMB,
-        );
-        return;
-      }
-
-      setResult(json.data);
-      setState("success");
-    } catch {
-      // fetch() itself threw — network failure / timeout
-      setErrorState("NETWORK_ERROR");
-    }
+    setState("context");
   };
 
-  const handleSample = async () => {
+  const handleSample = () => {
     setFileName("Sample — Basic Metabolic Panel");
     setIsSample(true);
+    setPendingFile(null);
     setError(null);
     setErrorCode(null);
     setFileSizeMB(undefined);
-    setState("loading");
-
-    try {
-      const formData = new FormData();
-      formData.append("sample", "true");
-      formData.append("language", lang);
-      formData.append("mode", "lab"); // sample is always a lab report
-
-      const res = await fetch("/api/analyze", { method: "POST", body: formData });
-      const json = await res.json();
-
-      if (!res.ok) {
-        setErrorState((json.errorCode as ErrorCode) ?? "SERVER_ERROR", json.error);
-        return;
-      }
-
-      setResult(json.data);
-      setState("success");
-    } catch {
-      setErrorState("NETWORK_ERROR");
-    }
+    setState("context");
   };
 
   const handleReset = () => {
@@ -1514,6 +1605,7 @@ export default function AppPage() {
     setFileSizeMB(undefined);
     setFileName("");
     setIsSample(false);
+    setPendingFile(null);
   };
 
   return (
@@ -1561,6 +1653,12 @@ export default function AppPage() {
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-ink/5 dark:shadow-black/30 border border-surface-border p-6 sm:p-8">
           {state === "error" && errorCode ? (
             <ErrorCard code={errorCode} fileSizeMB={fileSizeMB} onReset={handleReset} />
+          ) : state === "context" ? (
+            <ContextForm
+              fileName={fileName}
+              onContinue={(age, sex) => runAnalysis(pendingFile, isSample, age, sex)}
+              onSkip={() => runAnalysis(pendingFile, isSample)}
+            />
           ) : state === "idle" ? (
             <div className="space-y-4">
               {/* Report mode toggle */}
