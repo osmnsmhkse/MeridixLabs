@@ -302,7 +302,105 @@ function LoadingAnimation({ mode }: { mode: ReportMode }) {
   );
 }
 
-function FlagBadge({ flag }: { flag: AnalysisFlag }) {
+// ── Confidence signal helpers ─────────────────────────────────────────────────
+
+type ConfidenceLevel = "borderline" | "abnormal" | "normal";
+
+const BORDERLINE_PHRASES = [
+  "borderline",
+  "mildly elevated",
+  "slightly elevated",
+  "mildly low",
+  "slightly low",
+  "mild increase",
+  "mild decrease",
+  "trending",
+  "within range but",
+  "marginally",
+  "just above",
+  "just below",
+  "slightly above",
+  "slightly below",
+  "mildly abnormal",
+  "mildly raised",
+  "mildly reduced",
+  "mildly increased",
+  "mildly decreased",
+];
+
+function parseRefBounds(ref: string): { lo: number; hi: number } | null {
+  // "70–99" / "70-99" / "70 - 99"
+  const rangePat = ref.match(/(\d+\.?\d*)\s*[–\-]\s*(\d+\.?\d*)/);
+  if (rangePat) return { lo: parseFloat(rangePat[1]), hi: parseFloat(rangePat[2]) };
+  // "> 60" / "≥60"
+  const gtPat = ref.match(/[>≥]\s*(\d+\.?\d*)/);
+  if (gtPat) return { lo: parseFloat(gtPat[1]), hi: Infinity };
+  // "< 150" / "≤150"
+  const ltPat = ref.match(/[<≤]\s*(\d+\.?\d*)/);
+  if (ltPat) return { lo: 0, hi: parseFloat(ltPat[1]) };
+  return null;
+}
+
+// Combines numeric proximity (within 10% of boundary) and text-signal scanning.
+function computeConfidence(flag: AnalysisFlag, interpretationText: string): ConfidenceLevel {
+  const val = parseFloat(flag.value);
+  const bounds = parseRefBounds(flag.reference);
+
+  // ── 1. Numeric proximity — abnormal values within 10% of the boundary ──────
+  if (!isNaN(val) && bounds) {
+    const { lo, hi } = bounds;
+    if (flag.status === "high" && isFinite(hi) && hi > 0) {
+      if ((val - hi) / hi <= 0.10) return "borderline";
+    }
+    if (flag.status === "low" && lo > 0) {
+      if ((lo - val) / lo <= 0.10) return "borderline";
+    }
+  }
+
+  // ── 2. Text signal — look for borderline phrases near the marker name ───────
+  const lowerText = interpretationText.toLowerCase();
+  const lowerMarker = flag.marker.toLowerCase();
+  const markerIdx = lowerText.indexOf(lowerMarker);
+
+  if (markerIdx !== -1) {
+    // Scan a 200-char window centred on the first mention of the marker
+    const excerpt = lowerText.slice(Math.max(0, markerIdx - 100), markerIdx + 100);
+    if (BORDERLINE_PHRASES.some((p) => excerpt.includes(p))) return "borderline";
+  }
+
+  // ── 3. Default from status ───────────────────────────────────────────────────
+  if (flag.status === "normal") return "normal";
+  return "abnormal";
+}
+
+// ── Confidence pill ───────────────────────────────────────────────────────────
+
+function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"] }) {
+  if (confidence === "borderline") {
+    return (
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 border border-yellow-200 text-yellow-700 text-[10px] font-bold leading-none whitespace-nowrap">
+        ⚠ Borderline
+      </span>
+    );
+  }
+  if (confidence === "abnormal") {
+    return (
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-[10px] font-bold leading-none whitespace-nowrap">
+        {status === "high" ? "↑" : "↓"} Abnormal
+      </span>
+    );
+  }
+  // normal
+  return (
+    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 border border-green-200 text-green-600 text-[10px] font-bold leading-none whitespace-nowrap">
+      ✓ Normal
+    </span>
+  );
+}
+
+// ── Flag badge (single row) ───────────────────────────────────────────────────
+
+function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: ConfidenceLevel }) {
   const config = {
     high:   { bg: "bg-amber-50",  border: "border-amber-200",  text: "text-amber-700",  badge: "bg-amber-100 text-amber-700",  icon: "↑" },
     low:    { bg: "bg-blue-50",   border: "border-blue-200",   text: "text-blue-700",   badge: "bg-blue-100 text-blue-700",   icon: "↓" },
@@ -311,13 +409,23 @@ function FlagBadge({ flag }: { flag: AnalysisFlag }) {
 
   return (
     <div className={`flex items-center justify-between p-3.5 rounded-xl ${config.bg} border ${config.border}`}>
-      <div className="flex items-center gap-2.5">
-        <span className={`w-6 h-6 rounded-full ${config.badge} flex items-center justify-center text-xs font-bold`}>{config.icon}</span>
-        <span className="text-sm font-semibold text-ink">{flag.marker}</span>
+      {/* Left: status icon + marker name */}
+      <div className="flex items-center gap-2.5 min-w-0">
+        <span className={`flex-shrink-0 w-6 h-6 rounded-full ${config.badge} flex items-center justify-center text-xs font-bold`}>
+          {config.icon}
+        </span>
+        <span className="text-sm font-semibold text-ink truncate">{flag.marker}</span>
       </div>
-      <div className="text-right">
-        <span className={`text-sm font-bold ${config.text}`}>{flag.value} {flag.unit}</span>
-        {flag.reference && <p className="text-xs text-ink-tertiary">ref: {flag.reference}</p>}
+
+      {/* Right: confidence pill + value + reference */}
+      <div className="flex flex-col items-end gap-0.5 ml-2 flex-shrink-0">
+        <div className="flex items-center gap-1.5">
+          <ConfidencePill confidence={confidence} status={flag.status} />
+          <span className={`text-sm font-bold ${config.text}`}>{flag.value} {flag.unit}</span>
+        </div>
+        {flag.reference && (
+          <p className="text-xs text-ink-tertiary">ref: {flag.reference}</p>
+        )}
       </div>
     </div>
   );
@@ -761,18 +869,46 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
       </div>
 
       {/* Flagged values / Key findings */}
-      {result.flags && result.flags.length > 0 && (
-        <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
-          <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised">
-            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
-              {mode === "radiology" ? "Key Findings" : "Flagged Values"}
-            </p>
+      {result.flags && result.flags.length > 0 && (() => {
+        // Build the full interpretation text once for text-signal scanning
+        const interpretationText = [
+          result.simple, result.medium, result.expert,
+          result.etiology, result.mechanism, result.diseases,
+        ].filter(Boolean).join(" ");
+
+        // Pre-compute confidence level for each flag
+        const confidences = result.flags.map((f) =>
+          computeConfidence(f, interpretationText)
+        );
+        const hasBorderline = confidences.some((c) => c === "borderline");
+
+        return (
+          <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+            <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised">
+              <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+                {mode === "radiology" ? "Key Findings" : "Flagged Values"}
+              </p>
+            </div>
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {result.flags.map((flag, i) => (
+                <FlagBadge key={i} flag={flag} confidence={confidences[i]} />
+              ))}
+            </div>
+
+            {/* Borderline footnote — shown only when at least one flag is borderline */}
+            {hasBorderline && (
+              <div className="px-5 py-3 border-t border-yellow-100 bg-yellow-50/60 flex items-start gap-2">
+                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0 mt-px">
+                  <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4.5zm0 7a.75.75 0 110-1.5.75.75 0 010 1.5z" clipRule="evenodd" />
+                </svg>
+                <p className="text-[11px] text-yellow-800 leading-relaxed">
+                  Borderline values may require clinical context to interpret accurately. Always confirm with your physician.
+                </p>
+              </div>
+            )}
           </div>
-          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {result.flags.map((flag, i) => <FlagBadge key={i} flag={flag} />)}
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Tier toggle + interpretation */}
       <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
