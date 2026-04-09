@@ -342,7 +342,145 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
   );
 }
 
-function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => void; error: string | null }) {
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () =>
+      setIsMobile(window.innerWidth < 768 || navigator.maxTouchPoints > 0);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
+// ── Shared file preview + analyze button (used by both upload UIs) ──────────
+function FilePreview({
+  preview,
+  onClear,
+  onAnalyze,
+}: {
+  preview: { name: string; size: string };
+  onClear: () => void;
+  onAnalyze: () => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-4 p-4 rounded-2xl border border-brand-blue/30 bg-brand-blue-light/50">
+        <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-brand-blue" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+          </svg>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-ink truncate">{preview.name}</p>
+          <p className="text-xs text-ink-tertiary mt-0.5">{preview.size}</p>
+          <p className="text-xs text-brand-blue mt-1 font-medium">Ready to analyze</p>
+        </div>
+        <button
+          onClick={onClear}
+          className="text-ink-tertiary hover:text-ink-secondary p-2 rounded-lg hover:bg-surface-raised flex-shrink-0"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
+      <button
+        onClick={onAnalyze}
+        className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+          <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+        </svg>
+        Analyze My Results
+      </button>
+    </div>
+  );
+}
+
+// ── Mobile upload UI ─────────────────────────────────────────────────────────
+function MobileUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => void; error: string | null }) {
+  const [preview, setPreview] = useState<{ name: string; size: string } | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const filesRef  = useRef<HTMLInputElement>(null);
+
+  const formatSize = (bytes: number) =>
+    bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+
+  const handleFile = useCallback((file: File) => {
+    setPreview({ name: file.name, size: formatSize(file.size) });
+    setSelectedFile(file);
+  }, []);
+
+  const clearFile = () => {
+    setPreview(null);
+    setSelectedFile(null);
+    if (cameraRef.current) cameraRef.current.value = "";
+    if (filesRef.current)  filesRef.current.value  = "";
+  };
+
+  if (preview && selectedFile) {
+    return (
+      <div className="space-y-3">
+        {error && <ErrorBanner message={error} />}
+        <FilePreview preview={preview} onClear={clearFile} onAnalyze={() => onFileSelect(selectedFile)} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {/* Hidden inputs */}
+      <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+      <input ref={filesRef}  type="file" accept="image/jpeg,image/jpg,image/png,image/webp,application/pdf" className="hidden"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+
+      {/* Camera button — primary */}
+      <button
+        onClick={() => cameraRef.current?.click()}
+        className="w-full py-5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/25 flex items-center justify-center gap-3"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+        </svg>
+        Take a Photo of Your Lab Report
+      </button>
+
+      {/* Files button — secondary */}
+      <button
+        onClick={() => filesRef.current?.click()}
+        className="w-full py-3.5 bg-white hover:bg-surface-raised border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-semibold rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2.5"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+        </svg>
+        Choose from Files
+      </button>
+
+      {error && <ErrorBanner message={error} />}
+    </div>
+  );
+}
+
+// ── Error banner (shared) ────────────────────────────────────────────────────
+function ErrorBanner({ message }: { message: string }) {
+  return (
+    <div className="flex items-start gap-2.5 p-4 rounded-xl bg-red-50 border border-red-100">
+      <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+      </svg>
+      <p className="text-sm text-red-700">{message}</p>
+    </div>
+  );
+}
+
+// ── Desktop upload UI (original drag-and-drop) ───────────────────────────────
+function DesktopUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => void; error: string | null }) {
+
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<{ name: string; size: string; type: string } | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -365,6 +503,12 @@ function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => voi
     const file = e.dataTransfer.files[0];
     if (file) handleFile(file);
   }, [handleFile]);
+
+  const clearFile = () => {
+    setPreview(null);
+    setSelectedFile(null);
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   return (
     <div className="space-y-4">
@@ -402,7 +546,7 @@ function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => voi
               <p className="text-xs text-brand-blue mt-1">Ready to analyze</p>
             </div>
             <button
-              onClick={(e) => { e.stopPropagation(); setPreview(null); setSelectedFile(null); if (inputRef.current) inputRef.current.value = ""; }}
+              onClick={(e) => { e.stopPropagation(); clearFile(); }}
               className="text-ink-tertiary hover:text-ink-secondary p-2 rounded-lg hover:bg-surface-raised"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -429,18 +573,11 @@ function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => voi
         )}
       </div>
 
-      {error && (
-        <div className="flex items-start gap-2.5 p-4 rounded-xl bg-red-50 border border-red-100">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-          </svg>
-          <p className="text-sm text-red-700">{error}</p>
-        </div>
-      )}
+      {error && <ErrorBanner message={error} />}
 
-      {preview && (
+      {preview && selectedFile && (
         <button
-          onClick={() => selectedFile && onFileSelect(selectedFile)}
+          onClick={() => onFileSelect(selectedFile)}
           className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -451,6 +588,13 @@ function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => voi
       )}
     </div>
   );
+}
+
+// ── Router: picks Mobile or Desktop based on device ──────────────────────────
+function UploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => void; error: string | null }) {
+  const isMobile = useIsMobile();
+  if (isMobile) return <MobileUploadZone onFileSelect={onFileSelect} error={error} />;
+  return <DesktopUploadZone onFileSelect={onFileSelect} error={error} />;
 }
 
 export default function AppPage() {
