@@ -111,11 +111,12 @@ export default function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   const navLinks = [
-    { href: "/",        label: "Home"          },
-    { href: "/app",     label: "Analyze"       },
-    { href: "/trends",  label: "Trend Tracker" },
-    { href: "/blog",    label: "Blog"          },
-    { href: "/about",   label: "About"         },
+    { href: "/",        label: "Home",          desktopOnly: false },
+    { href: "/app",     label: "Analyze",       desktopOnly: false },
+    { href: "/learn",   label: "Practice",      desktopOnly: true  },
+    { href: "/trends",  label: "Trend Tracker", desktopOnly: false },
+    { href: "/blog",    label: "Blog",          desktopOnly: false },
+    { href: "/about",   label: "About",         desktopOnly: false },
   ];
 
   return (
@@ -189,7 +190,7 @@ export default function Navigation() {
         {/* Mobile menu */}
         {mobileOpen && (
           <div className="md:hidden border-t border-surface-border py-3 space-y-1">
-            {navLinks.map((link) => (
+            {navLinks.filter((link) => !link.desktopOnly).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
