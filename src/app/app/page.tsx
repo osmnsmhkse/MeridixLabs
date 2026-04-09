@@ -63,8 +63,8 @@ interface ErrorConfig {
 }
 
 function getErrorConfig(code: ErrorCode, fileSizeMB?: string): ErrorConfig {
-  const amberAccent = "border-amber-200 bg-amber-50";
-  const redAccent   = "border-red-200   bg-red-50";
+  const amberAccent = "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20";
+  const redAccent   = "border-red-200   dark:border-red-800   bg-red-50   dark:bg-red-900/20";
 
   const fileIcon = (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
@@ -149,17 +149,17 @@ function ErrorCard({
     <div className={`rounded-2xl border p-6 ${cfg.accent} flex flex-col items-center text-center gap-4`}>
       {/* Icon circle */}
       <div className={`w-14 h-14 rounded-full flex items-center justify-center ${
-        isAmber ? "bg-amber-100 text-amber-600" : "bg-red-100 text-red-600"
+        isAmber ? "bg-amber-100 dark:bg-amber-900/40 text-amber-600" : "bg-red-100 dark:bg-red-900/40 text-red-600"
       }`}>
         {cfg.icon}
       </div>
 
       {/* Text */}
       <div className="space-y-1.5 max-w-sm">
-        <p className={`text-base font-bold ${isAmber ? "text-amber-900" : "text-red-900"}`}>
+        <p className={`text-base font-bold ${isAmber ? "text-amber-900 dark:text-amber-200" : "text-red-900 dark:text-red-200"}`}>
           {cfg.title}
         </p>
-        <p className={`text-sm leading-relaxed ${isAmber ? "text-amber-800" : "text-red-800"}`}>
+        <p className={`text-sm leading-relaxed ${isAmber ? "text-amber-800 dark:text-amber-300" : "text-red-800 dark:text-red-300"}`}>
           {cfg.message}
         </p>
       </div>
@@ -169,8 +169,8 @@ function ErrorCard({
         onClick={onReset}
         className={`mt-1 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
           isAmber
-            ? "bg-white border border-amber-200 text-amber-800 hover:bg-amber-50 hover:border-amber-300"
-            : "bg-white border border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300"
+            ? "bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:border-amber-300"
+            : "bg-white dark:bg-slate-800 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300"
         }`}
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -378,21 +378,21 @@ function computeConfidence(flag: AnalysisFlag, interpretationText: string): Conf
 function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"] }) {
   if (confidence === "borderline") {
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 border border-yellow-200 text-yellow-700 text-[10px] font-bold leading-none whitespace-nowrap">
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold leading-none whitespace-nowrap">
         ⚠ Borderline
       </span>
     );
   }
   if (confidence === "abnormal") {
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-600 text-[10px] font-bold leading-none whitespace-nowrap">
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-[10px] font-bold leading-none whitespace-nowrap">
         {status === "high" ? "↑" : "↓"} Abnormal
       </span>
     );
   }
   // normal
   return (
-    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 border border-green-200 text-green-600 text-[10px] font-bold leading-none whitespace-nowrap">
+    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-[10px] font-bold leading-none whitespace-nowrap">
       ✓ Normal
     </span>
   );
@@ -402,9 +402,9 @@ function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; s
 
 function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: ConfidenceLevel }) {
   const config = {
-    high:   { bg: "bg-amber-50",  border: "border-amber-200",  text: "text-amber-700",  badge: "bg-amber-100 text-amber-700",  icon: "↑" },
-    low:    { bg: "bg-blue-50",   border: "border-blue-200",   text: "text-blue-700",   badge: "bg-blue-100 text-blue-700",   icon: "↓" },
-    normal: { bg: "bg-green-50",  border: "border-green-200",  text: "text-green-700",  badge: "bg-green-100 text-green-700", icon: "✓" },
+    high:   { bg: "bg-amber-50 dark:bg-amber-900/20",  border: "border-amber-200 dark:border-amber-800",  text: "text-amber-700 dark:text-amber-400",  badge: "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300",  icon: "↑" },
+    low:    { bg: "bg-blue-50 dark:bg-blue-900/20",    border: "border-blue-200 dark:border-blue-800",    text: "text-blue-700 dark:text-blue-400",    badge: "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300",    icon: "↓" },
+    normal: { bg: "bg-green-50 dark:bg-green-900/20",  border: "border-green-200 dark:border-green-800",  text: "text-green-700 dark:text-green-400",  badge: "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300", icon: "✓" },
   }[flag.status];
 
   return (
@@ -495,7 +495,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
   if (!result.etiology && !result.mechanism && !result.diseases && !result.specialist) return null;
 
   return (
-    <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-5 py-4 bg-surface-raised hover:bg-surface-border/30 transition-colors"
@@ -517,7 +517,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
             const mapsUrl  = `https://www.google.com/maps/search/${encodeURIComponent(specialist + " near me")}`;
             const zocdocUrl = `https://www.zocdoc.com/search?dr_specialty=${encodeURIComponent(specialist)}`;
             return (
-              <div className="p-5 bg-brand-blue-light/50">
+              <div className="p-5 bg-brand-blue-light/50 dark:bg-brand-blue/5">
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
                     <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-white">
@@ -644,7 +644,7 @@ function DoctorQuestionsSection({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm print:hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm print:hidden">
       {/* Header — always visible, toggles section */}
       <button
         onClick={handleToggle}
@@ -827,7 +827,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
 
       {/* Sample banner */}
       {isSample && (
-        <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200">
+        <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
@@ -883,7 +883,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
         const hasBorderline = confidences.some((c) => c === "borderline");
 
         return (
-          <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
             <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised">
               <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
                 {mode === "radiology" ? "Key Findings" : "Flagged Values"}
@@ -897,7 +897,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
 
             {/* Borderline footnote — shown only when at least one flag is borderline */}
             {hasBorderline && (
-              <div className="px-5 py-3 border-t border-yellow-100 bg-yellow-50/60 flex items-start gap-2">
+              <div className="px-5 py-3 border-t border-yellow-100 dark:border-yellow-900 bg-yellow-50/60 dark:bg-yellow-900/10 flex items-start gap-2">
                 <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0 mt-px">
                   <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4.5zm0 7a.75.75 0 110-1.5.75.75 0 010 1.5z" clipRule="evenodd" />
                 </svg>
@@ -911,7 +911,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
       })()}
 
       {/* Tier toggle + interpretation */}
-      <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
         <div className="border-b border-surface-border px-5 pt-4 bg-surface-raised">
           <div className="flex gap-0.5">
             {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
@@ -948,7 +948,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
       <DeepDiveSection result={result} mode={mode} />
 
       {/* Action recommendation */}
-      <div className="bg-brand-blue-light border border-brand-blue-mid rounded-2xl p-5">
+      <div className="bg-brand-blue-light dark:bg-brand-blue/10 border border-brand-blue-mid dark:border-brand-blue/30 rounded-2xl p-5">
         <div className="flex items-start gap-3">
           <div className="w-9 h-9 bg-brand-blue/15 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
@@ -966,7 +966,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
       <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
 
       {/* Disclaimer */}
-      <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 border border-amber-100 print:hidden">
+      <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 print:hidden">
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
         </svg>
@@ -981,8 +981,8 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
           onClick={handleCopy}
           className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
             copied
-              ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-              : "border-surface-border bg-white hover:border-brand-blue/30 hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue"
+              ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
+              : "border-surface-border bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue"
           }`}
         >
           {copied ? (
@@ -1005,7 +1005,7 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
 
         <button
           onClick={handlePrint}
-          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border bg-white hover:border-brand-blue/30 hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
+          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
             <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h6a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 112 0 1 1 0 01-2 0zm2 1v2h4v-2H8z" clipRule="evenodd" />
@@ -1138,7 +1138,7 @@ function MobileUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) 
       {/* Files button — secondary */}
       <button
         onClick={() => filesRef.current?.click()}
-        className="w-full py-3.5 bg-white hover:bg-surface-raised border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-semibold rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2.5"
+        className="w-full py-3.5 bg-white dark:bg-slate-800 hover:bg-surface-raised border border-surface-border dark:border-slate-700 hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-semibold rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2.5"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -1389,11 +1389,11 @@ export default function AppPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white pt-24 pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-slate-900 dark:to-slate-900 pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page header */}
         <div className="text-center mb-8">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
             AI Lab Interpreter
           </span>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
@@ -1412,7 +1412,7 @@ export default function AppPage() {
               { icon: "⚡", label: "Results in seconds" },
               { icon: "🌍", label: "10 languages" },
             ].map((b) => (
-              <span key={b.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-surface-border text-xs text-ink-secondary font-medium shadow-sm">
+              <span key={b.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border dark:border-slate-700 text-xs text-ink-secondary font-medium shadow-sm">
                 <span>{b.icon}</span>
                 {b.label}
               </span>
@@ -1430,7 +1430,7 @@ export default function AppPage() {
         </div>
 
         {/* Main card */}
-        <div className="bg-white rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-ink/5 dark:shadow-black/30 border border-surface-border p-6 sm:p-8">
           {state === "error" && errorCode ? (
             <ErrorCard code={errorCode} fileSizeMB={fileSizeMB} onReset={handleReset} />
           ) : state === "idle" ? (
@@ -1446,7 +1446,7 @@ export default function AppPage() {
                     onClick={() => setReportMode(opt.mode)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                       reportMode === opt.mode
-                        ? "bg-white shadow-sm border border-surface-border text-ink"
+                        ? "bg-white dark:bg-slate-700 shadow-sm border border-surface-border text-ink"
                         : "text-ink-tertiary hover:text-ink-secondary"
                     }`}
                   >
@@ -1458,7 +1458,7 @@ export default function AppPage() {
 
               {/* Mode hint */}
               {reportMode === "radiology" && (
-                <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-purple-50 border border-purple-100">
+                <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800">
                   <span className="text-purple-500 text-sm mt-px flex-shrink-0">🩻</span>
                   <p className="text-xs text-purple-700 leading-relaxed">
                     <strong>Radiology &amp; Pathology mode:</strong> Upload a CT, MRI, X-ray, ultrasound, or biopsy report. The AI will identify every finding, flag what needs follow-up, and explain incidental findings clearly.
@@ -1498,14 +1498,14 @@ export default function AppPage() {
         {state === "idle" && (
           <div className="mt-8">
             <p className="text-center text-xs font-semibold text-ink-tertiary uppercase tracking-widest mb-4">Here's what you'll get</p>
-            <div className="bg-white rounded-2xl border border-surface-border shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
 
               {reportMode === "lab" ? (
                 <>
                   {/* Lab — Flagged value chip */}
                   <div className="px-5 pt-5 pb-3 flex items-center gap-3">
                     <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Flagged Values</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
                       <span className="text-amber-500 text-xs font-bold">↑</span>
                       <span className="text-xs font-semibold text-ink">Glucose</span>
                       <span className="text-xs font-bold text-amber-600">112 mg/dL</span>
@@ -1520,7 +1520,7 @@ export default function AppPage() {
                       { label: "📋 Medium", active: false },
                       { label: "🔬 Expert",  active: false },
                     ].map((tab) => (
-                      <span key={tab.label} className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${tab.active ? "bg-white text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary"}`}>
+                      <span key={tab.label} className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${tab.active ? "bg-white dark:bg-slate-800 text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary"}`}>
                         {tab.label}
                       </span>
                     ))}
@@ -1543,7 +1543,7 @@ export default function AppPage() {
                   </div>
 
                   {/* Specialist */}
-                  <div className="px-5 py-3 border-t border-surface-border bg-brand-blue-light/50 flex items-center gap-2.5">
+                  <div className="px-5 py-3 border-t border-surface-border bg-brand-blue-light/50 dark:bg-brand-blue/5 flex items-center gap-2.5">
                     <div className="w-6 h-6 rounded-lg bg-brand-blue flex items-center justify-center flex-shrink-0">
                       <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
                         <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />

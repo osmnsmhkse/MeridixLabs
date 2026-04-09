@@ -16,7 +16,23 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(ls /usr/local/bin/npm /opt/homebrew/bin/npm ~/.nvm/versions/node/*/bin/npm)",
       "Bash(ls /Users/osmansemihkose/Desktop/MeridixLabs/.env*)",
-      "Bash(git -C /Users/osmansemihkose/Desktop/MeridixLabs status)"
+      "Bash(git -C /Users/osmansemihkose/Desktop/MeridixLabs status)",
+      "Bash(npx tsc:*)",
+      "Bash(/usr/local/bin/node node_modules/.bin/tsc --noEmit)",
+      "Bash(/usr/local/bin/node node_modules/.bin/npm install recharts --save)",
+      "Bash(/usr/local/bin/npm install:*)",
+      "Bash(export PATH=\"/usr/local/bin:$PATH\")",
+      "Bash(npm install:*)",
+      "Bash(/usr/local/bin/npx tsc:*)",
+      "Bash(/opt/homebrew/bin/npx tsc:*)",
+      "Bash(/usr/local/bin/node --version)",
+      "Bash(ls /usr/local/bin/npx*)",
+      "Bash(/usr/local/lib/node_modules/npm/bin/npx tsc:*)",
+      "Bash(PATH=\"/usr/local/bin:$PATH\" /usr/local/bin/node /usr/local/lib/node_modules/npm/bin/npx tsc --noEmit)",
+      "Bash(/usr/local/bin/node node_modules/.bin/tsc --version)",
+      "Bash(/usr/local/bin/node node_modules/.bin/npm install lucide-react)",
+      "Bash(npm run:*)",
+      "Bash(git add:*)"
     ]
   }
 }

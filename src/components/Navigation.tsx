@@ -4,7 +4,26 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Sun, Moon } from "lucide-react";
 import { useLanguage, LANGUAGES, LangCode } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
+
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="w-9 h-9" />;
+  return (
+    <button
+      onClick={toggle}
+      aria-label="Toggle dark mode"
+      className="relative w-9 h-9 flex items-center justify-center rounded-lg text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
+    >
+      <Sun className={`absolute w-4 h-4 transition-all duration-300 ${theme === "dark" ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"}`} />
+      <Moon className={`absolute w-4 h-4 transition-all duration-300 ${theme === "light" ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-50"}`} />
+    </button>
+  );
+}
 
 function LanguageSelector() {
   const { lang, setLang } = useLanguage();
@@ -28,7 +47,6 @@ function LanguageSelector() {
         className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
         aria-label="Select language"
       >
-        {/* Globe icon */}
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 flex-shrink-0">
           <circle cx="10" cy="10" r="8" />
           <path d="M10 2c-2 3-2 13 0 16M10 2c2 3 2 13 0 16M2 10h16" strokeLinecap="round" />
@@ -40,8 +58,8 @@ function LanguageSelector() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-surface-border rounded-xl shadow-lg shadow-ink/8 overflow-hidden z-50">
-          <div className="px-3 py-2 border-b border-surface-border">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-surface-raised dark:bg-slate-800 border border-surface-border dark:border-slate-700 rounded-xl shadow-lg shadow-ink/8 overflow-hidden z-50">
+          <div className="px-3 py-2 border-b border-surface-border dark:border-slate-700">
             <p className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-widest">Language</p>
           </div>
           <div className="p-1.5 max-h-80 overflow-y-auto">
@@ -51,8 +69,8 @@ function LanguageSelector() {
                 onClick={() => { setLang(code as LangCode); setOpen(false); }}
                 className={`w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${
                   lang === code
-                    ? "bg-brand-blue-light text-brand-blue"
-                    : "text-ink-secondary hover:bg-surface-raised hover:text-ink"
+                    ? "bg-brand-blue-light dark:bg-brand-blue/20 text-brand-blue"
+                    : "text-ink-secondary hover:bg-surface-raised dark:hover:bg-slate-700 hover:text-ink"
                 }`}
               >
                 <div className="flex flex-col">
@@ -104,8 +122,8 @@ export default function Navigation() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm shadow-ink/5 border-b border-surface-border"
-          : "bg-white"
+          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm shadow-ink/5 border-b border-surface-border"
+          : "bg-white dark:bg-slate-900"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,8 +157,9 @@ export default function Navigation() {
             ))}
           </nav>
 
-          {/* Right side: language + CTA */}
+          {/* Right side: theme toggle + language + CTA */}
           <div className="hidden md:flex items-center gap-2">
+            <ThemeToggle />
             <LanguageSelector />
             <Link
               href="/app"
@@ -177,14 +196,15 @@ export default function Navigation() {
                 onClick={() => setMobileOpen(false)}
                 className={`block py-2.5 px-4 rounded-lg text-sm font-medium transition-colors ${
                   isActive(link.href)
-                    ? "text-brand-blue bg-brand-blue-light"
+                    ? "text-brand-blue bg-brand-blue-light dark:bg-brand-blue/20"
                     : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
                 }`}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="px-4 py-2">
+            <div className="px-4 py-2 flex items-center gap-2">
+              <ThemeToggle />
               <LanguageSelector />
             </div>
             <Link

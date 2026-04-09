@@ -37,8 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{__html: `
+          try {
+            var t = localStorage.getItem('meridix-theme');
+            var p = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (t === 'dark' || (!t && p)) document.documentElement.classList.add('dark');
+          } catch(e) {}
+        `}} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -46,7 +53,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased bg-white text-ink">
+      <body className="antialiased bg-surface text-ink">
         <Providers>
           <ScrollReveal />
           <Navigation />

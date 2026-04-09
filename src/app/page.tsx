@@ -29,7 +29,7 @@ export default function LandingPage() {
               </svg>
               Analyze My Results — Free
             </Link>
-            <a href="#how-it-works" className="inline-flex items-center gap-2 px-8 py-4 border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-semibold rounded-xl text-base transition-all duration-200 bg-white hover:bg-surface-raised">
+            <a href="#how-it-works" className="inline-flex items-center gap-2 px-8 py-4 border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-semibold rounded-xl text-base transition-all duration-200 bg-white dark:bg-slate-800 hover:bg-surface-raised">
               See how it works
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -56,7 +56,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── HOW IT WORKS ─────────────────────────────────────── */}
-      <section id="how-it-works" className="py-24 bg-white">
+      <section id="how-it-works" className="py-24 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 reveal">
             <span className="text-brand-blue font-semibold text-sm uppercase tracking-widest">Simple process</span>
@@ -84,7 +84,7 @@ export default function LandingPage() {
                 description: 'Toggle between Simple, Medium, and Expert — plus causes, mechanisms, which specialist to see, and a clear action plan.',
               },
             ].map((item, i) => (
-              <div key={i} className={`reveal reveal-delay-${i + 1} relative flex flex-col items-center text-center p-8 rounded-2xl border border-surface-border bg-white hover:border-brand-blue/25 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-300 card-hover`}>
+              <div key={i} className={`reveal reveal-delay-${i + 1} relative flex flex-col items-center text-center p-8 rounded-2xl border border-surface-border bg-white dark:bg-slate-800 hover:border-brand-blue/25 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-300 card-hover`}>
                 <div className="w-14 h-14 bg-brand-blue-light rounded-2xl flex items-center justify-center text-brand-blue mb-5">{item.icon}</div>
                 <span className="absolute top-6 right-6 text-xs font-bold text-brand-blue/30 tracking-widest">{item.step}</span>
                 <h3 className="text-xl font-bold text-ink mb-3">{item.title}</h3>
@@ -130,7 +130,7 @@ export default function LandingPage() {
                 highlight: "Full clinical language",
               },
             ].map((tier, i) => (
-              <div key={i} className={`reveal reveal-delay-${i + 1} p-7 rounded-2xl bg-white border border-surface-border ${tier.borderHover} transition-all duration-200 card-hover`}>
+              <div key={i} className={`reveal reveal-delay-${i + 1} p-7 rounded-2xl bg-white dark:bg-slate-800 border border-surface-border ${tier.borderHover} transition-all duration-200 card-hover`}>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-2xl">{tier.emoji}</span>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${tier.badge}`}>{tier.audience}</span>
@@ -145,7 +145,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── SOCIAL PROOF ────────────────────────────────────── */}
-      <section className="py-20 bg-white border-y border-surface-border">
+      <section className="py-20 bg-white dark:bg-slate-900 border-y border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Stat bar */}
@@ -216,7 +216,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── FEATURES ─────────────────────────────────────────── */}
-      <section id="features" className="py-24 bg-white">
+      <section id="features" className="py-24 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
@@ -246,7 +246,7 @@ export default function LandingPage() {
             {/* Mock results card */}
             <div className="relative reveal reveal-delay-2">
               <div className="absolute inset-0 bg-brand-blue/6 rounded-3xl blur-2xl" />
-              <div className="relative bg-white rounded-3xl shadow-xl shadow-brand-blue/10 border border-surface-border overflow-hidden">
+              <div className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-brand-blue/10 border border-surface-border overflow-hidden">
                 <div className="bg-surface-raised px-6 py-4 border-b border-surface-border flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-brand-blue-light rounded-lg flex items-center justify-center">
@@ -259,7 +259,7 @@ export default function LandingPage() {
                   </div>
                   <span className="text-brand-blue text-xs font-semibold">✓ Analyzed</span>
                 </div>
-                <div className="border-b border-surface-border px-6 pt-4 bg-white">
+                <div className="border-b border-surface-border px-6 pt-4 bg-white dark:bg-slate-800">
                   <div className="flex gap-1">
                     {["Simple","Medium","Expert"].map((t, i) => (
                       <button key={t} className={`px-4 py-2 rounded-t-lg text-sm font-medium ${i === 0 ? "bg-brand-blue-light text-brand-blue-dark border-b-2 border-brand-blue" : "text-ink-tertiary"}`}>{t}</button>
@@ -268,15 +268,15 @@ export default function LandingPage() {
                 </div>
                 <div className="p-6 space-y-3">
                   <p className="text-sm text-ink-secondary leading-relaxed">Your glucose is slightly elevated and sodium is on the low end — worth mentioning at your next check-up.</p>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50 border border-amber-100">
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">
                     <div className="flex items-center gap-2"><span className="text-amber-500 text-sm font-bold">↑</span><span className="text-sm font-semibold text-ink">Glucose</span></div>
                     <div className="text-right"><span className="text-sm font-bold text-amber-600">112 mg/dL</span><p className="text-xs text-ink-tertiary">ref: 70–99</p></div>
                   </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800">
                     <div className="flex items-center gap-2"><span className="text-emerald-500 text-sm font-bold">✓</span><span className="text-sm font-semibold text-ink">Creatinine</span></div>
                     <div className="text-right"><span className="text-sm font-bold text-emerald-600">0.9 mg/dL</span><p className="text-xs text-ink-tertiary">ref: 0.7–1.2</p></div>
                   </div>
-                  <div className="p-3 rounded-xl bg-brand-blue-light border border-brand-blue-mid">
+                  <div className="p-3 rounded-xl bg-brand-blue-light dark:bg-brand-blue/10 border border-brand-blue-mid dark:border-brand-blue/30">
                     <p className="text-xs font-bold text-brand-blue-dark uppercase tracking-wider mb-1">Which specialist?</p>
                     <p className="text-xs text-ink-secondary">Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism and rule out pre-diabetes.</p>
                   </div>
@@ -288,7 +288,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── DISCLAIMER BAND ─────────────────────────────────── */}
-      <section className="py-5 bg-amber-50 border-y border-amber-100">
+      <section className="py-5 bg-amber-50 dark:bg-amber-900/20 border-y border-amber-100 dark:border-amber-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3 text-center">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />

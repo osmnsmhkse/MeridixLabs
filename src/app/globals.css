@@ -4,12 +4,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Semantic color tokens ─────────────────────────────── */
 :root {
+  --color-ink:            15 23 42;      /* #0F172A */
+  --color-ink-secondary:  71 85 105;     /* #475569 */
+  --color-ink-tertiary:   148 163 184;   /* #94A3B8 */
+  --color-surface:        255 255 255;   /* #FFFFFF */
+  --color-surface-raised: 248 250 252;   /* #F8FAFC */
+  --color-surface-border: 226 232 240;   /* #E2E8F0 */
+
   --brand-blue:       #4A85EF;
   --brand-blue-hover: #3A6FD8;
   --brand-blue-light: #EBF3FF;
-  --ink:              #0F172A;
-  --ink-secondary:    #475569;
+}
+
+.dark {
+  --color-ink:            241 245 249;   /* #F1F5F9 */
+  --color-ink-secondary:  148 163 184;   /* #94A3B8 */
+  --color-ink-tertiary:   100 116 139;   /* #64748B */
+  --color-surface:        15 23 42;      /* #0F172A */
+  --color-surface-raised: 30 41 59;      /* #1E293B */
+  --color-surface-border: 51 65 85;      /* #334155 */
 }
 
 * { box-sizing: border-box; }
@@ -18,31 +33,31 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: #ffffff;
-  color: #0F172A;
+  background-color: rgb(var(--color-surface));
+  color: rgb(var(--color-ink));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ── Utility gradients ─────────────────────────────────── */
 @layer utilities {
 
-  /* Light hero — white fading into a whisper of brand blue */
   .gradient-hero {
     background: linear-gradient(160deg, #ffffff 0%, #EFF6FF 60%, #DBEAFE 100%);
   }
+  .dark .gradient-hero {
+    background: #0F172A;
+  }
 
-  /* Bold blue CTA sections */
   .gradient-blue {
     background: linear-gradient(135deg, #5B9CF8 0%, #4080E8 100%);
   }
 
-  /* Subtle raised card background */
   .surface-raised {
     background: #F8FAFC;
   }
 
-  /* Text highlight in brand blue */
   .text-brand {
     color: #5B9CF8;
   }
@@ -54,7 +69,6 @@ body {
     background-clip: text;
   }
 
-  /* Hover lift card */
   .card-hover {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
@@ -69,6 +83,9 @@ body {
 ::-webkit-scrollbar-track { background: #F1F5F9; }
 ::-webkit-scrollbar-thumb { background: #5B9CF8; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #4080E8; }
+
+.dark ::-webkit-scrollbar-track { background: #1E293B; }
+.dark ::-webkit-scrollbar-thumb { background: #4A85EF; }
 
 /* ── Scroll reveal animations ──────────────────────────── */
 .reveal {
@@ -89,11 +106,9 @@ body {
 
 /* ── Print styles ──────────────────────────────────────── */
 @media print {
-  /* Hide everything except the result zone */
   body * { visibility: hidden; }
   #print-zone, #print-zone * { visibility: visible; }
 
-  /* Position the result zone at the top-left of the page */
   #print-zone {
     position: absolute;
     top: 0;
@@ -102,22 +117,17 @@ body {
     padding: 2rem;
   }
 
-  /* Clean up backgrounds and shadows for paper */
   #print-zone .shadow-sm,
   #print-zone .shadow-xl,
   #print-zone .shadow-lg { box-shadow: none !important; }
 
-  /* Ensure readable text on white paper */
   #print-zone { background: white !important; color: black !important; }
 
-  /* Remove hover/interactive styling that looks odd on paper */
   #print-zone button { display: none !important; }
 
-  /* Keep the print header visible */
   .print\:block  { display: block  !important; }
   .print\:hidden { display: none   !important; }
 
-  /* Page margins */
   @page { margin: 1.5cm; }
 }
 
@@ -130,4 +140,8 @@ body {
   background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+.dark .shimmer {
+  background: linear-gradient(90deg, #1E293B 25%, #334155 50%, #1E293B 75%);
+  background-size: 200% 100%;
 }

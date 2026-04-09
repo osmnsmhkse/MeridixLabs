@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,21 +11,21 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          blue:       "#4A85EF",   // primary accent — medium blue (slightly darker)
-          "blue-hover": "#3A6FD8", // hover / slightly deeper
-          "blue-dark":  "#1E45B8", // for text-on-white links
-          "blue-light": "#EBF3FF", // hero / section backgrounds
-          "blue-mid":   "#C5DBFC", // borders, dividers
+          blue:       "#4A85EF",
+          "blue-hover": "#3A6FD8",
+          "blue-dark":  "#1E45B8",
+          "blue-light": "#EBF3FF",
+          "blue-mid":   "#C5DBFC",
         },
         ink: {
-          DEFAULT: "#0F172A",  // primary text
-          secondary: "#475569", // secondary text
-          tertiary:  "#94A3B8", // placeholder / muted
+          DEFAULT:   "rgb(var(--color-ink) / <alpha-value>)",
+          secondary: "rgb(var(--color-ink-secondary) / <alpha-value>)",
+          tertiary:  "rgb(var(--color-ink-tertiary) / <alpha-value>)",
         },
         surface: {
-          DEFAULT: "#FFFFFF",
-          raised:  "#F8FAFC",  // cards on white
-          border:  "#E2E8F0",  // subtle borders
+          DEFAULT: "rgb(var(--color-surface) / <alpha-value>)",
+          raised:  "rgb(var(--color-surface-raised) / <alpha-value>)",
+          border:  "rgb(var(--color-surface-border) / <alpha-value>)",
         },
       },
       fontFamily: {
