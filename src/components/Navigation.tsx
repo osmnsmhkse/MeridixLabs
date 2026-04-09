@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Sun, Moon } from "lucide-react";
 import { useLanguage, LANGUAGES, LangCode } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { track } from "@/lib/track";
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
@@ -66,7 +67,7 @@ function LanguageSelector() {
             {Object.entries(LANGUAGES).map(([code, names]) => (
               <button
                 key={code}
-                onClick={() => { setLang(code as LangCode); setOpen(false); }}
+                onClick={() => { track("language_changed", { from: lang, to: code }); setLang(code as LangCode); setOpen(false); }}
                 className={`w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${
                   lang === code
                     ? "bg-brand-blue-light dark:bg-brand-blue/20 text-brand-blue"

@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
+import { track } from "@/lib/track";
 
 // ── Returning-user localStorage hook ─────────────────────────────────────────
 const LS_KEY = "meridix_user";
@@ -734,6 +735,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
                         href={mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => track("specialist_link_clicked", { specialist, destination: "maps" })}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-blue/30 text-brand-blue hover:bg-brand-blue hover:text-white text-xs font-semibold transition-all duration-150"
                       >
                         {/* Map pin icon */}
@@ -746,6 +748,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
                         href={zocdocUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => track("specialist_link_clicked", { specialist, destination: "zocdoc" })}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-ink-secondary hover:border-brand-blue/30 hover:text-brand-blue hover:bg-brand-blue-light text-xs font-semibold transition-all duration-150"
                       >
                         {/* Calendar icon */}
@@ -1167,6 +1170,7 @@ function EmailSection({ result }: { result: AnalysisResult }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to send.");
+      track("email_sent");
       setStatus("sent");
     } catch (err) {
       setErrMsg(err instanceof Error ? err.message : "Something went wrong.");
@@ -1265,6 +1269,7 @@ function ShareSection({ simple }: { simple: string }) {
   const shareText = `Here's a summary of my lab results from Meridix Labs:\n\n${simple}\n\nFull interpretation at meridixlabs.com`;
 
   const handleWhatsApp = () => {
+    track("share_whatsapp");
     const url = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -2148,6 +2153,7 @@ export default function AppPage() {
       setResult(json.data);
       setState("success");
       recordInterpretation();
+      track("interpretation_complete", { tier: "simple", language: lang });
     } catch {
       setErrorState("NETWORK_ERROR");
     }
@@ -2166,6 +2172,7 @@ export default function AppPage() {
       setErrorState("WRONG_FILE_TYPE");
       return;
     }
+    track("report_uploaded", { fileType: file.type, fileSize: file.size });
     setFileName(file.name);
     setIsSample(false);
     setPendingFile(file);
@@ -2176,6 +2183,7 @@ export default function AppPage() {
   };
 
   const handleSample = () => {
+    track("demo_mode_used");
     setFileName("Sample — Basic Metabolic Panel");
     setIsSample(true);
     setPendingFile(null);
