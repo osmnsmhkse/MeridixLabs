@@ -515,14 +515,33 @@ export default function AppPage() {
     <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page header */}
-        <div className="text-center mb-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
+        <div className="text-center mb-8">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
             AI Lab Interpreter
           </span>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight">Analyze your results</h1>
-          <p className="mt-3 text-lg text-ink-secondary max-w-xl mx-auto">
-            Upload a photo or PDF of your lab report. Get a full explanation — causes, mechanisms, and which doctor to see.
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
+            Upload your lab report.{" "}
+            <span className="text-gradient-blue">Understand it in seconds.</span>
+          </h1>
+          <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
+            Our AI reads every value, flags what's abnormal, and explains the biology — in plain English or full clinical detail.
           </p>
+
+          {/* Trust badges */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            {[
+              { icon: "🔒", label: "Never stored" },
+              { icon: "✓",  label: "No account required" },
+              { icon: "⚡", label: "Results in seconds" },
+              { icon: "🌍", label: "10 languages" },
+            ].map((b) => (
+              <span key={b.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-surface-border text-xs text-ink-secondary font-medium shadow-sm">
+                <span>{b.icon}</span>
+                {b.label}
+              </span>
+            ))}
+          </div>
+
           {lang !== "en" && (
             <div className="mt-3 inline-flex items-center gap-1.5 text-xs text-brand-blue bg-brand-blue-light px-3 py-1.5 rounded-full border border-brand-blue-mid">
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3.5 h-3.5">
@@ -561,21 +580,72 @@ export default function AppPage() {
           ) : null}
         </div>
 
-        {/* Trust badges */}
+        {/* "Here's what you'll get" preview — only shown on idle/error */}
         {(state === "idle" || state === "error") && (
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-5 text-xs text-ink-tertiary">
-            {[
-              { icon: "🔒", label: "Never stored" },
-              { icon: "✓",  label: "No account required" },
-              { icon: "🤖", label: "Powered by Claude AI" },
-              { icon: "⚡", label: "Results in seconds" },
-              { icon: "🌍", label: "10 languages" },
-            ].map((b) => (
-              <span key={b.label} className="flex items-center gap-1.5">
-                <span>{b.icon}</span>
-                {b.label}
-              </span>
-            ))}
+          <div className="mt-8">
+            <p className="text-center text-xs font-semibold text-ink-tertiary uppercase tracking-widest mb-4">Here's what you'll get</p>
+            <div className="bg-white rounded-2xl border border-surface-border shadow-sm overflow-hidden">
+
+              {/* Flagged value chip */}
+              <div className="px-5 pt-5 pb-3 flex items-center gap-3">
+                <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Flagged Values</span>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
+                  <span className="text-amber-500 text-xs font-bold">↑</span>
+                  <span className="text-xs font-semibold text-ink">Glucose</span>
+                  <span className="text-xs font-bold text-amber-600">112 mg/dL</span>
+                  <span className="text-xs text-ink-tertiary">ref: 70–99</span>
+                </div>
+              </div>
+
+              {/* Tabs */}
+              <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
+                {[
+                  { label: "💬 Simple",  active: true  },
+                  { label: "📋 Medium", active: false },
+                  { label: "🔬 Expert",  active: false },
+                ].map((tab) => (
+                  <span
+                    key={tab.label}
+                    className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${
+                      tab.active
+                        ? "bg-white text-brand-blue border-b-2 border-brand-blue -mb-px"
+                        : "text-ink-tertiary"
+                    }`}
+                  >
+                    {tab.label}
+                  </span>
+                ))}
+              </div>
+
+              {/* Sample tab content */}
+              <div className="px-5 py-4 space-y-2">
+                <p className="text-xs text-ink-secondary leading-relaxed">
+                  <span className="font-semibold text-emerald-600">Simple: </span>
+                  Your blood sugar is a little high — like having more sugar in your blood than ideal. Worth mentioning to your doctor.
+                </p>
+                <p className="text-xs text-ink-tertiary leading-relaxed">
+                  <span className="font-semibold text-brand-blue">Medium: </span>
+                  Fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125). Your insulin response may be losing efficiency.
+                </p>
+                <p className="text-xs text-ink-tertiary leading-relaxed">
+                  <span className="font-semibold text-purple-600">Expert: </span>
+                  IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components.
+                </p>
+              </div>
+
+              {/* Specialist */}
+              <div className="px-5 py-3 border-t border-surface-border bg-brand-blue-light/50 flex items-center gap-2.5">
+                <div className="w-6 h-6 rounded-lg bg-brand-blue flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                  </svg>
+                </div>
+                <p className="text-xs text-ink-secondary">
+                  <span className="font-bold text-brand-blue uppercase tracking-wider text-[10px]">Which specialist? </span>
+                  Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism.
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </div>
