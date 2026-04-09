@@ -2,32 +2,32 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 
-export const LANGUAGES = {
-  en: "English",
-  es: "Español",
-  de: "Deutsch",
-  fr: "Français",
-  it: "Italiano",
-  tr: "Türkçe",
-  ru: "Русский",
-  zh: "中文",
-  ja: "日本語",
-  ar: "العربية",
-} as const;
+export const LANGUAGES: Record<string, { english: string; native: string }> = {
+  en: { english: "English",    native: "English"    },
+  es: { english: "Spanish",    native: "Español"    },
+  tr: { english: "Turkish",    native: "Türkçe"     },
+  fr: { english: "French",     native: "Français"   },
+  de: { english: "German",     native: "Deutsch"    },
+  ar: { english: "Arabic",     native: "العربية"    },
+  ja: { english: "Japanese",   native: "日本語"      },
+  pt: { english: "Portuguese", native: "Português"  },
+  it: { english: "Italian",    native: "Italiano"   },
+  zh: { english: "Chinese",    native: "中文"        },
+};
 
 export type LangCode = keyof typeof LANGUAGES;
 
-export const LANGUAGE_NAMES_FOR_PROMPT: Record<LangCode, string> = {
+export const LANGUAGE_NAMES_FOR_PROMPT: Record<string, string> = {
   en: "English",
   es: "Spanish",
-  de: "German",
-  fr: "French",
-  it: "Italian",
   tr: "Turkish",
-  ru: "Russian",
-  zh: "Simplified Chinese",
-  ja: "Japanese",
+  fr: "French",
+  de: "German",
   ar: "Arabic",
+  ja: "Japanese",
+  pt: "Portuguese",
+  it: "Italian",
+  zh: "Simplified Chinese",
 };
 
 interface LanguageContextType {

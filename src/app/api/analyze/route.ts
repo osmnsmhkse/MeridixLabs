@@ -8,14 +8,14 @@ const client = new Anthropic({
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
   es: "Spanish",
-  de: "German",
-  fr: "French",
-  it: "Italian",
   tr: "Turkish",
-  ru: "Russian",
-  zh: "Simplified Chinese",
-  ja: "Japanese",
+  fr: "French",
+  de: "German",
   ar: "Arabic",
+  ja: "Japanese",
+  pt: "Portuguese",
+  it: "Italian",
+  zh: "Simplified Chinese",
 };
 
 function buildSystemPrompt(languageName: string): string {

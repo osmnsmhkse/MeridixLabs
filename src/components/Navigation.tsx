@@ -19,6 +19,8 @@ function LanguageSelector() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  const currentLang = LANGUAGES[lang] ?? LANGUAGES["en"];
+
   return (
     <div ref={ref} className="relative">
       <button
@@ -27,32 +29,44 @@ function LanguageSelector() {
         aria-label="Select language"
       >
         {/* Globe icon */}
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 flex-shrink-0">
           <circle cx="10" cy="10" r="8" />
           <path d="M10 2c-2 3-2 13 0 16M10 2c2 3 2 13 0 16M2 10h16" strokeLinecap="round" />
         </svg>
-        <span className="font-medium uppercase text-xs tracking-wide">{lang}</span>
-        <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}>
+        <span className="font-medium text-sm hidden sm:inline">{currentLang.english}</span>
+        <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3 h-3 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`}>
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-surface-border rounded-xl shadow-lg shadow-ink/8 overflow-hidden z-50">
-          <div className="p-1.5">
-            {(Object.entries(LANGUAGES) as [LangCode, string][]).map(([code, name]) => (
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-surface-border rounded-xl shadow-lg shadow-ink/8 overflow-hidden z-50">
+          <div className="px-3 py-2 border-b border-surface-border">
+            <p className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-widest">Language</p>
+          </div>
+          <div className="p-1.5 max-h-80 overflow-y-auto">
+            {Object.entries(LANGUAGES).map(([code, names]) => (
               <button
                 key={code}
-                onClick={() => { setLang(code); setOpen(false); }}
-                className={`w-full text-left flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                onClick={() => { setLang(code as LangCode); setOpen(false); }}
+                className={`w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${
                   lang === code
-                    ? "bg-brand-blue-light text-brand-blue font-semibold"
+                    ? "bg-brand-blue-light text-brand-blue"
                     : "text-ink-secondary hover:bg-surface-raised hover:text-ink"
                 }`}
               >
-                <span>{name}</span>
+                <div className="flex flex-col">
+                  <span className={`text-sm font-medium ${lang === code ? "text-brand-blue" : "text-ink"}`}>
+                    {names.english}
+                  </span>
+                  {names.native !== names.english && (
+                    <span className={`text-xs mt-0.5 ${lang === code ? "text-brand-blue/70" : "text-ink-tertiary"}`}>
+                      {names.native}
+                    </span>
+                  )}
+                </div>
                 {lang === code && (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue flex-shrink-0">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 )}

@@ -547,7 +547,7 @@ export default function AppPage() {
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3.5 h-3.5">
                 <circle cx="10" cy="10" r="8" /><path d="M10 2c-2 3-2 13 0 16M10 2c2 3 2 13 0 16M2 10h16" strokeLinecap="round" />
               </svg>
-              Results will be in {LANGUAGES[lang]}
+              Results will be in {LANGUAGES[lang]?.english ?? lang}
             </div>
           )}
         </div>
