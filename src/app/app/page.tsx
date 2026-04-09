@@ -284,10 +284,61 @@ function DeepDiveSection({ result }: { result: AnalysisResult }) {
 
 function ResultsPanel({ result, fileName, onReset, isSample }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean }) {
   const [activeTier, setActiveTier] = useState<Tier>("simple");
+  const [copied, setCopied] = useState(false);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
+  const handleCopy = async () => {
+    const flagLines = result.flags?.length
+      ? result.flags.map(f => `  ${f.status === "high" ? "↑" : f.status === "low" ? "↓" : "✓"} ${f.marker}: ${f.value} ${f.unit} (ref: ${f.reference})`).join("\n")
+      : "  No flagged values.";
+
+    const text = [
+      "MERIDIX LABS — Lab Interpretation",
+      `File: ${fileName}`,
+      `Date: ${new Date().toLocaleDateString()}`,
+      "",
+      "━━━ SIMPLE ━━━",
+      result.simple,
+      "",
+      "━━━ MEDIUM ━━━",
+      result.medium,
+      "",
+      "━━━ EXPERT ━━━",
+      result.expert,
+      "",
+      "━━━ FLAGGED VALUES ━━━",
+      flagLines,
+      ...(result.specialist ? ["", "━━━ WHICH SPECIALIST TO SEE ━━━", result.specialist] : []),
+      ...(result.etiology   ? ["", "━━━ POSSIBLE CAUSES ━━━",        result.etiology]   : []),
+      ...(result.mechanism  ? ["", "━━━ BODY MECHANISM ━━━",         result.mechanism]  : []),
+      ...(result.diseases   ? ["", "━━━ ASSOCIATED CONDITIONS ━━━",  result.diseases]   : []),
+      "",
+      "━━━ WHAT SHOULD YOU DO? ━━━",
+      result.action,
+      "",
+      "─────────────────────────────────────────",
+      "Meridix Labs is an educational tool. This is not medical advice.",
+      "Always consult a qualified physician.",
+    ].join("\n");
+
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handlePrint = () => window.print();
+
   return (
-    <div className="animate-fade-in space-y-5">
+    <div id="print-zone" className="animate-fade-in space-y-5">
+
+      {/* Print-only header — hidden on screen, shown when printing */}
+      <div className="hidden print:block mb-6 pb-4 border-b border-gray-200">
+        <p className="text-xl font-extrabold text-gray-900 tracking-tight">Meridix Labs</p>
+        <p className="text-sm text-gray-500 mt-0.5">meridixlabs.com — AI-powered lab interpretation</p>
+        <p className="text-xs text-gray-400 mt-1">File: {fileName} · {new Date().toLocaleDateString()}</p>
+        {isSample && <p className="text-xs text-amber-600 mt-1">⚠ Sample report for demonstration purposes</p>}
+      </div>
+
       {/* Sample banner */}
       {isSample && (
         <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200">
@@ -388,7 +439,7 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
       </div>
 
       {/* Disclaimer */}
-      <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 border border-amber-100">
+      <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 border border-amber-100 print:hidden">
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
         </svg>
@@ -396,6 +447,55 @@ function ResultsPanel({ result, fileName, onReset, isSample }: { result: Analysi
           <strong>Meridix Labs is an educational tool.</strong> This is not medical advice. Always consult a qualified physician.
         </p>
       </div>
+
+      {/* Copy + Print action buttons */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1 print:hidden">
+        <button
+          onClick={handleCopy}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
+            copied
+              ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+              : "border-surface-border bg-white hover:border-brand-blue/30 hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue"
+          }`}
+        >
+          {copied ? (
+            <>
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              Copied!
+            </>
+          ) : (
+            <>
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+              </svg>
+              Copy to Clipboard
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={handlePrint}
+          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border bg-white hover:border-brand-blue/30 hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h6a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 112 0 1 1 0 01-2 0zm2 1v2h4v-2H8z" clipRule="evenodd" />
+          </svg>
+          Download as PDF
+        </button>
+      </div>
+
+      {/* Toast notification (shown briefly after copy) */}
+      {copied && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-sm font-medium rounded-xl shadow-xl animate-fade-in pointer-events-none">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-400">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+          Copied to clipboard!
+        </div>
+      )}
     </div>
   );
 }

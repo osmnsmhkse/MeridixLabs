@@ -87,6 +87,40 @@ body {
 .reveal-delay-4 { transition-delay: 0.4s; }
 .reveal-delay-5 { transition-delay: 0.5s; }
 
+/* ── Print styles ──────────────────────────────────────── */
+@media print {
+  /* Hide everything except the result zone */
+  body * { visibility: hidden; }
+  #print-zone, #print-zone * { visibility: visible; }
+
+  /* Position the result zone at the top-left of the page */
+  #print-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+  }
+
+  /* Clean up backgrounds and shadows for paper */
+  #print-zone .shadow-sm,
+  #print-zone .shadow-xl,
+  #print-zone .shadow-lg { box-shadow: none !important; }
+
+  /* Ensure readable text on white paper */
+  #print-zone { background: white !important; color: black !important; }
+
+  /* Remove hover/interactive styling that looks odd on paper */
+  #print-zone button { display: none !important; }
+
+  /* Keep the print header visible */
+  .print\:block  { display: block  !important; }
+  .print\:hidden { display: none   !important; }
+
+  /* Page margins */
+  @page { margin: 1.5cm; }
+}
+
 /* ── Shimmer skeleton ──────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
