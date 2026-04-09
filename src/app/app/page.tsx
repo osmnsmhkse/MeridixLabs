@@ -300,7 +300,185 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
   );
 }
 
-function ResultsPanel({ result, fileName, onReset, isSample, mode }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean; mode: ReportMode }) {
+function DoctorQuestionsSection({
+  result,
+  mode,
+  lang,
+}: {
+  result: AnalysisResult;
+  mode: ReportMode;
+  lang: string;
+}) {
+  const [open, setOpen]               = useState(false);
+  const [questions, setQuestions]     = useState<string[] | null>(null);
+  const [loading, setLoading]         = useState(false);
+  const [error, setError]             = useState<string | null>(null);
+  const [copiedAll, setCopiedAll]     = useState(false);
+
+  const generate = async () => {
+    if (questions) return; // already generated — don't re-fetch
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode,
+          flags:     result.flags   ?? [],
+          specialist: result.specialist,
+          action:    result.action,
+          simple:    result.simple,
+          language:  lang,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Could not generate questions.");
+      setQuestions(json.questions as string[]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (next && !questions && !loading) generate();
+  };
+
+  const handleCopyAll = async () => {
+    if (!questions) return;
+    const text = questions.map((q, i) => `${i + 1}. ${q}`).join("\n");
+    await navigator.clipboard.writeText(text);
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 2000);
+  };
+
+  return (
+    <div className="bg-white rounded-2xl border border-surface-border overflow-hidden shadow-sm print:hidden">
+      {/* Header — always visible, toggles section */}
+      <button
+        onClick={handleToggle}
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-surface-raised/60 transition-colors"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className="text-base">📋</span>
+          <span className="text-sm font-semibold text-ink">Questions to bring to your doctor</span>
+          {!open && !questions && (
+            <span className="hidden sm:inline-flex items-center gap-1 text-xs text-ink-tertiary border border-surface-border rounded-full px-2.5 py-0.5 bg-surface-raised ml-1">
+              Click to generate
+            </span>
+          )}
+          {questions && (
+            <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">
+              {questions.length} ready
+            </span>
+          )}
+        </div>
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={`w-4 h-4 text-ink-tertiary transition-transform duration-200 flex-shrink-0 ${open ? "rotate-180" : ""}`}
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {/* Expanded body */}
+      {open && (
+        <div className="border-t border-surface-border">
+          {loading && (
+            <div className="flex flex-col items-center justify-center gap-3 py-10 px-5">
+              <div className="relative w-10 h-10">
+                <div className="absolute inset-0 border-3 border-brand-blue/20 rounded-full" />
+                <div className="absolute inset-0 border-[3px] border-brand-blue border-t-transparent rounded-full animate-spin" />
+              </div>
+              <p className="text-sm text-ink-secondary font-medium">Crafting your questions…</p>
+              <p className="text-xs text-ink-tertiary">Tailoring to your specific results</p>
+            </div>
+          )}
+
+          {error && !loading && (
+            <div className="p-5 space-y-3">
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-red-50 border border-red-100">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+              <button
+                onClick={() => { setError(null); generate(); }}
+                className="w-full py-2.5 rounded-xl border border-surface-border text-sm font-semibold text-ink-secondary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light transition-all duration-150"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+
+          {questions && !loading && (
+            <div className="p-5 space-y-4">
+              {/* Intro note */}
+              <p className="text-xs text-ink-tertiary leading-relaxed">
+                These questions are tailored to your specific results. Bring this list to your next appointment — you can copy them below.
+              </p>
+
+              {/* Numbered questions */}
+              <ol className="space-y-3">
+                {questions.map((q, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-bold flex items-center justify-center mt-0.5">
+                      {i + 1}
+                    </span>
+                    <p className="text-sm text-ink-secondary leading-relaxed flex-1">{q}</p>
+                  </li>
+                ))}
+              </ol>
+
+              {/* Copy all button */}
+              <button
+                onClick={handleCopyAll}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
+                  copiedAll
+                    ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                    : "border-surface-border bg-surface-raised hover:border-brand-blue/30 hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue"
+                }`}
+              >
+                {copiedAll ? (
+                  <>
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                      <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                      <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                    </svg>
+                    Copy all questions
+                  </>
+                )}
+              </button>
+
+              {/* Regenerate link */}
+              <button
+                onClick={() => { setQuestions(null); generate(); }}
+                className="w-full text-xs text-ink-tertiary hover:text-ink-secondary transition-colors py-1"
+              >
+                ↻ Generate different questions
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean; mode: ReportMode; lang: string }) {
   const [activeTier, setActiveTier] = useState<Tier>("simple");
   const [copied, setCopied] = useState(false);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
@@ -468,6 +646,9 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode }: { result: A
           </div>
         </div>
       </div>
+
+      {/* Doctor questions */}
+      <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
 
       {/* Disclaimer */}
       <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 border border-amber-100 print:hidden">
@@ -947,7 +1128,7 @@ export default function AppPage() {
           ) : state === "loading" ? (
             <LoadingAnimation mode={reportMode} />
           ) : result ? (
-            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} />
+            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} lang={lang} />
           ) : null}
         </div>
 
