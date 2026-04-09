@@ -111,12 +111,11 @@ export default function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   const navLinks = [
-    { href: "/",        label: "Home",          desktopOnly: false },
-    { href: "/app",     label: "Analyze",       desktopOnly: false },
-    { href: "/learn",   label: "Practice",      desktopOnly: true  },
-    { href: "/trends",  label: "Trend Tracker", desktopOnly: false },
-    { href: "/blog",    label: "Blog",          desktopOnly: false },
-    { href: "/about",   label: "About",         desktopOnly: false },
+    { href: "/app",     label: "Analyze",       mobileOnly: false },
+    { href: "/learn",   label: "Practice",      mobileOnly: false },
+    { href: "/trends",  label: "Trend Tracker", mobileOnly: false },
+    { href: "/blog",    label: "Blog",          mobileOnly: false },
+    { href: "/about",   label: "About",         mobileOnly: false },
   ];
 
   return (
@@ -142,12 +141,12 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-7">
+          <nav className="hidden md:flex items-center gap-5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium transition-colors whitespace-nowrap ${
                   isActive(link.href)
                     ? "text-brand-blue"
                     : "text-ink-secondary hover:text-ink"
@@ -190,7 +189,7 @@ export default function Navigation() {
         {/* Mobile menu */}
         {mobileOpen && (
           <div className="md:hidden border-t border-surface-border py-3 space-y-1">
-            {navLinks.filter((link) => !link.desktopOnly).map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
