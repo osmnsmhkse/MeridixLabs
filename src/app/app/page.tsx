@@ -3,6 +3,69 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 
+// ── Returning-user localStorage hook ─────────────────────────────────────────
+const LS_KEY = "meridix_user";
+
+interface UserData {
+  firstVisit: string;
+  lastVisit:  string;
+  interpretationCount: number;
+  saveBannerDismissed: boolean;
+}
+
+function readUserData(): UserData | null {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? (JSON.parse(raw) as UserData) : null;
+  } catch { return null; }
+}
+
+function writeUserData(data: UserData) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch { /* noop */ }
+}
+
+function useReturningUser() {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [daysSinceLastVisit, setDaysSinceLastVisit] = useState(0);
+
+  useEffect(() => {
+    const now = new Date().toISOString();
+    const existing = readUserData();
+    if (existing) {
+      // Compute days from the STORED lastVisit before overwriting it
+      const days = Math.floor(
+        (Date.now() - new Date(existing.lastVisit).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      setDaysSinceLastVisit(days);
+      const updated = { ...existing, lastVisit: now };
+      writeUserData(updated);
+      setUserData(updated);
+    }
+    // If no data yet, only create entry on first completed analysis
+  }, []);
+
+  const recordInterpretation = useCallback(() => {
+    const now = new Date().toISOString();
+    const existing = readUserData();
+    const updated: UserData = existing
+      ? { ...existing, lastVisit: now, interpretationCount: existing.interpretationCount + 1 }
+      : { firstVisit: now, lastVisit: now, interpretationCount: 1, saveBannerDismissed: false };
+    writeUserData(updated);
+    setUserData(updated);
+  }, []);
+
+  const dismissBanner = useCallback(() => {
+    setUserData((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, saveBannerDismissed: true };
+      writeUserData(updated);
+      return updated;
+    });
+  }, []);
+
+  return { userData, recordInterpretation, dismissBanner, daysSinceLastVisit };
+}
+
 type Tier = "simple" | "medium" | "expert";
 type ReportMode = "lab" | "radiology";
 type ErrorCode =
@@ -1838,6 +1901,7 @@ function ContextForm({
 
 export default function AppPage() {
   const { lang } = useLanguage();
+  const { userData, recordInterpretation, dismissBanner, daysSinceLastVisit } = useReturningUser();
   const [state, setState] = useState<"idle" | "context" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -1880,6 +1944,7 @@ export default function AppPage() {
       }
       setResult(json.data);
       setState("success");
+      recordInterpretation();
     } catch {
       setErrorState("NETWORK_ERROR");
     }
@@ -1933,16 +1998,42 @@ export default function AppPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page header */}
         <div className="text-center mb-8">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-            AI Lab Interpreter
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
-            Upload your lab report.{" "}
-            <span className="text-gradient-blue">Understand it in seconds.</span>
-          </h1>
-          <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
-            Our AI reads every value, flags what's abnormal, and explains the biology — in plain English or full clinical detail.
-          </p>
+          {userData && userData.interpretationCount > 1 && state === "idle" ? (
+            /* Returning user greeting */
+            <>
+              <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+                Welcome back
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
+                Ready to analyze{" "}
+                <span className="text-gradient-blue">another report?</span>
+              </h1>
+              <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
+                {daysSinceLastVisit >= 30
+                  ? "It's been a while — time for a check-up?"
+                  : `You've interpreted ${userData.interpretationCount} report${userData.interpretationCount === 1 ? "" : "s"} with Meridix Labs.`}
+              </p>
+              {daysSinceLastVisit >= 30 && (
+                <p className="mt-1 text-sm text-ink-tertiary">
+                  You&apos;ve interpreted {userData.interpretationCount} report{userData.interpretationCount === 1 ? "" : "s"} with Meridix Labs.
+                </p>
+              )}
+            </>
+          ) : (
+            /* Default hero */
+            <>
+              <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+                AI Lab Interpreter
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
+                Upload your lab report.{" "}
+                <span className="text-gradient-blue">Understand it in seconds.</span>
+              </h1>
+              <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
+                Our AI reads every value, flags what's abnormal, and explains the biology — in plain English or full clinical detail.
+              </p>
+            </>
+          )}
 
           {/* Trust badges */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
@@ -2039,6 +2130,29 @@ export default function AppPage() {
             <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} lang={lang} />
           ) : null}
         </div>
+
+        {/* Save account banner — shown after first interpretation */}
+        {userData && userData.interpretationCount === 1 && !userData.saveBannerDismissed && result && (
+          <div className="mt-4 animate-fade-in flex items-start justify-between gap-3 px-4 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-brand-blue/20 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
+                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-ink">Save your results?</p>
+                <p className="text-xs text-ink-secondary mt-0.5">Create a free account to track changes over time.</p>
+              </div>
+            </div>
+            <button
+              onClick={dismissBanner}
+              className="text-xs text-ink-tertiary hover:text-ink-secondary transition-colors flex-shrink-0 mt-1 px-2 py-1 rounded-lg hover:bg-surface-raised"
+            >
+              Maybe later
+            </button>
+          </div>
+        )}
 
         {/* "Here's what you'll get" preview — only shown on idle */}
         {state === "idle" && (
