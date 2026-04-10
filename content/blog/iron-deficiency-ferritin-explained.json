@@ -1,0 +1,141 @@
+{
+  "title": "Iron Deficiency and Ferritin: Why Your Doctor's 'Normal' Range Might Be Wrong for You",
+  "slug": "iron-deficiency-ferritin-explained",
+  "date": "2026-03-31",
+  "excerpt": "Ferritin is the most sensitive marker for iron deficiency — yet the lower end of most lab reference ranges is set so low that millions of people are told their iron is 'normal' while experiencing classic deficiency symptoms like fatigue, hair loss, and brain fog. Here's how to read an iron panel properly.",
+  "content": [
+    {
+      "type": "p",
+      "text": "Iron deficiency is the most common nutritional deficiency in the world, affecting an estimated 2 billion people. Yet in clinical practice, it's also one of the most commonly missed diagnoses — because the reference ranges on standard lab reports are set to identify overt anemia, not the subclinical deficiency that causes symptoms long before anemia develops."
+    },
+    {
+      "type": "h2",
+      "text": "The Iron Panel: Four Tests, One Picture"
+    },
+    {
+      "type": "p",
+      "text": "A complete iron panel includes serum iron, ferritin, TIBC (total iron-binding capacity), and transferrin saturation. Each measures something different, and together they tell a more complete story than any single value alone."
+    },
+    {
+      "type": "h2",
+      "text": "Ferritin: The Storage Measure That Matters Most"
+    },
+    {
+      "type": "p",
+      "text": "Ferritin is the protein that stores iron inside cells. The amount of ferritin in your blood reflects how full your iron stores are. It's the earliest marker to drop when iron is being depleted — your body will pull from stores long before your hemoglobin or serum iron falls."
+    },
+    {
+      "type": "p",
+      "text": "The typical reference range for ferritin is 12–300 ng/mL for women and 12–400 ng/mL for men. Here's the problem: a ferritin of 13 ng/mL is technically 'normal' on most lab reports — yet studies consistently show that symptoms of iron deficiency (fatigue, brain fog, hair loss, restless legs) begin to appear when ferritin drops below 30–50 ng/mL, and hair shedding specifically accelerates below 70 ng/mL."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Below 12 ng/mL: Iron deficiency, iron-deficiency anemia may be developing",
+        "12–30 ng/mL: Low-normal — technically within range but likely symptomatic for many people",
+        "30–70 ng/mL: Marginal — adequate but suboptimal; hair and cognitive symptoms may be present",
+        "70–150 ng/mL: Good functional range for most people",
+        "Above 300 ng/mL (women) / 400 ng/mL (men): Elevated — rule out inflammation or hemochromatosis"
+      ]
+    },
+    {
+      "type": "callout",
+      "text": "Ferritin is also an acute phase reactant — it rises during infection, inflammation, and liver disease, potentially masking iron deficiency. Someone with chronic inflammation can have 'normal' ferritin while being functionally iron deficient. In these cases, transferrin saturation below 20% alongside symptoms is more informative."
+    },
+    {
+      "type": "h2",
+      "text": "Serum Iron: The Circulating Level"
+    },
+    {
+      "type": "p",
+      "text": "Serum iron measures the amount of iron currently circulating in your blood, bound to the transport protein transferrin. It's highly variable — it fluctuates throughout the day (highest in the morning), is suppressed by inflammation, and drops after a single night of poor sleep. Normal range is roughly 60–170 µg/dL."
+    },
+    {
+      "type": "p",
+      "text": "Serum iron alone is a poor diagnostic test for iron deficiency because of its variability. Its main value is in combination with TIBC to calculate transferrin saturation."
+    },
+    {
+      "type": "h2",
+      "text": "TIBC and Transferrin Saturation"
+    },
+    {
+      "type": "p",
+      "text": "TIBC (Total Iron-Binding Capacity) measures how much iron your blood could carry if all the transferrin were fully loaded. In iron deficiency, the body makes more transferrin to capture every available iron molecule — so TIBC rises. Normal range is 250–370 µg/dL; above 400 µg/dL suggests deficiency."
+    },
+    {
+      "type": "p",
+      "text": "Transferrin saturation (TSAT) is calculated as: (serum iron ÷ TIBC) × 100. It tells you what percentage of your transport capacity is actually being used. Normal is 20–50%. Below 20% with low ferritin confirms iron deficiency. Below 20% with elevated ferritin suggests functional iron deficiency from inflammation (iron exists in stores but can't be mobilized)."
+    },
+    {
+      "type": "h2",
+      "text": "Stages of Iron Deficiency"
+    },
+    {
+      "type": "p",
+      "text": "Iron deficiency doesn't go straight to anemia. There's a progression:"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Stage 1 — Iron depletion: Ferritin falls below 30 ng/mL. Serum iron, TIBC, hemoglobin, and CBC all still normal. Symptoms possible: fatigue, hair loss, reduced exercise tolerance.",
+        "Stage 2 — Iron-deficient erythropoiesis: Ferritin low, TIBC elevated, TSAT below 20%. The bone marrow is now making red blood cells with less iron. Hemoglobin still normal. Symptoms more prominent.",
+        "Stage 3 — Iron deficiency anemia: Hemoglobin drops below normal. Red blood cells become small (low MCV) and pale (low MCH). Classic anemia symptoms: pallor, shortness of breath, heart palpitations."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Symptoms That Should Make You Check Ferritin"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Chronic fatigue that doesn't improve with rest",
+        "Hair shedding — particularly diffuse thinning all over the scalp (telogen effluvium)",
+        "Brain fog, difficulty concentrating, poor memory",
+        "Restless legs syndrome — the urge to move legs at night is strongly linked to low ferritin",
+        "Cold hands and feet despite normal thyroid",
+        "Brittle nails, especially with koilonychia (spoon-shaped nails)",
+        "Pica — craving non-food substances like ice (pagophagia), dirt, or chalk"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Who Is Most at Risk?"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Menstruating women: Monthly blood loss is the single biggest risk factor — heavy periods dramatically increase demand",
+        "Pregnant women: Iron requirements nearly double during pregnancy",
+        "Vegans and vegetarians: Plant-based iron (non-heme) is absorbed 2–10 times less efficiently than animal-based (heme) iron",
+        "Endurance athletes: 'Sports anemia' from foot-strike hemolysis, sweat losses, and GI microbleeding",
+        "People with celiac disease or IBD: Malabsorption reduces iron uptake even with adequate dietary intake",
+        "Regular blood donors: Each donation removes approximately 250 mg of iron"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Treating Iron Deficiency"
+    },
+    {
+      "type": "p",
+      "text": "Oral iron supplements (ferrous sulfate, ferrous gluconate, ferrous bisglycinate) are the first-line treatment. However, daily dosing actually reduces absorption — the gut temporarily downregulates iron receptors after each dose. Alternate-day dosing (every other day) has been shown to achieve better absorption with fewer side effects."
+    },
+    {
+      "type": "p",
+      "text": "Take iron on an empty stomach with vitamin C (ascorbic acid) to maximize absorption. Avoid taking it within 2 hours of coffee, tea, calcium supplements, or antacids — all of which significantly inhibit absorption. Constipation and nausea are common side effects; ferrous bisglycinate ('gentle iron') is typically better tolerated than ferrous sulfate."
+    },
+    {
+      "type": "callout",
+      "text": "Even with perfect supplementation, it typically takes 3–6 months of consistent treatment to fully replenish iron stores from a depleted state. Hair regrowth lags even further — expect 6–12 months after ferritin is restored before seeing full results."
+    },
+    {
+      "type": "h2",
+      "text": "When Ferritin Is High: Don't Ignore This"
+    },
+    {
+      "type": "p",
+      "text": "Elevated ferritin (above 300 ng/mL in women, 400 ng/mL in men) is not simply the opposite of deficiency. The most common causes are inflammation, fatty liver disease, alcohol use, and metabolic syndrome. But persistently elevated ferritin — especially above 1,000 ng/mL — needs to be evaluated for hereditary hemochromatosis, a common genetic condition (affecting 1 in 200 people of Northern European descent) where the body absorbs too much iron, which can damage the liver, heart, and pancreas if untreated."
+    }
+  ]
+}

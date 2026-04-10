@@ -1,0 +1,145 @@
+{
+  "title": "Kidney Function Tests: Creatinine, eGFR, and BUN Explained",
+  "slug": "kidney-function-tests-creatinine-egfr",
+  "date": "2026-04-06",
+  "excerpt": "Your kidneys filter about 200 liters of blood every day, and a basic metabolic panel gives you a window into how well they're doing it. Creatinine, eGFR, BUN — these values appear on almost every routine blood test, yet most patients have no idea what they mean or when to worry. This guide breaks it all down.",
+  "content": [
+    {
+      "type": "p",
+      "text": "Your kidneys perform one of the most critical functions in your body: filtering waste products from your blood, regulating fluid balance, controlling blood pressure, and producing hormones. When they start to struggle, waste builds up in your bloodstream — and that's exactly what kidney function tests measure."
+    },
+    {
+      "type": "h2",
+      "text": "Creatinine: The Waste Product Your Kidneys Filter"
+    },
+    {
+      "type": "p",
+      "text": "Creatinine is a waste product produced by the normal breakdown of creatine phosphate in muscle tissue. It's released into the bloodstream at a fairly constant rate (proportional to your muscle mass) and filtered out by the kidneys. Because production is constant, a rise in blood creatinine almost always means the kidneys are filtering less efficiently."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Normal range for men: 0.74–1.35 mg/dL",
+        "Normal range for women: 0.59–1.04 mg/dL",
+        "Higher muscle mass = naturally higher creatinine (bodybuilders and athletes often run 1.2–1.4 mg/dL without any kidney problem)",
+        "Low muscle mass = naturally lower creatinine (elderly patients and those with muscle-wasting conditions may have 'normal' creatinine despite significant kidney impairment)"
+      ]
+    },
+    {
+      "type": "p",
+      "text": "This is creatinine's limitation: it's biased by muscle mass. A sedentary 80-year-old woman with creatinine of 1.0 mg/dL might actually have much worse kidney function than a 30-year-old male athlete with creatinine of 1.4 mg/dL. This is why creatinine is almost never interpreted alone."
+    },
+    {
+      "type": "h2",
+      "text": "eGFR: The Better Measure of Kidney Function"
+    },
+    {
+      "type": "p",
+      "text": "eGFR stands for estimated Glomerular Filtration Rate. It estimates how many milliliters of blood your kidneys filter per minute, calculated from your creatinine level along with your age, sex, and sometimes race. It's a far more meaningful number than raw creatinine because it adjusts for the factors that bias creatinine alone."
+    },
+    {
+      "type": "p",
+      "text": "The eGFR scale maps directly to the five stages of Chronic Kidney Disease (CKD):"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "eGFR ≥ 90 mL/min/1.73m²: Normal kidney function (Stage 1 if markers of damage are present)",
+        "eGFR 60–89: Mildly decreased function (Stage 2 — often no symptoms)",
+        "eGFR 45–59: Mildly to moderately decreased (Stage 3a — monitor closely)",
+        "eGFR 30–44: Moderately to severely decreased (Stage 3b — specialist referral often recommended)",
+        "eGFR 15–29: Severely decreased (Stage 4 — preparing for renal replacement therapy)",
+        "eGFR < 15: Kidney failure (Stage 5 — dialysis or transplant territory)"
+      ]
+    },
+    {
+      "type": "callout",
+      "text": "A single low eGFR reading is not a diagnosis. Kidney function naturally varies, and a temporary dip during dehydration, illness, or after taking NSAIDs is common. CKD is only diagnosed when reduced function persists for more than 3 months."
+    },
+    {
+      "type": "h2",
+      "text": "BUN: Blood Urea Nitrogen"
+    },
+    {
+      "type": "p",
+      "text": "BUN measures the amount of urea nitrogen in your blood. Urea is produced in the liver when it processes protein, and it's excreted by the kidneys. Like creatinine, elevated BUN can signal reduced kidney filtering — but BUN is even more easily influenced by non-kidney factors."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Normal range: 7–20 mg/dL",
+        "High BUN with elevated creatinine: Likely kidney-related",
+        "High BUN with normal creatinine: Usually reflects high protein intake, dehydration, or gastrointestinal bleeding (blood in the gut is digested like dietary protein)",
+        "Low BUN: Can indicate liver disease (less urea production), malnutrition, or overhydration"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "The BUN:Creatinine Ratio"
+    },
+    {
+      "type": "p",
+      "text": "Doctors often look at the BUN to creatinine ratio (BUN/Cr) to distinguish between different causes of kidney impairment:"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ratio 10–20:1 (normal): Proportional elevation, suggests intrinsic kidney disease or normal variation",
+        "Ratio > 20:1 (elevated): Suggests 'pre-renal' cause — dehydration, heart failure, reduced blood flow to kidneys; or upper GI bleed",
+        "Ratio < 10:1 (low): May indicate acute tubular necrosis, severe liver disease, or low-protein diet"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Cystatin C: The Next-Generation Kidney Marker"
+    },
+    {
+      "type": "p",
+      "text": "Cystatin C is a newer kidney marker appearing on more comprehensive metabolic panels. Unlike creatinine, it's not affected by muscle mass — it's produced by all nucleated cells at a constant rate and filtered exclusively by the kidneys. The CKD-EPI equation that combines creatinine-based eGFR with cystatin C-based eGFR is now considered the most accurate way to estimate kidney function."
+    },
+    {
+      "type": "p",
+      "text": "If your creatinine-based eGFR falls in the 45–75 range, ask your doctor about a cystatin C test to get a more accurate picture, especially if you have either very low or very high muscle mass."
+    },
+    {
+      "type": "h2",
+      "text": "Other Kidney Markers to Know"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Urine albumin-to-creatinine ratio (uACR): Albumin in urine (proteinuria) is an early sign of kidney damage, sometimes appearing before eGFR drops. Target: < 30 mg/g.",
+        "Electrolytes (sodium, potassium, bicarbonate): The kidneys regulate these tightly. Abnormal levels can signal kidney dysfunction.",
+        "Phosphorus: Elevated phosphorus is a sign of advanced CKD — healthy kidneys excrete it efficiently.",
+        "PTH (parathyroid hormone): Rises as kidneys lose their ability to process vitamin D, disturbing calcium-phosphorus balance."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "What Causes Kidneys to Struggle?"
+    },
+    {
+      "type": "p",
+      "text": "The two leading causes of CKD are diabetes and high blood pressure — they account for roughly 75% of all cases. Poorly controlled blood sugar damages the small blood vessels in the kidney's filtering units (glomeruli); high pressure mechanically damages them. Other common causes include autoimmune diseases (lupus nephritis), recurrent kidney infections, long-term NSAID use, and genetic conditions like polycystic kidney disease."
+    },
+    {
+      "type": "callout",
+      "text": "Regular kidney function monitoring is especially important if you have diabetes, hypertension, a family history of kidney disease, or take long-term NSAIDs (ibuprofen, naproxen). Kidney disease is often silent until it's significantly advanced."
+    },
+    {
+      "type": "h2",
+      "text": "How to Protect Your Kidneys"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Control blood sugar and blood pressure: These are the two most powerful levers for preventing kidney decline",
+        "Stay hydrated: Chronic mild dehydration stresses the kidneys over time",
+        "Limit NSAIDs: Ibuprofen and naproxen reduce blood flow to the kidneys — use acetaminophen when possible",
+        "Moderate protein intake: Very high protein diets (>2g/kg/day) can accelerate decline in already-damaged kidneys",
+        "Avoid smoking: Smoking reduces blood flow to the kidneys and accelerates CKD progression",
+        "Annual screening: If you have risk factors, yearly BMP or CMP with urine albumin check can catch problems early"
+      ]
+    }
+  ]
+}

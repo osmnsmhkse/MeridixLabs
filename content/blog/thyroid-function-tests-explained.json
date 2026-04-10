@@ -1,0 +1,126 @@
+{
+  "title": "Thyroid Function Tests Explained: TSH, T3, T4 and What They Mean",
+  "slug": "thyroid-function-tests-explained",
+  "date": "2026-04-10",
+  "excerpt": "Thyroid tests are among the most frequently misread lab results. A TSH of 5.2 can mean very different things depending on your age, symptoms, and whether you're already on medication. This guide explains how TSH, Free T4, Free T3, and antibody tests work together — and what it actually means when one of them is flagged.",
+  "content": [
+    {
+      "type": "p",
+      "text": "Your thyroid is a butterfly-shaped gland at the base of your neck, and it controls your metabolism, energy, mood, heart rate, and much more. When something goes wrong with it, the effects are felt everywhere — but because the symptoms (fatigue, weight changes, brain fog) overlap with dozens of other conditions, the only way to know for sure is a blood test."
+    },
+    {
+      "type": "h2",
+      "text": "The Thyroid Axis: How the System Works"
+    },
+    {
+      "type": "p",
+      "text": "Understanding thyroid results requires understanding the chain of command. Your brain's hypothalamus releases TRH (thyrotropin-releasing hormone), which signals the pituitary gland to release TSH (thyroid-stimulating hormone). TSH then tells your thyroid to produce T4 and T3. T4 is the storage form — relatively inactive. T3 is the active form that actually drives cellular metabolism."
+    },
+    {
+      "type": "p",
+      "text": "This feedback loop means the relationship between TSH and thyroid hormones is inverse: when T4 and T3 are low, the pituitary pumps out more TSH to compensate. When they're high, TSH is suppressed. This is why TSH is usually the first test ordered — it's the most sensitive signal of overall thyroid function."
+    },
+    {
+      "type": "h2",
+      "text": "TSH: The Master Signal"
+    },
+    {
+      "type": "p",
+      "text": "TSH (Thyroid-Stimulating Hormone) is produced by your pituitary gland, not your thyroid. It's a messenger, not a thyroid hormone itself. The typical reference range is 0.4–4.0 mIU/L, though this varies slightly between labs."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "High TSH (above 4.0): Your pituitary is working overtime trying to stimulate an underperforming thyroid. This suggests hypothyroidism — the thyroid is sluggish.",
+        "Low TSH (below 0.4): The pituitary has reduced its signal, usually because the thyroid is producing too much hormone on its own. This points to hyperthyroidism.",
+        "Mildly elevated TSH (4.0–10.0) with normal T4: Often called 'subclinical hypothyroidism' — the thyroid is compensating but may be struggling."
+      ]
+    },
+    {
+      "type": "callout",
+      "text": "TSH is counterintuitive: a high TSH means the thyroid is underactive (the pituitary is trying harder to push a lazy gland), while a low TSH means the thyroid is overactive (the pituitary is holding back because there's already too much hormone)."
+    },
+    {
+      "type": "h2",
+      "text": "Free T4: The Main Output"
+    },
+    {
+      "type": "p",
+      "text": "T4 (thyroxine) is the primary hormone produced by the thyroid gland — it contains four iodine atoms, which is where the '4' comes from. Most T4 in your blood is bound to proteins, so labs measure 'Free T4' (FT4), the unbound portion that's actually available to your cells."
+    },
+    {
+      "type": "p",
+      "text": "Normal Free T4 is typically 0.8–1.8 ng/dL. If your TSH is elevated but your Free T4 is still normal, you're in the subclinical range. If Free T4 is also low, you have overt hypothyroidism. If both TSH is low and Free T4 is high, that's overt hyperthyroidism."
+    },
+    {
+      "type": "h2",
+      "text": "Free T3: The Active Hormone"
+    },
+    {
+      "type": "p",
+      "text": "T3 (triiodothyronine) is the biologically active form of thyroid hormone — it's what your cells actually use. Your thyroid produces some T3 directly, but most of it is made by converting T4 in peripheral tissues (liver, kidneys, muscles). Free T3 is particularly useful when someone has symptoms of thyroid dysfunction but their TSH and T4 look normal."
+    },
+    {
+      "type": "p",
+      "text": "Some people have a conversion problem: their T4 levels look fine, but they don't efficiently convert it to T3, so they experience hypothyroid symptoms despite 'normal' results. This is why many endocrinologists check Free T3 in patients who remain symptomatic on levothyroxine (which is pure T4)."
+    },
+    {
+      "type": "h2",
+      "text": "Thyroid Antibodies: Autoimmune Causes"
+    },
+    {
+      "type": "p",
+      "text": "If your TSH is abnormal, the next question is why. The most common cause of hypothyroidism worldwide is Hashimoto's thyroiditis — an autoimmune condition in which your immune system attacks the thyroid gland. The most common cause of hyperthyroidism is Graves' disease, also autoimmune."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "TPO antibodies (Anti-TPO): Elevated in Hashimoto's thyroiditis and sometimes Graves' disease. High levels indicate the immune system is attacking thyroid tissue.",
+        "Thyroglobulin antibodies (Anti-Tg): Also associated with Hashimoto's. Often tested alongside Anti-TPO.",
+        "TSI / TRAb (Thyroid-stimulating immunoglobulins): Present in Graves' disease. These antibodies mimic TSH and overstimulate the thyroid."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "How to Read Your Results Together"
+    },
+    {
+      "type": "p",
+      "text": "Individual values tell an incomplete story. Here's how common patterns translate:"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "High TSH + Low Free T4 = Overt hypothyroidism. You're not producing enough thyroid hormone.",
+        "High TSH + Normal Free T4 = Subclinical hypothyroidism. Thyroid is compensating but borderline.",
+        "Low TSH + High Free T4 = Overt hyperthyroidism. Too much thyroid hormone.",
+        "Low TSH + Normal Free T4 = Subclinical hyperthyroidism. Could be early Graves' or excess medication.",
+        "Normal TSH + Symptoms = Consider Free T3, antibodies, or a repeat test in 3–6 months."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "What Affects Thyroid Test Accuracy"
+    },
+    {
+      "type": "p",
+      "text": "TSH varies throughout the day — it's highest in the early morning and lowest in the afternoon. Most labs prefer a fasting morning draw for consistency. Biotin supplements (commonly taken for hair and nails) can interfere with thyroid assays and cause falsely abnormal results — stop biotin for 3 days before testing if possible."
+    },
+    {
+      "type": "p",
+      "text": "Pregnancy changes thyroid reference ranges significantly, especially in the first trimester. Stress, illness, and certain medications (amiodarone, lithium, steroids) can all shift thyroid values. Always review results in the context of your overall health picture."
+    },
+    {
+      "type": "callout",
+      "text": "One abnormal TSH reading is rarely the whole story. Most endocrinologists want to see two abnormal results separated by weeks before diagnosing a thyroid disorder, unless symptoms are severe."
+    },
+    {
+      "type": "h2",
+      "text": "When to See an Endocrinologist"
+    },
+    {
+      "type": "p",
+      "text": "Your primary care doctor can manage most thyroid conditions. But consider a referral to an endocrinologist if: your TSH is persistently abnormal despite treatment, you're pregnant or planning to become pregnant, you have thyroid nodules, your antibody levels are very high, or you remain symptomatic despite 'normal' lab values. Thyroid management is nuanced, and getting it right can transform how you feel day-to-day."
+    }
+  ]
+}

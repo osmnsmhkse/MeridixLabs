@@ -1,0 +1,137 @@
+{
+  "title": "Liver Function Tests: What ALT, AST, ALP, and Bilirubin Actually Mean",
+  "slug": "liver-function-tests-alt-ast-explained",
+  "date": "2026-04-02",
+  "excerpt": "A slightly elevated ALT is one of the most common incidental findings in routine blood work — and one of the most anxiety-inducing. Is it serious? Does it mean liver disease? Most of the time, the answer is nuanced. This guide explains each liver enzyme, what it measures, and when elevated values are actually worth worrying about.",
+  "content": [
+    {
+      "type": "p",
+      "text": "Your liver performs over 500 different functions — metabolizing drugs, producing bile, synthesizing proteins, storing glucose, and detoxifying everything that passes through your gut. A liver function test (LFT, also called a hepatic function panel) gives you a snapshot of how well it's doing, through a combination of enzymes and proteins that leak out of liver cells when they're stressed or damaged."
+    },
+    {
+      "type": "h2",
+      "text": "ALT: The Most Liver-Specific Enzyme"
+    },
+    {
+      "type": "p",
+      "text": "ALT (alanine aminotransferase) is an enzyme found predominantly in liver cells. When liver cells are damaged or inflamed, they release ALT into the bloodstream. It's the most specific marker for liver injury — unlike some other enzymes, elevated ALT almost always points to the liver."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Normal range: roughly 7–56 U/L in men, 7–45 U/L in women (varies by lab)",
+        "Mild elevation (1–3× upper limit): Common, often due to fatty liver, alcohol, medications, or obesity — usually not alarming",
+        "Moderate elevation (3–10×): Warrants investigation — could be viral hepatitis, significant fatty liver disease, or drug toxicity",
+        "Severe elevation (>10×): Suggests acute liver injury — viral hepatitis, ischemic hepatitis ('shock liver'), drug-induced liver injury, or autoimmune hepatitis"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "AST: The Less Specific Partner"
+    },
+    {
+      "type": "p",
+      "text": "AST (aspartate aminotransferase) is also released by damaged liver cells — but unlike ALT, it's also found in heart muscle, skeletal muscle, kidneys, and red blood cells. This makes it less specific for liver disease. However, the pattern of AST relative to ALT is diagnostically useful."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "ALT > AST: Most liver diseases including non-alcoholic fatty liver disease (NAFLD), viral hepatitis, and most drug toxicities",
+        "AST:ALT ratio > 2:1: Classic pattern of alcoholic liver disease — alcohol depletes pyridoxal phosphate (vitamin B6), which disproportionately reduces ALT production",
+        "AST elevated but ALT normal: Consider heart attack, rhabdomyolysis (muscle breakdown), or hemolysis — not necessarily a liver problem at all"
+      ]
+    },
+    {
+      "type": "callout",
+      "text": "The AST:ALT ratio is one of the most useful patterns in liver medicine. A ratio above 2 strongly suggests alcohol as the cause, even when patients don't disclose their drinking habits. A ratio below 1 with both enzymes mildly elevated usually points to non-alcoholic fatty liver disease."
+    },
+    {
+      "type": "h2",
+      "text": "ALP: The Enzyme That Points to the Bile Ducts"
+    },
+    {
+      "type": "p",
+      "text": "ALP (alkaline phosphatase) is produced by cells lining the bile ducts, as well as bone, intestine, and placenta. When bile flow is obstructed — whether by a gallstone, a tumor, or inflammation of the bile ducts — ALP rises dramatically."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Normal range: 44–147 U/L (varies significantly by age, sex, and lab)",
+        "Isolated high ALP with normal ALT/AST: Points to the bile ducts (cholestasis) or bone disease rather than hepatocyte damage",
+        "High ALP alongside elevated bilirubin and GGT: Suggests biliary obstruction or primary biliary cholangitis",
+        "High ALP in children and adolescents: Normal during growth spurts — bone produces large amounts during active growth"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "GGT: The Alcohol and Bile Duct Marker"
+    },
+    {
+      "type": "p",
+      "text": "GGT (gamma-glutamyl transferase) is particularly sensitive to alcohol and medications. Even moderate, regular alcohol consumption raises GGT within days. It's also elevated in bile duct disorders and is useful for confirming that a high ALP is liver-derived rather than bone-derived (bone disease raises ALP but not GGT)."
+    },
+    {
+      "type": "p",
+      "text": "GGT is extremely sensitive but not very specific — it rises with alcohol, many medications (statins, anticonvulsants, antibiotics), fatty liver, heart failure, and even after vigorous exercise. An elevated GGT alone, in the absence of other abnormal LFTs, rarely requires extensive investigation."
+    },
+    {
+      "type": "h2",
+      "text": "Bilirubin: The Breakdown Product"
+    },
+    {
+      "type": "p",
+      "text": "Bilirubin is produced when red blood cells are broken down and their hemoglobin is metabolized. The liver processes it and excretes it into bile. Jaundice (yellow skin and eyes) occurs when bilirubin builds up in the blood. There are two types measured:"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Direct (conjugated) bilirubin: Processed by the liver. Elevated in liver disease and bile duct obstruction.",
+        "Indirect (unconjugated) bilirubin: Not yet processed. Elevated when too many red blood cells are being broken down (hemolysis) or when the liver can't conjugate it fast enough.",
+        "Total bilirubin normal range: 0.1–1.2 mg/dL",
+        "Gilbert's syndrome: A benign genetic variant affecting ~5% of people that causes mildly elevated unconjugated bilirubin — harmless, but often causes alarm in routine blood work"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Albumin and Total Protein: Liver Synthetic Function"
+    },
+    {
+      "type": "p",
+      "text": "The enzymes above tell you about liver cell damage. Albumin and total protein tell you about liver function — specifically, the liver's ability to manufacture proteins. Albumin is produced exclusively by the liver and has a half-life of about 20 days. Low albumin (below 3.5 g/dL) suggests the liver has been struggling for weeks or more, or that protein is being lost elsewhere (malnutrition, kidney disease, inflammation)."
+    },
+    {
+      "type": "p",
+      "text": "Low albumin alongside elevated bilirubin and abnormal clotting tests (PT/INR) paints a picture of serious liver dysfunction. In contrast, someone with enzyme elevations but normal albumin and bilirubin has liver irritation but preserved synthetic function — a much better prognostic sign."
+    },
+    {
+      "type": "h2",
+      "text": "The Most Common Reason for Mildly Elevated Enzymes"
+    },
+    {
+      "type": "p",
+      "text": "Non-alcoholic fatty liver disease (NAFLD) — fat accumulation in the liver not caused by alcohol — affects roughly 25% of the global population. It's the most common cause of mildly elevated ALT and AST in the developed world, closely followed by alcohol use and medications. NAFLD is strongly associated with obesity, type 2 diabetes, and metabolic syndrome."
+    },
+    {
+      "type": "p",
+      "text": "The good news: for most people, NAFLD is reversible. A 7–10% reduction in body weight consistently normalizes liver enzymes and reduces liver fat on imaging. No medication is required for early-stage NAFLD — lifestyle is the treatment."
+    },
+    {
+      "type": "callout",
+      "text": "Many medications cause liver enzyme elevations as a side effect. Statins, antibiotics (especially amoxicillin-clavulanate), NSAIDs, antifungals, and antiepileptics are common offenders. Always check whether a new medication was started before assuming there's underlying liver disease."
+    },
+    {
+      "type": "h2",
+      "text": "When to Worry and When to Watch"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "ALT/AST mildly elevated (< 3× normal), no symptoms, no alcohol: Likely NAFLD or medication — repeat in 3–6 months, pursue weight loss if applicable",
+        "Any elevation with jaundice, right upper quadrant pain, or dark urine: Needs prompt evaluation — could be gallstones, hepatitis, or biliary obstruction",
+        "ALT/AST > 10× normal: Acute liver injury — evaluate urgently",
+        "Progressively rising enzymes over months: Requires workup for chronic hepatitis B or C, autoimmune hepatitis, or hemochromatosis",
+        "Elevated ALP with normal ALT/AST: Rule out bile duct disease and bone disease before assuming it's liver-related"
+      ]
+    }
+  ]
+}
