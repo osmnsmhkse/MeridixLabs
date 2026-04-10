@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" role="img">
+  <title>Meridix Labs — app icon</title>
+  <rect width="48" height="48" rx="11" fill="#0f172a"/>
+
+  <!-- Rod of Asclepius mark -->
+  <line x1="24" y1="9" x2="24" y2="45" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M 24,15 C 40,22 40,38 24,44" stroke="#4a85ef" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M 24,21 C 8,28 8,43 24,45" stroke="#4a85ef" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <circle cx="24" cy="11" r="3.2" fill="#ffffff"/>
+</svg>

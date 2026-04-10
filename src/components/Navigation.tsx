@@ -130,14 +130,23 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-18">
 
-          {/* Logo */}
+          {/* Logo — light/dark variants swapped via CSS to avoid hydration mismatch */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/meridixlabs-logo-primary.svg"
+              src="/meridix-logo-light.svg"
               alt="Meridix Labs"
-              width={213}
-              height={40}
+              width={200}
+              height={51}
               priority
+              className="block dark:hidden"
+            />
+            <Image
+              src="/meridix-logo-dark.svg"
+              alt="Meridix Labs"
+              width={200}
+              height={51}
+              priority
+              className="hidden dark:block"
             />
           </Link>
 

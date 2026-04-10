@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" fill="none" role="img">
+  <title>Meridix Labs — dark background</title>
+  <rect width="220" height="56" fill="#0f172a" rx="10"/>
+
+  <!-- Mark: Rod of Asclepius -->
+  <line x1="24" y1="9" x2="24" y2="50" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M 24,15 C 40,22 40,38 24,44" stroke="#4a85ef" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M 24,22 C 8,29 8,44 24,50" stroke="#4a85ef" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <circle cx="24" cy="11" r="3.2" fill="#ffffff"/>
+
+  <!-- Wordmark -->
+  <text x="54" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#ffffff" letter-spacing="-0.4">Meridix</text>
+  <text x="149" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="400" fill="rgba(255,255,255,0.45)" letter-spacing="-0.4"> Labs</text>
+</svg>

@@ -11,10 +11,18 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center mb-4">
               <Image
-                src="/meridixlabs-logo-primary.svg"
+                src="/meridix-logo-light.svg"
                 alt="Meridix Labs"
-                width={200}
-                height={38}
+                width={185}
+                height={47}
+                className="block dark:hidden"
+              />
+              <Image
+                src="/meridix-logo-dark.svg"
+                alt="Meridix Labs"
+                width={185}
+                height={47}
+                className="hidden dark:block"
               />
             </Link>
             <p className="text-sm text-ink-secondary leading-relaxed max-w-xs">
