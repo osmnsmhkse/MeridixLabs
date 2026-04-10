@@ -12,9 +12,9 @@ export const metadata: Metadata = {
   keywords: ["lab results", "medical AI", "health interpretation", "blood test", "AI health"],
   authors: [{ name: "Meridix Labs" }],
   icons: {
-    icon: "/meridix-mark.svg",
-    shortcut: "/meridix-mark.svg",
-    apple: "/meridix-mark.svg",
+    icon: "/meridix-favicon.svg",
+    shortcut: "/meridix-favicon.svg",
+    apple: "/meridix-favicon.svg",
   },
   openGraph: {
     title: "Meridix Labs — Your health, clearly explained.",
