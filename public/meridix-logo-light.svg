@@ -7,7 +7,8 @@
   <path d="M 24,22 C 8,29 8,44 24,50" stroke="#4a85ef" stroke-width="1.8" stroke-linecap="round" fill="none"/>
   <circle cx="24" cy="11" r="3.2" fill="#0f172a"/>
 
-  <!-- Wordmark -->
-  <text x="54" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#0f172a" letter-spacing="-0.4">Meridix</text>
-  <text x="149" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="400" fill="#475569" letter-spacing="-0.4"> Labs</text>
+  <!-- Wordmark: single text element so "Labs" always starts exactly where "Meridix" ends -->
+  <text x="54" y="36" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" letter-spacing="-0.4">
+    <tspan font-weight="600" fill="#0f172a">Meridix</tspan><tspan font-weight="400" fill="#475569"> Labs</tspan>
+  </text>
 </svg>
