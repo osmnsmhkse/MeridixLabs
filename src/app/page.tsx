@@ -140,6 +140,60 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── MORE TOOLS ───────────────────────────────────────── */}
+      <section className="py-20 bg-white dark:bg-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 reveal">
+            <span className="text-brand-blue font-semibold text-sm uppercase tracking-widest">More tools</span>
+            <h2 className="mt-3 text-4xl font-extrabold text-ink tracking-tight">Built for every hard moment</h2>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">
+              Beyond lab results — tools for other moments when medicine feels overwhelming.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Card 1 — Lab Results (existing product) */}
+            <Link
+              href="/app"
+              className="reveal group relative flex flex-col p-7 rounded-2xl bg-brand-blue-light dark:bg-brand-blue/10 border border-brand-blue-mid dark:border-brand-blue/30 hover:border-brand-blue/50 hover:shadow-lg hover:shadow-brand-blue/10 transition-all duration-300 card-hover overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-full -translate-y-8 translate-x-8 pointer-events-none" />
+              <div className="w-12 h-12 rounded-2xl bg-brand-blue flex items-center justify-center mb-5 flex-shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6 text-white">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-ink mb-2">Understand your lab results</h3>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-5">
+                Upload a blood test, lipid panel, or CBC and get an instant AI interpretation — in plain English or full clinical detail.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue group-hover:gap-2.5 transition-all duration-200">
+                Analyze my results →
+              </span>
+            </Link>
+
+            {/* Card 2 — Diagnosis explainer (new product) */}
+            <Link
+              href="/diagnosed"
+              className="reveal reveal-delay-1 group relative flex flex-col p-7 rounded-2xl bg-surface-raised dark:bg-slate-800 border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 card-hover overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 rounded-full -translate-y-8 translate-x-8 pointer-events-none" />
+              <div className="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center mb-5 flex-shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6 text-violet-600 dark:text-violet-400">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-ink mb-2">Just received a diagnosis?</h3>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-5">
+                Understand what it means for your life, what comes next, and the exact questions to bring to your next appointment.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 dark:text-violet-400 group-hover:gap-2.5 transition-all duration-200">
+                Explain my diagnosis →
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ─── SOCIAL PROOF ────────────────────────────────────── */}
       <section className="py-20 bg-white dark:bg-slate-900 border-y border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

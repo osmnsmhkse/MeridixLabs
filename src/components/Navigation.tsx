@@ -112,11 +112,12 @@ export default function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   const navLinks = [
-    { href: "/app",     label: "Analyze",       mobileOnly: false },
-    { href: "/learn",   label: "Practice",      mobileOnly: false },
-    { href: "/trends",  label: "Trend Tracker", mobileOnly: false },
-    { href: "/blog",    label: "Blog",          mobileOnly: false },
-    { href: "/about",   label: "About",         mobileOnly: false },
+    { href: "/app",        label: "Analyze",           mobileOnly: false, lgOnly: false },
+    { href: "/learn",      label: "Practice",          mobileOnly: false, lgOnly: false },
+    { href: "/trends",     label: "Trend Tracker",     mobileOnly: false, lgOnly: false },
+    { href: "/blog",       label: "Blog",              mobileOnly: false, lgOnly: false },
+    { href: "/about",      label: "About",             mobileOnly: false, lgOnly: false },
+    { href: "/diagnosed",  label: "Got a diagnosis?",  mobileOnly: false, lgOnly: true  },
   ];
 
   return (
@@ -157,6 +158,8 @@ export default function Navigation() {
                 key={link.href}
                 href={link.href}
                 className={`text-sm font-medium transition-colors whitespace-nowrap ${
+                  link.lgOnly ? "hidden lg:inline" : ""
+                } ${
                   isActive(link.href)
                     ? "text-brand-blue"
                     : "text-ink-secondary hover:text-ink"
