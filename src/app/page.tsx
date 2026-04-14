@@ -140,54 +140,121 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── MORE TOOLS ───────────────────────────────────────── */}
-      <section className="py-20 bg-white dark:bg-slate-900">
+      {/* ─── PRODUCT SUITE ────────────────────────────────────── */}
+      <section className="py-24 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 reveal">
-            <span className="text-brand-blue font-semibold text-sm uppercase tracking-widest">More tools</span>
-            <h2 className="mt-3 text-4xl font-extrabold text-ink tracking-tight">Built for every hard moment</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">
-              Beyond lab results — tools for other moments when medicine feels overwhelming.
+          <div className="text-center mb-14 reveal">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-blue/10 rounded-full text-brand-blue text-xs font-semibold mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" />
+              Four tools, one mission
+            </span>
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight">
+              Medicine makes sense<br className="hidden sm:block" /> when someone explains it.
+            </h2>
+            <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto">
+              Whether you have a new symptom, a confusing lab result, or a diagnosis you don&apos;t understand yet — we&apos;ve built a tool for that moment.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {/* Card 1 — Lab Results (existing product) */}
+
+          {/* Large featured card */}
+          <div className="reveal mb-5">
             <Link
               href="/app"
-              className="reveal group relative flex flex-col p-7 rounded-2xl bg-brand-blue-light dark:bg-brand-blue/10 border border-brand-blue-mid dark:border-brand-blue/30 hover:border-brand-blue/50 hover:shadow-lg hover:shadow-brand-blue/10 transition-all duration-300 card-hover overflow-hidden"
+              className="group relative flex flex-col sm:flex-row items-start gap-8 p-8 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-brand-blue/40 hover:shadow-xl hover:shadow-brand-blue/8 transition-all duration-300 overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-full -translate-y-8 translate-x-8 pointer-events-none" />
-              <div className="w-12 h-12 rounded-2xl bg-brand-blue flex items-center justify-center mb-5 flex-shrink-0">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6 text-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/3 to-transparent pointer-events-none" />
+              <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-brand-blue flex items-center justify-center shadow-lg shadow-brand-blue/30">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8 text-white">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-ink mb-2">Understand your lab results</h3>
-              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-5">
-                Upload a blood test, lipid panel, or CBC and get an instant AI interpretation — in plain English or full clinical detail.
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-blue/10 rounded-full text-[11px] font-bold text-brand-blue uppercase tracking-wider">
+                    Most used
+                  </span>
+                </div>
+                <h3 className="text-2xl font-extrabold text-ink mb-2">Lab Analyzer</h3>
+                <p className="text-ink-secondary leading-relaxed mb-4 max-w-xl">
+                  Upload a blood test, lipid panel, CBC, or metabolic panel. Get an instant interpretation in plain English, medium depth, or full clinical detail — with flagged values, mechanisms, and specialist guidance.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {["Blood tests", "Lipid panels", "Urinalysis", "CBC", "Metabolic panels"].map((tag) => (
+                    <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-ink-secondary text-xs rounded-full">{tag}</span>
+                  ))}
+                </div>
+                <span className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue group-hover:gap-3 transition-all duration-200">
+                  Analyze my results
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                    <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Three smaller cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Symptom Checker */}
+            <Link
+              href="/symptom"
+              className="reveal reveal-delay-1 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg hover:shadow-emerald-500/8 transition-all duration-300 overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 rounded-full -translate-y-6 translate-x-6 pointer-events-none" />
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-4 flex-shrink-0">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-600 dark:text-emerald-400">
+                  <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-wider mb-1.5">Symptom Checker</p>
+              <h3 className="text-lg font-bold text-ink mb-2">Before you Google it.</h3>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">
+                Describe a symptom. Get the most likely causes ranked by probability, what to watch for, and a clear next step.
               </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue group-hover:gap-2.5 transition-all duration-200">
-                Analyze my results →
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-600 dark:text-emerald-400 group-hover:gap-2.5 transition-all duration-200">
+                Check a symptom →
               </span>
             </Link>
 
-            {/* Card 2 — Diagnosis explainer (new product) */}
+            {/* Diagnosis Explainer */}
             <Link
               href="/diagnosed"
-              className="reveal reveal-delay-1 group relative flex flex-col p-7 rounded-2xl bg-surface-raised dark:bg-slate-800 border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 card-hover overflow-hidden"
+              className="reveal reveal-delay-2 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg hover:shadow-violet-500/8 transition-all duration-300 overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 rounded-full -translate-y-8 translate-x-8 pointer-events-none" />
-              <div className="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center mb-5 flex-shrink-0">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6 text-violet-600 dark:text-violet-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              <div className="absolute top-0 right-0 w-24 h-24 bg-violet-400/5 rounded-full -translate-y-6 translate-x-6 pointer-events-none" />
+              <div className="w-11 h-11 rounded-xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center mb-4 flex-shrink-0">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-violet-600 dark:text-violet-400">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-ink mb-2">Just received a diagnosis?</h3>
-              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-5">
-                Understand what it means for your life, what comes next, and the exact questions to bring to your next appointment.
+              <p className="text-[11px] font-bold text-violet-600 dark:text-violet-500 uppercase tracking-wider mb-1.5">Diagnosis Explainer</p>
+              <h3 className="text-lg font-bold text-ink mb-2">Just got a diagnosis?</h3>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">
+                Understand what it means for your life, what the next six months look like, and the exact questions to ask your doctor.
               </p>
               <span className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 dark:text-violet-400 group-hover:gap-2.5 transition-all duration-200">
                 Explain my diagnosis →
+              </span>
+            </Link>
+
+            {/* Trend Tracker */}
+            <Link
+              href="/trends"
+              className="reveal reveal-delay-3 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-lg hover:shadow-amber-500/8 transition-all duration-300 overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/5 rounded-full -translate-y-6 translate-x-6 pointer-events-none" />
+              <div className="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mb-4 flex-shrink-0">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400">
+                  <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <p className="text-[11px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider mb-1.5">Trend Tracker</p>
+              <h3 className="text-lg font-bold text-ink mb-2">Watch your numbers change.</h3>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">
+                Track how your biomarkers shift across multiple tests over time. See what&apos;s improving, what&apos;s drifting, and why.
+              </p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-amber-600 dark:text-amber-400 group-hover:gap-2.5 transition-all duration-200">
+                Track my trends →
               </span>
             </Link>
           </div>

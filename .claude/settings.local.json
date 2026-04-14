@@ -32,7 +32,27 @@
       "Bash(/usr/local/bin/node node_modules/.bin/tsc --version)",
       "Bash(/usr/local/bin/node node_modules/.bin/npm install lucide-react)",
       "Bash(npm run:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(rm /Users/osmansemihkose/Desktop/MeridixLabs/.git/index.lock)",
+      "Bash(git push:*)",
+      "Bash(git commit -m 'feat: add RangeGauge component to flagged values in results card:*)",
+      "Bash(rm -f /Users/osmansemihkose/Desktop/MeridixLabs/.git/index.lock)",
+      "Bash(npx vercel:*)",
+      "Bash(git -C /Users/osmansemihkose/Desktop/MeridixLabs add src/components/HeroCTA.tsx src/app/api/ab-track/route.ts src/app/page.tsx src/app/api/admin/analytics/route.ts src/app/admin/analytics/page.tsx)",
+      "Bash(git -C /Users/osmansemihkose/Desktop/MeridixLabs commit -m ':*)",
+      "Bash(git commit -m 'Add hero CTA A/B test with admin conversion tracking:*)",
+      "Bash(cp \"/Users/osmansemihkose/Desktop/meridixlabs-logo-primary.svg/meridix-logo-light.svg\" /Users/osmansemihkose/Desktop/MeridixLabs/public/meridix-logo-light.svg)",
+      "Bash(cp \"/Users/osmansemihkose/Desktop/meridixlabs-logo-primary.svg/meridix-logo-dark.svg\" /Users/osmansemihkose/Desktop/MeridixLabs/public/meridix-logo-dark.svg)",
+      "Bash(cp \"/Users/osmansemihkose/Desktop/meridixlabs-logo-primary.svg/meridix-icon-dark.svg\" /Users/osmansemihkose/Desktop/MeridixLabs/public/meridix-icon-dark.svg)",
+      "Bash(cp \"/Users/osmansemihkose/Desktop/meridixlabs-logo-primary.svg/meridix-mark.svg\" /Users/osmansemihkose/Desktop/MeridixLabs/public/meridix-mark.svg)",
+      "Bash(git commit -m 'Update brand assets — new logo and favicon SVGs:*)",
+      "Bash(git commit -m 'Fix gap between Meridix and Labs in wordmark:*)",
+      "Bash(git commit -m 'Use transparent mark SVG for browser tab favicon:*)",
+      "Bash(git commit -m 'Fix favicon — blue background with white mark, visible on any browser chrome:*)",
+      "Bash(git commit -m 'Add 5 new blog posts covering key lab test topics:*)",
+      "Bash(git commit -m 'Add /diagnosed — diagnosis explainer tool:*)",
+      "Bash(wait)"
     ]
   }
 }
