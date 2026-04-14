@@ -1,4 +1,3 @@
-
 <h1>Meridix Labs</h1>
 
 import Link from "next/link";
@@ -19,10 +18,10 @@ export default function LandingPage() {
             <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
             AI-powered medical interpretation
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-ink leading-[1.05] tracking-tight mb-6 reveal reveal-delay-1">
-            Your lab results,{" "}
-            <span className="text-gradient-blue">finally explained.</span>
-          </h1>
+<h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-ink leading-[1.05] tracking-tight mb-6 reveal reveal-delay-1">
+  Meridix Labs — Your lab results,{" "}
+  <span className="text-gradient-blue">finally explained.</span>
+</h1>
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-ink-secondary leading-relaxed mb-10 reveal reveal-delay-2">
             Upload your blood test, lipid panel, or urinalysis and get an instant, clear interpretation — in plain English or full clinical detail. No jargon unless you want it.
           </p>
