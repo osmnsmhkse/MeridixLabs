@@ -1,5 +1,3 @@
-<h1>Meridix Labs</h1>
-
 import Link from "next/link";
 import HeroCTA from "@/components/HeroCTA";
 
@@ -18,10 +16,10 @@ export default function LandingPage() {
             <span className="w-2 h-2 rounded-full bg-brand-blue animate-pulse" />
             AI-powered medical interpretation
           </div>
-<h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-ink leading-[1.05] tracking-tight mb-6 reveal reveal-delay-1">
-  Meridix Labs — Your lab results,{" "}
-  <span className="text-gradient-blue">finally explained.</span>
-</h1>
+          <h1 className="text-5xl sm:text-6xl lg:text-[5rem] font-extrabold text-ink leading-[1.05] tracking-tight mb-6 reveal reveal-delay-1">
+            Meridix Labs — Your lab results,{" "}
+            <span className="text-gradient-blue">finally explained.</span>
+          </h1>
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-ink-secondary leading-relaxed mb-10 reveal reveal-delay-2">
             Upload your blood test, lipid panel, or urinalysis and get an instant, clear interpretation — in plain English or full clinical detail. No jargon unless you want it.
           </p>
@@ -158,7 +156,6 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Large featured card */}
           <div className="reveal mb-5">
             <Link
               href="/app"
@@ -195,13 +192,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Three smaller cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* Symptom Checker */}
-            <Link
-              href="/symptom"
-              className="reveal reveal-delay-1 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg hover:shadow-emerald-500/8 transition-all duration-300 overflow-hidden"
-            >
+            <Link href="/symptom" className="reveal reveal-delay-1 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg hover:shadow-emerald-500/8 transition-all duration-300 overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 rounded-full -translate-y-6 translate-x-6 pointer-events-none" />
               <div className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center mb-4 flex-shrink-0">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-600 dark:text-emerald-400">
@@ -210,19 +202,11 @@ export default function LandingPage() {
               </div>
               <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-wider mb-1.5">Symptom Checker</p>
               <h3 className="text-lg font-bold text-ink mb-2">Before you Google it.</h3>
-              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">
-                Describe a symptom. Get the most likely causes ranked by probability, what to watch for, and a clear next step.
-              </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-600 dark:text-emerald-400 group-hover:gap-2.5 transition-all duration-200">
-                Check a symptom →
-              </span>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">Describe a symptom. Get the most likely causes ranked by probability, what to watch for, and a clear next step.</p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-600 dark:text-emerald-400 group-hover:gap-2.5 transition-all duration-200">Check a symptom →</span>
             </Link>
 
-            {/* Diagnosis Explainer */}
-            <Link
-              href="/diagnosed"
-              className="reveal reveal-delay-2 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg hover:shadow-violet-500/8 transition-all duration-300 overflow-hidden"
-            >
+            <Link href="/diagnosed" className="reveal reveal-delay-2 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg hover:shadow-violet-500/8 transition-all duration-300 overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-violet-400/5 rounded-full -translate-y-6 translate-x-6 pointer-events-none" />
               <div className="w-11 h-11 rounded-xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center mb-4 flex-shrink-0">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-violet-600 dark:text-violet-400">
@@ -231,19 +215,11 @@ export default function LandingPage() {
               </div>
               <p className="text-[11px] font-bold text-violet-600 dark:text-violet-500 uppercase tracking-wider mb-1.5">Diagnosis Explainer</p>
               <h3 className="text-lg font-bold text-ink mb-2">Just got a diagnosis?</h3>
-              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">
-                Understand what it means for your life, what the next six months look like, and the exact questions to ask your doctor.
-              </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 dark:text-violet-400 group-hover:gap-2.5 transition-all duration-200">
-                Explain my diagnosis →
-              </span>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">Understand what it means for your life, what the next six months look like, and the exact questions to ask your doctor.</p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 dark:text-violet-400 group-hover:gap-2.5 transition-all duration-200">Explain my diagnosis →</span>
             </Link>
 
-            {/* Trend Tracker */}
-            <Link
-              href="/trends"
-              className="reveal reveal-delay-3 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-lg hover:shadow-amber-500/8 transition-all duration-300 overflow-hidden"
-            >
+            <Link href="/trends" className="reveal reveal-delay-3 group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border hover:border-amber-300 dark:hover:border-amber-700 hover:shadow-lg hover:shadow-amber-500/8 transition-all duration-300 overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/5 rounded-full -translate-y-6 translate-x-6 pointer-events-none" />
               <div className="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center mb-4 flex-shrink-0">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400">
@@ -252,12 +228,8 @@ export default function LandingPage() {
               </div>
               <p className="text-[11px] font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider mb-1.5">Trend Tracker</p>
               <h3 className="text-lg font-bold text-ink mb-2">Watch your numbers change.</h3>
-              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">
-                Track how your biomarkers shift across multiple tests over time. See what&apos;s improving, what&apos;s drifting, and why.
-              </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-amber-600 dark:text-amber-400 group-hover:gap-2.5 transition-all duration-200">
-                Track my trends →
-              </span>
+              <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">Track how your biomarkers shift across multiple tests over time. See what&apos;s improving, what&apos;s drifting, and why.</p>
+              <span className="inline-flex items-center gap-1.5 text-sm font-bold text-amber-600 dark:text-amber-400 group-hover:gap-2.5 transition-all duration-200">Track my trends →</span>
             </Link>
           </div>
         </div>
@@ -266,13 +238,11 @@ export default function LandingPage() {
       {/* ─── SOCIAL PROOF ────────────────────────────────────── */}
       <section className="py-20 bg-white dark:bg-slate-900 border-y border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Stat bar */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-0 sm:divide-x sm:divide-surface-border mb-16 reveal">
             {[
-              { number: "3,200+",   label: "Reports Analyzed"            },
-              { number: "10",       label: "Languages Supported"         },
-              { number: "< 10 sec", label: "Average Result Time"         },
+              { number: "3,200+", label: "Reports Analyzed" },
+              { number: "10", label: "Languages Supported" },
+              { number: "< 10 sec", label: "Average Result Time" },
             ].map((stat) => (
               <div key={stat.label} className="flex flex-col items-center text-center px-8 py-4">
                 <span className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight">{stat.number}</span>
@@ -280,28 +250,13 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-
-          {/* Testimonials */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              {
-                quote: "I finally understood what my cholesterol panel meant after years of just nodding at my doctor. The Expert mode was exactly what I needed.",
-                author: "Sarah K.",
-                meta: "34, United States",
-              },
-              {
-                quote: "As a medical student, the Expert tier is actually useful for clinical reasoning practice. Genuinely impressive.",
-                author: "Med Student",
-                meta: "Turkey",
-              },
-              {
-                quote: "My parents don't speak English well. I switched it to Spanish and they could finally read their own results.",
-                author: "Anonymous",
-                meta: "",
-              },
+              { quote: "I finally understood what my cholesterol panel meant after years of just nodding at my doctor. The Expert mode was exactly what I needed.", author: "Sarah K.", meta: "34, United States" },
+              { quote: "As a medical student, the Expert tier is actually useful for clinical reasoning practice. Genuinely impressive.", author: "Med Student", meta: "Turkey" },
+              { quote: "My parents don't speak English well. I switched it to Spanish and they could finally read their own results.", author: "Anonymous", meta: "" },
             ].map((t, i) => (
               <div key={i} className={`reveal reveal-delay-${i + 1} flex flex-col p-6 rounded-2xl bg-surface-raised border border-surface-border hover:border-brand-blue/20 hover:shadow-md hover:shadow-brand-blue/5 transition-all duration-300`}>
-                {/* 5 stars */}
                 <div className="flex items-center gap-0.5 mb-4">
                   {[...Array(5)].map((_, s) => (
                     <svg key={s} viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-400">
@@ -309,13 +264,7 @@ export default function LandingPage() {
                     </svg>
                   ))}
                 </div>
-
-                {/* Quote */}
-                <p className="text-sm text-ink-secondary leading-relaxed flex-1 italic">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-
-                {/* Author */}
+                <p className="text-sm text-ink-secondary leading-relaxed flex-1 italic">&ldquo;{t.quote}&rdquo;</p>
                 <div className="mt-5 flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-brand-blue-light flex items-center justify-center flex-shrink-0">
                     <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
@@ -330,7 +279,6 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
@@ -344,12 +292,12 @@ export default function LandingPage() {
               <p className="mt-4 text-lg text-ink-secondary leading-relaxed">Most people receive a lab report and have no idea what it means. Meridix Labs closes that gap — with science, not guesswork.</p>
               <div className="mt-10 space-y-5">
                 {[
-                  { icon: "🎯", title: "Flagged abnormal values",      desc: "Out-of-range results are highlighted so you spot what matters instantly." },
-                  { icon: "🔬", title: "Etiology & mechanisms",        desc: "We explain what causes abnormal values and what's happening in your body." },
-                  { icon: "👨‍⚕️", title: "Specialist recommendations",  desc: "Know exactly which type of doctor to see based on your specific results." },
-                  { icon: "🌍", title: "10 languages",                 desc: "Get your results explained in your native language — Spanish, Turkish, Japanese, and more." },
-                  { icon: "🔒", title: "Stateless & private",          desc: "We never store your file or data. Each session is completely ephemeral." },
-                  { icon: "⚡", title: "Results in seconds",           desc: "No waiting, no email, no account required. Upload and understand." },
+                  { icon: "🎯", title: "Flagged abnormal values", desc: "Out-of-range results are highlighted so you spot what matters instantly." },
+                  { icon: "🔬", title: "Etiology & mechanisms", desc: "We explain what causes abnormal values and what's happening in your body." },
+                  { icon: "👨‍⚕️", title: "Specialist recommendations", desc: "Know exactly which type of doctor to see based on your specific results." },
+                  { icon: "🌍", title: "10 languages", desc: "Get your results explained in your native language — Spanish, Turkish, Japanese, and more." },
+                  { icon: "🔒", title: "Stateless & private", desc: "We never store your file or data. Each session is completely ephemeral." },
+                  { icon: "⚡", title: "Results in seconds", desc: "No waiting, no email, no account required. Upload and understand." },
                 ].map((feat, i) => (
                   <div key={feat.title} className={`reveal reveal-delay-${Math.min(i + 1, 5)} flex items-start gap-4`}>
                     <div className="w-10 h-10 rounded-xl bg-brand-blue-light flex items-center justify-center text-lg flex-shrink-0">{feat.icon}</div>
@@ -361,8 +309,6 @@ export default function LandingPage() {
                 ))}
               </div>
             </div>
-
-            {/* Mock results card */}
             <div className="relative reveal reveal-delay-2">
               <div className="absolute inset-0 bg-brand-blue/6 rounded-3xl blur-2xl" />
               <div className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-brand-blue/10 border border-surface-border overflow-hidden">
