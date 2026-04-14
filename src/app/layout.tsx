@@ -6,28 +6,14 @@ import Providers from "@/components/Providers";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Meridix Labs — Your health, clearly explained.",
-  description:
-    "Upload your medical lab results and receive a clear, AI-powered interpretation at three levels — from plain language to clinical detail. Meridix Labs: Your health, clearly explained.",
-  keywords: ["lab results", "medical AI", "health interpretation", "blood test", "AI health"],
-  authors: [{ name: "Meridix Labs" }],
-  icons: {
-    icon: "/meridix-favicon.svg",
-    shortcut: "/meridix-favicon.svg",
-    apple: "/meridix-favicon.svg",
-  },
+  title: "Meridix Labs — AI-Powered Medical Lab Analysis",
+  description: "Meridix Labs helps you understand your blood test results using AI. Analyze, track, and get insights from your lab results instantly.",
+  keywords: ["medical AI", "lab results", "blood test analysis", "Meridix Labs"],
   openGraph: {
-    title: "Meridix Labs — Your health, clearly explained.",
-    description:
-      "AI-powered interpretation of your medical lab results in plain language, with clinical depth when you need it.",
-    url: "https://meridixlabs.com",
+    title: "Meridix Labs — AI-Powered Medical Lab Analysis",
+    description: "Understand your lab results with AI. Fast, accurate, and easy.",
+    url: "https://www.meridixlabs.com",
     siteName: "Meridix Labs",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Meridix Labs",
-    description: "Your health, clearly explained.",
   },
 };
 

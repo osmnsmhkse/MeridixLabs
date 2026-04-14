@@ -1,3 +1,6 @@
+
+<h1>Meridix Labs</h1>
+
 import Link from "next/link";
 import HeroCTA from "@/components/HeroCTA";
 
