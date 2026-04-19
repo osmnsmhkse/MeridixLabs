@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -43,15 +43,17 @@ body {
 /* ── Utility gradients ─────────────────────────────────── */
 @layer utilities {
 
+  /* Hero background — deep futuristic gradient */
   .gradient-hero {
-    background: linear-gradient(160deg, #ffffff 0%, #EFF6FF 60%, #DBEAFE 100%);
+    background: linear-gradient(145deg, #ffffff 0%, #EFF6FF 30%, #EEF2FF 60%, #F5F3FF 100%);
   }
   .dark .gradient-hero {
-    background: #0F172A;
+    background: linear-gradient(145deg, #0F172A 0%, #0c1425 40%, #0E0F28 70%, #100c20 100%);
   }
 
+  /* Primary gradient (blue → indigo) — used on buttons and highlights */
   .gradient-blue {
-    background: linear-gradient(135deg, #5B9CF8 0%, #4080E8 100%);
+    background: linear-gradient(135deg, #4A85EF 0%, #6366F1 100%);
   }
 
   .surface-raised {
@@ -62,37 +64,103 @@ body {
     color: #5B9CF8;
   }
 
+  /* Text gradient — blue to indigo/violet for maximum visual impact */
   .text-gradient-blue {
-    background: linear-gradient(135deg, #5B9CF8, #4080E8);
+    background: linear-gradient(135deg, #4A85EF 0%, #818CF8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  /* Card hover — smooth lift with blue glow */
   .card-hover {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 40px rgba(91, 156, 248, 0.12);
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 0 1px rgba(74, 133, 239, 0.07),
+      0 8px 24px -4px rgba(74, 133, 239, 0.18),
+      0 20px 48px rgba(99, 102, 241, 0.08);
+  }
+
+  /* Glass morphism — for badges, input cards, floating elements */
+  .glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+  .dark .glass {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Gradient border — wraps card with a subtle gradient border line */
+  .gradient-border {
+    position: relative;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+  .gradient-border::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(74, 133, 239, 0.55) 0%,
+      rgba(129, 140, 248, 0.3) 50%,
+      rgba(99, 102, 241, 0.15) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Glow — for primary action buttons */
+  .btn-glow {
+    box-shadow: 0 0 20px rgba(74, 133, 239, 0.35), 0 4px 14px rgba(74, 133, 239, 0.2);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .btn-glow:hover {
+    box-shadow: 0 0 32px rgba(99, 102, 241, 0.45), 0 8px 20px rgba(74, 133, 239, 0.3);
+    transform: translateY(-1px);
+  }
+
+  /* Glow orb — decorative blurred background blobs */
+  .glow-orb {
+    border-radius: 9999px;
+    filter: blur(72px);
+    pointer-events: none;
   }
 }
 
 /* ── Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 5px; }
 ::-webkit-scrollbar-track { background: #F1F5F9; }
-::-webkit-scrollbar-thumb { background: #5B9CF8; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #4080E8; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #4A85EF, #818CF8); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4A85EF; }
 
 .dark ::-webkit-scrollbar-track { background: #1E293B; }
-.dark ::-webkit-scrollbar-thumb { background: #4A85EF; }
+.dark ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #4A85EF, #6366F1); }
 
 /* ── Scroll reveal animations ──────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal.is-visible {
   opacity: 1;
@@ -103,6 +171,203 @@ body {
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 .reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ── Animated grid background ─────────────────────────── */
+@keyframes gridMove {
+  0%   { background-position: 0 0; }
+  100% { background-position: 32px 32px; }
+}
+.animated-grid {
+  background-image:
+    linear-gradient(rgba(74, 133, 239, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 133, 239, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: gridMove 4s linear infinite;
+}
+.dark .animated-grid {
+  background-image:
+    linear-gradient(rgba(74, 133, 239, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 133, 239, 0.08) 1px, transparent 1px);
+}
+
+/* ── Mesh drift background (hero ambient) ─────────────── */
+@keyframes meshdrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-3%, 2%, 0) scale(1.06); }
+}
+.mesh-bg {
+  position: absolute;
+  inset: -20% -10% 0 -10%;
+  background:
+    radial-gradient(60% 50% at 20% 20%, rgba(74, 133, 239, 0.18) 0, transparent 60%),
+    radial-gradient(50% 50% at 80% 10%, rgba(99, 102, 241, 0.14) 0, transparent 60%),
+    radial-gradient(40% 50% at 60% 60%, rgba(148, 163, 184, 0.08) 0, transparent 60%);
+  filter: blur(48px);
+  animation: meshdrift 28s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.dark .mesh-bg {
+  background:
+    radial-gradient(60% 50% at 20% 20%, rgba(74, 133, 239, 0.12) 0, transparent 60%),
+    radial-gradient(50% 50% at 80% 10%, rgba(99, 102, 241, 0.1) 0, transparent 60%),
+    radial-gradient(40% 50% at 60% 60%, rgba(99, 102, 241, 0.06) 0, transparent 60%);
+}
+
+/* ── Grid with mask (fades toward edges) ──────────────── */
+.grid-mask {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(74, 133, 239, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(74, 133, 239, 0.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(80% 60% at 50% 40%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(80% 60% at 50% 40%, #000 30%, transparent 85%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.dark .grid-mask {
+  background-image:
+    linear-gradient(to right, rgba(74, 133, 239, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(74, 133, 239, 0.1) 1px, transparent 1px);
+}
+
+/* ── Conic spin (rotating glow behind icons) ──────────── */
+@keyframes conicSpin {
+  to { transform: rotate(360deg); }
+}
+.conic-icon {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.conic-icon::after {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(from 0deg, transparent, rgba(74, 133, 239, 0.35), transparent 30%);
+  animation: conicSpin 6s linear infinite;
+  z-index: 0;
+}
+.conic-icon > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Mono utility ─────────────────────────────────────── */
+.font-mono-data {
+  font-family: "JetBrains Mono", monospace;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Step number badge (mono style) ──────────────────── */
+.step-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Dark CTA card grid overlay ───────────────────────── */
+.dark-grid-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent 80%);
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent 80%);
+  pointer-events: none;
+}
+
+/* ── Kicker label (mono uppercase) ───────────────────── */
+.kicker-mono {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Scanning line animation ──────────────────────────── */
+@keyframes scanLine {
+  0%   { top: 0; opacity: 1; }
+  80%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.scan-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #4A85EF, #818CF8, transparent);
+  animation: scanLine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Counter number animation ─────────────────────────── */
+@keyframes countUp {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.9); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.animate-count-up {
+  animation: countUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Stagger children ─────────────────────────────────── */
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* ── Gradient line — horizontal decorative ────────────── */
+.gradient-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(74, 133, 239, 0.4), rgba(99, 102, 241, 0.4), transparent);
+}
+
+/* ── Orbiting particle ────────────────────────────────── */
+@keyframes orbit {
+  0%   { transform: rotate(0deg) translateX(140px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
+}
+@keyframes orbit-sm {
+  0%   { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+}
+.orbit-particle {
+  animation: orbit 20s linear infinite;
+}
+.orbit-particle-sm {
+  animation: orbit-sm 14s linear infinite reverse;
+}
+
+/* ── Glowing border animation (for featured cards) ───── */
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(74, 133, 239, 0.2); box-shadow: 0 0 20px rgba(74, 133, 239, 0); }
+  50%      { border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 0 30px rgba(74, 133, 239, 0.1); }
+}
+.border-glow {
+  animation: borderGlow 4s ease-in-out infinite;
+}
+
+/* ── Typing cursor ────────────────────────────────────── */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: #4A85EF;
+  font-weight: 200;
+}
 
 /* ── Print styles ──────────────────────────────────────── */
 @media print {
@@ -144,4 +409,28 @@ body {
 .dark .shimmer {
   background: linear-gradient(90deg, #1E293B 25%, #334155 50%, #1E293B 75%);
   background-size: 200% 100%;
+}
+
+/* ── Pulse glow (for badges, live indicators) ──────────── */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 133, 239, 0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(74, 133, 239, 0); }
+}
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ── Gradient border shimmer (on key featured cards) ───── */
+@keyframes borderShimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Particle float ───────────────────────────────────── */
+@keyframes particleFloat {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+  25%      { transform: translateY(-20px) translateX(10px); opacity: 0.7; }
+  50%      { transform: translateY(-8px) translateX(-5px); opacity: 0.5; }
+  75%      { transform: translateY(-25px) translateX(8px); opacity: 0.8; }
 }

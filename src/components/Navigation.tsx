@@ -5,9 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Sun, Moon } from "lucide-react";
-import { useLanguage, LANGUAGES, LangCode } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { track } from "@/lib/track";
+import { Show, UserButton } from "@clerk/nextjs";
+
+const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 // ── Tool definitions ───────────────────────────────────────────────────────
 
@@ -79,80 +81,6 @@ function ThemeToggle() {
       <Sun className={`absolute w-4 h-4 transition-all duration-300 ${theme === "dark" ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"}`} />
       <Moon className={`absolute w-4 h-4 transition-all duration-300 ${theme === "light" ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-50"}`} />
     </button>
-  );
-}
-
-// ── Language selector ──────────────────────────────────────────────────────
-
-function LanguageSelector() {
-  const { lang, setLang } = useLanguage();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  const currentLang = LANGUAGES[lang] ?? LANGUAGES["en"];
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
-        aria-label="Select language"
-      >
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4 h-4 flex-shrink-0">
-          <circle cx="10" cy="10" r="8" />
-          <path d="M10 2c-2 3-2 13 0 16M10 2c2 3 2 13 0 16M2 10h16" strokeLinecap="round" />
-        </svg>
-        <span className="font-medium text-sm hidden sm:inline">{currentLang.english}</span>
-        <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3 h-3 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`}>
-          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-        </svg>
-      </button>
-
-      {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-surface-raised dark:bg-slate-800 border border-surface-border dark:border-slate-700 rounded-xl shadow-lg shadow-ink/8 overflow-hidden z-50">
-          <div className="px-3 py-2 border-b border-surface-border dark:border-slate-700">
-            <p className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-widest">Language</p>
-          </div>
-          <div className="p-1.5 max-h-80 overflow-y-auto">
-            {Object.entries(LANGUAGES).map(([code, names]) => (
-              <button
-                key={code}
-                onClick={() => { track("language_changed", { from: lang, to: code }); setLang(code as LangCode); setOpen(false); }}
-                className={`w-full text-left flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${
-                  lang === code
-                    ? "bg-brand-blue-light dark:bg-brand-blue/20 text-brand-blue"
-                    : "text-ink-secondary hover:bg-surface-raised dark:hover:bg-slate-700 hover:text-ink"
-                }`}
-              >
-                <div className="flex flex-col">
-                  <span className={`text-sm font-medium ${lang === code ? "text-brand-blue" : "text-ink"}`}>
-                    {names.english}
-                  </span>
-                  {names.native !== names.english && (
-                    <span className={`text-xs mt-0.5 ${lang === code ? "text-brand-blue/70" : "text-ink-tertiary"}`}>
-                      {names.native}
-                    </span>
-                  )}
-                </div>
-                {lang === code && (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue flex-shrink-0">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -245,45 +173,48 @@ export default function Navigation() {
   const isToolActive = TOOLS.some((t) => pathname === t.href);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm shadow-ink/5 border-b border-surface-border"
-          : "bg-white dark:bg-slate-900"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-
+    <>
+    {/* ── Floating pill nav ─────────────────────────────── */}
+    <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+      <div
+        className={`pointer-events-auto flex items-center gap-2 pl-4 pr-2 py-2 rounded-full transition-all duration-300 border ${
+          scrolled
+            ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-lift border-surface-border"
+            : "bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-surface-border shadow-soft"
+        }`}
+        style={{ width: "min(1100px, calc(100% - 0px))" }}
+      >
           {/* Logo */}
-          <Link href="/" className="flex items-center flex-shrink-0">
+          <Link href="/" className="flex items-center flex-shrink-0 mr-2">
             <Image
               src="/meridix-logo-light.svg"
               alt="Meridix Labs"
-              width={160}
-              height={41}
+              width={136}
+              height={36}
               priority
               className="block dark:hidden"
             />
             <Image
               src="/meridix-logo-dark.svg"
               alt="Meridix Labs"
-              width={160}
-              height={41}
+              width={136}
+              height={36}
               priority
               className="hidden dark:block"
             />
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-1 flex-1">
             <ToolsDropdown pathname={pathname} />
             {FLAT_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors whitespace-nowrap ${
-                  isActive(link.href) ? "text-brand-blue" : "text-ink-secondary hover:text-ink"
+                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                  isActive(link.href)
+                    ? "text-brand-blue bg-brand-blue/8"
+                    : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
                 }`}
               >
                 {link.label}
@@ -292,22 +223,52 @@ export default function Navigation() {
           </nav>
 
           {/* Right side */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-1.5 ml-auto">
             <ThemeToggle />
-            <LanguageSelector />
             <Link
               href="/for-doctors"
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 border font-semibold rounded-lg text-sm transition-all duration-200 ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 border font-medium rounded-full text-sm transition-all duration-200 ${
                 isActive("/for-doctors")
                   ? "border-brand-blue bg-brand-blue/10 text-brand-blue"
-                  : "border-slate-200 dark:border-slate-700 text-ink-secondary hover:border-brand-blue hover:text-brand-blue"
+                  : "border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-brand-blue"
               }`}
             >
               For Doctors
             </Link>
+
+            {AUTH_ENABLED ? (
+              <>
+                <Show when="signed-out">
+                  <Link
+                    href="/sign-in"
+                    className="hidden lg:inline-flex items-center px-3 py-2 text-sm font-medium text-ink-secondary hover:text-ink transition-colors rounded-full hover:bg-surface-raised"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 border border-surface-border text-ink font-medium rounded-full text-sm hover:border-brand-blue hover:text-brand-blue transition-all duration-200"
+                  >
+                    Sign up
+                  </Link>
+                </Show>
+                <Show when="signed-in">
+                  <Link
+                    href="/dashboard"
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium transition-colors rounded-full ${
+                      isActive("/dashboard") ? "text-brand-blue bg-brand-blue/8" : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
+                    }`}
+                  >
+                    Dashboard
+                  </Link>
+                  <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+                </Show>
+              </>
+            ) : null}
+
             <Link
               href="/app"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold rounded-lg text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-brand-blue/20"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-full text-sm transition-all duration-200 shadow-sm hover:shadow-glow-blue hover:-translate-y-px"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                 <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
@@ -318,21 +279,23 @@ export default function Navigation() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-ink-secondary p-2 rounded-lg hover:bg-surface-raised transition-colors"
+            className="md:hidden ml-auto text-ink-secondary p-2 rounded-full hover:bg-surface-raised transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
               {mobileOpen
                 ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />}
             </svg>
           </button>
-        </div>
+      </div>
+    </header>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div className="md:hidden border-t border-surface-border py-3 space-y-1">
+    {/* Mobile menu (below pill) */}
+    {mobileOpen && (
+      <div className="md:hidden fixed top-16 left-4 right-4 z-40 bg-white dark:bg-slate-900 border border-surface-border rounded-2xl shadow-lift overflow-hidden">
+        <div className="py-3 space-y-1 px-2">
             {/* Tools section in mobile */}
             <button
               onClick={() => setMobileToolsOpen(!mobileToolsOpen)}
@@ -396,19 +359,59 @@ export default function Navigation() {
 
             <div className="px-4 py-2 flex items-center gap-2">
               <ThemeToggle />
-              <LanguageSelector />
             </div>
+
+            {AUTH_ENABLED && (
+              <div className="pt-2 border-t border-surface-border mt-2 space-y-1">
+                <Show when="signed-out">
+                  <Link
+                    href="/sign-in"
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-2.5 px-4 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-2.5 px-4 rounded-lg text-sm font-semibold text-ink border border-slate-200 dark:border-slate-700 text-center hover:border-brand-blue hover:text-brand-blue transition-all"
+                  >
+                    Sign up — free
+                  </Link>
+                </Show>
+                <Show when="signed-in">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileOpen(false)}
+                    className={`block py-2.5 px-4 rounded-lg text-sm font-medium transition-colors ${
+                      isActive("/dashboard")
+                        ? "text-brand-blue bg-brand-blue-light dark:bg-brand-blue/20"
+                        : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
+                    }`}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-2.5 px-4 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
+                  >
+                    Profile
+                  </Link>
+                </Show>
+              </div>
+            )}
 
             <Link
               href="/app"
               onClick={() => setMobileOpen(false)}
-              className="block py-2.5 px-4 bg-brand-blue text-white font-semibold rounded-lg text-sm text-center"
+              className="block py-2.5 px-4 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-xl text-sm text-center"
             >
               Analyze My Results
             </Link>
           </div>
-        )}
-      </div>
-    </header>
+        </div>
+      )}
+    </>
   );
 }

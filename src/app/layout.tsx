@@ -1,9 +1,27 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import Providers from "@/components/Providers";
+import ScrollReveal from "@/components/ScrollReveal";
+
 export const metadata: Metadata = {
   title: "Meridix Labs — AI-Powered Medical Lab Analysis",
-  description: "Meridix Labs helps you understand your blood test results using AI. Analyze, track, and get insights from your lab results instantly.",
+  description:
+    "Meridix Labs helps you understand your blood test results using AI. Analyze, track, and get insights from your lab results instantly.",
   keywords: ["medical AI", "lab results", "blood test analysis", "Meridix Labs", "AI doctor", "blood test AI"],
   authors: [{ name: "Meridix Labs", url: "https://www.meridixlabs.com" }],
   metadataBase: new URL("https://www.meridixlabs.com"),
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/meridix-favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
   alternates: {
     canonical: "/",
   },
@@ -26,3 +44,37 @@ export const metadata: Metadata = {
     site: "@meridixlabs",
   },
 };
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{__html: `
+          try {
+            var t = localStorage.getItem('meridix-theme');
+            var p = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (t === 'dark' || (!t && p)) document.documentElement.classList.add('dark');
+          } catch(e) {}
+        `}} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="antialiased bg-surface text-ink">
+        <Providers>
+          <ScrollReveal />
+          <Navigation />
+          <main className="pt-16">{children}</main>
+          <Footer />
+        </Providers>
+      </body>
+    </html>
+  );
+}
