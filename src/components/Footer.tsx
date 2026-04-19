@@ -31,7 +31,7 @@ export default function Footer() {
             <div className="mt-5">
               <span className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary bg-surface dark:bg-slate-800 px-3 py-1.5 rounded-full border border-surface-border dark:border-slate-700">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
-                Powered by Claude AI
+                AI-powered health insights
               </span>
             </div>
           </div>
