@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import Link from "next/link";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
+import NextStepBar from "@/components/NextStepBar";
 import { track } from "@/lib/track";
+
+const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 // ── Returning-user localStorage hook ─────────────────────────────────────────
 const LS_KEY = "meridix_user";
@@ -101,29 +105,69 @@ interface AnalysisResult {
   flags: AnalysisFlag[];
   medication_context?: string;
   health_insights?: string;
+  supplements?: string;
   overall_status?: OverallStatus;
   summary_headline?: string;
   urgency?: UrgencyLevel;
 }
 
-const TIER_CONFIG: Record<Tier, { label: string; emoji: string; audience: string; activeClass: string }> = {
+// ── Pre-built demo result (instant, no API call) ──────────────────────────────
+const DEMO_RESULT: AnalysisResult = {
+  overall_status: "amber",
+  summary_headline: "Your glucose and LDL cholesterol are mildly elevated, and your vitamin D is low — common findings that are easy to address.",
+  urgency: "weeks",
+  simple: "Your blood test shows a few things worth paying attention to. Your blood sugar (glucose) is a little higher than ideal — not diabetes, but in a range your doctor will want to track. Your 'bad' cholesterol (LDL) is borderline high, and your vitamin D is low, which is very common if you spend most of your time indoors. The good news: all three of these respond really well to simple lifestyle changes like diet adjustments, more sunlight, and exercise.",
+  medium: "The panel reveals three notable findings. Fasting glucose of 112 mg/dL falls in the impaired fasting glucose range (100–125 mg/dL per ADA criteria), suggesting possible early insulin resistance. LDL cholesterol at 134 mg/dL is borderline high per ATP-III guidelines (optimal <100, borderline 130–159). Vitamin D at 18 ng/mL is insufficient (optimal 30–100 ng/mL). Sodium is mildly low at 134 mEq/L — often a dietary or hydration issue. All other values including kidney function and liver markers are within normal range.",
+  expert: "BMP findings: (1) Impaired fasting glucose — 112 mg/dL meets ADA criteria for prediabetes (IFG: 100–125). Recommend HbA1c for 3-month glycemic confirmation, fasting insulin, and HOMA-IR to assess insulin resistance. (2) Borderline LDL — 134 mg/dL. Per ACC/AHA 2019 guidelines, formal 10-year ASCVD risk assessment is indicated before initiating pharmacological therapy in the absence of established ASCVD. (3) Vitamin D insufficiency — 18 ng/mL. Supplementation with 2,000 IU cholecalciferol daily with recheck in 3 months. (4) Mild hyponatremia — 134 mEq/L. Likely euvolemic or dietary; reassess hydration status and sodium intake before pursuing SIADH or adrenal workup given no other corroborating findings.",
+  etiology: "The elevated glucose is most commonly driven by a diet high in refined carbohydrates, physical inactivity, excess visceral fat, or family history of type 2 diabetes. Borderline LDL typically results from dietary saturated/trans fat intake, a sedentary lifestyle, or genetic predisposition (familial hypercholesterolemia). Low vitamin D is nearly universal in people who spend most of their time indoors — modern indoor lifestyles are the primary driver, with darker skin tone and higher body weight also contributing to reduced UV-B conversion.",
+  mechanism: "Impaired fasting glucose reflects reduced peripheral insulin sensitivity or impaired first-phase insulin secretion from β-cells, resulting in insufficient suppression of hepatic glucose output after an overnight fast — the earliest detectable signal before frank type 2 diabetes develops. Elevated LDL reflects increased hepatic cholesterol synthesis or reduced LDL-receptor-mediated clearance; over time, cholesterol accumulates in arterial walls, initiating and propagating atherosclerosis. Vitamin D deficiency occurs when insufficient 7-dehydrocholesterol is converted to pre-vitamin D3 in skin via UV-B exposure, impairing downstream synthesis of calcitriol, which regulates calcium absorption, immune function, and insulin secretion.",
+  diseases: "Prediabetes / early type 2 diabetes mellitus (glucose elevation), Metabolic syndrome (glucose + lipid pattern), Familial hypercholesterolemia (if LDL elevation is persistent and family history is positive), Hypothyroidism (can raise both glucose and LDL — worth ruling out with TSH), Vitamin D deficiency-related fatigue, immune dysfunction, and long-term bone health risk. Note: These are educational possibilities, not diagnoses.",
+  specialist: "A Primary Care Physician or Internal Medicine specialist is the ideal first contact — they can order follow-up tests (HbA1c, TSH, repeat fasting lipid panel) and coordinate referrals. If prediabetes is confirmed, an Endocrinologist or Certified Diabetes Educator may be helpful. If LDL remains elevated after lifestyle changes, a Cardiologist or lipid specialist may be consulted.",
+  action: "Schedule a follow-up with your doctor in the next few weeks. Ask about: (1) HbA1c to assess your 3-month average blood sugar, (2) Fasting lipid panel repeat, (3) TSH to rule out thyroid involvement, (4) Vitamin D supplementation dosing. In the meantime: reduce refined sugars, increase dietary fiber, get 20–30 minutes of moderate daily exercise, and consider a Vitamin D3 supplement with your doctor's guidance.",
+  flags: [
+    { marker: "Glucose", value: "112", unit: "mg/dL", reference: "70–99", status: "high" },
+    { marker: "LDL Cholesterol", value: "134", unit: "mg/dL", reference: "< 100", status: "high" },
+    { marker: "Vitamin D", value: "18", unit: "ng/mL", reference: "30–100", status: "low" },
+    { marker: "Sodium", value: "134", unit: "mEq/L", reference: "136–145", status: "low" },
+    { marker: "Creatinine", value: "0.9", unit: "mg/dL", reference: "0.7–1.2", status: "normal" },
+    { marker: "TSH", value: "2.1", unit: "mIU/L", reference: "0.4–4.0", status: "normal" },
+  ],
+  supplements: "**Vitamin D3 (2,000 IU/day with a fatty meal):** Directly addresses your low Vitamin D of 18 ng/mL. Cholecalciferol (D3) is the most bioavailable form. Take with lunch or dinner for better absorption. Recheck blood levels in 3 months — your doctor may recommend a higher dose based on follow-up results.\n\n**Omega-3 Fatty Acids (1,000–2,000 mg EPA+DHA/day):** Targets your borderline LDL and supports cardiovascular health. Fish oil or algae-based omega-3s have strong clinical evidence for lowering triglycerides and reducing cardiovascular risk. Look for a product with >500 mg combined EPA+DHA per capsule.\n\n**Magnesium Glycinate (300 mg at bedtime):** Supports insulin sensitivity and glucose metabolism — directly relevant to your prediabetic glucose level. Magnesium also improves sleep quality, and poor sleep is independently associated with elevated blood sugar. The glycinate form is gentle on the stomach.\n\n**Berberine (500 mg twice daily with meals):** Has strong clinical evidence for improving insulin sensitivity and lowering fasting glucose — comparable to low-dose metformin in several studies. Discuss with your doctor before starting, as berberine can interact with certain medications.\n\n**Lifestyle (most impactful):** 150 minutes/week of moderate aerobic exercise (brisk walking, cycling, swimming). Even a 10-minute walk after meals measurably reduces postprandial glucose spikes. Reducing refined carbohydrates and increasing dietary fiber can improve all three flagged values — glucose, LDL, and Vitamin D absorption — within 8–12 weeks.",
+};
+
+const TIER_CONFIG: Record<Tier, { label: string; icon: React.ReactNode; audience: string; activeClass: string; inactiveIconClass: string }> = {
   simple: {
     label: "Simple",
-    emoji: "💬",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+      </svg>
+    ),
     audience: "Plain language",
-    activeClass: "bg-brand-blue/10 text-brand-blue border-b-2 border-brand-blue",
+    activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+    inactiveIconClass: "text-ink-tertiary",
   },
   medium: {
     label: "Medium",
-    emoji: "📋",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+      </svg>
+    ),
     audience: "Educated patient",
-    activeClass: "bg-brand-blue/10 text-brand-blue border-b-2 border-brand-blue",
+    activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+    inactiveIconClass: "text-ink-tertiary",
   },
   expert: {
     label: "Expert",
-    emoji: "🔬",
+    icon: (
+      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+      </svg>
+    ),
     audience: "Clinical detail",
-    activeClass: "bg-purple-500/10 text-purple-700 border-b-2 border-purple-500",
+    activeClass: "text-purple-700 border-b-2 border-purple-500 bg-purple-500/5",
+    inactiveIconClass: "text-ink-tertiary",
   },
 };
 
@@ -270,7 +314,15 @@ const LOADING_STEPS_RADIOLOGY = [
 ] as const;
 
 // Delays (ms) at which each step becomes the active step
-const STEP_DELAYS = [0, 1500, 3000, 5000] as const;
+const STEP_DELAYS = [0, 1500, 3500, 6500] as const;
+
+// Messages shown while the final step is still running (cycling every ~4s)
+const PATIENCE_MESSAGES = [
+  "This usually takes 10–20 seconds...",
+  "Almost there — reading every value carefully...",
+  "Complex reports take a little longer...",
+  "Still working — your privacy is protected throughout...",
+] as const;
 
 type StepStatus = "waiting" | "active" | "done";
 
@@ -281,7 +333,6 @@ function StepRow({
   label: string;
   status: StepStatus;
 }) {
-  // Slide-in: start offset on mount, transition to resting position after 1 frame
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setVisible(true));
@@ -296,7 +347,6 @@ function StepRow({
         visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
       }`}
     >
-      {/* Icon: spinner when active, checkmark when done */}
       <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
         {status === "active" ? (
           <div className="w-5 h-5 rounded-full border-2 border-brand-blue/25 border-t-brand-blue animate-spin" />
@@ -314,13 +364,9 @@ function StepRow({
           </div>
         )}
       </div>
-
-      {/* Label */}
       <span
         className={`text-sm leading-snug transition-colors duration-300 ${
-          status === "active"
-            ? "text-ink font-semibold"
-            : "text-ink-secondary"
+          status === "active" ? "text-ink font-semibold" : "text-ink-secondary"
         }`}
       >
         {label}
@@ -331,14 +377,37 @@ function StepRow({
 
 function LoadingAnimation({ mode }: { mode: ReportMode }) {
   const steps = mode === "radiology" ? LOADING_STEPS_RADIOLOGY : LOADING_STEPS_LAB;
-  // activeStep: the index currently spinning. Steps before it are "done".
   const [activeStep, setActiveStep] = useState(0);
+  const [patienceIdx, setPatienceIdx] = useState(0);
+  const [showPatience, setShowPatience] = useState(false);
+  const [elapsedSec, setElapsedSec] = useState(0);
 
+  // Advance through steps on a timer
   useEffect(() => {
     const timers = STEP_DELAYS.slice(1).map((delay, i) =>
       setTimeout(() => setActiveStep(i + 1), delay)
     );
     return () => timers.forEach(clearTimeout);
+  }, []);
+
+  // After all steps are "active", show the patience message and cycle it
+  useEffect(() => {
+    const showTimer = setTimeout(() => setShowPatience(true), STEP_DELAYS[STEP_DELAYS.length - 1] + 1500);
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!showPatience) return;
+    const id = setInterval(() => {
+      setPatienceIdx((prev) => (prev + 1) % PATIENCE_MESSAGES.length);
+    }, 4000);
+    return () => clearInterval(id);
+  }, [showPatience]);
+
+  // Elapsed time counter — shown after 8s so users know it's still running
+  useEffect(() => {
+    const id = setInterval(() => setElapsedSec((s) => s + 1), 1000);
+    return () => clearInterval(id);
   }, []);
 
   const getStatus = (i: number): StepStatus => {
@@ -356,15 +425,23 @@ function LoadingAnimation({ mode }: { mode: ReportMode }) {
         ))}
       </div>
 
-      {/* Connector line skeleton while waiting — subtle pulse */}
+      {/* Shimmer skeleton preview */}
       <div className="w-full max-w-xs space-y-2.5 pt-1">
         {[92, 78, 85].map((w, i) => (
-          <div
-            key={i}
-            className="h-2.5 rounded-full shimmer"
-            style={{ width: `${w}%` }}
-          />
+          <div key={i} className="h-2.5 rounded-full shimmer" style={{ width: `${w}%` }} />
         ))}
+      </div>
+
+      {/* Patience message — fades in after last step is reached */}
+      <div className={`text-center transition-opacity duration-700 ${showPatience ? "opacity-100" : "opacity-0"}`}>
+        <p className="text-xs text-ink-secondary font-medium transition-all duration-500">
+          {PATIENCE_MESSAGES[patienceIdx]}
+        </p>
+        {elapsedSec >= 8 && (
+          <p className="text-[11px] text-ink-tertiary mt-1">
+            {elapsedSec}s elapsed · still running
+          </p>
+        )}
       </div>
 
       {/* Privacy reassurance */}
@@ -477,7 +554,6 @@ function RangeGauge({
   value,
   min,
   max,
-  unit,
 }: {
   value: number;
   min: number;
@@ -487,73 +563,43 @@ function RangeGauge({
   const range = max - min;
   if (range <= 0) return null;
 
-  // Display range: 25% padding beyond reference range on each side
-  const pad = range * 0.25;
-  const dispMin = min - pad;
-  const dispMax = max + pad;
+  const pad      = range * 0.28;
+  const dispMin  = min - pad;
+  const dispMax  = max + pad;
   const dispRange = dispMax - dispMin;
 
-  // Value position as % of display range (clamped near edges)
   const clampedVal = Math.max(dispMin + dispRange * 0.01, Math.min(dispMax - dispRange * 0.01, value));
   const valPct     = ((clampedVal - dispMin) / dispRange) * 100;
-  const refMinPct  = ((min        - dispMin) / dispRange) * 100; // ≈ 20%
-  const refMaxPct  = ((max        - dispMin) / dispRange) * 100; // ≈ 80%
+  const refMinPct  = ((min - dispMin) / dispRange) * 100;
+  const refMaxPct  = ((max - dispMin) / dispRange) * 100;
 
-  // Fill: from reference-range start to value (or reversed when below range)
   const fillStartPct = Math.min(refMinPct, valPct);
   const fillWidthPct = Math.abs(valPct - refMinPct);
 
-  // Color
   const threshold = range * 0.15;
   const color =
-    value < min || value > max               ? "red"
-    : value <= min + threshold ||
-      value >= max - threshold               ? "amber"
-    :                                          "green";
+    value < min || value > max                              ? "red"
+    : value <= min + threshold || value >= max - threshold  ? "amber"
+    :                                                         "green";
 
   const c = {
-    green: {
-      fill:  "bg-emerald-400 dark:bg-emerald-500",
-      dot:   "bg-emerald-500 dark:bg-emerald-400",
-      label: "text-emerald-700 dark:text-emerald-400",
-    },
-    amber: {
-      fill:  "bg-amber-400 dark:bg-amber-500",
-      dot:   "bg-amber-500 dark:bg-amber-400",
-      label: "text-amber-700 dark:text-amber-400",
-    },
-    red: {
-      fill:  "bg-red-400 dark:bg-red-500",
-      dot:   "bg-red-500 dark:bg-red-400",
-      label: "text-red-600 dark:text-red-400",
-    },
+    green: { fill: "bg-emerald-400 dark:bg-emerald-500", dot: "bg-emerald-500 dark:bg-emerald-400", zone: "bg-emerald-200/60 dark:bg-emerald-800/30" },
+    amber: { fill: "bg-amber-400 dark:bg-amber-500",     dot: "bg-amber-500 dark:bg-amber-400",     zone: "bg-amber-200/60 dark:bg-amber-800/30" },
+    red:   { fill: "bg-red-400 dark:bg-red-500",         dot: "bg-red-500 dark:bg-red-400",         zone: "bg-red-200/40 dark:bg-red-900/20" },
   }[color];
 
-  // Clamp label so it never overflows the bar edges
-  const labelPct = Math.max(6, Math.min(94, valPct));
-
   return (
-    <div className="mt-2.5 select-none">
-      {/* Value label above dot */}
-      <div className="relative h-4 mb-0.5">
-        <span
-          className={`absolute -translate-x-1/2 text-[10px] font-bold leading-none ${c.label}`}
-          style={{ left: `${labelPct}%` }}
-        >
-          {value} {unit}
-        </span>
-      </div>
-
+    <div className="select-none pt-1">
       {/* Track */}
-      <div className="relative h-1.5 rounded-full bg-gray-200 dark:bg-slate-600">
-        {/* Reference range band */}
+      <div className="relative h-2 rounded-full bg-black/8 dark:bg-white/10">
+        {/* Normal zone highlight */}
         <div
-          className="absolute top-0 h-full rounded-full bg-gray-300 dark:bg-slate-500"
+          className={`absolute top-0 h-full rounded-full ${c.zone}`}
           style={{ left: `${refMinPct}%`, width: `${refMaxPct - refMinPct}%` }}
         />
-        {/* Colored fill */}
+        {/* Colored fill from ref-start toward value */}
         <div
-          className={`absolute top-0 h-full rounded-full opacity-80 ${c.fill}`}
+          className={`absolute top-0 h-full rounded-full ${c.fill} opacity-75`}
           style={{ left: `${fillStartPct}%`, width: `${fillWidthPct}%` }}
         />
         {/* Marker dot */}
@@ -561,24 +607,15 @@ function RangeGauge({
           className="absolute top-1/2 z-10 -translate-y-1/2 -translate-x-1/2"
           style={{ left: `${valPct}%` }}
         >
-          <div className={`w-3.5 h-3.5 rounded-full ring-2 ring-white dark:ring-slate-800 shadow-sm ${c.dot}`} />
+          <div className={`w-4 h-4 rounded-full ring-2 ring-white dark:ring-slate-800 shadow-md ${c.dot}`} />
         </div>
       </div>
 
-      {/* Min / Max reference labels */}
-      <div className="relative mt-1 h-3">
-        <span
-          className="absolute -translate-x-1/2 text-[9px] leading-none text-ink-tertiary"
-          style={{ left: `${refMinPct}%` }}
-        >
-          {min}
-        </span>
-        <span
-          className="absolute -translate-x-1/2 text-[9px] leading-none text-ink-tertiary"
-          style={{ left: `${refMaxPct}%` }}
-        >
-          {max}
-        </span>
+      {/* Labels row — left = min, center = "Normal zone", right = max */}
+      <div className="flex items-center justify-between mt-2 px-0.5">
+        <span className="text-[9px] text-ink-tertiary tabular-nums">{min}</span>
+        <span className="text-[9px] text-ink-tertiary/60 tracking-wide">normal range</span>
+        <span className="text-[9px] text-ink-tertiary tabular-nums">{max}</span>
       </div>
     </div>
   );
@@ -587,14 +624,47 @@ function RangeGauge({
 // ── Flag badge ────────────────────────────────────────────────────────────────
 
 function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: ConfidenceLevel }) {
-  const config = {
-    high:   { bg: "bg-amber-50 dark:bg-amber-900/20",  border: "border-amber-200 dark:border-amber-800",  text: "text-amber-700 dark:text-amber-400",  badge: "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300",  icon: "↑" },
-    low:    { bg: "bg-blue-50 dark:bg-blue-900/20",    border: "border-blue-200 dark:border-blue-800",    text: "text-blue-700 dark:text-blue-400",    badge: "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300",    icon: "↓" },
-    normal: { bg: "bg-green-50 dark:bg-green-900/20",  border: "border-green-200 dark:border-green-800",  text: "text-green-700 dark:text-green-400",  badge: "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300", icon: "✓" },
+  const cfg = {
+    high: {
+      bg: "bg-amber-50 dark:bg-amber-900/20",
+      border: "border-amber-200 dark:border-amber-800",
+      valueColor: "text-amber-600 dark:text-amber-400",
+      iconBg: "bg-amber-100 dark:bg-amber-900/40",
+      iconColor: "text-amber-600 dark:text-amber-400",
+      icon: (
+        <svg viewBox="0 0 12 12" fill="currentColor" className="w-3 h-3">
+          <path d="M6 2l4 8H2L6 2z"/>
+        </svg>
+      ),
+    },
+    low: {
+      bg: "bg-sky-50 dark:bg-sky-900/20",
+      border: "border-sky-200 dark:border-sky-800",
+      valueColor: "text-sky-600 dark:text-sky-400",
+      iconBg: "bg-sky-100 dark:bg-sky-900/40",
+      iconColor: "text-sky-600 dark:text-sky-400",
+      icon: (
+        <svg viewBox="0 0 12 12" fill="currentColor" className="w-3 h-3">
+          <path d="M6 10L2 2h8L6 10z"/>
+        </svg>
+      ),
+    },
+    normal: {
+      bg: "bg-emerald-50 dark:bg-emerald-900/20",
+      border: "border-emerald-200 dark:border-emerald-800",
+      valueColor: "text-emerald-600 dark:text-emerald-400",
+      iconBg: "bg-emerald-100 dark:bg-emerald-900/40",
+      iconColor: "text-emerald-600 dark:text-emerald-400",
+      icon: (
+        <svg viewBox="0 0 12 12" fill="currentColor" className="w-3 h-3">
+          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 1.414l-6 6a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L5 8.586l5.293-5.293z" clipRule="evenodd"/>
+        </svg>
+      ),
+    },
   }[flag.status];
 
-  const bounds    = parseRefBounds(flag.reference);
-  const numValue  = parseFloat(flag.value);
+  const bounds   = parseRefBounds(flag.reference);
+  const numValue = parseFloat(flag.value);
   const showGauge =
     bounds !== null &&
     isFinite(bounds.lo) &&
@@ -603,28 +673,37 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
     bounds.hi > bounds.lo;
 
   return (
-    <div className={`flex flex-col p-3.5 rounded-xl ${config.bg} border ${config.border}`}>
-      {/* Top row: icon + name | confidence pill + value */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span className={`flex-shrink-0 w-6 h-6 rounded-full ${config.badge} flex items-center justify-center text-xs font-bold`}>
-            {config.icon}
-          </span>
-          <span className="text-sm font-semibold text-ink truncate">{flag.marker}</span>
-        </div>
+    <div className={`flex flex-col gap-3 p-4 rounded-xl ${cfg.bg} border ${cfg.border}`}>
 
-        <div className="flex flex-col items-end gap-0.5 ml-2 flex-shrink-0">
-          <div className="flex items-center gap-1.5">
-            <ConfidencePill confidence={confidence} status={flag.status} />
-            <span className={`text-sm font-bold ${config.text}`}>{flag.value} {flag.unit}</span>
-          </div>
-          {flag.reference && (
-            <p className="text-xs text-ink-tertiary">ref: {flag.reference}</p>
-          )}
+      {/* Row 1: status icon + marker name — full width, no truncation */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ${cfg.iconColor}`}>
+            {cfg.icon}
+          </span>
+          <span className="text-sm font-bold text-ink leading-tight">{flag.marker}</span>
         </div>
+        <ConfidencePill confidence={confidence} status={flag.status} />
       </div>
 
-      {/* Range gauge */}
+      {/* Row 2: large value + ref range */}
+      <div className="flex items-end justify-between gap-2">
+        <div>
+          <span className={`text-2xl font-extrabold tracking-tight leading-none ${cfg.valueColor}`}>
+            {flag.value}
+          </span>
+          <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>
+            {flag.unit}
+          </span>
+        </div>
+        {flag.reference && (
+          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 flex-shrink-0">
+            ref {flag.reference}
+          </span>
+        )}
+      </div>
+
+      {/* Row 3: gauge bar — no floating label, clean lines */}
       {showGauge && (
         <RangeGauge value={numValue} min={bounds!.lo} max={bounds!.hi} unit={flag.unit} />
       )}
@@ -650,6 +729,59 @@ function extractSpecialist(text: string): string {
   // Fallback: grab first word ending in common specialist suffixes
   const m = text.match(/\b([A-Z][a-z]+(?:ologist|iatrist|ician|surgeon|ist))\b/);
   return m ? m[1] : "specialist";
+}
+
+// ── Supplements & Lifestyle Section ──────────────────────────────────────────
+function SupplementsSection({ supplements }: { supplements: string }) {
+  const items = supplements.split(/\n\n+/).filter(Boolean);
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-emerald-200 dark:border-emerald-800/50 overflow-hidden shadow-sm">
+      {/* Header */}
+      <div className="px-5 py-3.5 border-b border-emerald-100 dark:border-emerald-800/30 bg-emerald-50/60 dark:bg-emerald-900/10 flex items-center gap-2.5">
+        <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <div className="flex-1">
+          <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">Supplements &amp; Lifestyle</p>
+          <p className="text-[10px] text-emerald-600 dark:text-emerald-500">Personalized to your flagged values</p>
+        </div>
+        <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full font-semibold border border-emerald-200 dark:border-emerald-800">
+          {items.length} recommendations
+        </span>
+      </div>
+
+      {/* Items */}
+      <div className="divide-y divide-surface-border">
+        {items.map((item, i) => {
+          const match = item.match(/^\*\*([^*]+)\*\*:?\s*([\s\S]*)$/);
+          const title = match ? match[1].trim() : "";
+          const body = match ? match[2].trim() : item;
+          return (
+            <div key={i} className="p-4 flex gap-3 hover:bg-surface-raised/40 transition-colors">
+              <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+                {i + 1}
+              </div>
+              <div className="min-w-0">
+                {title && <p className="text-sm font-semibold text-ink mb-1">{title}</p>}
+                <p className="text-sm text-ink-secondary leading-relaxed">{body}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer disclaimer */}
+      <div className="px-5 py-3 border-t border-surface-border bg-surface-raised flex items-center gap-2">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-ink-tertiary flex-shrink-0">
+          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+        </svg>
+        <p className="text-[10px] text-ink-tertiary">These are educational suggestions only. Always consult your doctor before starting any supplement.</p>
+      </div>
+    </div>
+  );
 }
 
 function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: ReportMode }) {
@@ -1028,7 +1160,11 @@ function DoctorQuestionsSection({
         className="w-full flex items-center justify-between px-5 py-4 hover:bg-surface-raised/60 transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <span className="text-base">📋</span>
+          <div className="w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
+              <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
+            </svg>
+          </div>
           <span className="text-sm font-semibold text-ink">Questions to bring to your doctor</span>
           {!open && !questions && (
             <span className="hidden sm:inline-flex items-center gap-1 text-xs text-ink-tertiary border border-surface-border rounded-full px-2.5 py-0.5 bg-surface-raised ml-1">
@@ -1522,202 +1658,231 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
         );
       })()}
 
-      {/* Flagged values / Key findings */}
-      {result.flags && result.flags.length > 0 && (() => {
-        // Build the full interpretation text once for text-signal scanning
-        const interpretationText = [
-          result.simple, result.medium, result.expert,
-          result.etiology, result.mechanism, result.diseases,
-        ].filter(Boolean).join(" ");
+      {/* ─── SECTION 1: YOUR RESULTS ─────────────────────────────────────────── */}
+      <div>
+        <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+          Your Results
+        </p>
 
-        // Pre-compute confidence level for each flag
-        const confidences = result.flags.map((f) =>
-          computeConfidence(f, interpretationText)
-        );
-        const hasBorderline = confidences.some((c) => c === "borderline");
+        {/* Single unified card: flags + tier tabs + interpretation + action */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
 
-        return (
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
-            <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised">
-              <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
-                {mode === "radiology" ? "Key Findings" : "Flagged Values"}
-              </p>
+          {/* Flagged values — merged at the top of this card */}
+          {result.flags && result.flags.length > 0 && (() => {
+            const interpretationText = [
+              result.simple, result.medium, result.expert,
+              result.etiology, result.mechanism, result.diseases,
+            ].filter(Boolean).join(" ");
+            const confidences = result.flags.map((f) => computeConfidence(f, interpretationText));
+            const hasBorderline = confidences.some((c) => c === "borderline");
+            return (
+              <>
+                <div className="px-5 py-3 border-b border-surface-border bg-surface-raised flex items-center justify-between">
+                  <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
+                    {mode === "radiology" ? "Key Findings" : "Flagged Values"}
+                  </p>
+                  <span className="text-[11px] text-ink-tertiary bg-white dark:bg-slate-700 border border-surface-border px-2 py-0.5 rounded-full">
+                    {result.flags.length} value{result.flags.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {result.flags.map((flag, i) => (
+                    <FlagBadge key={i} flag={flag} confidence={confidences[i]} />
+                  ))}
+                </div>
+                {hasBorderline && (
+                  <div className="px-5 py-3 border-t border-yellow-100 dark:border-yellow-900 bg-yellow-50/60 dark:bg-yellow-900/10 flex items-start gap-2">
+                    <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0 mt-px">
+                      <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4.5zm0 7a.75.75 0 110-1.5.75.75 0 010 1.5z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-[11px] text-yellow-800 dark:text-yellow-300 leading-relaxed">
+                      Borderline values may require clinical context to interpret accurately. Always confirm with your physician.
+                    </p>
+                  </div>
+                )}
+              </>
+            );
+          })()}
+
+          {/* Tier tabs */}
+          <div className={`border-b border-surface-border px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
+            <div className="flex gap-0.5">
+              {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
+                const cfg = TIER_CONFIG[tier];
+                const isActive = tier === activeTier;
+                return (
+                  <button
+                    key={tier}
+                    onClick={() => setActiveTier(tier)}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg text-sm font-semibold transition-all duration-200 ${
+                      isActive ? cfg.activeClass : `text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40 ${cfg.inactiveIconClass}`
+                    }`}
+                  >
+                    {cfg.icon}
+                    <span>{cfg.label}</span>
+                    {isActive && (
+                      <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">— {cfg.audience}</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
-            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {result.flags.map((flag, i) => (
-                <FlagBadge key={i} flag={flag} confidence={confidences[i]} />
+          </div>
+
+          {/* Interpretation text */}
+          <div className="p-6">
+            <div className="animate-fade-in">
+              {paragraphs.map((para, i) => (
+                <p key={i} className="text-ink-secondary leading-relaxed text-sm sm:text-base mb-3 last:mb-0">{para}</p>
               ))}
             </div>
+          </div>
 
-            {/* Borderline footnote — shown only when at least one flag is borderline */}
-            {hasBorderline && (
-              <div className="px-5 py-3 border-t border-yellow-100 dark:border-yellow-900 bg-yellow-50/60 dark:bg-yellow-900/10 flex items-start gap-2">
-                <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0 mt-px">
-                  <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4.5zm0 7a.75.75 0 110-1.5.75.75 0 010 1.5z" clipRule="evenodd" />
+          {/* What should you do? — merged at the bottom of the results card */}
+          <div className="border-t border-brand-blue/10 bg-brand-blue-light/50 dark:bg-brand-blue/5 p-5">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 bg-brand-blue/15 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <p className="text-[11px] text-yellow-800 leading-relaxed">
-                  Borderline values may require clinical context to interpret accurately. Always confirm with your physician.
-                </p>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-brand-blue-dark dark:text-brand-blue uppercase tracking-widest mb-1.5">What should you do?</p>
+                <p className="text-sm text-ink-secondary leading-relaxed">{result.action}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── SECTION 1.5: SUPPLEMENTS & LIFESTYLE ───────────────────────────── */}
+      {result.supplements && mode === "lab" && (
+        <div>
+          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+            Supplements &amp; Lifestyle
+          </p>
+          <SupplementsSection supplements={result.supplements} />
+        </div>
+      )}
+
+      {/* ─── SECTION 2: DEEPER ANALYSIS ──────────────────────────────────────── */}
+      {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (
+        <div>
+          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+            Deeper Analysis
+          </p>
+          <div className="space-y-3">
+            <DeepDiveSection result={result} mode={mode} />
+
+            {result.medication_context && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+                <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
+                  <div className="w-6 h-6 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400">
+                      <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Medication Context</p>
+                </div>
+                <div className="p-5">
+                  <p className="text-sm text-ink-secondary leading-relaxed">{result.medication_context}</p>
+                </div>
+              </div>
+            )}
+
+            {result.health_insights && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-red-200 dark:border-red-900/50 overflow-hidden shadow-sm">
+                <div className="px-5 py-3.5 border-b border-red-100 dark:border-red-900/30 bg-red-50/60 dark:bg-red-950/20 flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
+                      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-red-700 dark:text-red-400 uppercase tracking-wider">Apple Health · Wearable Insights</p>
+                    <p className="text-[10px] text-red-500/80 dark:text-red-500">Cross-referenced with your lab results</p>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <p className="text-sm text-ink-secondary leading-relaxed">{result.health_insights}</p>
+                </div>
               </div>
             )}
           </div>
-        );
-      })()}
-
-      {/* Tier toggle + interpretation */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
-        <div className="border-b border-surface-border px-5 pt-4 bg-surface-raised">
-          <div className="flex gap-0.5">
-            {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
-              const cfg = TIER_CONFIG[tier];
-              const isActive = tier === activeTier;
-              return (
-                <button
-                  key={tier}
-                  onClick={() => setActiveTier(tier)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg text-sm font-medium transition-all duration-200 ${
-                    isActive ? cfg.activeClass : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
-                  }`}
-                >
-                  <span>{cfg.emoji}</span>
-                  <span>{cfg.label}</span>
-                  {isActive && (
-                    <span className="hidden sm:inline-block text-xs font-normal opacity-60">— {cfg.audience}</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
         </div>
-        <div className="p-6">
-          <div className="animate-fade-in">
-            {paragraphs.map((para, i) => (
-              <p key={i} className="text-ink-secondary leading-relaxed text-sm sm:text-base mb-3 last:mb-0">{para}</p>
-            ))}
-          </div>
+      )}
+
+      {/* ─── SECTION 3: NEXT STEPS ────────────────────────────────────────────── */}
+      <div>
+        <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+          Next Steps
+        </p>
+        <div className="space-y-3">
+          <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
+          {result.flags && result.flags.length > 0 && (
+            <ClinicalTrialsSection flags={result.flags} />
+          )}
         </div>
       </div>
 
-      {/* Medication context */}
-      {result.medication_context && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
-          <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2">
-            <span className="text-base leading-none">📋</span>
-            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Medication context</p>
-          </div>
-          <div className="p-5 flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
-                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-              </svg>
-            </div>
-            <p className="text-sm text-ink-secondary leading-relaxed">{result.medication_context}</p>
-          </div>
+      {/* ─── SECTION 4: SAVE & SHARE ─────────────────────────────────────────── */}
+      <div className="print:hidden">
+        <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+          Save &amp; Share
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          <ShareSection simple={result.simple} />
+          <EmailSection result={result} />
         </div>
-      )}
-
-      {/* Apple Health / Wearable cross-reference */}
-      {result.health_insights && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-red-200 dark:border-red-900/50 overflow-hidden shadow-sm">
-          <div className="px-5 py-3.5 border-b border-red-100 dark:border-red-900/30 bg-red-50/60 dark:bg-red-950/20 flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-red-500 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white">
-                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-xs font-bold text-red-700 dark:text-red-400 uppercase tracking-wider">Apple Health · Wearable Insights</p>
-              <p className="text-[10px] text-red-500/80 dark:text-red-500">Cross-referenced with your lab results</p>
-            </div>
-          </div>
-          <div className="p-5">
-            <p className="text-sm text-ink-secondary leading-relaxed">{result.health_insights}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Deep Dive */}
-      <DeepDiveSection result={result} mode={mode} />
-
-      {/* Action recommendation */}
-      <div className="bg-brand-blue-light dark:bg-brand-blue/10 border border-brand-blue-mid dark:border-brand-blue/30 rounded-2xl p-5">
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 bg-brand-blue/15 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <button
+            onClick={handleCopy}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
+              copied
+                ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
+                : "border-surface-border bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue"
+            }`}
+          >
+            {copied ? (
+              <>
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                  <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                </svg>
+                Copy to Clipboard
+              </>
+            )}
+          </button>
+          <button
+            onClick={handlePrint}
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+              <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h6a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 112 0 1 1 0 01-2 0zm2 1v2h4v-2H8z" clipRule="evenodd" />
             </svg>
-          </div>
-          <div>
-            <p className="text-xs font-bold text-brand-blue-dark uppercase tracking-widest mb-1.5">What should you do?</p>
-            <p className="text-sm text-ink-secondary leading-relaxed">{result.action}</p>
-          </div>
+            Download as PDF
+          </button>
         </div>
       </div>
-
-      {/* Doctor questions */}
-      <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
-
-      {/* Clinical trials */}
-      {result.flags && result.flags.length > 0 && (
-        <ClinicalTrialsSection flags={result.flags} />
-      )}
-
-      {/* Share with family */}
-      <ShareSection simple={result.simple} />
-
-      {/* Email to myself */}
-      <EmailSection result={result} />
 
       {/* Disclaimer */}
       <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 print:hidden">
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
         </svg>
-        <p className="text-xs text-amber-700 leading-relaxed">
+        <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
           <strong>Meridix Labs is an educational tool.</strong> This is not medical advice. Always consult a qualified physician.
         </p>
       </div>
 
-      {/* Copy + Print action buttons */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1 print:hidden">
-        <button
-          onClick={handleCopy}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
-            copied
-              ? "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
-              : "border-surface-border bg-white dark:bg-slate-800 dark:border-slate-700 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue"
-          }`}
-        >
-          {copied ? (
-            <>
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Copied!
-            </>
-          ) : (
-            <>
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
-              </svg>
-              Copy to Clipboard
-            </>
-          )}
-        </button>
-
-        <button
-          onClick={handlePrint}
-          className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
-        >
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-            <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h6a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 112 0 1 1 0 01-2 0zm2 1v2h4v-2H8z" clipRule="evenodd" />
-          </svg>
-          Download as PDF
-        </button>
-      </div>
-
-      {/* Toast notification (shown briefly after copy) */}
+      {/* Toast notification */}
       {copied && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-sm font-medium rounded-xl shadow-xl animate-fade-in pointer-events-none">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-400">
@@ -1726,6 +1891,8 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
           Copied to clipboard!
         </div>
       )}
+
+      <NextStepBar currentPage="app" />
     </div>
   );
 }
@@ -1992,14 +2159,30 @@ function ContextForm({
   fileName,
   onContinue,
   onSkip,
+  initialAge = "",
+  initialSex = "",
+  initialMedications = "",
+  profileLoaded = false,
 }: {
   fileName: string;
   onContinue: (age: string, sex: PatientSex, medications: string) => void;
   onSkip: () => void;
+  initialAge?: string;
+  initialSex?: PatientSex;
+  initialMedications?: string;
+  profileLoaded?: boolean;
 }) {
-  const [age, setAge] = useState("");
-  const [sex, setSex] = useState<PatientSex>("");
-  const [medications, setMedications] = useState("");
+  const [age, setAge] = useState(initialAge);
+  const [sex, setSex] = useState<PatientSex>(initialSex);
+  const [medications, setMedications] = useState(initialMedications);
+
+  useEffect(() => {
+    if (profileLoaded) {
+      if (initialAge) setAge(initialAge);
+      if (initialSex) setSex(initialSex);
+      if (initialMedications) setMedications(initialMedications);
+    }
+  }, [profileLoaded, initialAge, initialSex, initialMedications]);
 
   return (
     <div className="animate-fade-in space-y-6 py-1">
@@ -2017,6 +2200,16 @@ function ContextForm({
           </p>
         </div>
       </div>
+
+      {/* Autofill indicator for signed-in users */}
+      {profileLoaded && (initialAge || initialSex || initialMedications) && (
+        <div className="flex items-center gap-2 px-3 py-2 bg-brand-blue/5 border border-brand-blue/20 rounded-xl">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue flex-shrink-0">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+          <span className="text-xs text-brand-blue font-medium">Filled in from your profile — edit anything below.</span>
+        </div>
+      )}
 
       {/* File name chip */}
       {fileName && (
@@ -2119,6 +2312,38 @@ export default function AppPage() {
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [healthFile, setHealthFile] = useState<File | null>(null);
 
+  // ── Signed-in profile autofill ─────────────────────────────────────
+  const [profile, setProfile] = useState<null | {
+    age: number | null;
+    sex: "male" | "female" | "other" | null;
+    medications: string | null;
+  }>(null);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [savedAnalysisId, setSavedAnalysisId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!AUTH_ENABLED) { setProfileLoaded(true); return; }
+    (async () => {
+      try {
+        const r = await fetch("/api/user-profile");
+        if (r.ok) {
+          const j = await r.json();
+          setProfile({
+            age: j.profile?.age ?? null,
+            sex: j.profile?.sex ?? null,
+            medications: j.profile?.medications ?? null,
+          });
+          setIsSignedIn(true);
+        }
+      } catch {
+        /* not signed in — silently continue */
+      } finally {
+        setProfileLoaded(true);
+      }
+    })();
+  }, []);
+
   const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
     setErrorCode(code);
     setError(msg ?? code);
@@ -2154,6 +2379,40 @@ export default function AppPage() {
       setState("success");
       recordInterpretation();
       track("interpretation_complete", { tier: "simple", language: lang });
+
+      // Save to account for signed-in users (fire-and-forget; never fail the UX)
+      if (isSignedIn && !sampleMode) {
+        try {
+          const flagMarkers = new Set<string>((json.data?.flags ?? []).map((f: { marker: string }) => f.marker));
+          const labsRaw = (json.data?.labs ?? []).map((l: { marker: string; value: string; unit?: string; reference?: string; status?: string }) => ({
+            marker: l.marker, value: l.value, unit: l.unit, reference: l.reference,
+            status: flagMarkers.has(l.marker) ? (l.status ?? "high") : "normal",
+          }));
+          const flagsCount = json.data?.flags?.length ?? 0;
+          const healthScore = Math.max(20, 100 - flagsCount * 8);
+
+          const saveRes = await fetch("/api/save-analysis", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              analysis: json.data,
+              flags: json.data?.flags ?? [],
+              labs_raw: labsRaw,
+              tier: "simple",
+              summary: json.data?.summary ?? json.data?.medium?.slice(0, 240) ?? null,
+              patient_context: { age, sex, medications, language: lang },
+              source_filename: file?.name ?? fileName ?? null,
+              health_score: healthScore,
+            }),
+          });
+          if (saveRes.ok) {
+            const sj = await saveRes.json();
+            setSavedAnalysisId(sj.id ?? null);
+          }
+        } catch {
+          /* silent save failure */
+        }
+      }
     } catch {
       setErrorState("NETWORK_ERROR");
     }
@@ -2190,7 +2449,9 @@ export default function AppPage() {
     setError(null);
     setErrorCode(null);
     setFileSizeMB(undefined);
-    setState("context");
+    // Load pre-built demo result instantly — no API call needed
+    setResult(DEMO_RESULT);
+    setState("success");
   };
 
   const handleReset = () => {
@@ -2250,13 +2511,25 @@ export default function AppPage() {
           {/* Trust badges */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             {[
-              { icon: "🔒", label: "Never stored" },
-              { icon: "✓",  label: "No account required" },
-              { icon: "⚡", label: "Results in seconds" },
-              { icon: "🌍", label: "10 languages" },
+              {
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-emerald-500"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>,
+                label: "Never stored",
+              },
+              {
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>,
+                label: "No sign-up needed",
+              },
+              {
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-amber-500"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>,
+                label: "Results in seconds",
+              },
+              {
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-500"><path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16A8 8 0 0010 2zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd" /></svg>,
+                label: "10 languages",
+              },
             ].map((b) => (
               <span key={b.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border dark:border-slate-700 text-xs text-ink-secondary font-medium shadow-sm">
-                <span>{b.icon}</span>
+                {b.icon}
                 {b.label}
               </span>
             ))}
@@ -2281,15 +2554,27 @@ export default function AppPage() {
               fileName={fileName}
               onContinue={(age, sex, medications) => runAnalysis(pendingFile, isSample, age, sex, medications, healthFile)}
               onSkip={() => runAnalysis(pendingFile, isSample, "", "", "", healthFile)}
+              profileLoaded={profileLoaded}
+              initialAge={profile?.age != null ? String(profile.age) : ""}
+              initialSex={profile?.sex === "other" ? "prefer_not" : (profile?.sex ?? "") as PatientSex}
+              initialMedications={profile?.medications ?? ""}
             />
           ) : state === "idle" ? (
             <div className="space-y-4">
               {/* Report mode toggle */}
               <div className="flex p-1 bg-surface-raised rounded-2xl border border-surface-border gap-1">
                 {([
-                  { mode: "lab",       emoji: "🩸", label: "Lab Results"                },
-                  { mode: "radiology", emoji: "🩻", label: "Radiology / Pathology"      },
-                ] as { mode: ReportMode; emoji: string; label: string }[]).map((opt) => (
+                  {
+                    mode: "lab",
+                    icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clipRule="evenodd" /></svg>,
+                    label: "Lab Results",
+                  },
+                  {
+                    mode: "radiology",
+                    icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" /></svg>,
+                    label: "Radiology / Pathology",
+                  },
+                ] as { mode: ReportMode; icon: React.ReactNode; label: string }[]).map((opt) => (
                   <button
                     key={opt.mode}
                     onClick={() => setReportMode(opt.mode)}
@@ -2299,7 +2584,7 @@ export default function AppPage() {
                         : "text-ink-tertiary hover:text-ink-secondary"
                     }`}
                   >
-                    <span>{opt.emoji}</span>
+                    {opt.icon}
                     <span>{opt.label}</span>
                   </button>
                 ))}
@@ -2308,7 +2593,7 @@ export default function AppPage() {
               {/* Mode hint */}
               {reportMode === "radiology" && (
                 <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800">
-                  <span className="text-purple-500 text-sm mt-px flex-shrink-0">🩻</span>
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-purple-500 mt-px flex-shrink-0 flex-shrink-0"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" /></svg>
                   <p className="text-xs text-purple-700 leading-relaxed">
                     <strong>Radiology &amp; Pathology mode:</strong> Upload a CT, MRI, X-ray, ultrasound, or biopsy report. The AI will identify every finding, flag what needs follow-up, and explain incidental findings clearly.
                   </p>
@@ -2325,13 +2610,15 @@ export default function AppPage() {
                   </div>
                   <button
                     onClick={handleSample}
-                    className="w-full py-3 px-5 rounded-xl border border-surface-border hover:border-brand-blue/40 bg-surface-raised hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                    className="w-full py-3.5 px-5 rounded-xl border border-brand-blue/25 bg-brand-blue-light/60 hover:bg-brand-blue-light text-brand-blue font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2.5 group"
                   >
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 opacity-60">
-                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                      <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                     </svg>
-                    Try with a sample report
+                    See a live demo — no upload needed
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
+                      <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
+                    </svg>
                   </button>
                 </>
               )}
@@ -2341,6 +2628,20 @@ export default function AppPage() {
                 onHealthFileChange={setHealthFile}
                 healthFile={healthFile}
               />
+
+              {/* Privacy trust strip */}
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 pt-2">
+                {[
+                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M8 1a.5.5 0 01.5.5v1h1A1.5 1.5 0 0111 4v7.5a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 015 11.5V4a1.5 1.5 0 011.5-1.5h1V1.5A.5.5 0 018 1zm0 5a.5.5 0 100 1 .5.5 0 000-1z" clipRule="evenodd" /></svg>, text: "File never stored" },
+                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-brand-blue"><path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>, text: "End-to-end encrypted" },
+                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-violet-500"><path fillRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm3.354-9.646a.5.5 0 00-.708-.708L7 9.293 5.354 7.646a.5.5 0 10-.708.708l2 2a.5.5 0 00.708 0l4-4z" clipRule="evenodd" /></svg>, text: "No data sold, ever" },
+                ].map((item) => (
+                  <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-ink-tertiary">
+                    {item.icon}
+                    {item.text}
+                  </span>
+                ))}
+              </div>
             </div>
           ) : state === "loading" ? (
             <LoadingAnimation mode={reportMode} />
@@ -2349,8 +2650,60 @@ export default function AppPage() {
           ) : null}
         </div>
 
-        {/* Save account banner — shown after first interpretation */}
-        {userData && userData.interpretationCount === 1 && !userData.saveBannerDismissed && result && (
+        {/* Saved-to-account confirmation (signed-in users) */}
+        {AUTH_ENABLED && isSignedIn && result && !isSample && savedAnalysisId && (
+          <div className="mt-4 animate-fade-in flex items-center justify-between gap-3 px-4 py-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+            <div className="flex items-center gap-3">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-600">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <p className="text-sm font-semibold text-ink">Saved to your account</p>
+                <p className="text-xs text-ink-secondary mt-0.5">This report will show up in your dashboard trends.</p>
+              </div>
+            </div>
+            <Link
+              href="/dashboard"
+              className="text-xs font-semibold text-brand-blue hover:underline flex-shrink-0 whitespace-nowrap"
+            >
+              View dashboard →
+            </Link>
+          </div>
+        )}
+
+        {/* Sign-up nudge (anonymous users, after first interpretation) */}
+        {AUTH_ENABLED && !isSignedIn && userData && userData.interpretationCount === 1 && !userData.saveBannerDismissed && result && !isSample && (
+          <div className="mt-4 animate-fade-in flex items-start justify-between gap-3 px-4 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-brand-blue/20 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
+                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-ink">Save this report to your account</p>
+                <p className="text-xs text-ink-secondary mt-0.5">Track trends over time and skip the age/sex questions next visit — free, no card needed.</p>
+                <div className="mt-2 flex gap-2">
+                  <Link
+                    href="/sign-up"
+                    className="inline-flex items-center px-3 py-1.5 bg-brand-blue text-white text-xs font-semibold rounded-lg hover:bg-brand-blue-hover transition-colors"
+                  >
+                    Create free account
+                  </Link>
+                  <button
+                    onClick={dismissBanner}
+                    className="text-xs text-ink-tertiary hover:text-ink-secondary transition-colors px-2 py-1"
+                  >
+                    Maybe later
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Fallback banner when auth is disabled (original behavior) */}
+        {!AUTH_ENABLED && userData && userData.interpretationCount === 1 && !userData.saveBannerDismissed && result && (
           <div className="mt-4 animate-fade-in flex items-start justify-between gap-3 px-4 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-brand-blue/20 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
