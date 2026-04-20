@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
@@ -2313,20 +2314,25 @@ export default function AppPage() {
   const [healthFile, setHealthFile] = useState<File | null>(null);
 
   // ── Signed-in profile autofill ─────────────────────────────────────
+  const { isLoaded: clerkLoaded, isSignedIn: clerkSignedIn } = useUser();
+  const isSignedIn = AUTH_ENABLED && !!clerkSignedIn;
+
   const [profile, setProfile] = useState<null | {
     age: number | null;
     sex: "male" | "female" | "other" | null;
     medications: string | null;
   }>(null);
   const [profileLoaded, setProfileLoaded] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [savedAnalysisId, setSavedAnalysisId] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!AUTH_ENABLED) { setProfileLoaded(true); return; }
+    if (!clerkLoaded) return;
+    if (!clerkSignedIn) { setProfileLoaded(true); return; }
     (async () => {
       try {
-        const r = await fetch("/api/user-profile");
+        const r = await fetch("/api/user-profile", { credentials: "include" });
         if (r.ok) {
           const j = await r.json();
           setProfile({
@@ -2334,15 +2340,16 @@ export default function AppPage() {
             sex: j.profile?.sex ?? null,
             medications: j.profile?.medications ?? null,
           });
-          setIsSignedIn(true);
+        } else {
+          console.warn("[meridix] user-profile fetch failed:", r.status, await r.text());
         }
-      } catch {
-        /* not signed in — silently continue */
+      } catch (e) {
+        console.warn("[meridix] user-profile fetch error:", e);
       } finally {
         setProfileLoaded(true);
       }
     })();
-  }, []);
+  }, [clerkLoaded, clerkSignedIn]);
 
   const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
     setErrorCode(code);
@@ -2380,7 +2387,8 @@ export default function AppPage() {
       recordInterpretation();
       track("interpretation_complete", { tier: "simple", language: lang });
 
-      // Save to account for signed-in users (fire-and-forget; never fail the UX)
+      // Save to account for signed-in users
+      console.log("[meridix] save check — isSignedIn:", isSignedIn, "sampleMode:", sampleMode);
       if (isSignedIn && !sampleMode) {
         try {
           const flagMarkers = new Set<string>((json.data?.flags ?? []).map((f: { marker: string }) => f.marker));
@@ -2391,8 +2399,10 @@ export default function AppPage() {
           const flagsCount = json.data?.flags?.length ?? 0;
           const healthScore = Math.max(20, 100 - flagsCount * 8);
 
+          console.log("[meridix] calling /api/save-analysis…");
           const saveRes = await fetch("/api/save-analysis", {
             method: "POST",
+            credentials: "include",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               analysis: json.data,
@@ -2405,12 +2415,19 @@ export default function AppPage() {
               health_score: healthScore,
             }),
           });
+          const saveText = await saveRes.text();
+          console.log("[meridix] save-analysis response:", saveRes.status, saveText);
           if (saveRes.ok) {
-            const sj = await saveRes.json();
-            setSavedAnalysisId(sj.id ?? null);
+            try {
+              const sj = JSON.parse(saveText);
+              setSavedAnalysisId(sj.id ?? null);
+            } catch { /* noop */ }
+          } else {
+            setSaveError(`Save failed (${saveRes.status}): ${saveText.slice(0, 200)}`);
           }
-        } catch {
-          /* silent save failure */
+        } catch (e) {
+          console.warn("[meridix] save-analysis exception:", e);
+          setSaveError(e instanceof Error ? e.message : "Network error while saving.");
         }
       }
     } catch {
@@ -2649,6 +2666,19 @@ export default function AppPage() {
             <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} lang={lang} />
           ) : null}
         </div>
+
+        {/* Save failed banner (signed-in users) */}
+        {AUTH_ENABLED && isSignedIn && result && !isSample && saveError && (
+          <div className="mt-4 animate-fade-in flex items-start gap-3 px-4 py-3.5 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-ink">Couldn&apos;t save to your account</p>
+              <p className="mt-0.5 text-xs text-ink-secondary break-all">{saveError}</p>
+            </div>
+          </div>
+        )}
 
         {/* Saved-to-account confirmation (signed-in users) */}
         {AUTH_ENABLED && isSignedIn && result && !isSample && savedAnalysisId && (

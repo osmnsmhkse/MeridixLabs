@@ -1,30 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+// Clerk middleware — attaches auth context to requests when configured.
+// All routes remain PUBLIC by default. The platform is fully usable
+// without signing up; account-only pages/API routes check auth() inline.
 
-export function middleware(request: NextRequest) {
-  if (!request.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.next();
-  }
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-  const authHeader = request.headers.get("authorization");
-  if (authHeader?.startsWith("Basic ")) {
-    const base64 = authHeader.slice(6);
-    const decoded = Buffer.from(base64, "base64").toString("utf-8");
-    const colonIdx = decoded.indexOf(":");
-    const password = decoded.slice(colonIdx + 1);
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    if (adminPassword && password === adminPassword) {
-      return NextResponse.next();
-    }
-  }
+const CLERK_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-  return new NextResponse(null, {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="Meridix Labs Admin", charset="UTF-8"',
-    },
-  });
+const _clerk = CLERK_ENABLED ? clerkMiddleware() : null;
+
+export default function middleware(req: NextRequest, event: Parameters<NonNullable<typeof _clerk>>[1]) {
+  if (_clerk) return _clerk(req, event);
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    // Match everything except Next internals and static files
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };
