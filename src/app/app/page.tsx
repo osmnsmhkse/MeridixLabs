@@ -2314,8 +2314,13 @@ export default function AppPage() {
   const [healthFile, setHealthFile] = useState<File | null>(null);
 
   // ── Signed-in profile autofill ─────────────────────────────────────
-  const { isLoaded: clerkLoaded, isSignedIn: clerkSignedIn } = useUser();
-  const isSignedIn = AUTH_ENABLED && !!clerkSignedIn;
+  // Note: useUser() must be called inside a ClerkProvider. When AUTH_ENABLED
+  // is false (e.g., Vercel without Clerk env vars), Providers.tsx does NOT
+  // wrap with ClerkProvider, so we route Clerk state through a subcomponent
+  // that only mounts when AUTH_ENABLED is true.
+  const [clerkLoaded, setClerkLoaded] = useState(!AUTH_ENABLED);
+  const [clerkSignedIn, setClerkSignedIn] = useState(false);
+  const isSignedIn = AUTH_ENABLED && clerkSignedIn;
 
   const [profile, setProfile] = useState<null | {
     age: number | null;
@@ -2485,6 +2490,11 @@ export default function AppPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-slate-900 dark:to-slate-900 pt-24 pb-20">
+      {AUTH_ENABLED && (
+        <ClerkAuthBridge
+          onChange={(loaded, signedIn) => { setClerkLoaded(loaded); setClerkSignedIn(signedIn); }}
+        />
+      )}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page header */}
         <div className="text-center mb-8">
@@ -2884,4 +2894,16 @@ export default function AppPage() {
       </div>
     </div>
   );
+}
+
+// Bridges Clerk's useUser() state to the parent via a callback.
+// Only mounted when AUTH_ENABLED is true, so when Clerk env vars are
+// absent (e.g., on Vercel before env vars are configured) this never
+// runs and useUser() is never invoked outside a ClerkProvider.
+function ClerkAuthBridge({ onChange }: { onChange: (loaded: boolean, signedIn: boolean) => void }) {
+  const { isLoaded, isSignedIn } = useUser();
+  useEffect(() => {
+    onChange(isLoaded, !!isSignedIn);
+  }, [isLoaded, isSignedIn, onChange]);
+  return null;
 }
