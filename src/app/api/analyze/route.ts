@@ -82,6 +82,8 @@ Fields required:
 
 13. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…"). If no medications were provided, omit this field entirely.
 
+14. "supplements" — ONLY include this field when one or more abnormal (high or low) values are present in the flags. Provide 3–5 specific, actionable supplement or lifestyle recommendations directly tied to the flagged biomarkers. Use this format for each: start with the supplement name and dose in double asterisks (e.g., **Vitamin D3 (2,000 IU/day)**), followed by a colon and a plain-English explanation of which biomarker it targets, why it helps, and a practical note. End each item with a reminder to consult a doctor. Separate recommendations with two newlines. If all values are normal, omit this field entirely. Never recommend supplements for radiology/pathology reports.
+
 Always be accurate, warm, thorough, and never alarmist. Never make a definitive diagnosis — you are explaining possibilities, not diagnosing. Be educational and empowering.
 
 Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
@@ -101,7 +103,8 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
     { "marker": "Glucose", "value": "112", "unit": "mg/dL", "reference": "70–99", "status": "high" }
   ],
   "medication_context": "string (optional — only when medications were provided)",
-  "health_insights": "string (optional — only when Apple Health/wearable data was provided)"
+  "health_insights": "string (optional — only when Apple Health/wearable data was provided)",
+  "supplements": "string (optional — only when abnormal values are present)"
 }${healthInstruction}`;
 }
 
@@ -317,6 +320,7 @@ export async function POST(request: NextRequest) {
       flags: Array<{ marker: string; value: string; unit: string; reference: string; status: "high" | "low" | "normal" }>;
       medication_context?: string;
       health_insights?: string;
+      supplements?: string;
     };
 
     try {

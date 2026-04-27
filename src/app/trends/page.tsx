@@ -454,6 +454,55 @@ export default function TrendsPage() {
           </div>
         </div>
 
+        {/* ── How it works — shown only when no results yet ────── */}
+        {!hasResults && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            {[
+              {
+                step: "1",
+                icon: (
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
+                ),
+                title: "Upload 2+ reports",
+                body: "Add lab reports from different dates — any blood test, panel, or CBC works.",
+              },
+              {
+                step: "2",
+                icon: (
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                  </svg>
+                ),
+                title: "We extract the values",
+                body: "AI reads every lab value and matches it across your reports automatically.",
+              },
+              {
+                step: "3",
+                icon: (
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                  </svg>
+                ),
+                title: "See your trends",
+                body: "Pick any marker — glucose, TSH, cholesterol — and see how it's moved over time.",
+              },
+            ].map((item) => (
+              <div key={item.step} className="bg-white rounded-2xl border border-surface-border px-5 py-4 flex gap-3">
+                <div className="w-8 h-8 rounded-lg bg-brand-blue-light flex items-center justify-center flex-shrink-0 mt-0.5">
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-ink mb-0.5">{item.title}</p>
+                  <p className="text-xs text-ink-secondary leading-relaxed">{item.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* ── Setup / Upload phase ─────────────────────────────── */}
         {!hasResults && (
           <div className="bg-white rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8 space-y-4">
@@ -576,7 +625,18 @@ export default function TrendsPage() {
                 })}
               </select>
               {allMarkers.length === 0 && (
-                <p className="text-xs text-ink-tertiary mt-2">No markers detected across your reports.</p>
+                <div className="mt-4 p-4 rounded-xl bg-amber-50 border border-amber-100">
+                  <p className="text-sm font-semibold text-amber-800 mb-1">No shared markers found</p>
+                  <p className="text-xs text-amber-700 leading-relaxed mb-3">
+                    Your reports don&apos;t have overlapping lab values. Trends work best when reports are from the same test type — for example, two <strong>blood tests</strong> or two <strong>lipid panels</strong> from different dates.
+                  </p>
+                  <button
+                    onClick={resetAll}
+                    className="text-xs font-semibold text-amber-800 underline underline-offset-2 hover:text-amber-900"
+                  >
+                    Try different reports →
+                  </button>
+                </div>
               )}
             </div>
 

@@ -102,32 +102,69 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: "🧠",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                    <path d="M9 9a3 3 0 015.12-2.12M12 17v-5m0 0h.01"/>
+                    <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+                  </svg>
+                ),
+                color: "text-brand-blue bg-brand-blue/8",
                 title: "Clarity over complexity",
                 desc: "Medical information should be accessible to anyone who wants it — not locked behind jargon.",
               },
               {
-                icon: "🤝",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                  </svg>
+                ),
+                color: "text-violet-600 bg-violet-50",
                 title: "You are the expert on you",
                 desc: "We give you information so you can have a better, more informed conversation with your doctor.",
               },
               {
-                icon: "🔒",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0110 0v4"/>
+                  </svg>
+                ),
+                color: "text-emerald-600 bg-emerald-50",
                 title: "Privacy is non-negotiable",
                 desc: "Your health data is yours. We never store, share, or analyze your uploads after your session ends.",
               },
               {
-                icon: "⚖️",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                  </svg>
+                ),
+                color: "text-amber-600 bg-amber-50",
                 title: "Honest, never alarmist",
                 desc: "We explain — we don't diagnose. We are warm and accurate, not sensational or scary.",
               },
               {
-                icon: "🌍",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                  </svg>
+                ),
+                color: "text-sky-600 bg-sky-50",
                 title: "Health literacy for everyone",
                 desc: "Whether you're a worried parent or a medical student, everyone deserves the right level of detail.",
               },
               {
-                icon: "🩺",
+                icon: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                ),
+                color: "text-rose-600 bg-rose-50",
                 title: "Doctors remain essential",
                 desc: "We exist to prepare you for your doctor visit, not to replace it. Always.",
               },
@@ -136,7 +173,9 @@ export default function AboutPage() {
                 key={v.title}
                 className="p-6 rounded-2xl bg-white border border-surface-border card-hover"
               >
-                <div className="text-3xl mb-4">{v.icon}</div>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${v.color}`}>
+                  {v.icon}
+                </div>
                 <h3 className="font-bold text-ink mb-2">{v.title}</h3>
                 <p className="text-sm text-ink-secondary leading-relaxed">
                   {v.desc}
@@ -178,34 +217,67 @@ export default function AboutPage() {
                 {
                   label: "AI Model",
                   value: "Claude by Anthropic",
-                  icon: "🤖",
+                  icon: (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 010 2h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 010-2h1a7 7 0 017-7h1V5.73A2 2 0 0110 4a2 2 0 012-2z"/>
+                      <path d="M9 14h.01M15 14h.01M9.5 17.5c.83.67 2.17.67 3 0"/>
+                    </svg>
+                  ),
+                  color: "text-brand-blue bg-brand-blue/10",
                 },
                 {
                   label: "Interpretation depth",
                   value: "3 tiers — Simple to Expert",
-                  icon: "📊",
+                  icon: (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M18 20V10M12 20V4M6 20v-6"/>
+                    </svg>
+                  ),
+                  color: "text-violet-600 bg-violet-50",
                 },
                 {
                   label: "Supported test types",
                   value: "All standard lab panels",
-                  icon: "🧪",
+                  icon: (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+                    </svg>
+                  ),
+                  color: "text-emerald-600 bg-emerald-50",
                 },
                 {
                   label: "Data retention",
                   value: "Zero — stateless by design",
-                  icon: "🔒",
+                  icon: (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                  ),
+                  color: "text-slate-600 bg-slate-100",
                 },
                 {
                   label: "Format support",
                   value: "PDF, JPG, PNG",
-                  icon: "📄",
+                  icon: (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                      <polyline points="14,2 14,8 20,8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                      <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                  ),
+                  color: "text-amber-600 bg-amber-50",
                 },
               ].map((row) => (
                 <div
                   key={row.label}
                   className="flex items-center gap-4 p-4 rounded-xl bg-surface-raised border border-surface-border"
                 >
-                  <span className="text-xl">{row.icon}</span>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${row.color}`}>
+                    {row.icon}
+                  </div>
                   <div className="flex-1 flex items-center justify-between">
                     <span className="text-sm text-ink-tertiary">{row.label}</span>
                     <span className="text-sm font-semibold text-ink">

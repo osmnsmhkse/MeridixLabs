@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import type { PracticeCase } from "../api/practice-case/route";
-import type { EvaluationResult } from "../api/evaluate-interpretation/route";
+import type { PracticeCase, EvaluationResult } from "@/types/learn";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type Difficulty = "beginner" | "intermediate" | "advanced";
