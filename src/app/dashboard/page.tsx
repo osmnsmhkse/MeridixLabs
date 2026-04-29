@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { BODY_SYSTEMS } from "@/lib/biomarkers";
+import { BODY_SYSTEMS, CATALOG } from "@/lib/biomarkers";
 import {
   normalizeAnalyses,
   groupBySystem,
@@ -15,6 +15,21 @@ import {
   type SystemBreakdown,
   type BiggestMover,
 } from "@/lib/dashboardData";
+import { detectMedications, relevantInteractions, type DetectedInteraction } from "@/lib/medInteractions";
+import { computeAllRisks, tierColor, type RiskScore } from "@/lib/riskScores";
+
+interface InsightItem {
+  title: string;
+  body: string;
+  category?: "trend" | "risk" | "medication" | "system" | "general";
+  severity?: "info" | "watch" | "important";
+}
+
+interface ProfileShape {
+  age: number | null;
+  sex: "male" | "female" | "other" | null;
+  medications: string | null;
+}
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
@@ -46,9 +61,12 @@ function DashboardInner() {
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
+  const [profile, setProfile] = useState<ProfileShape | null>(null);
   const [loading, setLoading] = useState(true);
   const [insight, setInsight] = useState<string | null>(null);
   const [insightLoading, setInsightLoading] = useState(false);
+  const [insights, setInsights] = useState<InsightItem[]>([]);
+  const [insightsLoading, setInsightsLoading] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) router.replace("/sign-in");
@@ -58,9 +76,18 @@ function DashboardInner() {
     if (!isSignedIn) return;
     (async () => {
       try {
-        const r = await fetch("/api/user-analyses");
-        const j = await r.json();
-        if (r.ok) setAnalyses(j.analyses ?? []);
+        const [a, p] = await Promise.all([
+          fetch("/api/user-analyses").then((r) => r.json()),
+          fetch("/api/user-profile").then((r) => r.json()).catch(() => null),
+        ]);
+        setAnalyses(a?.analyses ?? []);
+        if (p?.profile) {
+          setProfile({
+            age: p.profile.age ?? null,
+            sex: p.profile.sex ?? null,
+            medications: p.profile.medications ?? null,
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -70,26 +97,40 @@ function DashboardInner() {
   useEffect(() => {
     if (!isSignedIn || analyses.length === 0) return;
     setInsightLoading(true);
+    setInsightsLoading(true);
     (async () => {
       try {
         const r = await fetch("/api/dashboard-summary", { method: "POST" });
         const j = await r.json();
         if (r.ok) setInsight(j.insight ?? null);
-      } finally {
-        setInsightLoading(false);
-      }
+      } finally { setInsightLoading(false); }
+    })();
+    (async () => {
+      try {
+        const r = await fetch("/api/insights-feed", { method: "POST" });
+        const j = await r.json();
+        if (r.ok && Array.isArray(j.insights)) setInsights(j.insights as InsightItem[]);
+      } finally { setInsightsLoading(false); }
     })();
   }, [isSignedIn, analyses.length]);
 
-  const { systems, movers, score, seriesMap, latest, totalFlags } = useMemo(() => {
+  const { systems, movers, score, seriesMap, latest, totalFlags, risks, interactions } = useMemo(() => {
     const seriesMap = normalizeAnalyses(analyses);
     const systems = groupBySystem(seriesMap);
     const movers = biggestMovers(seriesMap, 3);
     const score = overallScore(systems) ?? analyses[0]?.health_score ?? null;
     const latest = analyses[0] ?? null;
     const totalFlags = analyses.reduce((acc, a) => acc + (a.flags?.length ?? 0), 0);
-    return { systems, movers, score, seriesMap, latest, totalFlags };
-  }, [analyses]);
+    const risks = computeAllRisks({
+      series: seriesMap,
+      age: profile?.age ?? null,
+      sex: profile?.sex ?? null,
+    });
+    const meds = detectMedications(profile?.medications);
+    const trackedSlugs = new Set(seriesMap.keys());
+    const interactions = relevantInteractions(meds, trackedSlugs, CATALOG);
+    return { systems, movers, score, seriesMap, latest, totalFlags, risks, interactions };
+  }, [analyses, profile]);
 
   if (!isLoaded || loading) {
     return (
@@ -112,7 +153,13 @@ function DashboardInner() {
               Your private health dashboard — labs, trends, and timeline.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Link
+              href="/dashboard/chat"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-brand-blue/40 bg-brand-blue/5 text-brand-blue hover:bg-brand-blue/10 font-semibold rounded-lg text-sm transition-all"
+            >
+              <span aria-hidden>💬</span> Ask AI about my labs
+            </Link>
             <Link
               href="/profile"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
@@ -173,6 +220,47 @@ function DashboardInner() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
               {systems.map((s) => <SystemCard key={s.system} breakdown={s} />)}
             </div>
+
+            {/* AI insights feed */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide">Worth noticing</p>
+                {!insightsLoading && insights.length > 0 && (
+                  <Link href="/dashboard/chat" className="text-xs text-brand-blue hover:underline">Ask follow-ups →</Link>
+                )}
+              </div>
+              {insightsLoading ? (
+                <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-5 text-sm text-ink-tertiary">
+                  Surfacing patterns from your data…
+                </div>
+              ) : insights.length === 0 ? (
+                <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-5 text-sm text-ink-tertiary">
+                  Upload more reports to see longitudinal insights.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {insights.slice(0, 3).map((i, idx) => <InsightCard key={idx} insight={i} />)}
+                </div>
+              )}
+            </div>
+
+            {/* Risk scores */}
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">Risk assessments</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+              {risks.map((r) => <RiskCard key={r.id} risk={r} />)}
+            </div>
+
+            {/* Medication interactions */}
+            {interactions.length > 0 && (
+              <div className="mb-6">
+                <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">Medication insights</p>
+                <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden">
+                  <ul className="divide-y divide-surface-border">
+                    {interactions.map((i, idx) => <InteractionRow key={idx} item={i} />)}
+                  </ul>
+                </div>
+              </div>
+            )}
 
             {/* Reports list */}
             <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">All reports</p>
@@ -326,4 +414,84 @@ function formatDate(iso: string): string {
   } catch {
     return iso;
   }
+}
+
+// ── Tier 2 cards ──
+
+function InsightCard({ insight }: { insight: InsightItem }) {
+  const sev = insight.severity ?? "info";
+  const tone =
+    sev === "important" ? "border-red-500/30 bg-red-500/5" :
+    sev === "watch" ? "border-amber-500/30 bg-amber-500/5" :
+    "border-surface-border bg-white dark:bg-slate-900";
+  const sevLabel =
+    sev === "important" ? "Important" :
+    sev === "watch" ? "Watch" : "Info";
+  const sevTone =
+    sev === "important" ? "text-red-700 dark:text-red-300" :
+    sev === "watch" ? "text-amber-700 dark:text-amber-300" :
+    "text-ink-tertiary";
+  return (
+    <div className={`rounded-2xl border p-4 ${tone}`}>
+      <p className={`text-[10px] font-bold uppercase tracking-wider ${sevTone}`}>{sevLabel}</p>
+      <p className="mt-1 text-sm font-bold text-ink leading-snug">{insight.title}</p>
+      <p className="mt-1.5 text-xs text-ink-secondary leading-relaxed">{insight.body}</p>
+    </div>
+  );
+}
+
+function RiskCard({ risk }: { risk: RiskScore }) {
+  const c = tierColor(risk.tier);
+  const colorMap: Record<string, string> = {
+    emerald: "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300",
+    amber:   "border-amber-500/30 bg-amber-500/5 text-amber-700 dark:text-amber-300",
+    orange:  "border-orange-500/30 bg-orange-500/5 text-orange-700 dark:text-orange-300",
+    red:     "border-red-500/30 bg-red-500/5 text-red-700 dark:text-red-300",
+    slate:   "border-surface-border bg-white dark:bg-slate-900 text-ink-tertiary",
+  };
+  const tierLabel =
+    risk.tier === "low" ? "Low" :
+    risk.tier === "borderline" ? "Borderline" :
+    risk.tier === "intermediate" ? "Intermediate" :
+    risk.tier === "high" ? "High" : "—";
+  return (
+    <div className={`rounded-2xl border p-4 ${colorMap[c]}`}>
+      <p className="text-[10px] font-bold uppercase tracking-wider">{risk.label}</p>
+      <p className="mt-1 text-2xl font-bold text-ink">
+        {risk.value != null ? risk.value : "—"}
+        {risk.unit && <span className="text-xs font-semibold text-ink-tertiary ml-1">{risk.unit}</span>}
+      </p>
+      <p className="mt-0.5 text-xs font-bold">{tierLabel}</p>
+      <p className="mt-1.5 text-[11px] text-ink-secondary leading-snug">{risk.blurb}</p>
+      {risk.missing.length > 0 && (
+        <p className="mt-1.5 text-[10px] text-ink-tertiary">Missing: {risk.missing.slice(0, 3).join(", ")}</p>
+      )}
+    </div>
+  );
+}
+
+function InteractionRow({ item }: { item: DetectedInteraction }) {
+  const sev = item.effect.severity;
+  const sevTone =
+    sev === "important" ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" :
+    sev === "common"    ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" :
+    "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
+  const sevLabel = sev === "important" ? "Important" : sev === "common" ? "Common" : "Monitor";
+  return (
+    <li className="px-5 py-3 flex items-start gap-3">
+      <span className={`shrink-0 mt-0.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${sevTone}`}>{sevLabel}</span>
+      <div className="min-w-0">
+        <p className="text-sm text-ink">
+          <span className="font-bold">{item.med.display}</span>
+          {item.marker && <span className="text-ink-tertiary"> · affects </span>}
+          {item.marker && (
+            <Link href={`/dashboard/biomarkers/${item.marker.slug}`} className="font-semibold text-brand-blue hover:underline">
+              {item.marker.canonical}
+            </Link>
+          )}
+        </p>
+        <p className="mt-0.5 text-xs text-ink-secondary leading-relaxed">{item.effect.note}</p>
+      </div>
+    </li>
+  );
 }
