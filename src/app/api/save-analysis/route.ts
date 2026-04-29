@@ -55,8 +55,22 @@ export async function POST(request: NextRequest) {
     console.error("save-analysis error:", err);
     return NextResponse.json({
       error: "Something went wrong.",
-      detail: err instanceof Error ? err.message : String(err),
+      detail: describeError(err),
       stack: err instanceof Error ? err.stack?.split("\n").slice(0, 5).join("\n") : undefined,
     }, { status: 500 });
   }
+}
+
+// Surface Supabase / plain-object errors as readable strings.
+// Supabase errors are plain objects with { message, code, details, hint }
+// and don't extend Error, so the default String(err) yields "[object Object]".
+function describeError(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (err && typeof err === "object") {
+    const e = err as { message?: string; code?: string; details?: string; hint?: string };
+    const parts = [e.message, e.code && `code=${e.code}`, e.details, e.hint].filter(Boolean);
+    if (parts.length) return parts.join(" | ");
+    try { return JSON.stringify(err); } catch { return "Unknown error"; }
+  }
+  return String(err);
 }
