@@ -1,9 +1,28 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import HeroCTA from "@/components/HeroCTA";
 
+const DEMO_TIERS = {
+  Simple: {
+    summary: "Your glucose is slightly elevated and sodium is on the low end — worth mentioning at your next check-up.",
+    specialist: { label: "Which specialist?", body: <>Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism and rule out pre-diabetes.</> },
+  },
+  Medium: {
+    summary: "Fasting glucose at 112 mg/dL falls in the impaired fasting glucose range (100–125 mg/dL per ADA). Sodium is mildly low at 134 mEq/L — often dietary or hydration related. All other metabolic markers are within normal limits.",
+    specialist: { label: "Next steps", body: <>Consider repeating fasting glucose with an <strong>HbA1c</strong> to confirm glycemic trend. Review sodium intake and hydration habits with your <strong>Primary Care Physician</strong>.</> },
+  },
+  Expert: {
+    summary: "IFG confirmed: fasting glucose 112 mg/dL meets ADA prediabetes criteria (100–125 mg/dL). Recommend HbA1c, fasting insulin, and HOMA-IR. Mild hyponatremia (Na 134 mEq/L) — likely euvolemic/dietary; reassess before pursuing SIADH workup.",
+    specialist: { label: "Clinical reasoning", body: <>Per ACC/AHA 2019: formal 10-yr ASCVD risk assessment indicated. Refer to <strong>Endocrinology</strong> if HOMA-IR &gt; 2.5. Monitor sodium trend before adrenal workup.</> },
+  },
+} as const;
+
+type DemoTier = keyof typeof DEMO_TIERS;
+
 export default function LandingPage() {
+  const [demoTier, setDemoTier] = useState<DemoTier>("Simple");
   return (
     <div className="min-h-screen">
 
@@ -495,13 +514,17 @@ export default function LandingPage() {
                 </div>
                 <div className="border-b border-surface-border px-6 pt-4 bg-white dark:bg-slate-800">
                   <div className="flex gap-1">
-                    {["Simple","Medium","Expert"].map((t, i) => (
-                      <button key={t} className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors duration-200 ${i === 0 ? "bg-brand-blue-light text-brand-blue-dark border-b-2 border-brand-blue" : "text-ink-tertiary hover:text-ink-secondary"}`}>{t}</button>
+                    {(["Simple","Medium","Expert"] as DemoTier[]).map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setDemoTier(t)}
+                        className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors duration-200 ${t === demoTier ? "bg-brand-blue-light text-brand-blue-dark border-b-2 border-brand-blue" : "text-ink-tertiary hover:text-ink-secondary"}`}
+                      >{t}</button>
                     ))}
                   </div>
                 </div>
                 <div className="p-6 space-y-3">
-                  <p className="text-sm text-ink-secondary leading-relaxed">Your glucose is slightly elevated and sodium is on the low end — worth mentioning at your next check-up.</p>
+                  <p className="text-sm text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].summary}</p>
                   {/* Biomarker rows — left-border marker style */}
                   <div className="relative flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 overflow-hidden">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400 rounded-l-xl" />
@@ -522,8 +545,8 @@ export default function LandingPage() {
                     </div>
                   </div>
                   <div className="p-3 rounded-xl bg-gradient-to-r from-brand-blue/5 to-brand-indigo/5 border border-brand-blue/20">
-                    <p className="kicker-mono text-brand-blue-dark mb-1">Which specialist?</p>
-                    <p className="text-xs text-ink-secondary">Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism and rule out pre-diabetes.</p>
+                    <p className="kicker-mono text-brand-blue-dark mb-1">{DEMO_TIERS[demoTier].specialist.label}</p>
+                    <p className="text-xs text-ink-secondary">{DEMO_TIERS[demoTier].specialist.body}</p>
                   </div>
                 </div>
               </div>
