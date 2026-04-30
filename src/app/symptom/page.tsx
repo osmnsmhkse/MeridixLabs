@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -185,6 +186,9 @@ export default function SymptomPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [queriedSymptom, setQueriedSymptom] = useState("");
 
+  // Symptom→lab cross-reference (Tier 3)
+  const [relatedLabs, setRelatedLabs] = useState<RelatedLabsResponse | null>(null);
+
   const resultRef = useRef<HTMLDivElement>(null);
 
   async function submit(overrideSymptom?: string) {
@@ -206,6 +210,18 @@ export default function SymptomPage() {
       const parsed = parseResult(data.text as string);
       setResult(parsed);
       setStage("result");
+
+      // Fire-and-forget: fetch related labs from user's history (works
+      // for anon users too — they get the recommendation list without values).
+      fetch("/api/symptom-related-labs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ symptoms: sym }),
+      })
+        .then((r) => r.json())
+        .then((j) => setRelatedLabs(j))
+        .catch(() => undefined);
     } catch (e) {
       setErrorMsg(e instanceof Error ? e.message : "Something went wrong.");
       setStage("error");
@@ -509,10 +525,15 @@ export default function SymptomPage() {
             </div>
           )}
 
+          {/* Symptom → lab cross-reference (Tier 3) */}
+          {relatedLabs && relatedLabs.groups.length > 0 && (
+            <RelatedLabsCard data={relatedLabs} />
+          )}
+
           {/* Try again */}
           <div className="text-center pt-2">
             <button
-              onClick={() => { setStage("idle"); setResult(null); setSymptom(""); }}
+              onClick={() => { setStage("idle"); setResult(null); setSymptom(""); setRelatedLabs(null); }}
               className="text-sm text-ink-tertiary hover:text-ink transition-colors underline underline-offset-2"
             >
               Check another symptom
@@ -537,4 +558,92 @@ export default function SymptomPage() {
       )}
     </main>
   );
+}
+
+// ── Tier 3: Symptom → lab cross-reference ──────────────────────────────────
+
+interface RelatedMarker {
+  slug: string;
+  name: string;
+  value: number | null;
+  raw: string | null;
+  unit: string | null;
+  zone: "optimal" | "normal" | "out-of-range" | null;
+  date: string | null;
+}
+interface RelatedGroup {
+  symptom: string;
+  rationale: string;
+  markers: RelatedMarker[];
+}
+interface RelatedLabsResponse {
+  signedIn?: boolean;
+  groups: RelatedGroup[];
+}
+
+function RelatedLabsCard({ data }: { data: RelatedLabsResponse }) {
+  const haveAny = data.groups.some((g) => g.markers.some((m) => m.value != null));
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-brand-blue/30 shadow-sm p-5">
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-wider text-brand-blue">From your labs</p>
+          <h2 className="font-bold text-ink text-sm mt-1">Possibly related to your lab history</h2>
+        </div>
+        {data.signedIn === false && (
+          <Link href="/sign-up" className="text-xs font-semibold text-brand-blue hover:underline whitespace-nowrap">
+            Sign up →
+          </Link>
+        )}
+      </div>
+
+      {data.signedIn === false ? (
+        <p className="text-xs text-ink-secondary leading-relaxed mb-3">
+          When you have an account, we can also check your saved labs against this symptom. For now, here&apos;s what&apos;s commonly worth measuring:
+        </p>
+      ) : !haveAny ? (
+        <p className="text-xs text-ink-secondary leading-relaxed mb-3">
+          You don&apos;t have these markers in your saved reports yet. They&apos;re commonly worth measuring for this symptom.
+        </p>
+      ) : null}
+
+      <div className="space-y-4">
+        {data.groups.map((g) => (
+          <div key={g.symptom}>
+            <p className="text-xs font-semibold text-ink">{g.symptom}</p>
+            <p className="mt-0.5 text-xs text-ink-tertiary leading-relaxed">{g.rationale}</p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {g.markers.map((m) => (
+                <RelatedMarkerChip key={m.slug} marker={m} signedIn={data.signedIn ?? false} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RelatedMarkerChip({ marker, signedIn }: { marker: RelatedMarker; signedIn: boolean }) {
+  const has = marker.value != null;
+  const tone = !has
+    ? "border-surface-border text-ink-tertiary"
+    : marker.zone === "optimal"
+    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+    : marker.zone === "normal"
+    ? "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+    : "border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300";
+
+  const inner = (
+    <span className={`text-[11px] font-semibold px-2 py-1 rounded-full border ${tone}`}>
+      {marker.name}
+      {has && <span className="ml-1 font-normal opacity-80">· {marker.raw}{marker.unit ? ` ${marker.unit}` : ""}</span>}
+    </span>
+  );
+
+  if (signedIn && has) {
+    return <Link href={`/dashboard/biomarkers/${marker.slug}`}>{inner}</Link>;
+  }
+  return inner;
 }

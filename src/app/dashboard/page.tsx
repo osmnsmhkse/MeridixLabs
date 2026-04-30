@@ -158,13 +158,25 @@ function DashboardInner() {
               href="/dashboard/chat"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-brand-blue/40 bg-brand-blue/5 text-brand-blue hover:bg-brand-blue/10 font-semibold rounded-lg text-sm transition-all"
             >
-              <span aria-hidden>💬</span> Ask AI about my labs
+              <span aria-hidden>💬</span> Ask AI
+            </Link>
+            <Link
+              href="/dashboard/goals"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
+            >
+              🎯 Goals
+            </Link>
+            <Link
+              href="/dashboard/supplements"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
+            >
+              💊 Supplements
             </Link>
             <Link
               href="/profile"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
             >
-              Edit profile
+              Profile
             </Link>
             <Link
               href="/app"
@@ -266,19 +278,7 @@ function DashboardInner() {
             <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">All reports</p>
             <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden">
               <ul className="divide-y divide-surface-border">
-                {analyses.map((a) => (
-                  <li key={a.id} className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-surface-raised transition-colors">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-ink truncate">{a.source_filename ?? "Lab report"}</p>
-                      <p className="text-xs text-ink-tertiary">
-                        {formatDate(a.report_date ?? a.created_at)} · {a.flags?.length ?? 0} flag{(a.flags?.length ?? 0) === 1 ? "" : "s"}
-                      </p>
-                    </div>
-                    {a.health_score != null && (
-                      <span className={`text-sm font-bold ${scoreColor(a.health_score)}`}>{a.health_score}</span>
-                    )}
-                  </li>
-                ))}
+                {analyses.map((a) => <ReportRow key={a.id} analysis={a} />)}
               </ul>
             </div>
           </>
@@ -467,6 +467,60 @@ function RiskCard({ risk }: { risk: RiskScore }) {
         <p className="mt-1.5 text-[10px] text-ink-tertiary">Missing: {risk.missing.slice(0, 3).join(", ")}</p>
       )}
     </div>
+  );
+}
+
+function ReportRow({ analysis }: { analysis: Analysis }) {
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function createShare() {
+    setSharing(true);
+    try {
+      const r = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ analysis_id: analysis.id, expires_days: 30 }),
+      });
+      const j = await r.json();
+      if (r.ok && j.share?.token) {
+        const url = `${window.location.origin}/share/${j.share.token}`;
+        setShareUrl(url);
+        try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch {}
+      }
+    } finally { setSharing(false); }
+  }
+
+  return (
+    <li className="px-5 py-3 hover:bg-surface-raised transition-colors">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-ink truncate">{analysis.source_filename ?? "Lab report"}</p>
+          <p className="text-xs text-ink-tertiary">
+            {formatDate(analysis.report_date ?? analysis.created_at)} · {analysis.flags?.length ?? 0} flag{(analysis.flags?.length ?? 0) === 1 ? "" : "s"}
+          </p>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={createShare}
+            disabled={sharing}
+            className="text-xs font-semibold text-ink-secondary hover:text-brand-blue disabled:opacity-50 transition-colors"
+            title="Create a shareable link"
+          >
+            {sharing ? "…" : copied ? "✓ Copied" : "Share"}
+          </button>
+          {analysis.health_score != null && (
+            <span className={`text-sm font-bold ${scoreColor(analysis.health_score)}`}>{analysis.health_score}</span>
+          )}
+        </div>
+      </div>
+      {shareUrl && (
+        <div className="mt-2 rounded-lg bg-emerald-500/5 border border-emerald-500/30 px-3 py-2 text-xs text-emerald-700 dark:text-emerald-300 break-all">
+          {copied ? "Link copied to clipboard. " : ""}Expires in 30 days: <span className="font-mono">{shareUrl}</span>
+        </div>
+      )}
+    </li>
   );
 }
 
