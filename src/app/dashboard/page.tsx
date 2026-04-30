@@ -114,7 +114,7 @@ function DashboardInner() {
     })();
   }, [isSignedIn, analyses.length]);
 
-  const { systems, movers, score, seriesMap, latest, totalFlags, risks, interactions } = useMemo(() => {
+  const { systems, movers, score, seriesMap, latest, totalFlags, risks, interactions, zoneStats, scoreDelta } = useMemo(() => {
     const seriesMap = normalizeAnalyses(analyses);
     const systems = groupBySystem(seriesMap);
     const movers = biggestMovers(seriesMap, 3);
@@ -129,7 +129,29 @@ function DashboardInner() {
     const meds = detectMedications(profile?.medications);
     const trackedSlugs = new Set(seriesMap.keys());
     const interactions = relevantInteractions(meds, trackedSlugs, CATALOG);
-    return { systems, movers, score, seriesMap, latest, totalFlags, risks, interactions };
+
+    // Zone breakdown — prefer normalized series, fall back to raw flags from latest report
+    let zoneOptimal = 0, zoneNormal = 0, zoneOutOfRange = 0, zoneTotal = 0;
+    if (seriesMap.size > 0) {
+      for (const s of systems) {
+        zoneOptimal += s.optimal; zoneNormal += s.normal; zoneOutOfRange += s.outOfRange; zoneTotal += s.total;
+      }
+    } else if (latest) {
+      const flagged = latest.flags?.length ?? 0;
+      const rawTotal = (latest.labs_raw as unknown[] | null)?.length ?? 0;
+      zoneOutOfRange = flagged;
+      zoneNormal = Math.max(0, rawTotal - flagged);
+      zoneTotal = rawTotal;
+    }
+    const zoneStats = { optimal: zoneOptimal, normal: zoneNormal, outOfRange: zoneOutOfRange, total: zoneTotal };
+
+    // Score trend vs previous report
+    const scoreDelta =
+      analyses.length >= 2 && analyses[0]?.health_score != null && analyses[1]?.health_score != null
+        ? analyses[0].health_score - analyses[1].health_score
+        : null;
+
+    return { systems, movers, score, seriesMap, latest, totalFlags, risks, interactions, zoneStats, scoreDelta };
   }, [analyses, profile]);
 
   if (!isLoaded || loading) {
@@ -191,29 +213,87 @@ function DashboardInner() {
           <EmptyState />
         ) : (
           <>
-            {/* Hero: gauge + insight banner */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-              <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-6 flex items-center gap-5">
-                <RadialGauge score={score} />
-                <div>
-                  <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide">Overall health score</p>
-                  <p className="mt-1 text-sm text-ink-secondary">
-                    Derived from {seriesMap.size} tracked biomarker{seriesMap.size === 1 ? "" : "s"} across {analyses.length} report{analyses.length === 1 ? "" : "s"}.
-                  </p>
-                  <p className="mt-2 text-xs text-ink-tertiary">
-                    {totalFlags} flag{totalFlags === 1 ? "" : "s"} total · last report {formatDate(latest?.report_date ?? latest?.created_at ?? "")}
-                  </p>
+            {/* Hero: enhanced health score + AI summary */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 mb-6">
+
+              {/* Health score card */}
+              <div className="lg:col-span-2 rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-6">
+                <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-4">Overall Health Score</p>
+                <div className="flex items-center gap-5">
+                  <RadialGauge score={score} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-2">
+                      <span className={`text-4xl font-extrabold ${scoreColor(score ?? 0)}`}>{score ?? "—"}</span>
+                      <span className="text-sm font-semibold text-ink-tertiary">/ 100</span>
+                      {scoreDelta != null && (
+                        <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md ${scoreDelta > 0 ? "text-emerald-700 bg-emerald-100" : scoreDelta < 0 ? "text-red-700 bg-red-100" : "text-ink-tertiary bg-surface-raised"}`}>
+                          {scoreDelta > 0 ? "▲" : scoreDelta < 0 ? "▼" : "="} {Math.abs(scoreDelta)}
+                        </span>
+                      )}
+                    </div>
+                    <p className={`text-sm font-bold mt-0.5 ${scoreColor(score ?? 0)}`}>
+                      {(score ?? 0) >= 85 ? "Excellent" : (score ?? 0) >= 70 ? "Good" : (score ?? 0) >= 55 ? "Fair" : "Needs attention"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Zone bar */}
+                {zoneStats.total > 0 && (
+                  <div className="mt-5">
+                    <div className="flex h-2 rounded-full overflow-hidden gap-0.5">
+                      {zoneStats.optimal > 0 && (
+                        <div className="bg-emerald-500 rounded-full" style={{ flex: zoneStats.optimal }} title={`${zoneStats.optimal} optimal`} />
+                      )}
+                      {zoneStats.normal > 0 && (
+                        <div className="bg-amber-400 rounded-full" style={{ flex: zoneStats.normal }} title={`${zoneStats.normal} normal`} />
+                      )}
+                      {zoneStats.outOfRange > 0 && (
+                        <div className="bg-red-500 rounded-full" style={{ flex: zoneStats.outOfRange }} title={`${zoneStats.outOfRange} flagged`} />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3 mt-2 flex-wrap">
+                      {zoneStats.optimal > 0 && (
+                        <span className="flex items-center gap-1 text-[11px] text-ink-secondary">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />{zoneStats.optimal} optimal
+                        </span>
+                      )}
+                      {zoneStats.normal > 0 && (
+                        <span className="flex items-center gap-1 text-[11px] text-ink-secondary">
+                          <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />{zoneStats.normal} normal
+                        </span>
+                      )}
+                      {zoneStats.outOfRange > 0 && (
+                        <span className="flex items-center gap-1 text-[11px] text-red-600 font-semibold">
+                          <span className="w-2 h-2 rounded-full bg-red-500 inline-block" />{zoneStats.outOfRange} flagged
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-4 pt-4 border-t border-surface-border flex items-center gap-4 flex-wrap">
+                  <span className="text-xs text-ink-tertiary">{zoneStats.total > 0 ? `${zoneStats.total} markers` : `${analyses.reduce((a, b) => a + (b.labs_raw as unknown[] | null ?? []).length, 0)} labs`}</span>
+                  <span className="text-xs text-ink-tertiary">{analyses.length} report{analyses.length === 1 ? "" : "s"}</span>
+                  <span className="text-xs text-ink-tertiary">Last: {formatDate(latest?.report_date ?? latest?.created_at ?? "")}</span>
                 </div>
               </div>
-              <div className="lg:col-span-2 rounded-2xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/5 to-transparent p-5">
-                <p className="text-xs font-semibold text-brand-blue uppercase tracking-wide">AI summary</p>
+
+              {/* AI summary */}
+              <div className="lg:col-span-3 rounded-2xl border border-brand-blue/30 bg-gradient-to-br from-brand-blue/5 to-transparent p-5 flex flex-col">
+                <p className="text-[11px] font-bold text-brand-blue uppercase tracking-widest">AI Summary</p>
                 {insightLoading ? (
-                  <p className="mt-2 text-sm text-ink-tertiary">Reading your history…</p>
+                  <div className="mt-3 flex items-center gap-2 text-sm text-ink-tertiary">
+                    <span className="w-3 h-3 rounded-full bg-brand-blue/30 animate-pulse" />
+                    Reading your history…
+                  </div>
                 ) : insight ? (
-                  <p className="mt-2 text-sm text-ink leading-relaxed">{insight}</p>
+                  <p className="mt-3 text-sm text-ink leading-relaxed flex-1">{insight}</p>
                 ) : (
-                  <p className="mt-2 text-sm text-ink-tertiary">No summary yet.</p>
+                  <p className="mt-3 text-sm text-ink-tertiary">No summary available yet.</p>
                 )}
+                <div className="mt-4 pt-4 border-t border-brand-blue/10">
+                  <Link href="/dashboard/chat" className="text-xs text-brand-blue hover:underline font-medium">Ask a follow-up question →</Link>
+                </div>
               </div>
             </div>
 
@@ -278,7 +358,14 @@ function DashboardInner() {
             <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">All reports</p>
             <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden">
               <ul className="divide-y divide-surface-border">
-                {analyses.map((a) => <ReportRow key={a.id} analysis={a} />)}
+                {analyses.map((a) => (
+                  <ReportRow
+                    key={a.id}
+                    analysis={a}
+                    onDelete={(id) => setAnalyses((prev) => prev.filter((x) => x.id !== id))}
+                    onRename={(id, name) => setAnalyses((prev) => prev.map((x) => x.id === id ? { ...x, source_filename: name } : x))}
+                  />
+                ))}
               </ul>
             </div>
           </>
@@ -290,28 +377,27 @@ function DashboardInner() {
 
 function RadialGauge({ score }: { score: number | null }) {
   const s = score ?? 0;
-  const radius = 52;
+  const radius = 40;
   const circ = 2 * Math.PI * radius;
   const offset = circ * (1 - s / 100);
   const color = s >= 80 ? "#059669" : s >= 60 ? "#d97706" : "#dc2626";
   return (
-    <div className="relative w-32 h-32 shrink-0">
-      <svg viewBox="0 0 128 128" className="w-full h-full -rotate-90">
-        <circle cx="64" cy="64" r={radius} fill="none" stroke="currentColor" strokeWidth="10" className="text-surface-border" />
+    <div className="relative w-24 h-24 shrink-0">
+      <svg viewBox="0 0 96 96" className="w-full h-full -rotate-90">
+        <circle cx="48" cy="48" r={radius} fill="none" stroke="currentColor" strokeWidth="9" className="text-surface-border" />
         <circle
-          cx="64" cy="64" r={radius}
+          cx="48" cy="48" r={radius}
           fill="none"
           stroke={color}
-          strokeWidth="10"
+          strokeWidth="9"
           strokeLinecap="round"
           strokeDasharray={circ}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 800ms ease" }}
+          style={{ transition: "stroke-dashoffset 1000ms ease" }}
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold" style={{ color }}>{score ?? "—"}</span>
-        <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">of 100</span>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full" style={{ background: `${color}15` }} />
       </div>
     </div>
   );
@@ -470,10 +556,19 @@ function RiskCard({ risk }: { risk: RiskScore }) {
   );
 }
 
-function ReportRow({ analysis }: { analysis: Analysis }) {
+function ReportRow({ analysis, onDelete, onRename }: {
+  analysis: Analysis;
+  onDelete: (id: string) => void;
+  onRename: (id: string, newName: string) => void;
+}) {
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState(analysis.source_filename ?? "");
+  const [saving, setSaving] = useState(false);
 
   async function createShare() {
     setSharing(true);
@@ -492,32 +587,138 @@ function ReportRow({ analysis }: { analysis: Analysis }) {
     } finally { setSharing(false); }
   }
 
+  async function handleDelete() {
+    setDeleting(true);
+    try {
+      const r = await fetch(`/api/user-analyses?id=${analysis.id}`, { method: "DELETE" });
+      if (r.ok) onDelete(analysis.id);
+    } finally { setDeleting(false); setConfirmDelete(false); }
+  }
+
+  async function handleSave() {
+    if (!editName.trim() || editName.trim() === analysis.source_filename) { setEditing(false); return; }
+    setSaving(true);
+    try {
+      const r = await fetch(`/api/user-analyses?id=${analysis.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source_filename: editName.trim() }),
+      });
+      if (r.ok) { onRename(analysis.id, editName.trim()); setEditing(false); }
+    } finally { setSaving(false); }
+  }
+
+  const flagCount = analysis.flags?.length ?? 0;
+
   return (
-    <li className="px-5 py-3 hover:bg-surface-raised transition-colors">
+    <li className="px-5 py-3.5 hover:bg-surface-raised/60 transition-colors">
       <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-ink truncate">{analysis.source_filename ?? "Lab report"}</p>
-          <p className="text-xs text-ink-tertiary">
-            {formatDate(analysis.report_date ?? analysis.created_at)} · {analysis.flags?.length ?? 0} flag{(analysis.flags?.length ?? 0) === 1 ? "" : "s"}
+        <div className="min-w-0 flex-1">
+          {editing ? (
+            <div className="flex items-center gap-2">
+              <input
+                autoFocus
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleSave(); if (e.key === "Escape") setEditing(false); }}
+                className="flex-1 text-sm font-semibold text-ink bg-surface-raised border border-brand-blue/40 rounded-lg px-2.5 py-1 outline-none focus:ring-2 focus:ring-brand-blue/30"
+              />
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="text-xs font-bold text-white bg-brand-blue hover:bg-brand-blue-hover px-2.5 py-1 rounded-lg disabled:opacity-50 transition-colors"
+              >
+                {saving ? "…" : "Save"}
+              </button>
+              <button
+                onClick={() => { setEditing(false); setEditName(analysis.source_filename ?? ""); }}
+                className="text-xs text-ink-tertiary hover:text-ink transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <Link
+              href={`/dashboard/reports/${analysis.id}`}
+              className="group flex items-center gap-1.5"
+            >
+              <p className="text-sm font-semibold text-ink group-hover:text-brand-blue transition-colors truncate">
+                {analysis.source_filename ?? "Lab report"}
+              </p>
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary group-hover:text-brand-blue opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
+                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </Link>
+          )}
+          <p className="text-xs text-ink-tertiary mt-0.5">
+            {formatDate(analysis.report_date ?? analysis.created_at)}
+            {flagCount > 0 && <span className="text-red-500 font-semibold"> · {flagCount} flag{flagCount === 1 ? "" : "s"}</span>}
           </p>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+
+        <div className="flex items-center gap-2 shrink-0">
+          {analysis.health_score != null && (
+            <span className={`text-sm font-bold tabular-nums ${scoreColor(analysis.health_score)}`}>{analysis.health_score}</span>
+          )}
+
+          {/* Share */}
           <button
             onClick={createShare}
             disabled={sharing}
-            className="text-xs font-semibold text-ink-secondary hover:text-brand-blue disabled:opacity-50 transition-colors"
-            title="Create a shareable link"
+            className="text-xs font-semibold text-ink-tertiary hover:text-brand-blue disabled:opacity-50 transition-colors px-1.5 py-1"
+            title="Share"
           >
-            {sharing ? "…" : copied ? "✓ Copied" : "Share"}
+            {sharing ? "…" : copied ? "✓" : (
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" /></svg>
+            )}
           </button>
-          {analysis.health_score != null && (
-            <span className={`text-sm font-bold ${scoreColor(analysis.health_score)}`}>{analysis.health_score}</span>
+
+          {/* Edit */}
+          {!editing && !confirmDelete && (
+            <button
+              onClick={() => { setEditName(analysis.source_filename ?? ""); setEditing(true); }}
+              className="text-xs text-ink-tertiary hover:text-ink transition-colors px-1.5 py-1"
+              title="Rename"
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+            </button>
+          )}
+
+          {/* Delete */}
+          {!editing && (
+            confirmDelete ? (
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-ink-tertiary">Delete?</span>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="text-xs font-bold text-red-600 hover:text-red-700 disabled:opacity-50 transition-colors"
+                >
+                  {deleting ? "…" : "Yes"}
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="text-xs text-ink-tertiary hover:text-ink transition-colors"
+                >
+                  No
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="text-xs text-ink-tertiary hover:text-red-500 transition-colors px-1.5 py-1"
+                title="Delete"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+              </button>
+            )
           )}
         </div>
       </div>
+
       {shareUrl && (
         <div className="mt-2 rounded-lg bg-emerald-500/5 border border-emerald-500/30 px-3 py-2 text-xs text-emerald-700 dark:text-emerald-300 break-all">
-          {copied ? "Link copied to clipboard. " : ""}Expires in 30 days: <span className="font-mono">{shareUrl}</span>
+          {copied ? "Copied! " : ""}Expires in 30 days: <span className="font-mono">{shareUrl}</span>
         </div>
       )}
     </li>

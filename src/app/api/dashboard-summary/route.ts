@@ -33,14 +33,36 @@ export async function POST() {
     const systems = groupBySystem(map);
     const movers = biggestMovers(map, 5);
 
+    // Collect raw flags from all analyses as a fallback when biomarker normalization yields no movers
+    const allFlags = analyses.flatMap((a) =>
+      (a.flags ?? []).map((f) => ({
+        marker: (f as { marker?: string }).marker ?? "Unknown",
+        value: (f as { value?: string | number }).value,
+        unit: (f as { unit?: string }).unit,
+        status: (f as { status?: string }).status,
+        report_date: a.report_date ?? a.created_at,
+      }))
+    );
+
     const hasHistory = analyses.length >= 2;
     if (!hasHistory) {
-      // single report — one-liner based on latest
       const latest = analyses[0];
       const flagCount = latest.flags?.length ?? 0;
-      const insight = flagCount === 0
-        ? "Your first report is in — every marker landed in range. Upload your next one to start tracking trends."
-        : `Your first report flagged ${flagCount} marker${flagCount === 1 ? "" : "s"}. Upload your next lab to see how things change.`;
+      if (flagCount === 0) return NextResponse.json({ insight: "Your first report is in — every marker landed in range. Upload your next one to start tracking trends." });
+
+      // Even with one report, generate a real summary from the flags
+      const flagContext = {
+        report_date: latest.report_date ?? latest.created_at,
+        health_score: latest.health_score,
+        flags: allFlags.slice(0, 10),
+        labs_total: (latest.labs_raw as unknown[])?.length ?? 0,
+      };
+      const resp = await client.messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 300,
+        messages: [{ role: "user", content: `Write one short plain-English sentence (max 30 words) summarizing the key findings from this person's first lab report. Use specific marker names and values from the data. No disclaimers.\n\nData: ${JSON.stringify(flagContext)}\n\nReturn ONLY the sentence.` }],
+      });
+      const insight = resp.content[0].type === "text" ? resp.content[0].text.trim() : `Your first report flagged ${flagCount} marker${flagCount === 1 ? "" : "s"}. Upload your next lab to see how things change.`;
       return NextResponse.json({ insight });
     }
 
@@ -57,10 +79,13 @@ export async function POST() {
         latest_zone: m.series.latestZone,
       })),
       system_scores: systems.map((s) => ({ system: s.system, score: s.score, total: s.total })),
+      // Raw flags as fallback when biomarker normalization finds no matches
+      recent_flags: allFlags.slice(0, 15),
+      health_scores: analyses.slice(0, 5).map((a) => ({ date: a.report_date ?? a.created_at, score: a.health_score })),
     };
 
     const resp = await client.messages.create({
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-6",
       max_tokens: 400,
       messages: [{
         role: "user",
