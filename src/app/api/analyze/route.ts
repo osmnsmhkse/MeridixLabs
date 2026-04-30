@@ -86,8 +86,11 @@ Fields required:
 
 Always be accurate, warm, thorough, and never alarmist. Never make a definitive diagnosis — you are explaining possibilities, not diagnosing. Be educational and empowering.
 
+EXTRACT THE REPORT DATE: scan the document for the date the lab/test was performed or collected (look for labels like "Tarih", "Numune Tarihi", "Date", "Collection Date", "Sample Date", "Report Date", "Düzenleme Tarihi", "Rapor Tarihi", or any clearly dated header). Return it in ISO format (YYYY-MM-DD) in the "report_date" field. If multiple dates appear, prefer the COLLECTION/SAMPLE date over the print date. If no date can be found with confidence, set "report_date" to null.
+
 Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
 {
+  "report_date": "2024-08-15",
   "overall_status": "amber",
   "summary_headline": "Your glucose is slightly elevated and your sodium is a little low — both are worth a conversation with your doctor.",
   "urgency": "weeks",
@@ -152,8 +155,11 @@ CRITICAL INSTRUCTIONS:
 - If the report is entirely normal, say so warmly and clearly in all tiers.
 - Do not diagnose — you are interpreting possibilities and explaining the imaging findings.
 
+EXTRACT THE REPORT DATE: scan the document for the date the imaging was performed or the report was issued (look for labels like "Date of Exam", "Study Date", "Report Date", "Tarih", "Tetkik Tarihi", "Rapor Tarihi"). Return ISO format (YYYY-MM-DD) in "report_date". Prefer the EXAM/STUDY date over the print date. If no date is found, set null.
+
 Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
 {
+  "report_date": "2024-08-15",
   "overall_status": "normal",
   "summary_headline": "Your chest CT looks reassuring — the small nodule found is very common and almost certainly harmless.",
   "urgency": "routine",

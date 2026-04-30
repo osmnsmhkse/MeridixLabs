@@ -2405,6 +2405,9 @@ export default function AppPage() {
           const healthScore = Math.max(20, 100 - flagsCount * 8);
 
           console.log("[meridix] calling /api/save-analysis…");
+          const extractedDate = typeof json.data?.report_date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(json.data.report_date)
+            ? json.data.report_date
+            : null;
           const saveRes = await fetch("/api/save-analysis", {
             method: "POST",
             credentials: "include",
@@ -2418,6 +2421,7 @@ export default function AppPage() {
               patient_context: { age, sex, medications, language: lang },
               source_filename: file?.name ?? fileName ?? null,
               health_score: healthScore,
+              report_date: extractedDate,
             }),
           });
           const saveText = await saveRes.text();
