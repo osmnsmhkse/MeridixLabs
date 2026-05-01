@@ -2772,155 +2772,353 @@ export default function AppPage() {
 
         {/* "Here's what you'll get" preview — only shown on idle */}
         {state === "idle" && (
-          <div className="mt-8">
-            <p className="text-center text-xs font-semibold text-ink-tertiary uppercase tracking-widest mb-4">Here's what you'll get</p>
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
+          <div className="mt-12">
+            {/* Section header */}
+            <div className="text-center mb-6">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-[11px] font-bold text-brand-blue uppercase tracking-widest mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
+                Live preview · See what you&apos;ll get
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-[1.1]">
+                Your full report — in <span className="text-brand-blue">12 seconds</span>
+              </h3>
+              <p className="mt-2 text-sm text-ink-secondary max-w-xl mx-auto">
+                Three reading depths, flagged values explained, specialist guidance, an action plan, and supplement recommendations — all from one upload.
+              </p>
+            </div>
 
-              {reportMode === "lab" ? (
-                <>
-                  {/* Lab — Flagged value chip */}
-                  <div className="px-5 pt-5 pb-3 flex items-center gap-3">
-                    <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Flagged Values</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                      <span className="text-amber-500 text-xs font-bold">↑</span>
-                      <span className="text-xs font-semibold text-ink">Glucose</span>
-                      <span className="text-xs font-bold text-amber-600">112 mg/dL</span>
-                      <span className="text-xs text-ink-tertiary">ref: 70–99</span>
+            {/* Feature chips */}
+            <div className="flex items-center justify-center gap-2 flex-wrap mb-6">
+              {[
+                { icon: "🔬", label: "3 reading depths" },
+                { icon: "🚩", label: "Flag detection" },
+                { icon: "👨‍⚕️", label: "Specialist match" },
+                { icon: "💊", label: "Supplement plan" },
+                { icon: "⚡", label: "Action steps" },
+                { icon: "📊", label: "Trend tracking" },
+              ].map((f) => (
+                <span key={f.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border text-xs font-medium text-ink-secondary shadow-soft">
+                  <span aria-hidden>{f.icon}</span>{f.label}
+                </span>
+              ))}
+            </div>
+
+            {/* Showcase card with gradient glow */}
+            <div className="relative">
+              <div
+                className="absolute -inset-1 rounded-3xl opacity-60 blur-xl pointer-events-none"
+                style={{ background: "radial-gradient(60% 60% at 30% 20%, rgba(74,133,239,0.35), transparent 70%), radial-gradient(60% 60% at 80% 80%, rgba(139,92,246,0.25), transparent 70%)" }}
+                aria-hidden
+              />
+              <div className="relative bg-white dark:bg-slate-900 rounded-3xl border border-surface-border shadow-xl shadow-brand-blue/10 overflow-hidden">
+
+                {reportMode === "lab" ? (
+                  <>
+                    {/* Report header bar */}
+                    <div className="px-5 py-3.5 border-b border-surface-border bg-gradient-to-r from-surface-raised via-surface-raised/70 to-transparent flex items-center justify-between gap-3 flex-wrap">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center flex-shrink-0 shadow-soft">
+                          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                            <path d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm3 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h6a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" />
+                          </svg>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-ink truncate">Sample_Lab_Panel.pdf</p>
+                          <p className="text-[11px] text-ink-tertiary flex items-center gap-1.5">
+                            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                            Analyzed in 11.4s · 12 markers detected
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <div className="text-right">
+                          <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Health Score</p>
+                          <p className="text-2xl font-black text-amber-600 leading-none tabular-nums">72</p>
+                        </div>
+                        <div className="relative w-12 h-12">
+                          <svg viewBox="0 0 48 48" className="w-12 h-12 -rotate-90">
+                            <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(148,163,184,0.18)" strokeWidth="4" />
+                            <circle cx="24" cy="24" r="20" fill="none" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" strokeDasharray={2 * Math.PI * 20} strokeDashoffset={2 * Math.PI * 20 * (1 - 72 / 100)} />
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-[10px] font-bold text-amber-600">FAIR</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Tabs */}
-                  <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
-                    {([
-                      { id: "simple",  label: "💬 Simple"  },
-                      { id: "medium",  label: "📋 Medium"  },
-                      { id: "expert",  label: "🔬 Expert"  },
-                    ] as const).map((tab) => {
-                      const active = tab.id === demoTier;
-                      return (
-                        <button
-                          key={tab.id}
-                          type="button"
-                          onClick={() => setDemoTier(tab.id)}
-                          className={`px-4 py-2.5 text-xs font-medium rounded-t-lg transition-colors ${active ? "bg-white dark:bg-slate-800 text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary hover:text-ink-secondary"}`}
-                        >
-                          {tab.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Lab sample content */}
-                  <div className="px-5 py-4 min-h-[88px]">
-                    {demoTier === "simple" && (
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        <span className="font-semibold text-emerald-600">Simple: </span>
-                        Your blood sugar is a little high — like having more sugar in your blood than ideal. Worth mentioning to your doctor.
-                      </p>
-                    )}
-                    {demoTier === "medium" && (
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        <span className="font-semibold text-brand-blue">Medium: </span>
-                        Fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125 per ADA). Your fasting insulin response may be losing efficiency, suggesting early insulin resistance.
-                      </p>
-                    )}
-                    {demoTier === "expert" && (
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        <span className="font-semibold text-purple-600">Expert: </span>
-                        IFG per ADA criteria (FPG 100–125 mg/dL). Recommend HbA1c + 2-hr OGTT to stratify T2DM progression risk. Review MetS components — waist circumference, BP, TG/HDL ratio. Consider HOMA-IR for insulin sensitivity baseline.
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Specialist */}
-                  <div className="px-5 py-3 border-t border-surface-border bg-brand-blue-light/50 dark:bg-brand-blue/5 flex items-center gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-brand-blue flex items-center justify-center flex-shrink-0">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                      </svg>
+                    {/* Flags strip */}
+                    <div className="px-5 pt-4 pb-3.5">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">3 values need attention</span>
+                        <span className="text-[10px] text-emerald-600 font-bold">9 in range ✓</span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {[
+                          { arrow: "↑", marker: "Glucose", value: "112", unit: "mg/dL", ref: "70–99" },
+                          { arrow: "↓", marker: "Vitamin D", value: "18", unit: "ng/mL", ref: "30–100" },
+                          { arrow: "↑", marker: "LDL", value: "134", unit: "mg/dL", ref: "<100" },
+                        ].map((f) => (
+                          <div key={f.marker} className="relative flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400" />
+                            <span className="text-amber-500 text-xs font-bold pl-1">{f.arrow}</span>
+                            <span className="text-xs font-semibold text-ink">{f.marker}</span>
+                            <span className="text-xs font-bold text-amber-600 font-mono-data">{f.value}</span>
+                            <span className="text-[10px] text-ink-tertiary">{f.unit}</span>
+                            <span className="text-[10px] text-ink-tertiary hidden sm:inline">· ref {f.ref}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <p className="text-xs text-ink-secondary">
-                      <span className="font-bold text-brand-blue uppercase tracking-wider text-[10px]">Which specialist? </span>
-                      Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism.
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Radiology — Key finding chip */}
-                  <div className="px-5 pt-5 pb-3 flex items-center gap-3 flex-wrap">
-                    <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Key Findings</span>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200">
-                      <span className="text-amber-500 text-xs font-bold">↑</span>
-                      <span className="text-xs font-semibold text-ink">Pulmonary Nodule</span>
-                      <span className="text-xs font-bold text-amber-600">4 mm</span>
-                      <span className="text-xs text-ink-tertiary">ref: &lt;6mm low risk</span>
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-green-50 border border-green-200">
-                      <span className="text-green-600 text-xs font-bold">✓</span>
-                      <span className="text-xs font-semibold text-ink">Hepatic Cyst</span>
-                      <span className="text-xs font-bold text-green-600">incidental</span>
-                      <span className="text-xs text-ink-tertiary">benign</span>
-                    </div>
-                  </div>
 
-                  {/* Tabs */}
-                  <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
-                    {([
-                      { id: "simple",  label: "💬 Simple"  },
-                      { id: "medium",  label: "📋 Medium"  },
-                      { id: "expert",  label: "🔬 Expert"  },
-                    ] as const).map((tab) => {
-                      const active = tab.id === demoTier;
-                      return (
-                        <button
-                          key={tab.id}
-                          type="button"
-                          onClick={() => setDemoTier(tab.id)}
-                          className={`px-4 py-2.5 text-xs font-medium rounded-t-lg transition-colors ${active ? "bg-white text-purple-600 border-b-2 border-purple-500 -mb-px" : "text-ink-tertiary hover:text-ink-secondary"}`}
-                        >
-                          {tab.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Radiology sample content */}
-                  <div className="px-5 py-4 min-h-[88px]">
-                    {demoTier === "simple" && (
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        <span className="font-semibold text-emerald-600">Simple: </span>
-                        This is a CT scan of your chest. The scan found a tiny spot on your lung (4 mm) — this is very common and almost always harmless. There&apos;s also a small fluid-filled cyst on your liver, which is an incidental finding requiring no action.
-                      </p>
-                    )}
-                    {demoTier === "medium" && (
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        <span className="font-semibold text-brand-blue">Medium: </span>
-                        A 4 mm pulmonary nodule is below the Fleischner Society threshold for routine follow-up in low-risk patients. The 8 mm hepatic cyst has benign morphology with no septations or enhancement — incidental finding consistent with simple cyst.
-                      </p>
-                    )}
-                    {demoTier === "expert" && (
-                      <p className="text-xs text-ink-secondary leading-relaxed">
-                        <span className="font-semibold text-purple-600">Expert: </span>
-                        4 mm solid RUL nodule — no follow-up recommended per Fleischner 2017 (low risk, &lt;6 mm, single nodule). Simple hepatic cyst, homogeneous, no septations or enhancement — Bosniak I, benign. Recommend correlation with prior imaging if available.
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Specialist */}
-                  <div className="px-5 py-3 border-t border-surface-border bg-purple-50/50 flex items-center gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-purple-500 flex items-center justify-center flex-shrink-0">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-white">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                      </svg>
+                    {/* Tabs */}
+                    <div className="border-t border-surface-border px-5 pt-3 bg-surface-raised/40 flex gap-0.5">
+                      {([
+                        { id: "simple",  label: "💬 Simple",  hint: "Plain English" },
+                        { id: "medium",  label: "📋 Medium",  hint: "More detail" },
+                        { id: "expert",  label: "🔬 Expert",  hint: "Clinical depth" },
+                      ] as const).map((tab) => {
+                        const active = tab.id === demoTier;
+                        return (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setDemoTier(tab.id)}
+                            className={`group relative px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-all ${active ? "bg-white dark:bg-slate-900 text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary hover:text-ink-secondary"}`}
+                          >
+                            {tab.label}
+                          </button>
+                        );
+                      })}
                     </div>
-                    <p className="text-xs text-ink-secondary">
-                      <span className="font-bold text-purple-600 uppercase tracking-wider text-[10px]">Which specialist? </span>
-                      Discuss with your <strong>ordering physician</strong> first. A <strong>Pulmonologist</strong> may advise on the nodule if clinically indicated.
-                    </p>
-                  </div>
-                </>
-              )}
+
+                    {/* Tier content */}
+                    <div className="px-5 py-5 bg-surface-raised/40 min-h-[120px]">
+                      {demoTier === "simple" && (
+                        <div className="flex gap-3 animate-fade-in">
+                          <div className="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm">💬</span>
+                          </div>
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            Your blood sugar is a little high and your vitamin D is low — both are common and easy to address. The good news: your kidney and liver markers all look great. Worth a chat with your doctor about lifestyle tweaks.
+                          </p>
+                        </div>
+                      )}
+                      {demoTier === "medium" && (
+                        <div className="flex gap-3 animate-fade-in">
+                          <div className="w-7 h-7 rounded-full bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm">📋</span>
+                          </div>
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            Fasting glucose of 112 mg/dL falls in the impaired fasting glucose range (100–125 per ADA). LDL at 134 mg/dL is borderline-high (ATP-III). Vitamin D at 18 ng/mL indicates insufficiency. All three respond well to diet, exercise, and supplementation.
+                          </p>
+                        </div>
+                      )}
+                      {demoTier === "expert" && (
+                        <div className="flex gap-3 animate-fade-in">
+                          <div className="w-7 h-7 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm">🔬</span>
+                          </div>
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            IFG per ADA (FPG 100–125 mg/dL). Recommend HbA1c + 2-hr OGTT to stratify T2DM progression risk. Borderline LDL — formal 10-yr ASCVD assessment per ACC/AHA 2019. 25-OH vit D insufficiency: cholecalciferol 2,000 IU daily, recheck in 12 weeks.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Specialist + Action grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-surface-border">
+                      <div className="p-4 bg-brand-blue/5 sm:border-r border-surface-border">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-brand-blue flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">Which specialist?</p>
+                            <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
+                              <strong>Endocrinologist</strong> for glucose metabolism and pre-diabetes evaluation.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4 border-t sm:border-t-0 border-surface-border">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                              <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">What to do</p>
+                            <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
+                              HbA1c test in 4–6 weeks · D3 2,000 IU daily · 30-min walk after meals.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Supplement teaser */}
+                    <div className="px-5 py-3 border-t border-surface-border bg-gradient-to-r from-emerald-500/5 to-transparent flex items-center gap-2.5">
+                      <span className="text-base">💊</span>
+                      <p className="text-xs text-ink-secondary">
+                        <span className="font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider text-[10px]">Supplement plan </span>
+                        <strong>Vitamin D3</strong> 2,000 IU · <strong>Berberine</strong> 500 mg · <strong>Omega-3</strong> 1,000 mg — full dosing &amp; rationale included.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Radiology header */}
+                    <div className="px-5 py-3.5 border-b border-surface-border bg-gradient-to-r from-purple-500/5 via-purple-500/2 to-transparent flex items-center justify-between gap-3 flex-wrap">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center flex-shrink-0 shadow-soft">
+                          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                            <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-ink truncate">Chest_CT_Report.pdf</p>
+                          <p className="text-[11px] text-ink-tertiary flex items-center gap-1.5">
+                            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                            Analyzed in 9.7s · 2 findings
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 px-2.5 py-1 rounded-full uppercase tracking-wider">Routine follow-up</span>
+                      </div>
+                    </div>
+
+                    {/* Findings strip */}
+                    <div className="px-5 pt-4 pb-3.5">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Key findings</span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div className="relative flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 overflow-hidden">
+                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400" />
+                          <span className="text-amber-500 text-xs font-bold pl-1">↑</span>
+                          <span className="text-xs font-semibold text-ink">Pulmonary Nodule</span>
+                          <span className="text-xs font-bold text-amber-600 font-mono-data">4 mm</span>
+                          <span className="text-[10px] text-ink-tertiary hidden sm:inline">· ref &lt;6 mm low risk</span>
+                        </div>
+                        <div className="relative flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 overflow-hidden">
+                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400" />
+                          <span className="text-emerald-600 text-xs font-bold pl-1">✓</span>
+                          <span className="text-xs font-semibold text-ink">Hepatic Cyst</span>
+                          <span className="text-xs font-bold text-emerald-600">benign · Bosniak I</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tabs */}
+                    <div className="border-t border-surface-border px-5 pt-3 bg-surface-raised/40 flex gap-0.5">
+                      {([
+                        { id: "simple",  label: "💬 Simple"  },
+                        { id: "medium",  label: "📋 Medium"  },
+                        { id: "expert",  label: "🔬 Expert"  },
+                      ] as const).map((tab) => {
+                        const active = tab.id === demoTier;
+                        return (
+                          <button
+                            key={tab.id}
+                            type="button"
+                            onClick={() => setDemoTier(tab.id)}
+                            className={`px-4 py-2.5 text-xs font-semibold rounded-t-lg transition-all ${active ? "bg-white text-purple-600 border-b-2 border-purple-500 -mb-px" : "text-ink-tertiary hover:text-ink-secondary"}`}
+                          >
+                            {tab.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Tier content */}
+                    <div className="px-5 py-5 bg-surface-raised/40 min-h-[120px]">
+                      {demoTier === "simple" && (
+                        <div className="flex gap-3 animate-fade-in">
+                          <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm">💬</span>
+                          </div>
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            This is a CT scan of your chest. The scan found a tiny spot on your lung (4 mm) — very common and almost always harmless. There&apos;s also a small fluid-filled cyst on your liver, which is incidental and needs no action.
+                          </p>
+                        </div>
+                      )}
+                      {demoTier === "medium" && (
+                        <div className="flex gap-3 animate-fade-in">
+                          <div className="w-7 h-7 rounded-full bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm">📋</span>
+                          </div>
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            A 4 mm pulmonary nodule is below the Fleischner Society threshold for routine follow-up in low-risk patients. The 8 mm hepatic cyst has benign morphology with no septations or enhancement — incidental, simple cyst.
+                          </p>
+                        </div>
+                      )}
+                      {demoTier === "expert" && (
+                        <div className="flex gap-3 animate-fade-in">
+                          <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm">🔬</span>
+                          </div>
+                          <p className="text-sm text-ink-secondary leading-relaxed">
+                            4 mm solid RUL nodule — no follow-up per Fleischner 2017 (low risk, &lt;6 mm). Simple hepatic cyst, homogeneous, no septations or enhancement — Bosniak I, benign. Correlate with priors if available.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Specialist + Action grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-surface-border">
+                      <div className="p-4 bg-purple-500/5 sm:border-r border-surface-border">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Which specialist?</p>
+                            <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
+                              Discuss with your <strong>ordering physician</strong> first; <strong>Pulmonology</strong> if clinically indicated.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4 border-t sm:border-t-0 border-surface-border">
+                        <div className="flex items-start gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                              <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">What to do</p>
+                            <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
+                              No urgent action · routine follow-up only · keep this report for your records.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Trust footer */}
+            <div className="mt-6 flex items-center justify-center gap-5 flex-wrap text-[11px] text-ink-tertiary">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> No signup needed
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" /> File never stored
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500" /> 100% educational use
+              </span>
             </div>
           </div>
         )}
