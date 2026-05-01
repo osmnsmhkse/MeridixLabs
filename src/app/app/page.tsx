@@ -1756,16 +1756,6 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
         </div>
       </div>
 
-      {/* ─── SECTION 1.5: SUPPLEMENTS & LIFESTYLE ───────────────────────────── */}
-      {result.supplements && mode === "lab" && (
-        <div>
-          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-            Supplements &amp; Lifestyle
-          </p>
-          <SupplementsSection supplements={result.supplements} />
-        </div>
-      )}
-
       {/* ─── SECTION 2: DEEPER ANALYSIS ──────────────────────────────────────── */}
       {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (
         <div>
@@ -1810,6 +1800,16 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ─── SECTION 2.5: SUPPLEMENTS & LIFESTYLE ─────────────────────────────── */}
+      {result.supplements && mode === "lab" && (
+        <div>
+          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+            Supplements &amp; Lifestyle
+          </p>
+          <SupplementsSection supplements={result.supplements} />
         </div>
       )}
 
