@@ -2312,6 +2312,7 @@ export default function AppPage() {
   const [reportMode, setReportMode] = useState<ReportMode>("lab");
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [healthFile, setHealthFile] = useState<File | null>(null);
+  const [demoTier, setDemoTier] = useState<"simple" | "medium" | "expert">("simple");
 
   // ── Signed-in profile autofill ─────────────────────────────────────
   // Note: useUser() must be called inside a ClerkProvider. When AUTH_ENABLED
@@ -2790,31 +2791,45 @@ export default function AppPage() {
 
                   {/* Tabs */}
                   <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
-                    {[
-                      { label: "💬 Simple",  active: true  },
-                      { label: "📋 Medium", active: false },
-                      { label: "🔬 Expert",  active: false },
-                    ].map((tab) => (
-                      <span key={tab.label} className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${tab.active ? "bg-white dark:bg-slate-800 text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary"}`}>
-                        {tab.label}
-                      </span>
-                    ))}
+                    {([
+                      { id: "simple",  label: "💬 Simple"  },
+                      { id: "medium",  label: "📋 Medium"  },
+                      { id: "expert",  label: "🔬 Expert"  },
+                    ] as const).map((tab) => {
+                      const active = tab.id === demoTier;
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setDemoTier(tab.id)}
+                          className={`px-4 py-2.5 text-xs font-medium rounded-t-lg transition-colors ${active ? "bg-white dark:bg-slate-800 text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary hover:text-ink-secondary"}`}
+                        >
+                          {tab.label}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   {/* Lab sample content */}
-                  <div className="px-5 py-4 space-y-2">
-                    <p className="text-xs text-ink-secondary leading-relaxed">
-                      <span className="font-semibold text-emerald-600">Simple: </span>
-                      Your blood sugar is a little high — like having more sugar in your blood than ideal. Worth mentioning to your doctor.
-                    </p>
-                    <p className="text-xs text-ink-tertiary leading-relaxed">
-                      <span className="font-semibold text-brand-blue">Medium: </span>
-                      Fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125). Your insulin response may be losing efficiency.
-                    </p>
-                    <p className="text-xs text-ink-tertiary leading-relaxed">
-                      <span className="font-semibold text-purple-600">Expert: </span>
-                      IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components.
-                    </p>
+                  <div className="px-5 py-4 min-h-[88px]">
+                    {demoTier === "simple" && (
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        <span className="font-semibold text-emerald-600">Simple: </span>
+                        Your blood sugar is a little high — like having more sugar in your blood than ideal. Worth mentioning to your doctor.
+                      </p>
+                    )}
+                    {demoTier === "medium" && (
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        <span className="font-semibold text-brand-blue">Medium: </span>
+                        Fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125 per ADA). Your fasting insulin response may be losing efficiency, suggesting early insulin resistance.
+                      </p>
+                    )}
+                    {demoTier === "expert" && (
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        <span className="font-semibold text-purple-600">Expert: </span>
+                        IFG per ADA criteria (FPG 100–125 mg/dL). Recommend HbA1c + 2-hr OGTT to stratify T2DM progression risk. Review MetS components — waist circumference, BP, TG/HDL ratio. Consider HOMA-IR for insulin sensitivity baseline.
+                      </p>
+                    )}
                   </div>
 
                   {/* Specialist */}
@@ -2851,31 +2866,45 @@ export default function AppPage() {
 
                   {/* Tabs */}
                   <div className="border-t border-b border-surface-border px-5 py-0 bg-surface-raised flex gap-0.5">
-                    {[
-                      { label: "💬 Simple",  active: true  },
-                      { label: "📋 Medium", active: false },
-                      { label: "🔬 Expert",  active: false },
-                    ].map((tab) => (
-                      <span key={tab.label} className={`px-4 py-2.5 text-xs font-medium rounded-t-lg ${tab.active ? "bg-white text-purple-600 border-b-2 border-purple-500 -mb-px" : "text-ink-tertiary"}`}>
-                        {tab.label}
-                      </span>
-                    ))}
+                    {([
+                      { id: "simple",  label: "💬 Simple"  },
+                      { id: "medium",  label: "📋 Medium"  },
+                      { id: "expert",  label: "🔬 Expert"  },
+                    ] as const).map((tab) => {
+                      const active = tab.id === demoTier;
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setDemoTier(tab.id)}
+                          className={`px-4 py-2.5 text-xs font-medium rounded-t-lg transition-colors ${active ? "bg-white text-purple-600 border-b-2 border-purple-500 -mb-px" : "text-ink-tertiary hover:text-ink-secondary"}`}
+                        >
+                          {tab.label}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   {/* Radiology sample content */}
-                  <div className="px-5 py-4 space-y-2">
-                    <p className="text-xs text-ink-secondary leading-relaxed">
-                      <span className="font-semibold text-emerald-600">Simple: </span>
-                      This is a CT scan of your chest. The scan found a tiny spot on your lung (4 mm) — this is very common and almost always harmless. There&apos;s also a small fluid-filled cyst on your liver, which is an incidental finding requiring no action.
-                    </p>
-                    <p className="text-xs text-ink-tertiary leading-relaxed">
-                      <span className="font-semibold text-brand-blue">Medium: </span>
-                      A 4 mm pulmonary nodule is below the Fleischner Society threshold for routine follow-up in low-risk patients. The 8 mm hepatic cyst has benign morphology and is incidental.
-                    </p>
-                    <p className="text-xs text-ink-tertiary leading-relaxed">
-                      <span className="font-semibold text-purple-600">Expert: </span>
-                      4 mm solid RUL nodule — no follow-up recommended per Fleischner (low risk, &lt;6 mm). Simple hepatic cyst, homogeneous, no septations — Bosniak I, benign.
-                    </p>
+                  <div className="px-5 py-4 min-h-[88px]">
+                    {demoTier === "simple" && (
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        <span className="font-semibold text-emerald-600">Simple: </span>
+                        This is a CT scan of your chest. The scan found a tiny spot on your lung (4 mm) — this is very common and almost always harmless. There&apos;s also a small fluid-filled cyst on your liver, which is an incidental finding requiring no action.
+                      </p>
+                    )}
+                    {demoTier === "medium" && (
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        <span className="font-semibold text-brand-blue">Medium: </span>
+                        A 4 mm pulmonary nodule is below the Fleischner Society threshold for routine follow-up in low-risk patients. The 8 mm hepatic cyst has benign morphology with no septations or enhancement — incidental finding consistent with simple cyst.
+                      </p>
+                    )}
+                    {demoTier === "expert" && (
+                      <p className="text-xs text-ink-secondary leading-relaxed">
+                        <span className="font-semibold text-purple-600">Expert: </span>
+                        4 mm solid RUL nodule — no follow-up recommended per Fleischner 2017 (low risk, &lt;6 mm, single nodule). Simple hepatic cyst, homogeneous, no septations or enhancement — Bosniak I, benign. Recommend correlation with prior imaging if available.
+                      </p>
+                    )}
                   </div>
 
                   {/* Specialist */}
