@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
+import LabPanelBySystem from "@/components/LabPanelBySystem";
 import { track } from "@/lib/track";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -104,6 +105,7 @@ interface AnalysisResult {
   specialist?: string;
   action: string;
   flags: AnalysisFlag[];
+  labs?: AnalysisFlag[];
   medication_context?: string;
   health_insights?: string;
   supplements?: string;
@@ -132,6 +134,28 @@ const DEMO_RESULT: AnalysisResult = {
     { marker: "Sodium", value: "134", unit: "mEq/L", reference: "136–145", status: "low" },
     { marker: "Creatinine", value: "0.9", unit: "mg/dL", reference: "0.7–1.2", status: "normal" },
     { marker: "TSH", value: "2.1", unit: "mIU/L", reference: "0.4–4.0", status: "normal" },
+  ],
+  labs: [
+    { marker: "Glucose",         value: "112", unit: "mg/dL",  reference: "70-99",   status: "high"   },
+    { marker: "HbA1c",           value: "5.8", unit: "%",      reference: "4-5.6",   status: "high"   },
+    { marker: "LDL Cholesterol", value: "134", unit: "mg/dL",  reference: "<100",    status: "high"   },
+    { marker: "HDL Cholesterol", value: "52",  unit: "mg/dL",  reference: ">40",     status: "normal" },
+    { marker: "Total Cholesterol", value: "212", unit: "mg/dL", reference: "<200",   status: "high"   },
+    { marker: "Triglycerides",   value: "128", unit: "mg/dL",  reference: "<150",    status: "normal" },
+    { marker: "ALT",             value: "28",  unit: "U/L",    reference: "7-56",    status: "normal" },
+    { marker: "AST",             value: "24",  unit: "U/L",    reference: "10-40",   status: "normal" },
+    { marker: "Creatinine",      value: "0.9", unit: "mg/dL",  reference: "0.7-1.2", status: "normal" },
+    { marker: "BUN",             value: "14",  unit: "mg/dL",  reference: "7-20",    status: "normal" },
+    { marker: "TSH",             value: "2.1", unit: "mIU/L",  reference: "0.4-4.0", status: "normal" },
+    { marker: "Vitamin D",       value: "18",  unit: "ng/mL",  reference: "30-100",  status: "low"    },
+    { marker: "Vitamin B12",     value: "420", unit: "pg/mL",  reference: "211-911", status: "normal" },
+    { marker: "Sodium",          value: "134", unit: "mEq/L",  reference: "136-145", status: "low"    },
+    { marker: "Potassium",       value: "4.2", unit: "mEq/L",  reference: "3.5-5.1", status: "normal" },
+    { marker: "Calcium",         value: "9.4", unit: "mg/dL",  reference: "8.5-10.2",status: "normal" },
+    { marker: "Hemoglobin",      value: "14.8", unit: "g/dL",  reference: "13-17",   status: "normal" },
+    { marker: "Hematocrit",      value: "44",  unit: "%",      reference: "40-53",   status: "normal" },
+    { marker: "Platelets",       value: "245", unit: "10^3/μL",reference: "150-450", status: "normal" },
+    { marker: "CRP",             value: "2.1", unit: "mg/L",   reference: "<5",      status: "normal" },
   ],
   supplements: "**Vitamin D3 (2,000 IU/day with a fatty meal):** Directly addresses your low Vitamin D of 18 ng/mL. Cholecalciferol (D3) is the most bioavailable form. Take with lunch or dinner for better absorption. Recheck blood levels in 3 months — your doctor may recommend a higher dose based on follow-up results.\n\n**Omega-3 Fatty Acids (1,000–2,000 mg EPA+DHA/day):** Targets your borderline LDL and supports cardiovascular health. Fish oil or algae-based omega-3s have strong clinical evidence for lowering triglycerides and reducing cardiovascular risk. Look for a product with >500 mg combined EPA+DHA per capsule.\n\n**Magnesium Glycinate (300 mg at bedtime):** Supports insulin sensitivity and glucose metabolism — directly relevant to your prediabetic glucose level. Magnesium also improves sleep quality, and poor sleep is independently associated with elevated blood sugar. The glycinate form is gentle on the stomach.\n\n**Berberine (500 mg twice daily with meals):** Has strong clinical evidence for improving insulin sensitivity and lowering fasting glucose — comparable to low-dose metformin in several studies. Discuss with your doctor before starting, as berberine can interact with certain medications.\n\n**Lifestyle (most impactful):** 150 minutes/week of moderate aerobic exercise (brisk walking, cycling, swimming). Even a 10-minute walk after meals measurably reduces postprandial glucose spikes. Reducing refined carbohydrates and increasing dietary fiber can improve all three flagged values — glucose, LDL, and Vitamin D absorption — within 8–12 weeks.",
 };
@@ -1755,6 +1779,16 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
           </div>
         </div>
       </div>
+
+      {/* ─── SECTION 1.5: LAB PANEL BY BODY SYSTEM (lab reports only) ────────── */}
+      {mode === "lab" && (((result.labs?.length ?? 0) > 0) || ((result.flags?.length ?? 0) > 0)) && (
+        <div>
+          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+            Lab Panel · Grouped by Body System
+          </p>
+          <LabPanelBySystem labs={result.labs} flags={result.flags} />
+        </div>
+      )}
 
       {/* ─── SECTION 2: DEEPER ANALYSIS ──────────────────────────────────────── */}
       {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (

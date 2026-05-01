@@ -80,6 +80,8 @@ Fields required:
 
 12. "flags" — An array of notable lab markers: { marker, value, unit, reference, status } where status is "high", "low", or "normal". Only include clinically notable markers.
 
+12b. "labs" — REQUIRED. An array containing EVERY measured lab value found in the report (not just abnormal ones), in the order they appear. Same shape: { marker, value, unit, reference, status } where status is "high", "low", or "normal". Use the marker name EXACTLY as written in the report. Use the canonical English biomarker name when the report is in another language (e.g., "Hemoglobin" not "Hemoglobin/HGB", "Vitamin D" not "Vit D 25-OH"). Always include the reference range as a string like "70-99" or "<100" or ">40". For Turkish/non-English reports, translate marker names to English: HEMOGLOBIN→Hemoglobin, GLUKOZ→Glucose, KREATİNİN→Creatinine, KOLESTEROL→Total Cholesterol, HDL KOL→HDL Cholesterol, LDL KOL→LDL Cholesterol, TRİGLİSERİT→Triglycerides, ÜRİK ASİT→Uric Acid, AST→AST, ALT (SGPT)→ALT, GGT→GGT, ALKALEN FOSFATAZ→Alkaline Phosphatase, BİLİRUBİN→Bilirubin, ALBÜMİN→Albumin, DEMİR→Iron, FERRİTİN→Ferritin, FOLAT→Folate, B12→Vitamin B12, D VİTAMİNİ→Vitamin D, TSH→TSH, T3→Free T3, T4→Free T4, KALSİYUM→Calcium, MAGNEZYUM→Magnesium, SODYUM→Sodium, POTASYUM→Potassium, KLOR→Chloride, CRP→CRP, HBA1C→HbA1c, INSULIN→Insulin, TESTOSTERON→Testosterone, etc.
+
 13. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…"). If no medications were provided, omit this field entirely.
 
 14. "supplements" — ONLY include this field when one or more abnormal (high or low) values are present in the flags. Provide 3–5 specific, actionable supplement or lifestyle recommendations directly tied to the flagged biomarkers. Use this format for each: start with the supplement name and dose in double asterisks (e.g., **Vitamin D3 (2,000 IU/day)**), followed by a colon and a plain-English explanation of which biomarker it targets, why it helps, and a practical note. End each item with a reminder to consult a doctor. Separate recommendations with two newlines. If all values are normal, omit this field entirely. Never recommend supplements for radiology/pathology reports.
@@ -104,6 +106,11 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
   "action": "string",
   "flags": [
     { "marker": "Glucose", "value": "112", "unit": "mg/dL", "reference": "70–99", "status": "high" }
+  ],
+  "labs": [
+    { "marker": "Glucose",     "value": "112", "unit": "mg/dL",  "reference": "70-99",   "status": "high"   },
+    { "marker": "Sodium",      "value": "138", "unit": "mEq/L",  "reference": "136-145", "status": "normal" },
+    { "marker": "Creatinine",  "value": "0.9", "unit": "mg/dL",  "reference": "0.7-1.2", "status": "normal" }
   ],
   "medication_context": "string (optional — only when medications were provided)",
   "health_insights": "string (optional — only when Apple Health/wearable data was provided)",
@@ -324,6 +331,7 @@ export async function POST(request: NextRequest) {
       specialist?: string;
       action: string;
       flags: Array<{ marker: string; value: string; unit: string; reference: string; status: "high" | "low" | "normal" }>;
+      labs?: Array<{ marker: string; value: string; unit?: string; reference?: string; status?: "high" | "low" | "normal" }>;
       medication_context?: string;
       health_insights?: string;
       supplements?: string;
