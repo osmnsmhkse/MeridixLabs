@@ -648,89 +648,309 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
   const thyroid = get("thyroid");
   const blood = get("hematology");
 
-  const fillFor = (s?: SystemBreakdown) => {
-    if (!s) return "#cbd5e1";
-    if (s.score >= 80) return "#10b981";
-    if (s.score >= 60) return "#f59e0b";
-    return "#ef4444";
+  // Status → color palette (active organs glow; inactive stay muted but visible)
+  const colorFor = (s?: SystemBreakdown) => {
+    if (!s) return { primary: "#64748b", glow: "#94a3b8", core: "#cbd5e1", active: false };
+    if (s.score >= 80) return { primary: "#10b981", glow: "#6ee7b7", core: "#a7f3d0", active: true };
+    if (s.score >= 60) return { primary: "#f59e0b", glow: "#fcd34d", core: "#fde68a", active: true };
+    return { primary: "#ef4444", glow: "#fca5a5", core: "#fecaca", active: true };
   };
-  const opacityFor = (s?: SystemBreakdown) => (s ? 1 : 0.35);
+
+  const cardC = colorFor(card);
+  const liverC = colorFor(liver);
+  const kidneyC = colorFor(kidney);
+  const metabC = colorFor(metab);
+  const thyroidC = colorFor(thyroid);
+  const bloodC = colorFor(blood);
+
+  const organGradients: Array<[string, ReturnType<typeof colorFor>]> = [
+    ["heart", cardC],
+    ["liver", liverC],
+    ["kidney", kidneyC],
+    ["stomach", metabC],
+    ["thyroid", thyroidC],
+    ["blood", bloodC],
+  ];
 
   return (
-    <div className="flex flex-col items-center">
-      <svg viewBox="0 0 200 360" className="w-full max-w-[200px] h-auto">
-        <defs>
-          <linearGradient id="body-fill" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(99,102,241,0.06)" />
-            <stop offset="100%" stopColor="rgba(59,130,246,0.04)" />
-          </linearGradient>
-        </defs>
+    <div className="flex flex-col gap-3">
+      {/* ─── Holographic scanner panel ─── */}
+      <div
+        className="relative rounded-2xl overflow-hidden border border-cyan-400/20 shadow-xl shadow-cyan-500/10"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.18) 0%, transparent 60%), linear-gradient(180deg, #0a1428 0%, #0a1c2e 50%, #050d1c 100%)",
+        }}
+      >
+        {/* Grid mesh background — fades at edges */}
+        <div
+          className="absolute inset-0 opacity-[0.22] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(125,211,252,0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,0.55) 1px, transparent 1px)",
+            backgroundSize: "18px 18px",
+            maskImage: "radial-gradient(ellipse at center, black 50%, transparent 95%)",
+            WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 95%)",
+          }}
+        />
 
-        {/* Body silhouette */}
-        <g fill="url(#body-fill)" stroke="rgba(100,116,139,0.4)" strokeWidth="1.2">
-          {/* head */}
-          <ellipse cx="100" cy="34" rx="22" ry="26" />
-          {/* neck */}
-          <rect x="92" y="58" width="16" height="12" />
-          {/* torso */}
-          <path d="M 70 70 Q 60 75 58 95 L 56 175 Q 56 195 65 200 L 135 200 Q 144 195 144 175 L 142 95 Q 140 75 130 70 Z" />
-          {/* arms */}
-          <path d="M 60 78 Q 40 95 36 145 Q 33 175 38 195 L 50 195 Q 53 165 56 140 Q 58 110 65 90 Z" />
-          <path d="M 140 78 Q 160 95 164 145 Q 167 175 162 195 L 150 195 Q 147 165 144 140 Q 142 110 135 90 Z" />
-          {/* hips/legs */}
-          <path d="M 65 200 Q 60 230 65 270 L 75 340 L 92 340 L 95 280 Q 97 240 100 215 Z" />
-          <path d="M 135 200 Q 140 230 135 270 L 125 340 L 108 340 L 105 280 Q 103 240 100 215 Z" />
-        </g>
+        {/* Scanning line (animated, uses .scan-line from globals.css) */}
+        <div className="absolute inset-x-0 top-0 bottom-0 scan-line pointer-events-none" />
 
-        {/* Thyroid (neck) */}
-        <g>
-          <ellipse cx="100" cy="64" rx="9" ry="4" fill={fillFor(thyroid)} opacity={opacityFor(thyroid)} />
-          <title>{thyroid ? `Thyroid · ${thyroid.score}` : "Thyroid"}</title>
-        </g>
+        {/* Status pill */}
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 pointer-events-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
+          <span className="text-[9px] font-bold text-cyan-300/90 uppercase tracking-[0.25em]">Body Scan</span>
+        </div>
 
-        {/* Heart (cardiovascular) */}
-        <g>
-          <path d="M 90 100 C 84 94, 76 96, 76 105 C 76 114, 90 124, 95 128 C 100 124, 114 114, 114 105 C 114 96, 106 94, 100 100 Z" fill={fillFor(card)} opacity={opacityFor(card)} />
-          <title>{card ? `Cardiovascular · ${card.score}` : "Cardiovascular"}</title>
-        </g>
+        {/* Body SVG */}
+        <svg viewBox="0 0 200 430" className="relative w-full h-auto" style={{ filter: "drop-shadow(0 0 12px rgba(99,102,241,0.15))" }}>
+          <defs>
+            {/* Body silhouette gradient — translucent cyan/indigo */}
+            <linearGradient id="body-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgba(165,243,252,0.18)" />
+              <stop offset="50%" stopColor="rgba(99,102,241,0.10)" />
+              <stop offset="100%" stopColor="rgba(56,189,248,0.04)" />
+            </linearGradient>
 
-        {/* Liver */}
-        <g>
-          <path d="M 110 130 Q 135 130 135 148 Q 130 160 113 158 Q 105 155 110 130 Z" fill={fillFor(liver)} opacity={opacityFor(liver)} />
-          <title>{liver ? `Liver · ${liver.score}` : "Liver"}</title>
-        </g>
+            {/* Body rim-light stroke gradient */}
+            <linearGradient id="body-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgba(186,230,253,0.95)" />
+              <stop offset="55%" stopColor="rgba(125,211,252,0.7)" />
+              <stop offset="100%" stopColor="rgba(99,102,241,0.55)" />
+            </linearGradient>
 
-        {/* Stomach / metabolic */}
-        <g>
-          <ellipse cx="92" cy="148" rx="12" ry="9" fill={fillFor(metab)} opacity={opacityFor(metab)} />
-          <title>{metab ? `Metabolic · ${metab.score}` : "Metabolic"}</title>
-        </g>
+            {/* Organ glow filter */}
+            <filter id="organGlow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="2.4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
 
-        {/* Kidneys */}
-        <g>
-          <ellipse cx="80" cy="172" rx="6" ry="9" fill={fillFor(kidney)} opacity={opacityFor(kidney)} />
-          <ellipse cx="120" cy="172" rx="6" ry="9" fill={fillFor(kidney)} opacity={opacityFor(kidney)} />
-          <title>{kidney ? `Kidney · ${kidney.score}` : "Kidney"}</title>
-        </g>
+            {/* Per-organ radial gradients (3D shading: light from upper-left) */}
+            {organGradients.map(([id, c]) => (
+              <radialGradient key={id} id={`organ-${id}`} cx="32%" cy="28%" r="75%">
+                <stop offset="0%" stopColor={c.core} stopOpacity={c.active ? 1 : 0.7} />
+                <stop offset="45%" stopColor={c.glow} stopOpacity={c.active ? 0.95 : 0.55} />
+                <stop offset="100%" stopColor={c.primary} stopOpacity={c.active ? 0.6 : 0.2} />
+              </radialGradient>
+            ))}
+          </defs>
 
-        {/* Blood drop (hematology) - on chest */}
-        <g>
-          <path d="M 100 80 Q 96 86 96 90 Q 96 95 100 95 Q 104 95 104 90 Q 104 86 100 80 Z" fill={fillFor(blood)} opacity={opacityFor(blood)} />
-          <title>{blood ? `Blood · ${blood.score}` : "Blood"}</title>
-        </g>
-      </svg>
+          {/* Body silhouette */}
+          <g fill="url(#body-fill)" stroke="url(#body-stroke)" strokeWidth="1.1" strokeLinejoin="round">
+            {/* head */}
+            <ellipse cx="100" cy="42" rx="24" ry="30" />
+            {/* neck */}
+            <path d="M 88 68 L 88 86 Q 100 90 112 86 L 112 68 Z" />
+            {/* torso */}
+            <path d="
+              M 72 86
+              Q 60 88 56 100
+              L 52 138
+              Q 50 162 53 188
+              L 58 220
+              Q 62 230 74 232
+              L 126 232
+              Q 138 230 142 220
+              L 147 188
+              Q 150 162 148 138
+              L 144 100
+              Q 140 88 128 86
+              Z
+            " />
+            {/* left arm */}
+            <path d="
+              M 56 100
+              Q 38 110 32 150
+              Q 28 198 36 240
+              L 52 238
+              Q 54 200 56 170
+              Q 58 140 62 110
+              Z
+            " />
+            {/* right arm */}
+            <path d="
+              M 144 100
+              Q 162 110 168 150
+              Q 172 198 164 240
+              L 148 238
+              Q 146 200 144 170
+              Q 142 140 138 110
+              Z
+            " />
+            {/* left leg */}
+            <path d="
+              M 74 232
+              Q 66 252 68 285
+              Q 70 322 76 360
+              L 82 410
+              L 100 410
+              L 102 360
+              Q 104 322 102 285
+              Q 100 252 100 234
+              Z
+            " />
+            {/* right leg */}
+            <path d="
+              M 126 232
+              Q 134 252 132 285
+              Q 130 322 124 360
+              L 118 410
+              L 100 410
+              L 98 360
+              Q 96 322 98 285
+              Q 100 252 100 234
+              Z
+            " />
+          </g>
 
-      <div className="mt-3 grid grid-cols-3 gap-x-3 gap-y-1.5 w-full">
+          {/* Subtle anatomical hint lines (collarbone, sternum) */}
+          <g stroke="rgba(165,243,252,0.28)" strokeWidth="0.6" fill="none" strokeLinecap="round">
+            <path d="M 72 96 Q 100 104 128 96" />
+            <line x1="100" y1="106" x2="100" y2="216" strokeDasharray="2 4" />
+          </g>
+
+          {/* ─── Organs (with depth glow) ─── */}
+          <g filter="url(#organGlow)">
+            {/* Thyroid — bow-tie at base of neck */}
+            <path
+              d="M 91 80 Q 86 78 86 82 Q 90 84 95 84 L 105 84 Q 110 84 114 82 Q 114 78 109 80 Q 100 76 91 80 Z"
+              fill="url(#organ-thyroid)"
+              stroke={thyroidC.glow}
+              strokeWidth="0.5"
+              strokeOpacity={thyroidC.active ? 0.8 : 0.25}
+            />
+
+            {/* Heart — anatomically left of midline */}
+            <path
+              d="M 86 122
+                 C 79 114, 68 117, 68 128
+                 C 68 140, 86 156, 92 162
+                 C 98 156, 116 140, 116 128
+                 C 116 117, 105 114, 98 122
+                 C 94 127, 90 127, 86 122 Z"
+              fill="url(#organ-heart)"
+              stroke={cardC.glow}
+              strokeWidth="0.7"
+              strokeOpacity={cardC.active ? 0.85 : 0.25}
+            />
+
+            {/* Liver — upper right abdomen, large lobe */}
+            <path
+              d="M 104 168
+                 Q 132 165 142 178
+                 Q 146 192 138 202
+                 Q 124 208 110 204
+                 Q 99 198 100 184
+                 Q 100 173 104 168 Z"
+              fill="url(#organ-liver)"
+              stroke={liverC.glow}
+              strokeWidth="0.7"
+              strokeOpacity={liverC.active ? 0.85 : 0.25}
+            />
+
+            {/* Stomach (metabolic) — upper-left under ribs */}
+            <path
+              d="M 70 178
+                 Q 64 188 70 202
+                 Q 80 212 92 206
+                 Q 96 192 90 180
+                 Q 80 173 70 178 Z"
+              fill="url(#organ-stomach)"
+              stroke={metabC.glow}
+              strokeWidth="0.7"
+              strokeOpacity={metabC.active ? 0.85 : 0.25}
+            />
+
+            {/* Kidneys — bean-shaped, lower back */}
+            <path
+              d="M 76 212 Q 68 216 70 228 Q 73 238 82 235 Q 87 230 86 222 Q 84 213 76 212 Z"
+              fill="url(#organ-kidney)"
+              stroke={kidneyC.glow}
+              strokeWidth="0.6"
+              strokeOpacity={kidneyC.active ? 0.85 : 0.25}
+            />
+            <path
+              d="M 124 212 Q 132 216 130 228 Q 127 238 118 235 Q 113 230 114 222 Q 116 213 124 212 Z"
+              fill="url(#organ-kidney)"
+              stroke={kidneyC.glow}
+              strokeWidth="0.6"
+              strokeOpacity={kidneyC.active ? 0.85 : 0.25}
+            />
+
+            {/* Blood — central droplet at chest level (sternum) */}
+            <path
+              d="M 100 102 Q 95 110 95 116 Q 95 122 100 122 Q 105 122 105 116 Q 105 110 100 102 Z"
+              fill="url(#organ-blood)"
+              stroke={bloodC.glow}
+              strokeWidth="0.6"
+              strokeOpacity={bloodC.active ? 0.85 : 0.25}
+            />
+          </g>
+
+          {/* Active-organ pulse rings (one ring per active flagged organ for emphasis) */}
+          {[
+            { c: cardC, cx: 92, cy: 138, r: 22 },
+            { c: liverC, cx: 122, cy: 188, r: 22 },
+            { c: kidneyC, cx: 100, cy: 224, r: 26 },
+            { c: metabC, cx: 81, cy: 192, r: 18 },
+          ].filter((x) => x.c.active && x.c !== cardC ? false : true).map((p, i) =>
+            p.c.active && p.c.primary !== "#10b981" ? (
+              <circle
+                key={i}
+                cx={p.cx}
+                cy={p.cy}
+                r={p.r}
+                fill="none"
+                stroke={p.c.glow}
+                strokeWidth="0.5"
+                opacity="0.4"
+              >
+                <animate attributeName="r" values={`${p.r * 0.6};${p.r * 1.1};${p.r * 0.6}`} dur="3s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0;0.5;0" dur="3s" repeatCount="indefinite" />
+              </circle>
+            ) : null
+          )}
+        </svg>
+
+        {/* Tech corner brackets */}
+        <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-cyan-400/50 pointer-events-none" />
+        <div className="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-cyan-400/50 pointer-events-none" />
+        <div className="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-cyan-400/50 pointer-events-none" />
+        <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-cyan-400/50 pointer-events-none" />
+
+        {/* Bottom telemetry strip */}
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 text-[8px] font-mono-data text-cyan-300/70 uppercase tracking-widest pointer-events-none">
+          <span>SYS·{systems.length.toString().padStart(2, "0")}</span>
+          <span className="opacity-50">|</span>
+          <span>CH·{systems.filter((s) => s.score < 80).length.toString().padStart(2, "0")}</span>
+          <span className="opacity-50">|</span>
+          <span className="text-emerald-300/80">LIVE</span>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="grid grid-cols-3 gap-x-3 gap-y-1.5 w-full">
         {[
-          { sys: card, label: "Heart" },
-          { sys: liver, label: "Liver" },
-          { sys: kidney, label: "Kidney" },
-          { sys: metab, label: "Metabolic" },
-          { sys: thyroid, label: "Thyroid" },
-          { sys: blood, label: "Blood" },
+          { c: cardC, label: "Heart", sys: card },
+          { c: liverC, label: "Liver", sys: liver },
+          { c: kidneyC, label: "Kidney", sys: kidney },
+          { c: metabC, label: "Metabolic", sys: metab },
+          { c: thyroidC, label: "Thyroid", sys: thyroid },
+          { c: bloodC, label: "Blood", sys: blood },
         ].map((it, i) => (
           <div key={i} className="flex items-center gap-1.5 text-[10px]">
-            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: fillFor(it.sys), opacity: opacityFor(it.sys) }} />
+            <span
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{
+                background: it.c.primary,
+                boxShadow: it.c.active ? `0 0 8px ${it.c.glow}` : "none",
+                opacity: it.c.active ? 1 : 0.45,
+              }}
+            />
             <span className="text-ink-secondary truncate">{it.label}</span>
             {it.sys && <span className={`font-bold tabular-nums ${scoreColor(it.sys.score)} ml-auto`}>{it.sys.score}</span>}
           </div>
