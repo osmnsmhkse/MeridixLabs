@@ -210,31 +210,31 @@ function DashboardInner() {
               href="/dashboard/chat"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-brand-blue/40 bg-brand-blue/5 text-brand-blue hover:bg-brand-blue/10 font-semibold rounded-lg text-sm transition-all"
             >
-              <span aria-hidden>💬</span> Ask AI
+              <ActionIcon name="chat" /> Ask AI
             </Link>
             <Link
               href="/dashboard/goals"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
             >
-              🎯 Goals
+              <ActionIcon name="target" /> Goals
             </Link>
             <Link
               href="/dashboard/supplements"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
             >
-              💊 Supplements
+              <ActionIcon name="pill" /> Supplements
             </Link>
             <Link
               href="/profile"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-surface-border text-ink-secondary hover:border-brand-blue hover:text-brand-blue font-semibold rounded-lg text-sm transition-all"
             >
-              Profile
+              <ActionIcon name="user" /> Profile
             </Link>
             <Link
               href="/app"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold rounded-lg text-sm transition-all"
             >
-              New analysis
+              <ActionIcon name="plus" /> New analysis
             </Link>
           </div>
         </div>
@@ -879,6 +879,43 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
       </div>
     </div>
   );
+}
+
+type ActionIconName = "chat" | "target" | "pill" | "user" | "plus";
+
+function ActionIcon({ name }: { name: ActionIconName }) {
+  const common = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className: "w-4 h-4 flex-shrink-0",
+    "aria-hidden": true as const,
+  };
+  switch (name) {
+    case "chat":
+      return (
+        <svg {...common}><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z" /></svg>
+      );
+    case "target":
+      return (
+        <svg {...common}><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.5" fill="currentColor" /></svg>
+      );
+    case "pill":
+      return (
+        <svg {...common}><rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-30 12 12)" /><path d="M14.5 6.5l-7 7" /></svg>
+      );
+    case "user":
+      return (
+        <svg {...common}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+      );
+    case "plus":
+      return (
+        <svg {...common}><path d="M12 5v14M5 12h14" /></svg>
+      );
+  }
 }
 
 type MetricIconName = "markers" | "reports" | "flags" | "latest" | "tracking";
