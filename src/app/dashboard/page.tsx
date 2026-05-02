@@ -366,12 +366,12 @@ function DashboardInner() {
                 <div className="md:col-span-3 p-6">
                   <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">Key Metrics</p>
                   <div className="space-y-3">
-                    <MetricRow icon="📊" label="Markers" value={zoneStats.total > 0 ? String(zoneStats.total) : String(analyses.reduce((a, b) => a + ((b.labs_raw as unknown[] | null ?? []).length), 0))} />
-                    <MetricRow icon="📁" label="Reports" value={String(analyses.length)} />
-                    <MetricRow icon="🚩" label="Total Flags" value={String(totalFlags)} valueClass={totalFlags > 0 ? "text-red-600" : "text-emerald-600"} />
-                    <MetricRow icon="📅" label="Latest" value={formatShortDate(latest?.report_date ?? latest?.created_at ?? "")} />
+                    <MetricRow icon="markers" label="Markers" value={zoneStats.total > 0 ? String(zoneStats.total) : String(analyses.reduce((a, b) => a + ((b.labs_raw as unknown[] | null ?? []).length), 0))} />
+                    <MetricRow icon="reports" label="Reports" value={String(analyses.length)} />
+                    <MetricRow icon="flags" label="Total Flags" value={String(totalFlags)} valueClass={totalFlags > 0 ? "text-red-600" : "text-emerald-600"} />
+                    <MetricRow icon="latest" label="Latest" value={formatShortDate(latest?.report_date ?? latest?.created_at ?? "")} />
                     {scoreSeries.length > 0 && (
-                      <MetricRow icon="📈" label="Tracking" value={`${formatShortDate(scoreSeries[0].date)} →`} />
+                      <MetricRow icon="tracking" label="Tracking" value={`${formatShortDate(scoreSeries[0].date)} →`} />
                     )}
                   </div>
                 </div>
@@ -881,11 +881,47 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
   );
 }
 
-function MetricRow({ icon, label, value, valueClass }: { icon: string; label: string; value: string; valueClass?: string }) {
+type MetricIconName = "markers" | "reports" | "flags" | "latest" | "tracking";
+
+function MetricIcon({ name }: { name: MetricIconName }) {
+  const common = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className: "w-4 h-4 text-ink-tertiary flex-shrink-0",
+  };
+  switch (name) {
+    case "markers": // bar chart
+      return (
+        <svg {...common}><path d="M3 21h18M6 17V9m6 8V5m6 12v-6" /></svg>
+      );
+    case "reports": // document
+      return (
+        <svg {...common}><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><path d="M14 3v6h6M8 13h8M8 17h6" /></svg>
+      );
+    case "flags": // flag
+      return (
+        <svg {...common}><path d="M5 3v18" /><path d="M5 4h11l-2 4 2 4H5" /></svg>
+      );
+    case "latest": // calendar
+      return (
+        <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>
+      );
+    case "tracking": // trending line
+      return (
+        <svg {...common}><path d="M3 17l6-6 4 4 8-8" /><path d="M14 7h7v7" /></svg>
+      );
+  }
+}
+
+function MetricRow({ icon, label, value, valueClass }: { icon: MetricIconName; label: string; value: string; valueClass?: string }) {
   return (
     <div className="flex items-center justify-between gap-2">
-      <span className="flex items-center gap-1.5 text-xs text-ink-secondary">
-        <span className="text-base leading-none">{icon}</span>
+      <span className="flex items-center gap-2 text-xs text-ink-secondary">
+        <MetricIcon name={icon} />
         {label}
       </span>
       <span className={`text-sm font-bold tabular-nums ${valueClass ?? "text-ink"}`}>{value}</span>
