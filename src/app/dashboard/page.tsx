@@ -639,6 +639,105 @@ function ZoneDonut({ stats }: { stats: { optimal: number; normal: number; outOfR
   );
 }
 
+// ── Particle body — generated once at module load ─────────────────────────────
+// The body is rendered as a network of dots and connecting lines that fill
+// an implicit human silhouette. Deterministic (seeded) so SSR and client match.
+
+type Region =
+  | { kind: "ellipse"; cx: number; cy: number; rx: number; ry: number }
+  | { kind: "rect"; x1: number; y1: number; x2: number; y2: number };
+
+const BODY_REGIONS: Region[] = [
+  { kind: "ellipse", cx: 100, cy: 44, rx: 23, ry: 28 },           // head
+  { kind: "rect",    x1: 88, y1: 70, x2: 112, y2: 88 },           // neck
+  { kind: "ellipse", cx: 100, cy: 116, rx: 50, ry: 30 },          // shoulders
+  { kind: "ellipse", cx: 100, cy: 168, rx: 42, ry: 36 },          // chest
+  { kind: "ellipse", cx: 100, cy: 220, rx: 44, ry: 22 },          // hips
+  { kind: "ellipse", cx: 50,  cy: 145, rx: 11, ry: 38 },          // L upper arm
+  { kind: "ellipse", cx: 39,  cy: 200, rx: 9,  ry: 32 },          // L forearm
+  { kind: "ellipse", cx: 32,  cy: 240, rx: 8,  ry: 8  },          // L hand
+  { kind: "ellipse", cx: 150, cy: 145, rx: 11, ry: 38 },          // R upper arm
+  { kind: "ellipse", cx: 161, cy: 200, rx: 9,  ry: 32 },          // R forearm
+  { kind: "ellipse", cx: 168, cy: 240, rx: 8,  ry: 8  },          // R hand
+  { kind: "ellipse", cx: 84,  cy: 280, rx: 17, ry: 48 },          // L thigh
+  { kind: "ellipse", cx: 81,  cy: 360, rx: 12, ry: 42 },          // L calf
+  { kind: "ellipse", cx: 80,  cy: 405, rx: 10, ry: 6  },          // L foot
+  { kind: "ellipse", cx: 116, cy: 280, rx: 17, ry: 48 },          // R thigh
+  { kind: "ellipse", cx: 119, cy: 360, rx: 12, ry: 42 },          // R calf
+  { kind: "ellipse", cx: 120, cy: 405, rx: 10, ry: 6  },          // R foot
+];
+
+function isInsideBody(x: number, y: number): boolean {
+  for (const r of BODY_REGIONS) {
+    if (r.kind === "ellipse") {
+      const dx = (x - r.cx) / r.rx;
+      const dy = (y - r.cy) / r.ry;
+      if (dx * dx + dy * dy <= 1) return true;
+    } else {
+      if (x >= r.x1 && x <= r.x2 && y >= r.y1 && y <= r.y2) return true;
+    }
+  }
+  return false;
+}
+
+// Mulberry32 — small, fast, deterministic
+function mulberry32(seed: number) {
+  return () => {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+interface BodyMesh {
+  points: [number, number][];
+  lines: [number, number, number, number][];
+}
+
+function generateBodyMesh(seed: number, target: number): BodyMesh {
+  const rand = mulberry32(seed);
+  const points: [number, number][] = [];
+  const W = 200, H = 420;
+  let safety = 0;
+  while (points.length < target && safety < target * 12) {
+    safety++;
+    const x = rand() * W;
+    const y = rand() * H;
+    if (isInsideBody(x, y)) points.push([x, y]);
+  }
+
+  // Build lines: connect each point to its 2 closest neighbours within MAX_DIST.
+  const lines: [number, number, number, number][] = [];
+  const MAX_DIST = 11;
+  const MAX_DIST_SQ = MAX_DIST * MAX_DIST;
+  const seen = new Set<string>();
+  for (let i = 0; i < points.length; i++) {
+    const [xi, yi] = points[i];
+    const candidates: { j: number; d: number }[] = [];
+    for (let j = 0; j < points.length; j++) {
+      if (i === j) continue;
+      const dx = xi - points[j][0];
+      const dy = yi - points[j][1];
+      const d = dx * dx + dy * dy;
+      if (d < MAX_DIST_SQ) candidates.push({ j, d });
+    }
+    candidates.sort((a, b) => a.d - b.d);
+    const k = Math.min(2, candidates.length);
+    for (let n = 0; n < k; n++) {
+      const j = candidates[n].j;
+      const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      lines.push([xi, yi, points[j][0], points[j][1]]);
+    }
+  }
+  return { points, lines };
+}
+
+// Computed once per page load — no per-render cost.
+const BODY_MESH = generateBodyMesh(1337, 720);
+
 function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
   const get = (sys: string) => systems.find((s) => s.system === sys);
   const card = get("cardiovascular");
@@ -648,12 +747,12 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
   const thyroid = get("thyroid");
   const blood = get("hematology");
 
-  // Status → color palette (active organs glow; inactive stay muted but visible)
+  // Status → marker color
   const colorFor = (s?: SystemBreakdown) => {
-    if (!s) return { primary: "#64748b", glow: "#94a3b8", core: "#cbd5e1", active: false };
-    if (s.score >= 80) return { primary: "#10b981", glow: "#6ee7b7", core: "#a7f3d0", active: true };
-    if (s.score >= 60) return { primary: "#f59e0b", glow: "#fcd34d", core: "#fde68a", active: true };
-    return { primary: "#ef4444", glow: "#fca5a5", core: "#fecaca", active: true };
+    if (!s) return { primary: "#94a3b8", glow: "#cbd5e1", core: "#ffffff", active: false };
+    if (s.score >= 80) return { primary: "#10b981", glow: "#6ee7b7", core: "#ffffff", active: true };
+    if (s.score >= 60) return { primary: "#f59e0b", glow: "#fcd34d", core: "#ffffff", active: true };
+    return { primary: "#ef4444", glow: "#fca5a5", core: "#ffffff", active: true };
   };
 
   const cardC = colorFor(card);
@@ -663,296 +762,118 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
   const thyroidC = colorFor(thyroid);
   const bloodC = colorFor(blood);
 
-  const organGradients: Array<[string, ReturnType<typeof colorFor>]> = [
-    ["heart", cardC],
-    ["liver", liverC],
-    ["kidney", kidneyC],
-    ["stomach", metabC],
-    ["thyroid", thyroidC],
-    ["blood", bloodC],
+  // Organ marker positions (cx/cy/radius/score-color/label)
+  const organMarkers = [
+    { id: "thyroid", cx: 100, cy: 80,  r: 5.5, c: thyroidC, sys: thyroid, label: "Thyroid" },
+    { id: "blood",   cx: 100, cy: 110, r: 5.0, c: bloodC,   sys: blood,   label: "Blood"   },
+    { id: "heart",   cx: 90,  cy: 138, r: 7.5, c: cardC,    sys: card,    label: "Heart"   },
+    { id: "liver",   cx: 122, cy: 178, r: 7.0, c: liverC,   sys: liver,   label: "Liver"   },
+    { id: "stomach", cx: 82,  cy: 188, r: 6.0, c: metabC,   sys: metab,   label: "Metabolic" },
+    { id: "kidney",  cx: 100, cy: 218, r: 6.5, c: kidneyC,  sys: kidney,  label: "Kidney"  },
   ];
 
   return (
     <div className="flex flex-col gap-3">
-      {/* ─── Holographic scanner panel ─── */}
       <div
-        className="relative rounded-2xl overflow-hidden border border-cyan-400/20 shadow-xl shadow-cyan-500/10"
+        className="relative rounded-2xl overflow-hidden border border-surface-border"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.18) 0%, transparent 60%), linear-gradient(180deg, #0a1428 0%, #0a1c2e 50%, #050d1c 100%)",
+          background: "radial-gradient(ellipse 60% 70% at 50% 45%, rgba(241,245,249,0.95) 0%, rgba(248,250,252,1) 60%, #ffffff 100%)",
         }}
       >
-        {/* Grid mesh background — fades at edges */}
-        <div
-          className="absolute inset-0 opacity-[0.22] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(125,211,252,0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,0.55) 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-            maskImage: "radial-gradient(ellipse at center, black 50%, transparent 95%)",
-            WebkitMaskImage: "radial-gradient(ellipse at center, black 50%, transparent 95%)",
-          }}
-        />
-
-        {/* Scanning line (animated, uses .scan-line from globals.css) */}
-        <div className="absolute inset-x-0 top-0 bottom-0 scan-line pointer-events-none" />
-
-        {/* Status pill */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 pointer-events-none">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
-          <span className="text-[9px] font-bold text-cyan-300/90 uppercase tracking-[0.25em]">Body Scan</span>
-        </div>
-
-        {/* Body SVG */}
-        <svg viewBox="0 0 200 430" className="relative w-full h-auto" style={{ filter: "drop-shadow(0 0 12px rgba(99,102,241,0.15))" }}>
-          <defs>
-            {/* Body silhouette gradient — translucent cyan/indigo */}
-            <linearGradient id="body-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(165,243,252,0.18)" />
-              <stop offset="50%" stopColor="rgba(99,102,241,0.10)" />
-              <stop offset="100%" stopColor="rgba(56,189,248,0.04)" />
-            </linearGradient>
-
-            {/* Body rim-light stroke gradient */}
-            <linearGradient id="body-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(186,230,253,0.95)" />
-              <stop offset="55%" stopColor="rgba(125,211,252,0.7)" />
-              <stop offset="100%" stopColor="rgba(99,102,241,0.55)" />
-            </linearGradient>
-
-            {/* Organ glow filter */}
-            <filter id="organGlow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="2.4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-
-            {/* Per-organ radial gradients (3D shading: light from upper-left) */}
-            {organGradients.map(([id, c]) => (
-              <radialGradient key={id} id={`organ-${id}`} cx="32%" cy="28%" r="75%">
-                <stop offset="0%" stopColor={c.core} stopOpacity={c.active ? 1 : 0.7} />
-                <stop offset="45%" stopColor={c.glow} stopOpacity={c.active ? 0.95 : 0.55} />
-                <stop offset="100%" stopColor={c.primary} stopOpacity={c.active ? 0.6 : 0.2} />
-              </radialGradient>
-            ))}
-          </defs>
-
-          {/* Body silhouette */}
-          <g fill="url(#body-fill)" stroke="url(#body-stroke)" strokeWidth="1.1" strokeLinejoin="round">
-            {/* head */}
-            <ellipse cx="100" cy="42" rx="24" ry="30" />
-            {/* neck */}
-            <path d="M 88 68 L 88 86 Q 100 90 112 86 L 112 68 Z" />
-            {/* torso */}
-            <path d="
-              M 72 86
-              Q 60 88 56 100
-              L 52 138
-              Q 50 162 53 188
-              L 58 220
-              Q 62 230 74 232
-              L 126 232
-              Q 138 230 142 220
-              L 147 188
-              Q 150 162 148 138
-              L 144 100
-              Q 140 88 128 86
-              Z
-            " />
-            {/* left arm */}
-            <path d="
-              M 56 100
-              Q 38 110 32 150
-              Q 28 198 36 240
-              L 52 238
-              Q 54 200 56 170
-              Q 58 140 62 110
-              Z
-            " />
-            {/* right arm */}
-            <path d="
-              M 144 100
-              Q 162 110 168 150
-              Q 172 198 164 240
-              L 148 238
-              Q 146 200 144 170
-              Q 142 140 138 110
-              Z
-            " />
-            {/* left leg */}
-            <path d="
-              M 74 232
-              Q 66 252 68 285
-              Q 70 322 76 360
-              L 82 410
-              L 100 410
-              L 102 360
-              Q 104 322 102 285
-              Q 100 252 100 234
-              Z
-            " />
-            {/* right leg */}
-            <path d="
-              M 126 232
-              Q 134 252 132 285
-              Q 130 322 124 360
-              L 118 410
-              L 100 410
-              L 98 360
-              Q 96 322 98 285
-              Q 100 252 100 234
-              Z
-            " />
+        {/* Floating ECG decorations behind the body */}
+        <svg
+          viewBox="0 0 200 420"
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          aria-hidden
+        >
+          <g stroke="rgba(148,163,184,0.20)" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round" fill="none">
+            <path d="M 12 90 l 5 0 l 2 -6 l 3 12 l 3 -16 l 3 14 l 3 -4 l 9 0" />
+            <path d="M 158 70 l 5 0 l 2 -5 l 3 10 l 3 -14 l 3 12 l 3 -3 l 8 0" />
+            <path d="M 18 230 l 5 0 l 2 -5 l 3 10 l 3 -14 l 3 12 l 3 -3 l 6 0" />
+            <path d="M 162 240 l 5 0 l 2 -6 l 3 12 l 3 -16 l 3 14 l 3 -4 l 6 0" />
+            <path d="M 14 360 l 5 0 l 2 -5 l 3 10 l 3 -14 l 3 12 l 3 -3 l 6 0" />
+            <path d="M 156 350 l 5 0 l 2 -6 l 3 12 l 3 -16 l 3 14 l 3 -4 l 6 0" />
           </g>
-
-          {/* Subtle anatomical hint lines (collarbone, sternum) */}
-          <g stroke="rgba(165,243,252,0.28)" strokeWidth="0.6" fill="none" strokeLinecap="round">
-            <path d="M 72 96 Q 100 104 128 96" />
-            <line x1="100" y1="106" x2="100" y2="216" strokeDasharray="2 4" />
-          </g>
-
-          {/* ─── Organs (with depth glow) ─── */}
-          <g filter="url(#organGlow)">
-            {/* Thyroid — bow-tie at base of neck */}
-            <path
-              d="M 91 80 Q 86 78 86 82 Q 90 84 95 84 L 105 84 Q 110 84 114 82 Q 114 78 109 80 Q 100 76 91 80 Z"
-              fill="url(#organ-thyroid)"
-              stroke={thyroidC.glow}
-              strokeWidth="0.5"
-              strokeOpacity={thyroidC.active ? 0.8 : 0.25}
-            />
-
-            {/* Heart — anatomically left of midline */}
-            <path
-              d="M 86 122
-                 C 79 114, 68 117, 68 128
-                 C 68 140, 86 156, 92 162
-                 C 98 156, 116 140, 116 128
-                 C 116 117, 105 114, 98 122
-                 C 94 127, 90 127, 86 122 Z"
-              fill="url(#organ-heart)"
-              stroke={cardC.glow}
-              strokeWidth="0.7"
-              strokeOpacity={cardC.active ? 0.85 : 0.25}
-            />
-
-            {/* Liver — upper right abdomen, large lobe */}
-            <path
-              d="M 104 168
-                 Q 132 165 142 178
-                 Q 146 192 138 202
-                 Q 124 208 110 204
-                 Q 99 198 100 184
-                 Q 100 173 104 168 Z"
-              fill="url(#organ-liver)"
-              stroke={liverC.glow}
-              strokeWidth="0.7"
-              strokeOpacity={liverC.active ? 0.85 : 0.25}
-            />
-
-            {/* Stomach (metabolic) — upper-left under ribs */}
-            <path
-              d="M 70 178
-                 Q 64 188 70 202
-                 Q 80 212 92 206
-                 Q 96 192 90 180
-                 Q 80 173 70 178 Z"
-              fill="url(#organ-stomach)"
-              stroke={metabC.glow}
-              strokeWidth="0.7"
-              strokeOpacity={metabC.active ? 0.85 : 0.25}
-            />
-
-            {/* Kidneys — bean-shaped, lower back */}
-            <path
-              d="M 76 212 Q 68 216 70 228 Q 73 238 82 235 Q 87 230 86 222 Q 84 213 76 212 Z"
-              fill="url(#organ-kidney)"
-              stroke={kidneyC.glow}
-              strokeWidth="0.6"
-              strokeOpacity={kidneyC.active ? 0.85 : 0.25}
-            />
-            <path
-              d="M 124 212 Q 132 216 130 228 Q 127 238 118 235 Q 113 230 114 222 Q 116 213 124 212 Z"
-              fill="url(#organ-kidney)"
-              stroke={kidneyC.glow}
-              strokeWidth="0.6"
-              strokeOpacity={kidneyC.active ? 0.85 : 0.25}
-            />
-
-            {/* Blood — central droplet at chest level (sternum) */}
-            <path
-              d="M 100 102 Q 95 110 95 116 Q 95 122 100 122 Q 105 122 105 116 Q 105 110 100 102 Z"
-              fill="url(#organ-blood)"
-              stroke={bloodC.glow}
-              strokeWidth="0.6"
-              strokeOpacity={bloodC.active ? 0.85 : 0.25}
-            />
-          </g>
-
-          {/* Active-organ pulse rings (one ring per active flagged organ for emphasis) */}
-          {[
-            { c: cardC, cx: 92, cy: 138, r: 22 },
-            { c: liverC, cx: 122, cy: 188, r: 22 },
-            { c: kidneyC, cx: 100, cy: 224, r: 26 },
-            { c: metabC, cx: 81, cy: 192, r: 18 },
-          ].filter((x) => x.c.active && x.c !== cardC ? false : true).map((p, i) =>
-            p.c.active && p.c.primary !== "#10b981" ? (
-              <circle
-                key={i}
-                cx={p.cx}
-                cy={p.cy}
-                r={p.r}
-                fill="none"
-                stroke={p.c.glow}
-                strokeWidth="0.5"
-                opacity="0.4"
-              >
-                <animate attributeName="r" values={`${p.r * 0.6};${p.r * 1.1};${p.r * 0.6}`} dur="3s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0;0.5;0" dur="3s" repeatCount="indefinite" />
-              </circle>
-            ) : null
-          )}
         </svg>
 
-        {/* Tech corner brackets */}
-        <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-cyan-400/50 pointer-events-none" />
-        <div className="absolute top-2 right-2 w-3 h-3 border-r-2 border-t-2 border-cyan-400/50 pointer-events-none" />
-        <div className="absolute bottom-2 left-2 w-3 h-3 border-l-2 border-b-2 border-cyan-400/50 pointer-events-none" />
-        <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-cyan-400/50 pointer-events-none" />
+        {/* Body SVG */}
+        <svg viewBox="0 0 200 420" className="relative w-full h-auto block">
+          {/* Soft ambient halo behind body */}
+          <ellipse cx="100" cy="220" rx="90" ry="195" fill="rgba(148,163,184,0.05)" />
 
-        {/* Bottom telemetry strip */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 text-[8px] font-mono-data text-cyan-300/70 uppercase tracking-widest pointer-events-none">
-          <span>SYS·{systems.length.toString().padStart(2, "0")}</span>
-          <span className="opacity-50">|</span>
-          <span>CH·{systems.filter((s) => s.score < 80).length.toString().padStart(2, "0")}</span>
-          <span className="opacity-50">|</span>
-          <span className="text-emerald-300/80">LIVE</span>
-        </div>
+          {/* Mesh lines (drawn first, behind dots) */}
+          <g stroke="rgba(249,115,22,0.45)" strokeWidth="0.35" fill="none" strokeLinecap="round">
+            {BODY_MESH.lines.map((l, i) => (
+              <line key={i} x1={l[0]} y1={l[1]} x2={l[2]} y2={l[3]} />
+            ))}
+          </g>
+
+          {/* Particle dots */}
+          <g fill="#f97316">
+            {BODY_MESH.points.map((p, i) => (
+              <circle key={i} cx={p[0]} cy={p[1]} r="0.95" />
+            ))}
+          </g>
+
+          {/* Organ markers — outer pulse ring (for active organs that aren't optimal) */}
+          {organMarkers.map((m) =>
+            m.c.active && m.c.primary !== "#10b981" ? (
+              <g key={`pulse-${m.id}`}>
+                <circle cx={m.cx} cy={m.cy} r={m.r * 2.6} fill="none" stroke={m.c.primary} strokeWidth="0.6" opacity="0.5">
+                  <animate attributeName="r" values={`${m.r * 1.6};${m.r * 3.2};${m.r * 1.6}`} dur="2.6s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;0.55;0" dur="2.6s" repeatCount="indefinite" />
+                </circle>
+                <circle cx={m.cx} cy={m.cy} r={m.r * 1.9} fill="none" stroke={m.c.primary} strokeWidth="0.5" opacity="0.4">
+                  <animate attributeName="r" values={`${m.r * 1.3};${m.r * 2.4};${m.r * 1.3}`} dur="2.6s" begin="0.4s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0;0.4;0" dur="2.6s" begin="0.4s" repeatCount="indefinite" />
+                </circle>
+              </g>
+            ) : null
+          )}
+
+          {/* Organ markers — colored circle with white core (matches reference) */}
+          {organMarkers.map((m) => (
+            <g key={`marker-${m.id}`}>
+              {/* outer halo */}
+              <circle cx={m.cx} cy={m.cy} r={m.r + 2.5} fill={m.c.primary} opacity={m.c.active ? 0.18 : 0.08} />
+              {/* main filled circle */}
+              <circle
+                cx={m.cx}
+                cy={m.cy}
+                r={m.r}
+                fill={m.c.primary}
+                stroke="white"
+                strokeWidth="1.2"
+                opacity={m.c.active ? 0.95 : 0.5}
+              />
+              {/* inner highlight */}
+              <circle
+                cx={m.cx - m.r * 0.25}
+                cy={m.cy - m.r * 0.25}
+                r={m.r * 0.35}
+                fill="white"
+                opacity={m.c.active ? 0.55 : 0.35}
+              />
+              <title>{m.sys ? `${m.label} · ${m.sys.score}` : m.label}</title>
+            </g>
+          ))}
+        </svg>
       </div>
 
       {/* Legend */}
       <div className="grid grid-cols-3 gap-x-3 gap-y-1.5 w-full">
-        {[
-          { c: cardC, label: "Heart", sys: card },
-          { c: liverC, label: "Liver", sys: liver },
-          { c: kidneyC, label: "Kidney", sys: kidney },
-          { c: metabC, label: "Metabolic", sys: metab },
-          { c: thyroidC, label: "Thyroid", sys: thyroid },
-          { c: bloodC, label: "Blood", sys: blood },
-        ].map((it, i) => (
-          <div key={i} className="flex items-center gap-1.5 text-[10px]">
+        {organMarkers.map((m) => (
+          <div key={m.id} className="flex items-center gap-1.5 text-[10px]">
             <span
-              className="w-2 h-2 rounded-full flex-shrink-0"
+              className="w-2.5 h-2.5 rounded-full flex-shrink-0 border border-white"
               style={{
-                background: it.c.primary,
-                boxShadow: it.c.active ? `0 0 8px ${it.c.glow}` : "none",
-                opacity: it.c.active ? 1 : 0.45,
+                background: m.c.primary,
+                boxShadow: m.c.active ? `0 0 8px ${m.c.glow}` : "none",
+                opacity: m.c.active ? 1 : 0.5,
               }}
             />
-            <span className="text-ink-secondary truncate">{it.label}</span>
-            {it.sys && <span className={`font-bold tabular-nums ${scoreColor(it.sys.score)} ml-auto`}>{it.sys.score}</span>}
+            <span className="text-ink-secondary truncate">{m.label}</span>
+            {m.sys && <span className={`font-bold tabular-nums ${scoreColor(m.sys.score)} ml-auto`}>{m.sys.score}</span>}
           </div>
         ))}
       </div>
