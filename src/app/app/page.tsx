@@ -7,6 +7,7 @@ import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
+import LabChatPanel from "@/components/LabChatPanel";
 import { track } from "@/lib/track";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -470,8 +471,8 @@ function LoadingAnimation({ mode }: { mode: ReportMode }) {
       </div>
 
       {/* Privacy reassurance */}
-      <p className="text-xs text-ink-tertiary text-center max-w-[260px] leading-relaxed">
-        Your file is never stored. This session is completely private.
+      <p className="text-xs text-ink-tertiary text-center max-w-[280px] leading-relaxed">
+        Your file is never stored. Only the AI interpretation is saved to your account.
       </p>
     </div>
   );
@@ -1503,8 +1504,29 @@ function ShareSection({ simple }: { simple: string }) {
   );
 }
 
-function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean; mode: ReportMode; lang: string }) {
-  const [activeTier, setActiveTier] = useState<Tier>("simple");
+function ResultsPanel({
+  result,
+  fileName,
+  onReset,
+  isSample,
+  mode,
+  lang,
+  activeTier,
+  setActiveTier,
+  savedAnalysisId,
+  isSignedIn,
+}: {
+  result: AnalysisResult;
+  fileName: string;
+  onReset: () => void;
+  isSample: boolean;
+  mode: ReportMode;
+  lang: string;
+  activeTier: Tier;
+  setActiveTier: (t: Tier) => void;
+  savedAnalysisId: string | null;
+  isSignedIn: boolean;
+}) {
   const [copied, setCopied] = useState(false);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
@@ -1905,6 +1927,21 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
             Download as PDF
           </button>
         </div>
+      </div>
+
+      {/* ─── SECTION: ASK FOLLOW-UP QUESTIONS (chat panel) ──────────── */}
+      <div>
+        <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 print:hidden">
+          Follow-up Questions
+        </p>
+        <LabChatPanel
+          result={result}
+          tier={activeTier}
+          fileName={fileName}
+          isSample={isSample}
+          savedAnalysisId={savedAnalysisId}
+          isSignedIn={isSignedIn}
+        />
       </div>
 
       {/* Disclaimer */}
@@ -2347,6 +2384,7 @@ export default function AppPage() {
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [healthFile, setHealthFile] = useState<File | null>(null);
   const [demoTier, setDemoTier] = useState<"simple" | "medium" | "expert">("simple");
+  const [activeTier, setActiveTier] = useState<Tier>("simple");
 
   // ── Signed-in profile autofill ─────────────────────────────────────
   // Note: useUser() must be called inside a ClerkProvider. When AUTH_ENABLED
@@ -2525,6 +2563,9 @@ export default function AppPage() {
     setIsSample(false);
     setPendingFile(null);
     setHealthFile(null);
+    setActiveTier("simple");
+    setSavedAnalysisId(null);
+    setSaveError(null);
   };
 
   return (
@@ -2712,7 +2753,18 @@ export default function AppPage() {
           ) : state === "loading" ? (
             <LoadingAnimation mode={reportMode} />
           ) : result ? (
-            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} lang={lang} />
+            <ResultsPanel
+              result={result}
+              fileName={fileName}
+              onReset={handleReset}
+              isSample={isSample}
+              mode={reportMode}
+              lang={lang}
+              activeTier={activeTier}
+              setActiveTier={setActiveTier}
+              savedAnalysisId={savedAnalysisId}
+              isSignedIn={isSignedIn}
+            />
           ) : null}
         </div>
 
