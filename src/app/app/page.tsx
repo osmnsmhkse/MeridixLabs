@@ -115,6 +115,61 @@ interface AnalysisResult {
   urgency?: UrgencyLevel;
 }
 
+// ── Anonymous-user analysis persistence (localStorage) ───────────────────────
+// Signed-in users save through /api/save-analysis → Supabase. Anonymous users
+// keep a snapshot of their most recent analysis on this device so refreshing
+// the page (or coming back to /app later) restores their interpretation and
+// chat history. Cleared on "New upload" or after 30 days.
+const ANON_STORE_KEY = "meridix_anon_analysis_v1";
+const ANON_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+interface AnonAnalysis {
+  result: AnalysisResult;
+  fileName: string;
+  isSample: boolean;
+  reportMode: ReportMode;
+  activeTier: Tier;
+  savedAt: number;
+}
+
+function readAnonAnalysis(): AnonAnalysis | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(ANON_STORE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as AnonAnalysis;
+    if (!parsed?.result || typeof parsed.savedAt !== "number") return null;
+    if (Date.now() - parsed.savedAt > ANON_TTL_MS) {
+      localStorage.removeItem(ANON_STORE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeAnonAnalysis(data: Omit<AnonAnalysis, "savedAt">) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(
+      ANON_STORE_KEY,
+      JSON.stringify({ ...data, savedAt: Date.now() }),
+    );
+  } catch {
+    /* quota or disabled */
+  }
+}
+
+function clearAnonAnalysis() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(ANON_STORE_KEY);
+  } catch {
+    /* noop */
+  }
+}
+
 // ── Pre-built demo result (instant, no API call) ──────────────────────────────
 const DEMO_RESULT: AnalysisResult = {
   overall_status: "amber",
@@ -2429,6 +2484,45 @@ export default function AppPage() {
     })();
   }, [clerkLoaded, clerkSignedIn]);
 
+  // ── Restore last anonymous analysis on mount (anonymous users only) ──
+  // Signed-in users get their history from Supabase, so we only restore
+  // the localStorage snapshot when Clerk has resolved and the user is not
+  // signed in. We only auto-restore once, and only when the page is in the
+  // empty/idle state (so we never clobber a fresh session).
+  const anonRestoreAttemptedRef = useRef(false);
+  useEffect(() => {
+    if (!clerkLoaded) return;
+    if (isSignedIn) return;
+    if (anonRestoreAttemptedRef.current) return;
+    if (state !== "idle" || result !== null) return;
+
+    const saved = readAnonAnalysis();
+    anonRestoreAttemptedRef.current = true;
+    if (!saved) return;
+
+    setResult(saved.result);
+    setFileName(saved.fileName);
+    setIsSample(saved.isSample);
+    setReportMode(saved.reportMode);
+    setActiveTier(saved.activeTier);
+    setState("success");
+  }, [clerkLoaded, isSignedIn, state, result]);
+
+  // ── Persist tier changes so a refresh restores the same depth ──
+  useEffect(() => {
+    if (!clerkLoaded) return;
+    if (isSignedIn) return;
+    if (state !== "success" || !result) return;
+    if (isSample) return; // don't persist demo data
+    writeAnonAnalysis({
+      result,
+      fileName,
+      isSample,
+      reportMode,
+      activeTier,
+    });
+  }, [activeTier, clerkLoaded, isSignedIn, state, result, fileName, isSample, reportMode]);
+
   const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
     setErrorCode(code);
     setError(msg ?? code);
@@ -2566,6 +2660,8 @@ export default function AppPage() {
     setActiveTier("simple");
     setSavedAnalysisId(null);
     setSaveError(null);
+    // Anonymous users: drop the persisted snapshot so the next visit is fresh
+    if (!isSignedIn) clearAnonAnalysis();
   };
 
   return (
