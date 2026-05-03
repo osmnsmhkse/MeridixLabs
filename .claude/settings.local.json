@@ -89,7 +89,8 @@
       "Bash(python3 -c \"import json,sys; print\\(json.load\\(sys.stdin\\)\\)\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('node engines:', d.get\\('engines',{}\\)\\); print\\('next version:', d.get\\('dependencies',{}\\).get\\('next',''\\)\\)\")",
       "Bash(git commit *)",
-      "Bash(node scripts/test-supabase.mjs)"
+      "Bash(node scripts/test-supabase.mjs)",
+      "Bash(npx eslint *)"
     ]
   }
 }

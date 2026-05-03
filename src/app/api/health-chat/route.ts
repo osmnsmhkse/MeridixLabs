@@ -1,8 +1,10 @@
 // POST /api/health-chat
-// Body: { messages: { role: "user"|"assistant", content: string }[] }
-// Streams a Claude response grounded in the signed-in user's lab history
+// Body: { messages: { role: "user"|"assistant", content: string | ContentBlock[] }[] }
+//   ContentBlock = { type: "text", text } | { type: "image", source: { type: "base64", media_type, data } }
+// Returns a Claude response grounded in the signed-in user's lab history
 // + profile. Profile + recent labs become a system message; the user's
-// chat turns are appended verbatim.
+// chat turns are appended verbatim. Multimodal content blocks are passed
+// through to Claude untouched (used for attachment uploads from the chat UI).
 
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
@@ -79,7 +81,14 @@ export async function POST(request: NextRequest) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await request.json();
-    const messages: { role: "user" | "assistant"; content: string }[] = Array.isArray(body?.messages) ? body.messages : [];
+    type ContentBlock =
+      | { type: "text"; text: string }
+      | { type: "image"; source: { type: "base64"; media_type: string; data: string } };
+    interface IncomingMsg {
+      role: "user" | "assistant";
+      content: string | ContentBlock[];
+    }
+    const messages: IncomingMsg[] = Array.isArray(body?.messages) ? body.messages : [];
     if (!messages.length) return NextResponse.json({ error: "No messages." }, { status: 400 });
 
     const sb = supabaseServer();
@@ -111,10 +120,10 @@ export async function POST(request: NextRequest) {
       .replace("{systems}", systemsTxt);
 
     const resp = await client.messages.create({
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system: sys,
-      messages,
+      messages: messages as Anthropic.MessageParam[],
     });
 
     const reply = resp.content
