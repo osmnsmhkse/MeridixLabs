@@ -79,10 +79,10 @@ export default function LandingPage() {
           {/* Trust signals */}
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-8 reveal reveal-delay-4">
             {[
-              { icon: "✓", text: "No data stored" },
+              { icon: "✓", text: "Encrypted & private" },
               { icon: "⚡", text: "Results in < 10s" },
               { icon: "◎", text: "AI-powered analysis" },
-              { icon: "✦", text: "No account needed" },
+              { icon: "✦", text: "Free to try" },
             ].map((s) => (
               <span key={s.text} className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary">
                 <span className="text-brand-blue">{s.icon}</span>
@@ -175,7 +175,7 @@ export default function LandingPage() {
               <span className="kicker-mono text-brand-blue">Simple process</span>
             </span>
             <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">Three steps to clarity</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">From upload to understanding in seconds. No account needed.</p>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">From upload to understanding in seconds. Free to try — create a free account to save your history.</p>
           </div>
 
           {/* Steps with connecting line */}
@@ -424,10 +424,10 @@ export default function LandingPage() {
           {/* Compact trust signals */}
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 mb-16 reveal reveal-delay-1">
             {[
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "No data stored" },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "Encrypted & private" },
               { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, text: "Results in seconds" },
               { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V15" /></svg>, text: "Advanced AI analysis" },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "No account needed" },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "Free to try" },
             ].map((item) => (
               <div key={item.text} className="flex items-center gap-2.5 text-sm text-ink-secondary">
                 <span className="text-brand-blue">{item.icon}</span>
@@ -583,7 +583,7 @@ export default function LandingPage() {
                 Ready to understand your results?
               </h2>
               <p className="text-lg mb-10" style={{ color: "rgba(200,205,255,0.75)" }}>
-                No account. No storage. No confusion. Just clarity.
+                Encrypted, deletable, in your control. Just clarity.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
