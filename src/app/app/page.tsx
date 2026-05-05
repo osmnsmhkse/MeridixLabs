@@ -1840,6 +1840,16 @@ function ResultsPanel({
             </div>
           </div>
 
+          {/* Lab panel by body system — merged into the results card (lab reports only) */}
+          {mode === "lab" && (((result.labs?.length ?? 0) > 0) || ((result.flags?.length ?? 0) > 0)) && (
+            <div className="border-t border-surface-border bg-surface-raised/30 px-5 py-5">
+              <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">
+                Grouped by Body System
+              </p>
+              <LabPanelBySystem labs={result.labs} flags={result.flags} />
+            </div>
+          )}
+
           {/* What should you do? — merged at the bottom of the results card */}
           <div className="border-t border-brand-blue/10 bg-brand-blue-light/50 dark:bg-brand-blue/5 p-5">
             <div className="flex items-start gap-3">
@@ -1856,16 +1866,6 @@ function ResultsPanel({
           </div>
         </div>
       </div>
-
-      {/* ─── SECTION 1.5: LAB PANEL BY BODY SYSTEM (lab reports only) ────────── */}
-      {mode === "lab" && (((result.labs?.length ?? 0) > 0) || ((result.flags?.length ?? 0) > 0)) && (
-        <div>
-          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-            Lab Panel · Grouped by Body System
-          </p>
-          <LabPanelBySystem labs={result.labs} flags={result.flags} />
-        </div>
-      )}
 
       {/* ─── SECTION 2: DEEPER ANALYSIS ──────────────────────────────────────── */}
       {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (
