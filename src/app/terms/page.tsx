@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = "May 5, 2026";
-const CONTACT_EMAIL = "hello@meridixlabs.com";
+const CONTACT_EMAIL = "contact@meridixlabs.com";
 
 export default function TermsPage() {
   return (
@@ -259,11 +259,13 @@ export default function TermsPage() {
           {/* 13 */}
           <Section number="13" title="Governing law and disputes">
             <p>
-              These Terms are governed by the laws of the jurisdiction in which Meridix
-              Labs is operated, without regard to conflict-of-laws principles. Any
-              disputes will be resolved in the competent courts of that jurisdiction,
-              except where mandatory consumer-protection laws of your country of
-              residence give you the right to bring a claim in your local courts.
+              Meridix Labs is operated by an individual founder based in the Republic
+              of Türkiye. These Terms are governed by the laws of the Republic of
+              Türkiye, without regard to conflict-of-laws principles. Any disputes
+              arising out of or relating to these Terms or the Service will be
+              resolved by the competent Turkish courts in Istanbul, except where
+              mandatory consumer-protection laws of your country of residence give
+              you the right to bring a claim in your local courts.
             </p>
             <p>
               We&apos;ll always try to resolve issues directly with you first — please

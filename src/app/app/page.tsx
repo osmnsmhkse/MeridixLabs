@@ -325,7 +325,7 @@ function getErrorConfig(code: ErrorCode, fileSizeMB?: string): ErrorConfig {
         ),
         title: "Something went wrong",
         message:
-          "Something went wrong on our end. This happens occasionally — please try again. If it keeps happening, email us at hello@meridixlabs.com",
+          "Something went wrong on our end. This happens occasionally — please try again. If it keeps happening, email us at contact@meridixlabs.com",
         accent: redAccent,
       };
   }

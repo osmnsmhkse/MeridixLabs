@@ -101,7 +101,7 @@ export default function Footer() {
 
               {/* Mail */}
               <a
-                href="mailto:hello@meridixlabs.com"
+                href="mailto:contact@meridixlabs.com"
                 aria-label="Send us an email"
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-surface-border dark:border-slate-700 bg-surface dark:bg-slate-800 text-ink-tertiary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 transition-all duration-200"
               >

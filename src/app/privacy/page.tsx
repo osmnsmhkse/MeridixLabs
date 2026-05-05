@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const LAST_UPDATED = "May 5, 2026";
-const CONTACT_EMAIL = "hello@meridixlabs.com";
+const CONTACT_EMAIL = "contact@meridixlabs.com";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -76,13 +76,15 @@ export default function PrivacyPolicyPage() {
             <p>
               Meridix Labs (&quot;Meridix,&quot; &quot;we,&quot; &quot;us&quot;) operates the
               website at meridixlabs.com and the related services that help you understand
-              your medical lab results. This Privacy Policy explains what information we
-              collect when you use those services, why we collect it, and what your rights
-              are.
+              your medical lab results. The service is operated by an individual founder
+              based in the Republic of Türkiye and is the &quot;data controller&quot; for
+              the personal data described in this policy.
             </p>
             <p>
-              By using Meridix Labs you accept this Privacy Policy. If you don&apos;t agree
-              with it, please don&apos;t use the service.
+              This Privacy Policy explains what information we collect when you use those
+              services, why we collect it, and what your rights are. By using Meridix Labs
+              you accept this Privacy Policy. If you don&apos;t agree with it, please
+              don&apos;t use the service.
             </p>
           </Section>
 
@@ -370,6 +372,21 @@ export default function PrivacyPolicyPage() {
               </Item>
             </ul>
             <p className="mt-4 text-xs text-ink-tertiary leading-relaxed">
+              <strong className="text-ink-secondary">If you&apos;re in Türkiye:</strong> The
+              rights above include your statutory rights under KVKK (Kişisel Verilerin
+              Korunması Kanunu) Article 11 — to learn whether we process your data, to
+              request information about how it&apos;s being used, to request correction or
+              deletion, and to object to processing. Requests can be sent to the contact
+              address below. If you&apos;re not satisfied with our response, you can lodge
+              a complaint with the Turkish Personal Data Protection Authority (KVKK).
+            </p>
+            <p className="mt-3 text-xs text-ink-tertiary leading-relaxed">
+              <strong className="text-ink-secondary">If you&apos;re in the EU/UK:</strong>{" "}
+              The rights above include your statutory GDPR/UK-GDPR rights to access,
+              rectification, erasure, restriction, portability, and objection.
+            </p>
+            <p className="mt-3 text-xs text-ink-tertiary leading-relaxed">
+              <strong className="text-ink-secondary">If you&apos;re in the U.S.:</strong>{" "}
               For users in California (CCPA), Colorado (CPA), Virginia (VCDPA), and other
               U.S. states with privacy laws, the rights above include your statutory
               rights to access, delete, and opt out of the &quot;sale&quot; of personal
@@ -421,12 +438,18 @@ export default function PrivacyPolicyPage() {
           {/* 11. International */}
           <Section number="11" title="International data transfers">
             <p>
-              Meridix Labs is operated globally. Depending on the location of our
-              sub-processors&apos; infrastructure, your data may be processed in the
-              United States, the European Union, or other regions. By using Meridix Labs
-              you consent to your data being processed in those regions, subject to the
-              safeguards described in this policy and our sub-processors&apos; own
-              international-transfer commitments (e.g., Standard Contractual Clauses).
+              Meridix Labs is operated from the Republic of Türkiye and serves users
+              globally. Because our sub-processors (listed in Section 5) have
+              infrastructure outside Türkiye, your personal data may be transferred to
+              and processed in the United States, the European Union, or other regions.
+            </p>
+            <p>
+              By using Meridix Labs you consent to your data being processed in those
+              regions, subject to the safeguards described in this policy and our
+              sub-processors&apos; own international-transfer commitments (e.g., Standard
+              Contractual Clauses for EU-origin data, KVKK-compliant transfer mechanisms
+              for Türkiye-origin data). If you do not consent to these transfers, please
+              do not use the Service.
             </p>
           </Section>
 
