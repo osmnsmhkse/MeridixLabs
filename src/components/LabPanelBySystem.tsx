@@ -421,29 +421,33 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
 
   return (
     <div>
-      {/* Top stats banner */}
+      {/* Top overview — stats + body systems integrated */}
       <div className="rounded-2xl border border-surface-border bg-gradient-to-br from-brand-blue/5 via-white to-emerald-500/5 dark:from-brand-blue/10 dark:via-slate-900 dark:to-emerald-500/10 p-5 mb-3">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {/* Headline summary */}
+        <div className="flex items-end justify-between gap-3 flex-wrap mb-4">
           <div>
-            <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Markers</p>
-            <p className="text-2xl font-extrabold text-ink tabular-nums leading-none mt-1">{totalMarkers}</p>
+            <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Lab panel</p>
+            <p className="text-2xl font-extrabold text-ink tabular-nums leading-tight mt-1">
+              {totalMarkers}
+              <span className="text-base font-semibold text-ink-tertiary ml-1.5">markers · {groups.length} systems</span>
+            </p>
           </div>
-          <div>
-            <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Body Systems</p>
-            <p className="text-2xl font-extrabold text-ink tabular-nums leading-none mt-1">{groups.length}</p>
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">In Range</p>
-            <p className="text-2xl font-extrabold text-emerald-600 tabular-nums leading-none mt-1">{totalMarkers - totalFlagged}<span className="text-sm font-bold text-ink-tertiary ml-1">·{inRangePct}%</span></p>
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-red-700 dark:text-red-400 uppercase tracking-wider">Flagged</p>
-            <p className="text-2xl font-extrabold text-red-600 tabular-nums leading-none mt-1">{totalFlagged}</p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
+              {totalMarkers - totalFlagged} in range · {inRangePct}%
+            </span>
+            {totalFlagged > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/60">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500" aria-hidden />
+                {totalFlagged} flagged
+              </span>
+            )}
           </div>
         </div>
 
-        {/* System chips overview */}
-        <div className="mt-4 pt-4 border-t border-surface-border flex items-center gap-2 flex-wrap">
+        {/* Body system grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
           {groups.map((g) => {
             const meta = BODY_SYSTEMS[g.system];
             const allClear = g.flagged.length === 0;
@@ -451,15 +455,23 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
               <a
                 key={g.system}
                 href={`#system-${g.system}`}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border transition-colors ${
                   allClear
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300"
-                    : "border-red-200 bg-red-50 text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300"
+                    ? "border-emerald-200/70 bg-emerald-50/50 hover:bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 dark:hover:bg-emerald-950/40"
+                    : "border-red-200/70 bg-red-50/50 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20 dark:hover:bg-red-950/40"
                 }`}
               >
-                <span aria-hidden>{meta.emoji}</span>
-                {meta.label}
-                <span className="opacity-60">·{g.flagged.length}/{g.total}</span>
+                <span className="text-base leading-none flex-shrink-0" aria-hidden>{meta.emoji}</span>
+                <div className="min-w-0 flex-1">
+                  <p className={`text-[11px] font-semibold truncate ${
+                    allClear ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"
+                  }`}>{meta.label}</p>
+                  <p className="text-[10px] tabular-nums text-ink-tertiary mt-0.5">
+                    {allClear
+                      ? `${g.total}/${g.total} clear`
+                      : `${g.flagged.length} of ${g.total} flagged`}
+                  </p>
+                </div>
               </a>
             );
           })}
