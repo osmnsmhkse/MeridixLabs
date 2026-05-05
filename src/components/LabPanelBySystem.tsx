@@ -98,6 +98,93 @@ function parseLab(raw: RawLab): ParsedLab {
   };
 }
 
+// ── System icons ──────────────────────────────────────────────────────────────
+
+function SystemIcon({ system, className = "" }: { system: BodySystem; className?: string }) {
+  const svgProps = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.75,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    className,
+    "aria-hidden": true,
+  };
+  switch (system) {
+    case "cardiovascular":
+      return (
+        <svg {...svgProps}>
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+        </svg>
+      );
+    case "metabolic":
+      return (
+        <svg {...svgProps}>
+          <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+      );
+    case "liver":
+      return (
+        <svg {...svgProps}>
+          <path d="M19 5c-3 0-5 1.5-7 4-2-2.5-4-4-7-4-1.5 0-3 1-3 3 0 6 5 11 10 11s10-5 10-11c0-2-1.5-3-3-3z" />
+          <path d="M9 12h2" />
+        </svg>
+      );
+    case "kidney":
+      return (
+        <svg {...svgProps}>
+          <path d="M7 21a5 5 0 0 1-5-5V8a5 5 0 0 1 9.5-2.2 5 5 0 0 1 9.5 2.2v8a5 5 0 0 1-9.5 2.2A5 5 0 0 1 7 21z" />
+          <path d="M11.5 5.8v12.4" />
+        </svg>
+      );
+    case "thyroid":
+      return (
+        <svg {...svgProps}>
+          <path d="M12 9c-1.2-2.5-3.5-4-6-4s-4 1.5-4 3c0 4 3 7 10 8 7-1 10-4 10-8 0-1.5-1.5-3-4-3s-4.8 1.5-6 4z" />
+          <path d="M12 9v9" />
+        </svg>
+      );
+    case "inflammation":
+      return (
+        <svg {...svgProps}>
+          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+        </svg>
+      );
+    case "hematology":
+      return (
+        <svg {...svgProps}>
+          <path d="M12 2.69 6.34 8.35a8 8 0 1 0 11.31 0z" />
+          <path d="M12 13.5a3 3 0 0 0 3 3" />
+        </svg>
+      );
+    case "nutrients":
+      return (
+        <svg {...svgProps}>
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z" />
+          <path d="M2 21c0-3 1.85-5.36 5.08-6" />
+        </svg>
+      );
+    case "hormonal":
+      return (
+        <svg {...svgProps}>
+          <circle cx="12" cy="12" r="1.5" />
+          <ellipse cx="12" cy="12" rx="10" ry="4.5" />
+          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)" />
+          <ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)" />
+        </svg>
+      );
+    case "other":
+      return (
+        <svg {...svgProps}>
+          <path d="M10 2v8.5L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 10.5V2" />
+          <path d="M8.5 2h7" />
+          <path d="M7 16h10" />
+        </svg>
+      );
+  }
+}
+
 // ── System metadata ───────────────────────────────────────────────────────────
 
 const SYSTEM_DESCRIPTIONS: Record<BodySystem, string> = {
@@ -300,7 +387,9 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
       {/* Header */}
       <div className="px-5 py-4 border-b border-surface-border bg-gradient-to-r from-surface-raised/60 to-transparent flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-2xl flex-shrink-0" aria-hidden>{meta.emoji}</span>
+          <span className={`flex items-center justify-center w-9 h-9 rounded-xl bg-surface-raised ${headerColor} flex-shrink-0`}>
+            <SystemIcon system={group.system} className="w-5 h-5" />
+          </span>
           <div className="min-w-0">
             <p className={`text-sm font-bold ${headerColor}`}>{meta.label}</p>
             <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5 hidden sm:block">{description}</p>
@@ -461,7 +550,12 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
                     : "border-red-200/70 bg-red-50/50 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20 dark:hover:bg-red-950/40"
                 }`}
               >
-                <span className="text-base leading-none flex-shrink-0" aria-hidden>{meta.emoji}</span>
+                <SystemIcon
+                  system={g.system}
+                  className={`w-4 h-4 flex-shrink-0 ${
+                    allClear ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                  }`}
+                />
                 <div className="min-w-0 flex-1">
                   <p className={`text-[11px] font-semibold truncate ${
                     allClear ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"
