@@ -63,6 +63,16 @@ export default function Footer() {
                   About
                 </Link>
               </li>
+              <li>
+                <Link href="/privacy" className="text-sm text-ink-secondary hover:text-brand-blue transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-sm text-ink-secondary hover:text-brand-blue transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
             <div className="flex items-center gap-2">
               {/* X / Twitter */}
