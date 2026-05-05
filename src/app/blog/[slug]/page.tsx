@@ -217,7 +217,7 @@ export default async function BlogPostPage({
               Want to understand your own lab results?
             </h3>
             <p className="text-white/80 text-sm mb-5 leading-relaxed">
-              Upload your blood test, lipid panel, or CBC and get an instant AI interpretation — in plain English or full clinical detail. No account required.
+              Upload your blood test, lipid panel, or CBC and get an instant AI interpretation — in plain English or full clinical detail. Free to try.
             </p>
             <Link
               href="/app"

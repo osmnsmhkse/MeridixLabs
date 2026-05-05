@@ -67,6 +67,25 @@ create index if not exists lab_analyses_user_idx          on public.lab_analyses
 create index if not exists lab_analyses_report_date_idx   on public.lab_analyses(user_id, report_date desc);
 
 -- ─────────────────────────────────────────────────────────────────────
+-- lab_chat_messages
+--   Persisted chat between the user and Meridix AI about a specific
+--   analyzed lab report. Anonymous users keep history in localStorage;
+--   only signed-in users land here.
+-- ─────────────────────────────────────────────────────────────────────
+create table if not exists public.lab_chat_messages (
+  id           uuid primary key default gen_random_uuid(),
+  user_id      text not null references public.users_profile(user_id) on delete cascade,
+  analysis_id  uuid not null references public.lab_analyses(id) on delete cascade,
+  role         text not null check (role in ('user','assistant')),
+  content      text not null,
+  tier         text check (tier in ('simple','medium','expert') or tier is null),
+  created_at   timestamptz default now()
+);
+
+create index if not exists lab_chat_messages_analysis_idx on public.lab_chat_messages(analysis_id, created_at asc);
+create index if not exists lab_chat_messages_user_idx     on public.lab_chat_messages(user_id, created_at desc);
+
+-- ─────────────────────────────────────────────────────────────────────
 -- symptom_sessions — /symptom tool history
 -- ─────────────────────────────────────────────────────────────────────
 create table if not exists public.symptom_sessions (
@@ -116,6 +135,7 @@ create index if not exists practice_sessions_user_idx on public.practice_session
 -- ─────────────────────────────────────────────────────────────────────
 alter table public.users_profile      enable row level security;
 alter table public.lab_analyses       enable row level security;
+alter table public.lab_chat_messages  enable row level security;
 alter table public.symptom_sessions   enable row level security;
 alter table public.diagnosis_sessions enable row level security;
 alter table public.practice_sessions  enable row level security;

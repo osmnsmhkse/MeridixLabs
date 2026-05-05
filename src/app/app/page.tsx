@@ -7,6 +7,7 @@ import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
+import LabChatPanel from "@/components/LabChatPanel";
 import { track } from "@/lib/track";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -112,6 +113,61 @@ interface AnalysisResult {
   overall_status?: OverallStatus;
   summary_headline?: string;
   urgency?: UrgencyLevel;
+}
+
+// ── Anonymous-user analysis persistence (localStorage) ───────────────────────
+// Signed-in users save through /api/save-analysis → Supabase. Anonymous users
+// keep a snapshot of their most recent analysis on this device so refreshing
+// the page (or coming back to /app later) restores their interpretation and
+// chat history. Cleared on "New upload" or after 30 days.
+const ANON_STORE_KEY = "meridix_anon_analysis_v1";
+const ANON_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+interface AnonAnalysis {
+  result: AnalysisResult;
+  fileName: string;
+  isSample: boolean;
+  reportMode: ReportMode;
+  activeTier: Tier;
+  savedAt: number;
+}
+
+function readAnonAnalysis(): AnonAnalysis | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(ANON_STORE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as AnonAnalysis;
+    if (!parsed?.result || typeof parsed.savedAt !== "number") return null;
+    if (Date.now() - parsed.savedAt > ANON_TTL_MS) {
+      localStorage.removeItem(ANON_STORE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeAnonAnalysis(data: Omit<AnonAnalysis, "savedAt">) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(
+      ANON_STORE_KEY,
+      JSON.stringify({ ...data, savedAt: Date.now() }),
+    );
+  } catch {
+    /* quota or disabled */
+  }
+}
+
+function clearAnonAnalysis() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(ANON_STORE_KEY);
+  } catch {
+    /* noop */
+  }
 }
 
 // ── Pre-built demo result (instant, no API call) ──────────────────────────────
@@ -470,8 +526,8 @@ function LoadingAnimation({ mode }: { mode: ReportMode }) {
       </div>
 
       {/* Privacy reassurance */}
-      <p className="text-xs text-ink-tertiary text-center max-w-[260px] leading-relaxed">
-        Your file is never stored. This session is completely private.
+      <p className="text-xs text-ink-tertiary text-center max-w-[280px] leading-relaxed">
+        Your file is never stored. Only the AI interpretation is saved to your account.
       </p>
     </div>
   );
@@ -1503,8 +1559,29 @@ function ShareSection({ simple }: { simple: string }) {
   );
 }
 
-function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { result: AnalysisResult; fileName: string; onReset: () => void; isSample: boolean; mode: ReportMode; lang: string }) {
-  const [activeTier, setActiveTier] = useState<Tier>("simple");
+function ResultsPanel({
+  result,
+  fileName,
+  onReset,
+  isSample,
+  mode,
+  lang,
+  activeTier,
+  setActiveTier,
+  savedAnalysisId,
+  isSignedIn,
+}: {
+  result: AnalysisResult;
+  fileName: string;
+  onReset: () => void;
+  isSample: boolean;
+  mode: ReportMode;
+  lang: string;
+  activeTier: Tier;
+  setActiveTier: (t: Tier) => void;
+  savedAnalysisId: string | null;
+  isSignedIn: boolean;
+}) {
   const [copied, setCopied] = useState(false);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
@@ -1905,6 +1982,21 @@ function ResultsPanel({ result, fileName, onReset, isSample, mode, lang }: { res
             Download as PDF
           </button>
         </div>
+      </div>
+
+      {/* ─── SECTION: ASK FOLLOW-UP QUESTIONS (chat panel) ──────────── */}
+      <div>
+        <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 print:hidden">
+          Follow-up Questions
+        </p>
+        <LabChatPanel
+          result={result}
+          tier={activeTier}
+          fileName={fileName}
+          isSample={isSample}
+          savedAnalysisId={savedAnalysisId}
+          isSignedIn={isSignedIn}
+        />
       </div>
 
       {/* Disclaimer */}
@@ -2308,7 +2400,7 @@ function ContextForm({
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary flex-shrink-0">
           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
         </svg>
-        <p className="text-xs text-ink-tertiary">Not stored. Used only to improve your interpretation.</p>
+        <p className="text-xs text-ink-tertiary">Used to tailor this interpretation. Saved to your account if you&apos;re signed in.</p>
       </div>
 
       {/* Actions */}
@@ -2347,6 +2439,7 @@ export default function AppPage() {
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [healthFile, setHealthFile] = useState<File | null>(null);
   const [demoTier, setDemoTier] = useState<"simple" | "medium" | "expert">("simple");
+  const [activeTier, setActiveTier] = useState<Tier>("simple");
 
   // ── Signed-in profile autofill ─────────────────────────────────────
   // Note: useUser() must be called inside a ClerkProvider. When AUTH_ENABLED
@@ -2390,6 +2483,45 @@ export default function AppPage() {
       }
     })();
   }, [clerkLoaded, clerkSignedIn]);
+
+  // ── Restore last anonymous analysis on mount (anonymous users only) ──
+  // Signed-in users get their history from Supabase, so we only restore
+  // the localStorage snapshot when Clerk has resolved and the user is not
+  // signed in. We only auto-restore once, and only when the page is in the
+  // empty/idle state (so we never clobber a fresh session).
+  const anonRestoreAttemptedRef = useRef(false);
+  useEffect(() => {
+    if (!clerkLoaded) return;
+    if (isSignedIn) return;
+    if (anonRestoreAttemptedRef.current) return;
+    if (state !== "idle" || result !== null) return;
+
+    const saved = readAnonAnalysis();
+    anonRestoreAttemptedRef.current = true;
+    if (!saved) return;
+
+    setResult(saved.result);
+    setFileName(saved.fileName);
+    setIsSample(saved.isSample);
+    setReportMode(saved.reportMode);
+    setActiveTier(saved.activeTier);
+    setState("success");
+  }, [clerkLoaded, isSignedIn, state, result]);
+
+  // ── Persist tier changes so a refresh restores the same depth ──
+  useEffect(() => {
+    if (!clerkLoaded) return;
+    if (isSignedIn) return;
+    if (state !== "success" || !result) return;
+    if (isSample) return; // don't persist demo data
+    writeAnonAnalysis({
+      result,
+      fileName,
+      isSample,
+      reportMode,
+      activeTier,
+    });
+  }, [activeTier, clerkLoaded, isSignedIn, state, result, fileName, isSample, reportMode]);
 
   const setErrorState = (code: ErrorCode, msg?: string, sizeMB?: string) => {
     setErrorCode(code);
@@ -2525,6 +2657,11 @@ export default function AppPage() {
     setIsSample(false);
     setPendingFile(null);
     setHealthFile(null);
+    setActiveTier("simple");
+    setSavedAnalysisId(null);
+    setSaveError(null);
+    // Anonymous users: drop the persisted snapshot so the next visit is fresh
+    if (!isSignedIn) clearAnonAnalysis();
   };
 
   return (
@@ -2579,11 +2716,11 @@ export default function AppPage() {
             {[
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-emerald-500"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>,
-                label: "Never stored",
+                label: "File never stored",
               },
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>,
-                label: "No sign-up needed",
+                label: "Free to try",
               },
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-amber-500"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>,
@@ -2712,7 +2849,18 @@ export default function AppPage() {
           ) : state === "loading" ? (
             <LoadingAnimation mode={reportMode} />
           ) : result ? (
-            <ResultsPanel result={result} fileName={fileName} onReset={handleReset} isSample={isSample} mode={reportMode} lang={lang} />
+            <ResultsPanel
+              result={result}
+              fileName={fileName}
+              onReset={handleReset}
+              isSample={isSample}
+              mode={reportMode}
+              lang={lang}
+              activeTier={activeTier}
+              setActiveTier={setActiveTier}
+              savedAnalysisId={savedAnalysisId}
+              isSignedIn={isSignedIn}
+            />
           ) : null}
         </div>
 

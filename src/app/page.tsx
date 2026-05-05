@@ -79,10 +79,10 @@ export default function LandingPage() {
           {/* Trust signals */}
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-8 reveal reveal-delay-4">
             {[
-              { icon: "✓", text: "No data stored" },
+              { icon: "✓", text: "Encrypted & private" },
               { icon: "⚡", text: "Results in < 10s" },
               { icon: "◎", text: "AI-powered analysis" },
-              { icon: "✦", text: "No account needed" },
+              { icon: "✦", text: "Free to try" },
             ].map((s) => (
               <span key={s.text} className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary">
                 <span className="text-brand-blue">{s.icon}</span>
@@ -175,7 +175,7 @@ export default function LandingPage() {
               <span className="kicker-mono text-brand-blue">Simple process</span>
             </span>
             <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">Three steps to clarity</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">From upload to understanding in seconds. No account needed.</p>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">From upload to understanding in seconds. Free to try — create a free account to save your history.</p>
           </div>
 
           {/* Steps with connecting line */}
@@ -424,10 +424,10 @@ export default function LandingPage() {
           {/* Compact trust signals */}
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 mb-16 reveal reveal-delay-1">
             {[
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "No data stored" },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "Encrypted & private" },
               { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, text: "Results in seconds" },
               { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V15" /></svg>, text: "Advanced AI analysis" },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "No account needed" },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "Free to try" },
             ].map((item) => (
               <div key={item.text} className="flex items-center gap-2.5 text-sm text-ink-secondary">
                 <span className="text-brand-blue">{item.icon}</span>
@@ -481,8 +481,8 @@ export default function LandingPage() {
                   { title: "Flagged abnormal values", desc: "Out-of-range results are highlighted so you spot what matters instantly.", color: "text-red-500", bgColor: "bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
                   { title: "Etiology & mechanisms", desc: "We explain what causes abnormal values and what's happening in your body.", color: "text-brand-blue", bgColor: "bg-brand-blue-light dark:bg-brand-blue/10 border-brand-blue-mid dark:border-brand-blue/20", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg> },
                   { title: "Specialist recommendations", desc: "Know exactly which type of doctor to see based on your specific results.", color: "text-violet-500", bgColor: "bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" /></svg> },
-                  { title: "Stateless & private", desc: "We never store your file or data. Each session is completely ephemeral.", color: "text-emerald-500", bgColor: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
-                  { title: "Results in seconds", desc: "No waiting, no email, no account required. Upload and understand.", color: "text-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
+                  { title: "Encrypted & yours", desc: "Your data is encrypted at rest, tied to your account, and deletable at any time. Your file is never stored — only the AI interpretation.", color: "text-emerald-500", bgColor: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
+                  { title: "Results in seconds", desc: "No waiting. Upload and understand in seconds — create a free account to save your history.", color: "text-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
                 ].map((feat, i) => (
                   <div key={feat.title} className={`reveal reveal-delay-${Math.min(i + 1, 5)} group flex items-start gap-4`}>
                     <div className={`w-10 h-10 rounded-xl ${feat.bgColor} border flex items-center justify-center flex-shrink-0 ${feat.color} group-hover:scale-110 transition-transform duration-300`}>{feat.icon}</div>
@@ -583,7 +583,7 @@ export default function LandingPage() {
                 Ready to understand your results?
               </h2>
               <p className="text-lg mb-10" style={{ color: "rgba(200,205,255,0.75)" }}>
-                No account. No storage. No confusion. Just clarity.
+                Encrypted, deletable, in your control. Just clarity.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link

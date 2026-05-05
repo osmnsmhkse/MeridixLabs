@@ -134,7 +134,7 @@ export default function AboutPage() {
                 ),
                 color: "text-emerald-600 bg-emerald-50",
                 title: "Privacy is non-negotiable",
-                desc: "Your health data is yours. We never store, share, or analyze your uploads after your session ends.",
+                desc: "Your file is never stored. Your interpretation is encrypted, tied to your account, and deletable anytime — we never share or sell your health data.",
               },
               {
                 icon: (
@@ -247,7 +247,7 @@ export default function AboutPage() {
                 },
                 {
                   label: "Data retention",
-                  value: "Zero — stateless by design",
+                  value: "Encrypted · account-bound · deletable",
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
