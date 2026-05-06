@@ -1760,6 +1760,10 @@ function ResultsPanel({
         );
       })()}
 
+      {/* ─── 2-COLUMN RESULTS LAYOUT (xl: results | sticky chat) ──────────────── */}
+      <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6 xl:items-start space-y-5 xl:space-y-0">
+        <div className="space-y-5 min-w-0">
+
       {/* ─── SECTION 1: YOUR RESULTS ─────────────────────────────────────────── */}
       <div>
         <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
@@ -1984,19 +1988,22 @@ function ResultsPanel({
         </div>
       </div>
 
-      {/* ─── SECTION: ASK FOLLOW-UP QUESTIONS (chat panel) ──────────── */}
-      <div>
-        <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 print:hidden">
-          Follow-up Questions
-        </p>
-        <LabChatPanel
-          result={result}
-          tier={activeTier}
-          fileName={fileName}
-          isSample={isSample}
-          savedAnalysisId={savedAnalysisId}
-          isSignedIn={isSignedIn}
-        />
+        </div>
+
+        {/* ─── ASK FOLLOW-UP QUESTIONS (sticky on xl) ─────────────────────── */}
+        <aside className="xl:sticky xl:top-24 print:hidden min-w-0">
+          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 xl:hidden">
+            Ask the AI
+          </p>
+          <LabChatPanel
+            result={result}
+            tier={activeTier}
+            fileName={fileName}
+            isSample={isSample}
+            savedAnalysisId={savedAnalysisId}
+            isSignedIn={isSignedIn}
+          />
+        </aside>
       </div>
 
       {/* Disclaimer */}
@@ -2671,7 +2678,7 @@ export default function AppPage() {
           onChange={(loaded, signedIn) => { setClerkLoaded(loaded); setClerkSignedIn(signedIn); }}
         />
       )}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${result && state !== "loading" ? "max-w-3xl xl:max-w-6xl" : "max-w-3xl"}`}>
         {/* Page header */}
         <div className="text-center mb-8">
           {userData && userData.interpretationCount > 1 && state === "idle" ? (
