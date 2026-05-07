@@ -8,74 +8,24 @@ import { Sun, Moon } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { track } from "@/lib/track";
 import { Show, UserButton } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-// ── Tool definitions ───────────────────────────────────────────────────────
-
-const TOOLS = [
-  {
-    href: "/app",
-    label: "Lab Analyzer",
-    description: "Upload a blood test and get a plain-English explanation",
-    color: "text-brand-blue",
-    bg: "bg-brand-blue-light dark:bg-brand-blue/10",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-  {
-    href: "/symptom",
-    label: "Symptom Checker",
-    description: "Understand what a symptom most likely means before you Google it",
-    color: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-50 dark:bg-emerald-900/20",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-        <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-  {
-    href: "/diagnosed",
-    label: "Diagnosis Explainer",
-    description: "Just got a diagnosis? Learn what it means for your life",
-    color: "text-violet-600 dark:text-violet-400",
-    bg: "bg-violet-50 dark:bg-violet-900/20",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-        <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-  {
-    href: "/trends",
-    label: "Trend Tracker",
-    description: "Track how your biomarkers change over time across tests",
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-50 dark:bg-amber-900/20",
-    icon: (
-      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-        <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
-      </svg>
-    ),
-  },
-];
+const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/trends"];
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
+  const t = useTranslations("Nav");
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   if (!mounted) return <div className="w-9 h-9" />;
   return (
     <button
       onClick={toggle}
-      aria-label="Toggle dark mode"
+      aria-label={t("toggleDarkMode")}
       className="relative w-9 h-9 flex items-center justify-center rounded-lg text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
     >
       <Sun className={`absolute w-4 h-4 transition-all duration-300 ${theme === "dark" ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"}`} />
@@ -89,8 +39,61 @@ function ThemeToggle() {
 function ToolsDropdown({ pathname }: { pathname: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const t = useTranslations("Nav");
 
-  const isToolActive = TOOLS.some((t) => pathname === t.href);
+  const TOOLS = [
+    {
+      href: "/app",
+      label: t("labAnalyzer"),
+      description: t("labAnalyzerDesc"),
+      color: "text-brand-blue",
+      bg: "bg-brand-blue-light dark:bg-brand-blue/10",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+          <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/symptom",
+      label: t("symptomChecker"),
+      description: t("symptomCheckerDesc"),
+      color: "text-emerald-600 dark:text-emerald-400",
+      bg: "bg-emerald-50 dark:bg-emerald-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/diagnosed",
+      label: t("diagnosisExplainer"),
+      description: t("diagnosisExplainerDesc"),
+      color: "text-violet-600 dark:text-violet-400",
+      bg: "bg-violet-50 dark:bg-violet-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/trends",
+      label: t("trendTracker"),
+      description: t("trendTrackerDesc"),
+      color: "text-amber-600 dark:text-amber-400",
+      bg: "bg-amber-50 dark:bg-amber-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+  ];
+
+  const isToolActive = TOOLS.some((tool) => pathname === tool.href);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -108,7 +111,7 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
           isToolActive ? "text-brand-blue" : "text-ink-secondary hover:text-ink"
         }`}
       >
-        Tools
+        {t("tools")}
         <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`}>
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
@@ -141,7 +144,7 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
             ))}
           </div>
           <div className="px-4 py-3 border-t border-surface-border bg-surface-raised">
-            <p className="text-[11px] text-ink-tertiary text-center">More tools coming soon</p>
+            <p className="text-[11px] text-ink-tertiary text-center">{t("moreToolsSoon")}</p>
           </div>
         </div>
       )}
@@ -151,17 +154,18 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
 
 // ── Main navigation ────────────────────────────────────────────────────────
 
-const FLAT_LINKS = [
-  { href: "/learn", label: "Practice" },
-  { href: "/blog",  label: "Blog"     },
-  { href: "/about", label: "About"    },
-];
-
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("Nav");
+
+  const FLAT_LINKS = [
+    { href: "/learn", label: t("practice") },
+    { href: "/blog",  label: t("blog")     },
+    { href: "/about", label: t("about")    },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 12);
@@ -170,7 +174,7 @@ export default function Navigation() {
   }, []);
 
   const isActive = (path: string) => pathname === path;
-  const isToolActive = TOOLS.some((t) => pathname === t.href);
+  const isToolActive = TOOL_HREFS.some((href) => pathname === href);
 
   return (
     <>
@@ -233,7 +237,7 @@ export default function Navigation() {
                   : "border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-brand-blue"
               }`}
             >
-              For Doctors
+              {t("forDoctors")}
             </Link>
 
             {AUTH_ENABLED ? (
@@ -243,13 +247,13 @@ export default function Navigation() {
                     href="/sign-in"
                     className="hidden lg:inline-flex items-center px-3 py-2 text-sm font-medium text-ink-secondary hover:text-ink transition-colors rounded-full hover:bg-surface-raised"
                   >
-                    Sign in
+                    {t("signIn")}
                   </Link>
                   <Link
                     href="/sign-up"
                     className="inline-flex items-center gap-1.5 px-4 py-2 border border-surface-border text-ink font-medium rounded-full text-sm hover:border-brand-blue hover:text-brand-blue transition-all duration-200"
                   >
-                    Sign up
+                    {t("signUp")}
                   </Link>
                 </Show>
                 <Show when="signed-in">
@@ -259,7 +263,7 @@ export default function Navigation() {
                       isActive("/dashboard") ? "text-brand-blue bg-brand-blue/8" : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
                     }`}
                   >
-                    Dashboard
+                    {t("dashboard")}
                   </Link>
                   <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
                 </Show>
@@ -273,7 +277,7 @@ export default function Navigation() {
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                 <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
               </svg>
-              Analyze Results
+              {t("analyzeResults")}
             </Link>
           </div>
 
@@ -281,7 +285,7 @@ export default function Navigation() {
           <button
             className="md:hidden ml-auto text-ink-secondary p-2 rounded-full hover:bg-surface-raised transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={t("toggleMenu")}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-5 h-5">
               {mobileOpen
@@ -305,25 +309,29 @@ export default function Navigation() {
                   : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
               }`}
             >
-              Tools
+              {t("tools")}
               <svg viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 transition-transform ${mobileToolsOpen ? "rotate-180" : ""}`}>
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </button>
             {mobileToolsOpen && (
               <div className="ml-4 space-y-1 pb-1">
-                {TOOLS.map((tool) => (
+                {[
+                  { href: "/app",       label: t("labAnalyzer"),        color: "text-brand-blue"                        },
+                  { href: "/symptom",   label: t("symptomChecker"),     color: "text-emerald-600 dark:text-emerald-400" },
+                  { href: "/diagnosed", label: t("diagnosisExplainer"), color: "text-violet-600 dark:text-violet-400"   },
+                  { href: "/trends",    label: t("trendTracker"),       color: "text-amber-600 dark:text-amber-400"     },
+                ].map((tool) => (
                   <Link
                     key={tool.href}
                     href={tool.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-3 py-2.5 px-4 rounded-lg text-sm font-medium transition-colors ${
+                    className={`block py-2.5 px-4 rounded-lg text-sm font-medium transition-colors ${
                       isActive(tool.href)
                         ? `${tool.color} bg-surface-raised`
                         : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
                     }`}
                   >
-                    <span className={`${isActive(tool.href) ? tool.color : "text-ink-tertiary"}`}>{tool.icon}</span>
                     {tool.label}
                   </Link>
                 ))}
@@ -354,7 +362,7 @@ export default function Navigation() {
                   : "text-ink-secondary border-slate-200 dark:border-slate-700 hover:border-brand-blue hover:text-brand-blue"
               }`}
             >
-              For Doctors
+              {t("forDoctors")}
             </Link>
 
             <div className="px-4 py-2 flex items-center gap-2">
@@ -369,14 +377,14 @@ export default function Navigation() {
                     onClick={() => setMobileOpen(false)}
                     className="block py-2.5 px-4 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
                   >
-                    Sign in
+                    {t("signIn")}
                   </Link>
                   <Link
                     href="/sign-up"
                     onClick={() => setMobileOpen(false)}
                     className="block py-2.5 px-4 rounded-lg text-sm font-semibold text-ink border border-slate-200 dark:border-slate-700 text-center hover:border-brand-blue hover:text-brand-blue transition-all"
                   >
-                    Sign up — free
+                    {t("signUpFree")}
                   </Link>
                 </Show>
                 <Show when="signed-in">
@@ -389,14 +397,14 @@ export default function Navigation() {
                         : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
                     }`}
                   >
-                    Dashboard
+                    {t("dashboard")}
                   </Link>
                   <Link
                     href="/profile"
                     onClick={() => setMobileOpen(false)}
                     className="block py-2.5 px-4 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
                   >
-                    Profile
+                    {t("profile")}
                   </Link>
                 </Show>
               </div>
@@ -407,7 +415,7 @@ export default function Navigation() {
               onClick={() => setMobileOpen(false)}
               className="block py-2.5 px-4 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-xl text-sm text-center"
             >
-              Analyze My Results
+              {t("analyzeMy")}
             </Link>
           </div>
         </div>

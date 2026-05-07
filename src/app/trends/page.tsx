@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   LineChart,
   Line,
@@ -248,6 +249,7 @@ function ReportSlotCard({
 
 // ── Main page ────────────────────────────────────────────────────────────────
 export default function TrendsPage() {
+  const t = useTranslations("Trends");
   const [slots, setSlots] = useState<ReportSlot[]>([
     { id: uid(), file: null, date: "" },
     { id: uid(), file: null, date: "" },
@@ -436,21 +438,19 @@ export default function TrendsPage() {
         {/* Header */}
         <div className="text-center mb-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-            New Feature
+            {t("badge")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-3">
-            Lab Value{" "}
-            <span className="text-gradient-blue">Trend Tracker</span>
+            <span className="text-gradient-blue">{t("title")}</span>
           </h1>
           <p className="text-ink-secondary text-lg max-w-xl mx-auto leading-relaxed">
-            Upload two or more lab reports from different dates and visualise
-            how your values have changed over time.
+            {t("subtitle")}
           </p>
           <div className="mt-4 inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-emerald-500">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
             </svg>
-            Your data is never uploaded or stored on our servers
+            {t("privacy")}
           </div>
         </div>
 
@@ -465,8 +465,8 @@ export default function TrendsPage() {
                     <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>
                 ),
-                title: "Upload 2+ reports",
-                body: "Add lab reports from different dates — any blood test, panel, or CBC works.",
+                title: t("step1Title"),
+                body: t("step1Desc"),
               },
               {
                 step: "2",
@@ -476,8 +476,8 @@ export default function TrendsPage() {
                     <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                   </svg>
                 ),
-                title: "We extract the values",
-                body: "AI reads every lab value and matches it across your reports automatically.",
+                title: t("step2Title"),
+                body: t("step2Desc"),
               },
               {
                 step: "3",
@@ -486,8 +486,8 @@ export default function TrendsPage() {
                     <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
                   </svg>
                 ),
-                title: "See your trends",
-                body: "Pick any marker — glucose, TSH, cholesterol — and see how it's moved over time.",
+                title: t("step3Title"),
+                body: t("step3Desc"),
               },
             ].map((item) => (
               <div key={item.step} className="bg-white rounded-2xl border border-surface-border px-5 py-4 flex gap-3">

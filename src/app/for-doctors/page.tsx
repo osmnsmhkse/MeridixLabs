@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
 
 const PRACTICE_TYPES = [
   "General Practice / Family Medicine",
@@ -42,6 +43,7 @@ function ArrowRight() {
 }
 
 export default function ForDoctorsPage() {
+  const t = useTranslations("ForDoctors");
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -83,8 +85,8 @@ export default function ForDoctorsPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
         </svg>
       ),
-      title: "Upload from your dashboard",
-      desc: "Drag and drop a patient's lab report PDF or image directly into your Meridix for Doctors dashboard. No EHR integration required.",
+      title: t("step1Title"),
+      desc: t("step1Desc"),
     },
     {
       number: "02",
@@ -93,8 +95,8 @@ export default function ForDoctorsPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
         </svg>
       ),
-      title: "Patient receives a link via SMS or email",
-      desc: "Your patient gets a secure, personalized link. They open it on any device and read a plain-language breakdown of their results — no login required.",
+      title: t("step2Title"),
+      desc: t("step2Desc"),
     },
     {
       number: "03",
@@ -103,18 +105,18 @@ export default function ForDoctorsPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
         </svg>
       ),
-      title: "They arrive informed, you save time",
-      desc: "Patients come prepared with questions about their actual values. Less time re-explaining the basics, more time for what matters clinically.",
+      title: t("step3Title"),
+      desc: t("step3Desc"),
     },
   ];
 
   const benefits = [
-    "Reduce appointment time spent re-explaining lab basics",
-    "Improve patient satisfaction scores",
-    "No EHR or EMR integration required",
-    "HIPAA-aware architecture",
-    "Works for labs, imaging, and pathology reports",
-    "Patients can share results with family members",
+    t("benefit1"),
+    t("benefit2"),
+    t("benefit3"),
+    t("benefit4"),
+    t("benefit5"),
+    t("benefit6"),
   ];
 
   return (
@@ -132,21 +134,15 @@ export default function ForDoctorsPage() {
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
               </svg>
-              Meridix for Doctors — Coming Soon
+              {t("badge")}
             </span>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05] mb-6">
-              Give your patients clarity
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                between appointments.
-              </span>
+              {t("heroTitle")}
             </h1>
 
             <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
-              Send lab reports directly to patients — they get an instant plain-language
-              explanation before their next appointment. Patients arrive better informed.
-              Appointments become more productive.
+              {t("heroSubtitle")}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -154,14 +150,14 @@ export default function ForDoctorsPage() {
                 href="#waitlist"
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/25 hover:shadow-xl hover:shadow-brand-blue/30"
               >
-                Join the waitlist
+                {t("joinWaitlist")}
                 <ArrowRight />
               </a>
               <a
                 href="#how-it-works"
                 className="inline-flex items-center gap-2 px-7 py-3.5 border border-slate-600 hover:border-slate-400 text-slate-300 hover:text-white font-semibold rounded-xl text-base transition-all duration-200"
               >
-                See how it works
+                {t("seeHow")}
               </a>
             </div>
           </div>
@@ -169,9 +165,9 @@ export default function ForDoctorsPage() {
           {/* Stats row */}
           <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-px bg-slate-700/50 rounded-2xl overflow-hidden border border-slate-700/50">
             {[
-              { stat: "< 30s", label: "Average time to generate a patient report" },
-              { stat: "3×", label: "More informed questions from patients who pre-read their results" },
-              { stat: "$0", label: "No EHR integration cost or IT resources needed" },
+              { stat: t("stat1Value"), label: t("stat1Label") },
+              { stat: t("stat2Value"), label: t("stat2Label") },
+              { stat: t("stat3Value"), label: t("stat3Label") },
             ].map(({ stat, label }) => (
               <div key={stat} className="bg-slate-900/80 px-8 py-7 text-center">
                 <p className="text-3xl font-extrabold text-white mb-1">{stat}</p>
@@ -187,13 +183,13 @@ export default function ForDoctorsPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-brand-blue/10 text-brand-blue text-sm font-semibold mb-4">
-              How it works
+              {t("howTitle")}
             </span>
             <h2 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-4">
-              Three steps. Zero friction.
+              {t("howSubtitle")}
             </h2>
             <p className="text-lg text-ink-secondary max-w-xl mx-auto">
-              Designed to fit into your existing workflow without disrupting it.
+              {t("howBody")}
             </p>
           </div>
 
@@ -228,16 +224,13 @@ export default function ForDoctorsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold mb-5">
-                Built for clinicians
+                {t("benefitsTitle")}
               </span>
               <h2 className="text-4xl font-extrabold text-ink tracking-tight mb-6">
-                Less explaining.
-                <br />
-                More practicing.
+                {t("benefitsSubtitle")}
               </h2>
               <p className="text-lg text-ink-secondary leading-relaxed mb-8">
-                The average primary care appointment lasts 18 minutes. Up to a third of that
-                is spent explaining what lab numbers mean. Meridix for Doctors gives that time back.
+                {t("benefitsBody")}
               </p>
               <ul className="space-y-3">
                 {benefits.map((b) => (
@@ -312,32 +305,31 @@ export default function ForDoctorsPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <span className="inline-block px-4 py-1.5 rounded-full bg-brand-blue/10 text-brand-blue text-sm font-semibold mb-4">
-              Pricing
+              {t("pricingTitle")}
             </span>
             <h2 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-4">
-              Simple, transparent pricing.
+              {t("pricingSubtitle")}
             </h2>
             <p className="text-lg text-ink-secondary max-w-xl mx-auto">
-              No per-seat fees. No surprise bills. Pay for reports, not for users.
+              {t("pricingBody")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Starter */}
             <div className="bg-surface-raised border border-surface-border rounded-2xl p-8">
-              <p className="text-sm font-semibold text-ink-tertiary uppercase tracking-widest mb-3">Starter</p>
+              <p className="text-sm font-semibold text-ink-tertiary uppercase tracking-widest mb-3">{t("starterTitle")}</p>
               <div className="flex items-end gap-1 mb-1">
-                <span className="text-4xl font-extrabold text-ink">$49</span>
-                <span className="text-ink-secondary mb-1">/month</span>
+                <span className="text-4xl font-extrabold text-ink">{t("starterPrice")}</span>
               </div>
-              <p className="text-sm text-ink-tertiary mb-6">Up to 50 patient reports/month</p>
+              <p className="text-sm text-ink-tertiary mb-6">{t("starterLimit")}</p>
               <ul className="space-y-3 mb-8">
                 {[
-                  "PDF & image report upload",
-                  "SMS + email delivery",
-                  "Plain-language explanations",
-                  "Patient reads — no login needed",
-                  "Basic analytics dashboard",
+                  t("starterF1"),
+                  t("starterF2"),
+                  t("starterF3"),
+                  t("starterF4"),
+                  t("starterF5"),
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5">
                     <span className="mt-0.5 text-brand-blue flex-shrink-0"><CheckIcon /></span>
@@ -346,25 +338,25 @@ export default function ForDoctorsPage() {
                 ))}
               </ul>
               <a href="#waitlist" className="block w-full text-center py-2.5 rounded-xl border border-brand-blue text-brand-blue font-semibold text-sm hover:bg-brand-blue hover:text-white transition-colors">
-                Join waitlist
+                {t("starterCta")}
               </a>
             </div>
 
             {/* Practice */}
             <div className="relative bg-brand-blue rounded-2xl p-8 text-white shadow-xl shadow-brand-blue/25">
               <span className="absolute top-4 right-4 px-2.5 py-1 bg-white/15 rounded-full text-xs font-semibold">Most popular</span>
-              <p className="text-sm font-semibold text-blue-200 uppercase tracking-widest mb-3">Practice</p>
+              <p className="text-sm font-semibold text-blue-200 uppercase tracking-widest mb-3">{t("practiceTitle")}</p>
               <div className="flex items-end gap-1 mb-1">
-                <span className="text-4xl font-extrabold">Custom</span>
+                <span className="text-4xl font-extrabold">{t("practicePrice")}</span>
               </div>
-              <p className="text-sm text-blue-200 mb-6">For larger practices & health systems</p>
+              <p className="text-sm text-blue-200 mb-6">{t("practiceLimit")}</p>
               <ul className="space-y-3 mb-8">
                 {[
-                  "Unlimited patient reports",
-                  "Branded patient experience",
-                  "Multi-provider dashboard",
-                  "EHR webhook integration (beta)",
-                  "Priority support & onboarding",
+                  t("practiceF1"),
+                  t("practiceF2"),
+                  t("practiceF3"),
+                  t("practiceF4"),
+                  t("practiceF5"),
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5">
                     <span className="mt-0.5 text-blue-200 flex-shrink-0"><CheckIcon /></span>
@@ -373,13 +365,13 @@ export default function ForDoctorsPage() {
                 ))}
               </ul>
               <a href="#waitlist" className="block w-full text-center py-2.5 rounded-xl bg-white text-brand-blue font-semibold text-sm hover:bg-blue-50 transition-colors">
-                Contact us
+                {t("practiceCta")}
               </a>
             </div>
           </div>
 
           <p className="text-center text-sm text-ink-tertiary mt-8">
-            All plans include a 30-day free trial. No credit card required to join the waitlist.
+            {t("trialNote")}
           </p>
         </div>
       </section>
@@ -389,14 +381,13 @@ export default function ForDoctorsPage() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1.5 rounded-full bg-brand-blue/20 border border-brand-blue/30 text-brand-blue text-sm font-semibold mb-4">
-              Early access
+              {t("earlyAccessBadge")}
             </span>
             <h2 className="text-4xl font-extrabold text-white tracking-tight mb-4">
-              Get early access.
+              {t("earlyAccessTitle")}
             </h2>
             <p className="text-slate-400 text-lg">
-              Be first to know when Meridix for Doctors launches. Waitlist members
-              get 3 months free on any plan.
+              {t("earlyAccessBody")}
             </p>
           </div>
 
@@ -407,10 +398,9 @@ export default function ForDoctorsPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">You&apos;re on the list!</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">{t("successTitle")}</h3>
               <p className="text-slate-400">
-                We&apos;ll reach out to <strong className="text-white">{form.email}</strong> as soon as we open access for new practices.
-                Expect to hear from us within the next few weeks.
+                {t("successBody")}
               </p>
             </div>
           ) : (
@@ -418,7 +408,7 @@ export default function ForDoctorsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                    Full name <span className="text-red-400">*</span>
+                    {t("formName")} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -426,13 +416,13 @@ export default function ForDoctorsPage() {
                     value={form.name}
                     onChange={handleChange}
                     required
-                    placeholder="Dr. Jane Smith"
+                    placeholder={t("formNamePlaceholder")}
                     className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-600 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                    Email address <span className="text-red-400">*</span>
+                    {t("formEmail")} <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
@@ -440,7 +430,7 @@ export default function ForDoctorsPage() {
                     value={form.email}
                     onChange={handleChange}
                     required
-                    placeholder="jane@clinic.com"
+                    placeholder={t("formEmailPlaceholder")}
                     className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-600 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors"
                   />
                 </div>
@@ -448,7 +438,7 @@ export default function ForDoctorsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                  Practice type <span className="text-red-400">*</span>
+                  {t("formPracticeType")} <span className="text-red-400">*</span>
                 </label>
                 <select
                   name="practice_type"
@@ -457,7 +447,7 @@ export default function ForDoctorsPage() {
                   required
                   className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors appearance-none"
                 >
-                  <option value="" disabled>Select practice type</option>
+                  <option value="" disabled>{t("formPracticeTypePlaceholder")}</option>
                   {PRACTICE_TYPES.map((t) => (
                     <option key={t} value={t}>{t}</option>
                   ))}
@@ -466,7 +456,7 @@ export default function ForDoctorsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
-                  Country <span className="text-red-400">*</span>
+                  {t("formCountry")} <span className="text-red-400">*</span>
                 </label>
                 <select
                   name="country"
@@ -475,7 +465,7 @@ export default function ForDoctorsPage() {
                   required
                   className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-colors appearance-none"
                 >
-                  <option value="" disabled>Select country</option>
+                  <option value="" disabled>{t("formCountryPlaceholder")}</option>
                   {COUNTRIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -503,14 +493,14 @@ export default function ForDoctorsPage() {
                   </>
                 ) : (
                   <>
-                    Request early access
+                    {t("formSubmit")}
                     <ArrowRight />
                   </>
                 )}
               </button>
 
               <p className="text-center text-xs text-slate-500">
-                No spam. We&apos;ll only contact you about Meridix for Doctors.
+                {t("formNoSpam")}
               </p>
             </form>
           )}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import HeroCTA from "@/components/HeroCTA";
 
 const DEMO_TIERS = {
@@ -23,6 +24,17 @@ type DemoTier = keyof typeof DEMO_TIERS;
 
 export default function LandingPage() {
   const [demoTier, setDemoTier] = useState<DemoTier>("Simple");
+
+  const tHero = useTranslations("Hero");
+  const tHow = useTranslations("HowItWorks");
+  const tTiers = useTranslations("Tiers");
+  const tSuite = useTranslations("Suite");
+  const tStats = useTranslations("Stats");
+  const tFeatures = useTranslations("Features");
+  const tCTA = useTranslations("CTA");
+  const tDisclaimer = useTranslations("Disclaimer");
+  const tTestimonials = useTranslations("Testimonials");
+
   return (
     <div className="min-h-screen">
 
@@ -50,17 +62,17 @@ export default function LandingPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-50" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue" />
             </span>
-            <span className="text-ink font-medium">AI-powered medical interpretation</span>
+            <span className="text-ink font-medium">{tHero("badge")}</span>
             <span className="text-ink-tertiary kicker-mono">v2</span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-extrabold text-ink leading-[0.97] tracking-tightest mb-6 reveal reveal-delay-1">
-            Your health,{" "}
-            <span className="text-gradient-blue">finally explained.</span>
+            {tHero("title")}{" "}
+            <span className="text-gradient-blue">{tHero("highlight")}</span>
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-ink-secondary leading-relaxed mb-10 reveal reveal-delay-2">
-            From symptoms to diagnoses to lab results — Meridix Labs is the only platform that walks you through your entire health journey in plain English. No jargon. No confusion. No waiting room required.
+            {tHero("subtitle")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 reveal reveal-delay-3">
@@ -69,7 +81,7 @@ export default function LandingPage() {
               href="#how-it-works"
               className="inline-flex items-center gap-2 px-7 py-3.5 border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-medium rounded-2xl text-base transition-all duration-300 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm hover:shadow-soft"
             >
-              See how it works
+              {tHero("seeHow")}
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
@@ -79,10 +91,10 @@ export default function LandingPage() {
           {/* Trust signals */}
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-8 reveal reveal-delay-4">
             {[
-              { icon: "✓", text: "Encrypted & private" },
-              { icon: "⚡", text: "Results in < 10s" },
-              { icon: "◎", text: "AI-powered analysis" },
-              { icon: "✦", text: "Free to try" },
+              { icon: "✓", text: tHero("trustEncrypted") },
+              { icon: "⚡", text: tHero("trustSpeed") },
+              { icon: "◎", text: tHero("trustAI") },
+              { icon: "✦", text: tHero("trustFree") },
             ].map((s) => (
               <span key={s.text} className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary">
                 <span className="text-brand-blue">{s.icon}</span>
@@ -104,9 +116,9 @@ export default function LandingPage() {
                     <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
                   </svg>
                 ),
-                step: "Start here",
+                step: tHero("startHere"),
                 title: "Symptom Checker",
-                desc: "Not feeling right? Understand what your symptoms might mean.",
+                desc: tSuite("symptomDesc"),
               },
               {
                 href: "/app",
@@ -119,9 +131,9 @@ export default function LandingPage() {
                     <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                   </svg>
                 ),
-                step: "Got results?",
+                step: tHero("labCard"),
                 title: "Lab Analyzer",
-                desc: "Upload your blood test and get a plain-English explanation.",
+                desc: tSuite("labDesc"),
               },
               {
                 href: "/diagnosed",
@@ -133,9 +145,9 @@ export default function LandingPage() {
                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                   </svg>
                 ),
-                step: "Just diagnosed?",
+                step: tHero("diagnosisCard"),
                 title: "Diagnosis Explainer",
-                desc: "Learn what your diagnosis actually means for your daily life.",
+                desc: tSuite("diagnosisDesc"),
               },
             ].map((item) => (
               <a
@@ -172,10 +184,10 @@ export default function LandingPage() {
           <div className="text-center mb-16 reveal">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full text-brand-blue shadow-soft">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
-              <span className="kicker-mono text-brand-blue">Simple process</span>
+              <span className="kicker-mono text-brand-blue">{tHow("badge")}</span>
             </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">Three steps to clarity</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">From upload to understanding in seconds. Free to try — create a free account to save your history.</p>
+            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">{tHow("title")}</h2>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">{tHow("subtitle")}</p>
           </div>
 
           {/* Steps with connecting line */}
@@ -189,26 +201,26 @@ export default function LandingPage() {
                 {
                   step: "01",
                   icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>,
-                  title: "Upload your results",
-                  description: "Drag and drop a PDF or photo of your lab report. We accept blood tests, urine tests, metabolic panels, and more.",
+                  title: tHow("step1Title"),
+                  description: tHow("step1Desc"),
                 },
                 {
                   step: "02",
                   icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" /></svg>,
-                  title: "AI reads your data",
-                  description: "Our AI, powered by Claude, analyzes every value against clinical reference ranges and explains the biology behind your results.",
+                  title: tHow("step2Title"),
+                  description: tHow("step2Desc"),
                 },
                 {
                   step: "03",
                   icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>,
-                  title: "Choose your depth",
-                  description: "Toggle between Simple, Medium, and Expert — plus causes, mechanisms, which specialist to see, and a clear action plan.",
+                  title: tHow("step3Title"),
+                  description: tHow("step3Desc"),
                 },
               ].map((item, i) => (
                 <div key={i} className={`reveal reveal-delay-${i + 1} group relative flex flex-col items-center text-center p-8 rounded-2xl border border-surface-border bg-white dark:bg-slate-900 hover:border-brand-blue/25 transition-all duration-300 shadow-soft hover:shadow-lift`}>
                   {/* Step number badge — mono style */}
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-surface-border shadow-soft">
-                    <span className="step-badge text-brand-blue">STEP {item.step}</span>
+                    <span className="step-badge text-brand-blue">{tHow("step")} {item.step}</span>
                   </div>
                   {/* Icon with conic spin */}
                   <div className="conic-icon w-14 h-14 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-surface-border rounded-2xl flex items-center justify-center text-brand-blue mb-6 mt-3 group-hover:border-brand-blue/30 transition-all duration-300">
@@ -230,42 +242,42 @@ export default function LandingPage() {
           <div className="text-center mb-16 reveal">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full text-brand-blue shadow-soft">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" /></svg>
-              <span className="kicker-mono text-brand-blue">Three levels of clarity</span>
+              <span className="kicker-mono text-brand-blue">{tTiers("badge")}</span>
             </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">Your results, your language</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">Whether you want the simple truth or the full clinical picture, you are in control.</p>
+            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">{tTiers("title")}</h2>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">{tTiers("subtitle")}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                tier: "Simple",
+                tier: tTiers("simple"),
                 badge: "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800",
                 borderHover: "hover:border-emerald-300 dark:hover:border-emerald-700",
                 glowColor: "hover:shadow-emerald-500/8",
-                audience: "No medical background",
+                audience: tTiers("noBackground"),
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-500"><path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" /></svg>,
                 example: '"Your glucose is a little high — think of it like your blood has more sugar than usual. It doesn\'t mean anything scary on its own, but your doctor should know."',
-                highlight: "Plain language, zero jargon",
+                highlight: tTiers("simpleDesc"),
               },
               {
-                tier: "Medium",
+                tier: tTiers("medium"),
                 badge: "bg-brand-blue-light text-brand-blue-dark border border-brand-blue-mid dark:bg-brand-blue/20 dark:text-blue-300 dark:border-brand-blue/40",
                 borderHover: "hover:border-brand-blue/40",
                 glowColor: "hover:shadow-brand-blue/10",
-                audience: "Educated patient",
+                audience: tTiers("educated"),
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>,
                 example: '"Your fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125 mg/dL). This signals that your body\'s insulin response may be starting to lose efficiency."',
-                highlight: "Key terms, with context",
+                highlight: tTiers("mediumDesc"),
               },
               {
-                tier: "Expert",
+                tier: tTiers("expert"),
                 badge: "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800",
                 borderHover: "hover:border-purple-300 dark:hover:border-purple-700",
                 glowColor: "hover:shadow-purple-500/8",
-                audience: "Clinician / med student",
+                audience: tTiers("clinician"),
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-purple-500"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg>,
                 example: '"Fasting glucose 112 mg/dL (ref: 70–99). Consistent with IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components: BMI, lipid panel, BP."',
-                highlight: "Full clinical language",
+                highlight: tTiers("expertDesc"),
               },
             ].map((tier, i) => (
               <div key={i} className={`reveal reveal-delay-${i + 1} group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tier.borderHover} hover:shadow-lift transition-all duration-300 shadow-soft`}>
@@ -290,13 +302,13 @@ export default function LandingPage() {
           <div className="text-center mb-14 reveal">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full shadow-soft">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
-              <span className="kicker-mono text-brand-blue">Four tools, one mission</span>
+              <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
             </span>
             <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">
-              Medicine makes sense<br className="hidden sm:block" /> when someone explains it.
+              {tSuite("title")}<br className="hidden sm:block" /> {tSuite("titleHighlight")}
             </h2>
             <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto">
-              Whether you have a new symptom, a confusing lab result, or a diagnosis you don&apos;t understand yet — we&apos;ve built a tool for that moment.
+              {tSuite("subtitle")}
             </p>
           </div>
 
@@ -318,20 +330,20 @@ export default function LandingPage() {
                 <div className="flex items-center gap-3 mb-2">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-brand-blue/10 to-brand-indigo/10 rounded-full text-[11px] font-bold text-brand-blue uppercase tracking-wider">
                     <span className="w-1 h-1 rounded-full bg-brand-blue animate-pulse" />
-                    Most used
+                    {tSuite("mostUsed")}
                   </span>
                 </div>
-                <h3 className="text-2xl font-extrabold text-ink mb-2">Lab Analyzer</h3>
+                <h3 className="text-2xl font-extrabold text-ink mb-2">{tSuite("labTitle")}</h3>
                 <p className="text-ink-secondary leading-relaxed mb-4 max-w-xl">
-                  Upload a blood test, lipid panel, CBC, or metabolic panel. Get an instant interpretation in plain English, medium depth, or full clinical detail — with flagged values, mechanisms, and specialist guidance.
+                  {tSuite("labDesc")}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-5">
-                  {["Blood tests", "Lipid panels", "Urinalysis", "CBC", "Metabolic panels"].map((tag) => (
-                    <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-ink-secondary text-xs rounded-full border border-surface-border">{tag}</span>
+                  {tSuite("labTags").split(",").map((tag) => (
+                    <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-ink-secondary text-xs rounded-full border border-surface-border">{tag.trim()}</span>
                   ))}
                 </div>
                 <span className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue group-hover:gap-3 transition-all duration-300">
-                  Analyze my results
+                  {tSuite("labCta")}
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300">
                     <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
                   </svg>
@@ -345,10 +357,10 @@ export default function LandingPage() {
             {[
               {
                 href: "/symptom",
-                label: "Symptom Checker",
-                title: "Before you Google it.",
-                desc: "Describe a symptom. Get the most likely causes ranked by probability, what to watch for, and a clear next step.",
-                cta: "Check a symptom",
+                label: tSuite("symptomLabel"),
+                title: tSuite("symptomTitle"),
+                desc: tSuite("symptomDesc"),
+                cta: tSuite("symptomCta"),
                 color: "text-emerald-600 dark:text-emerald-400",
                 hoverBorder: "hover:border-emerald-300 dark:hover:border-emerald-700",
                 hoverGlow: "hover:shadow-emerald-500/8",
@@ -357,10 +369,10 @@ export default function LandingPage() {
               },
               {
                 href: "/diagnosed",
-                label: "Diagnosis Explainer",
-                title: "Just got a diagnosis?",
-                desc: "Understand what it means for your life, what the next six months look like, and the exact questions to ask your doctor.",
-                cta: "Explain my diagnosis",
+                label: tSuite("diagnosisLabel"),
+                title: tSuite("diagnosisTitle"),
+                desc: tSuite("diagnosisDesc"),
+                cta: tSuite("diagnosisCta"),
                 color: "text-violet-600 dark:text-violet-400",
                 hoverBorder: "hover:border-violet-300 dark:hover:border-violet-700",
                 hoverGlow: "hover:shadow-violet-500/8",
@@ -369,10 +381,10 @@ export default function LandingPage() {
               },
               {
                 href: "/trends",
-                label: "Trend Tracker",
-                title: "Watch your numbers change.",
-                desc: "Track how your biomarkers shift across multiple tests over time. See what's improving, what's drifting, and why.",
-                cta: "Track my trends",
+                label: tSuite("trendLabel"),
+                title: tSuite("trendTitle"),
+                desc: tSuite("trendDesc"),
+                cta: tSuite("trendCta"),
                 color: "text-amber-600 dark:text-amber-400",
                 hoverBorder: "hover:border-amber-300 dark:hover:border-amber-700",
                 hoverGlow: "hover:shadow-amber-500/8",
@@ -406,12 +418,12 @@ export default function LandingPage() {
           {/* Stats strip — bordered like the reference design */}
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-surface-border border border-surface-border rounded-2xl overflow-hidden mb-16 reveal shadow-soft">
             {[
-              { number: "3,200+", label: "Reports analyzed", color: "text-brand-blue" },
-              { number: "< 10s", label: "Average result time", color: "text-emerald-500" },
-              { number: "3", label: "Detail levels", color: "text-violet-500" },
-              { number: "4", label: "AI-powered tools", color: "text-amber-500" },
+              { number: tStats("reportsCount"), label: tStats("reportsLabel"), color: "text-brand-blue" },
+              { number: tStats("speedCount"), label: tStats("speedLabel"), color: "text-emerald-500" },
+              { number: tStats("tiersCount"), label: tStats("tiersLabel"), color: "text-violet-500" },
+              { number: tStats("toolsCount"), label: tStats("toolsLabel"), color: "text-amber-500" },
             ].map((stat, i) => (
-              <div key={stat.label} className="flex flex-col items-center justify-center py-8 px-4 bg-white dark:bg-slate-900">
+              <div key={i} className="flex flex-col items-center justify-center py-8 px-4 bg-white dark:bg-slate-900">
                 <span className={`text-3xl sm:text-4xl font-extrabold tracking-tightest ${stat.color}`}>{stat.number}</span>
                 <p className="mt-1.5 text-xs text-ink-tertiary">{stat.label}</p>
               </div>
@@ -424,10 +436,10 @@ export default function LandingPage() {
           {/* Compact trust signals */}
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 mb-16 reveal reveal-delay-1">
             {[
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "Encrypted & private" },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, text: "Results in seconds" },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V15" /></svg>, text: "Advanced AI analysis" },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: "Free to try" },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: tStats("encrypted") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, text: tStats("resultsInSeconds") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V15" /></svg>, text: tStats("advancedAI") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: tStats("freeToTry") },
             ].map((item) => (
               <div key={item.text} className="flex items-center gap-2.5 text-sm text-ink-secondary">
                 <span className="text-brand-blue">{item.icon}</span>
@@ -440,24 +452,24 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 reveal reveal-delay-2">
             <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-brand-blue/20 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-500">
               <p className="text-sm text-ink-secondary leading-relaxed mb-4">
-                &ldquo;My doctor told me my cholesterol was &lsquo;a little high&rsquo; and left it at that. I uploaded the PDF here and finally understood which specific values were off and why it actually matters. The Expert mode gave me the clinical context I was missing.&rdquo;
+                &ldquo;{tTestimonials("quote1")}&rdquo;
               </p>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">S</span>
                 </div>
-                <span className="text-xs text-ink-tertiary">Patient, 34 — via feedback form</span>
+                <span className="text-xs text-ink-tertiary">{tTestimonials("author1")}</span>
               </div>
             </div>
             <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-violet-500/20 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-500">
               <p className="text-sm text-ink-secondary leading-relaxed mb-4">
-                &ldquo;I&apos;m a 4th-year med student and I&apos;ve been using the Expert tier to practice clinical reasoning. The differential thinking and specialist referral logic is genuinely useful — not dumbed-down AI output.&rdquo;
+                &ldquo;{tTestimonials("quote2")}&rdquo;
               </p>
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">M</span>
                 </div>
-                <span className="text-xs text-ink-tertiary">Medical student — via email</span>
+                <span className="text-xs text-ink-tertiary">{tTestimonials("author2")}</span>
               </div>
             </div>
           </div>
@@ -472,17 +484,17 @@ export default function LandingPage() {
             <div className="reveal">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full shadow-soft">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                <span className="kicker-mono text-brand-blue">Built differently</span>
+                <span className="kicker-mono text-brand-blue">{tFeatures("badge")}</span>
               </span>
-              <h2 className="mt-4 text-4xl font-extrabold text-ink tracking-tightest leading-tight">Designed for real people,<br />not just doctors.</h2>
-              <p className="mt-4 text-lg text-ink-secondary leading-relaxed">Most people receive a lab report and have no idea what it means. Meridix Labs closes that gap — with science, not guesswork.</p>
+              <h2 className="mt-4 text-4xl font-extrabold text-ink tracking-tightest leading-tight">{tFeatures("title")}</h2>
+              <p className="mt-4 text-lg text-ink-secondary leading-relaxed">{tFeatures("subtitle")}</p>
               <div className="mt-10 space-y-5">
                 {[
-                  { title: "Flagged abnormal values", desc: "Out-of-range results are highlighted so you spot what matters instantly.", color: "text-red-500", bgColor: "bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
-                  { title: "Etiology & mechanisms", desc: "We explain what causes abnormal values and what's happening in your body.", color: "text-brand-blue", bgColor: "bg-brand-blue-light dark:bg-brand-blue/10 border-brand-blue-mid dark:border-brand-blue/20", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg> },
-                  { title: "Specialist recommendations", desc: "Know exactly which type of doctor to see based on your specific results.", color: "text-violet-500", bgColor: "bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" /></svg> },
-                  { title: "Encrypted & yours", desc: "Your data is encrypted at rest, tied to your account, and deletable at any time. Your file is never stored — only the AI interpretation.", color: "text-emerald-500", bgColor: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
-                  { title: "Results in seconds", desc: "No waiting. Upload and understand in seconds — create a free account to save your history.", color: "text-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
+                  { title: tFeatures("flaggedTitle"), desc: tFeatures("flaggedDesc"), color: "text-red-500", bgColor: "bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
+                  { title: tFeatures("etiologyTitle"), desc: tFeatures("etiologyDesc"), color: "text-brand-blue", bgColor: "bg-brand-blue-light dark:bg-brand-blue/10 border-brand-blue-mid dark:border-brand-blue/20", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg> },
+                  { title: tFeatures("specialistTitle"), desc: tFeatures("specialistDesc"), color: "text-violet-500", bgColor: "bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" /></svg> },
+                  { title: tFeatures("privacyTitle"), desc: tFeatures("privacyDesc"), color: "text-emerald-500", bgColor: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
+                  { title: tFeatures("speedTitle"), desc: tFeatures("speedDesc"), color: "text-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
                 ].map((feat, i) => (
                   <div key={feat.title} className={`reveal reveal-delay-${Math.min(i + 1, 5)} group flex items-start gap-4`}>
                     <div className={`w-10 h-10 rounded-xl ${feat.bgColor} border flex items-center justify-center flex-shrink-0 ${feat.color} group-hover:scale-110 transition-transform duration-300`}>{feat.icon}</div>
@@ -519,7 +531,7 @@ export default function LandingPage() {
                         key={t}
                         onClick={() => setDemoTier(t)}
                         className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors duration-200 ${t === demoTier ? "bg-brand-blue-light text-brand-blue-dark border-b-2 border-brand-blue" : "text-ink-tertiary hover:text-ink-secondary"}`}
-                      >{t}</button>
+                      >{t === "Simple" ? tTiers("simple") : t === "Medium" ? tTiers("medium") : tTiers("expert")}</button>
                     ))}
                   </div>
                 </div>
@@ -562,7 +574,7 @@ export default function LandingPage() {
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
           <p className="text-sm text-amber-800 dark:text-amber-300">
-            <strong>Educational tool only.</strong> Not a substitute for professional medical advice. Always consult a qualified physician.
+            {tDisclaimer("short")}
           </p>
         </div>
       </section>
@@ -580,10 +592,10 @@ export default function LandingPage() {
           >
             <div className="relative z-10">
               <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tightest mb-5 leading-[1.02]">
-                Ready to understand your results?
+                {tCTA("title")}
               </h2>
               <p className="text-lg mb-10" style={{ color: "rgba(200,205,255,0.75)" }}>
-                Encrypted, deletable, in your control. Just clarity.
+                {tCTA("subtitle")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
@@ -594,14 +606,14 @@ export default function LandingPage() {
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                     <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>
-                  Upload My Lab Results
+                  {tCTA("button")}
                 </Link>
                 <a
                   href="#how-it-works"
                   className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-base font-medium transition-all duration-200"
                   style={{ background: "transparent", color: "rgba(200,205,255,0.8)", border: "1px solid rgba(255,255,255,0.18)" }}
                 >
-                  See how it works
+                  {tCTA("seeHow")}
                 </a>
               </div>
             </div>

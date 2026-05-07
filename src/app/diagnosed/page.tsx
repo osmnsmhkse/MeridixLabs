@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslations } from "next-intl";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -177,10 +178,11 @@ function SectionCard({
 // ── Result sections ───────────────────────────────────────────────────────────
 
 function WhatThisIsSection({ text }: { text: string }) {
+  const t = useTranslations("Diagnosed");
   return (
     <SectionCard
       accent="border-l-brand-blue"
-      label="What this actually is"
+      label={t("sectionWhatIsIt")}
       icon={
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -193,10 +195,11 @@ function WhatThisIsSection({ text }: { text: string }) {
 }
 
 function WhatCausedItSection({ text }: { text: string }) {
+  const t = useTranslations("Diagnosed");
   return (
     <SectionCard
       accent="border-l-slate-300 dark:border-l-slate-600"
-      label="What caused it"
+      label={t("sectionCaused")}
       icon={
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-slate-400">
           <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.995.512-1.953 1.218-2.655A6.002 6.002 0 0010 4a6 6 0 00-3.218 11.045C7.488 15.953 7.985 16.911 8 17.916V18h4v-.084c.015-1.005.512-1.963 1.218-2.665z" />
@@ -209,10 +212,11 @@ function WhatCausedItSection({ text }: { text: string }) {
 }
 
 function WhatLifeLooksLikeSection({ data }: { data: { prose: string; bullets: string[] } }) {
+  const t = useTranslations("Diagnosed");
   return (
     <SectionCard
       accent="border-l-emerald-400"
-      label="What your life looks like now"
+      label={t("sectionLifeNow")}
       icon={
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -239,10 +243,11 @@ function WhatLifeLooksLikeSection({ data }: { data: { prose: string; bullets: st
 }
 
 function NextSixMonthsSection({ text }: { text: string }) {
+  const t = useTranslations("Diagnosed");
   return (
     <SectionCard
       accent="border-l-amber-400"
-      label="The next 6 months"
+      label={t("sectionSixMonths")}
       icon={
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500">
           <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
@@ -255,6 +260,7 @@ function NextSixMonthsSection({ text }: { text: string }) {
 }
 
 function QuestionsSection({ questions }: { questions: string[] }) {
+  const t = useTranslations("Diagnosed");
   const [checked, setChecked] = useState<Record<number, boolean>>({});
   const toggle = (i: number) => setChecked((p) => ({ ...p, [i]: !p[i] }));
   const allText = questions.map((q, i) => `${i + 1}. ${q}`).join("\n");
@@ -262,7 +268,7 @@ function QuestionsSection({ questions }: { questions: string[] }) {
   return (
     <SectionCard
       accent="border-l-violet-400"
-      label="Questions for your doctor"
+      label={t("sectionQuestions")}
       icon={
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
@@ -293,12 +299,13 @@ function QuestionsSection({ questions }: { questions: string[] }) {
           </li>
         ))}
       </ol>
-      <CopyButton text={allText} label="Copy all questions" />
+      <CopyButton text={allText} label={t("copyQuestions")} />
     </SectionCard>
   );
 }
 
 function ExplainingToOthersSection({ templates }: { templates: { label: string; template: string }[] }) {
+  const t = useTranslations("Diagnosed");
   const ACCENT_COLORS = [
     "bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900",
     "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900",
@@ -308,7 +315,7 @@ function ExplainingToOthersSection({ templates }: { templates: { label: string; 
   return (
     <SectionCard
       accent="border-l-pink-400"
-      label="Explaining to others"
+      label={t("sectionExplaining")}
       icon={
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-pink-500">
           <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
@@ -316,7 +323,7 @@ function ExplainingToOthersSection({ templates }: { templates: { label: string; 
       }
     >
       <p className="text-xs text-ink-tertiary mb-4 leading-relaxed">
-        Ready-to-use templates — edit them to make them your own.
+        {t("questionTemplates")}
       </p>
       <div className="space-y-4">
         {templates.map((t, i) => (
@@ -377,6 +384,7 @@ const EXAMPLE_CHIPS = [
 
 export default function DiagnosedPage() {
   const { lang } = useLanguage();
+  const t = useTranslations("Diagnosed");
   const [state, setState] = useState<PageState>("idle");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<DiagnosisResult | null>(null);
@@ -445,16 +453,15 @@ export default function DiagnosedPage() {
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue flex-shrink-0">
                 <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
               </svg>
-              Diagnosis explainer
+              {t("badge")}
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight leading-tight mb-4">
-              Just got a diagnosis?<br />
-              <span className="text-gradient-blue">Let&apos;s talk through it.</span>
+              <span className="text-gradient-blue">{t("title")}</span>
             </h1>
 
             <p className="text-lg text-ink-secondary leading-relaxed mb-10 max-w-xl mx-auto">
-              Type in what your doctor told you. We&apos;ll explain what it means, what comes next, and what to ask.
+              {t("subtitle")}
             </p>
           </div>
         </section>
@@ -478,7 +485,7 @@ export default function DiagnosedPage() {
 
               {/* Input */}
               <label htmlFor="diagnosis-input" className="block text-xs font-bold text-ink uppercase tracking-widest mb-3">
-                Your diagnosis
+                {t("inputLabel")}
               </label>
               <input
                 id="diagnosis-input"
@@ -487,14 +494,14 @@ export default function DiagnosedPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && submit(input)}
-                placeholder="e.g. Type 2 diabetes, herniated disc, atrial fibrillation, PCOS..."
+                placeholder={t("placeholder")}
                 autoFocus
                 className="w-full px-5 py-4 rounded-2xl border border-surface-border dark:border-slate-700 bg-surface-raised dark:bg-slate-900 text-ink text-base placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all"
               />
 
               {/* Example chips */}
               <div className="mt-4 mb-5">
-                <p className="text-xs text-ink-tertiary mb-2.5">Common examples:</p>
+                <p className="text-xs text-ink-tertiary mb-2.5">{t("commonExamples")}</p>
                 <div className="flex flex-wrap gap-2">
                   {EXAMPLE_CHIPS.map((chip) => (
                     <button
@@ -517,7 +524,7 @@ export default function DiagnosedPage() {
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                   <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                 </svg>
-                Explain my diagnosis
+                {t("submit")}
               </button>
 
               {/* Privacy note */}
@@ -525,7 +532,7 @@ export default function DiagnosedPage() {
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                We don&apos;t store what you type. This session is completely private.
+                {t("privacy")}
               </p>
             </div>
           </div>
@@ -547,9 +554,9 @@ export default function DiagnosedPage() {
 
           {/* Title */}
           <div className="text-center mb-8">
-            <p className="text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-2">Your personalised explanation</p>
+            <p className="text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-2">{t("yourExplanation")}</p>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
-              Understanding:{" "}
+              {t("understanding")}{" "}
               <span className="text-gradient-blue">{result.diagnosis}</span>
             </h2>
           </div>
@@ -575,7 +582,7 @@ export default function DiagnosedPage() {
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
               </svg>
-              Start over
+              {t("startOver")}
             </button>
             <button
               onClick={() => window.print()}
@@ -584,7 +591,7 @@ export default function DiagnosedPage() {
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h8a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9H5v-2h1v2zm2 0v2h6v-2H8zm6 0h1v-2h-1v2z" clipRule="evenodd" />
               </svg>
-              Save as PDF
+              {t("saveAsPdf")}
             </button>
           </div>
 
@@ -594,7 +601,7 @@ export default function DiagnosedPage() {
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
             </svg>
             <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-              <strong>Educational explanation only.</strong> This is not medical advice. Your specific situation may differ — your doctor&apos;s guidance always takes precedence. Use this as a starting point for understanding, not a substitute for clinical care.
+              {t("disclaimer")}
             </p>
           </div>
         </div>

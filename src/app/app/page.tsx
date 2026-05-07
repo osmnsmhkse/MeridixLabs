@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
@@ -216,37 +217,37 @@ const DEMO_RESULT: AnalysisResult = {
   supplements: "**Vitamin D3 (2,000 IU/day with a fatty meal):** Directly addresses your low Vitamin D of 18 ng/mL. Cholecalciferol (D3) is the most bioavailable form. Take with lunch or dinner for better absorption. Recheck blood levels in 3 months — your doctor may recommend a higher dose based on follow-up results.\n\n**Omega-3 Fatty Acids (1,000–2,000 mg EPA+DHA/day):** Targets your borderline LDL and supports cardiovascular health. Fish oil or algae-based omega-3s have strong clinical evidence for lowering triglycerides and reducing cardiovascular risk. Look for a product with >500 mg combined EPA+DHA per capsule.\n\n**Magnesium Glycinate (300 mg at bedtime):** Supports insulin sensitivity and glucose metabolism — directly relevant to your prediabetic glucose level. Magnesium also improves sleep quality, and poor sleep is independently associated with elevated blood sugar. The glycinate form is gentle on the stomach.\n\n**Berberine (500 mg twice daily with meals):** Has strong clinical evidence for improving insulin sensitivity and lowering fasting glucose — comparable to low-dose metformin in several studies. Discuss with your doctor before starting, as berberine can interact with certain medications.\n\n**Lifestyle (most impactful):** 150 minutes/week of moderate aerobic exercise (brisk walking, cycling, swimming). Even a 10-minute walk after meals measurably reduces postprandial glucose spikes. Reducing refined carbohydrates and increasing dietary fiber can improve all three flagged values — glucose, LDL, and Vitamin D absorption — within 8–12 weeks.",
 };
 
-const TIER_CONFIG: Record<Tier, { label: string; icon: React.ReactNode; audience: string; activeClass: string; inactiveIconClass: string }> = {
+const TIER_CONFIG: Record<Tier, { labelKey: "tierSimple" | "tierMedium" | "tierExpert"; icon: React.ReactNode; audienceKey: "tierSimpleLabel" | "tierMediumLabel" | "tierExpertLabel"; activeClass: string; inactiveIconClass: string }> = {
   simple: {
-    label: "Simple",
+    labelKey: "tierSimple",
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
       </svg>
     ),
-    audience: "Plain language",
+    audienceKey: "tierSimpleLabel",
     activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
     inactiveIconClass: "text-ink-tertiary",
   },
   medium: {
-    label: "Medium",
+    labelKey: "tierMedium",
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
         <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
       </svg>
     ),
-    audience: "Educated patient",
+    audienceKey: "tierMediumLabel",
     activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
     inactiveIconClass: "text-ink-tertiary",
   },
   expert: {
-    label: "Expert",
+    labelKey: "tierExpert",
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
         <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
       </svg>
     ),
-    audience: "Clinical detail",
+    audienceKey: "tierExpertLabel",
     activeClass: "text-purple-700 border-b-2 border-purple-500 bg-purple-500/5",
     inactiveIconClass: "text-ink-tertiary",
   },
@@ -814,6 +815,7 @@ function extractSpecialist(text: string): string {
 
 // ── Supplements & Lifestyle Section ──────────────────────────────────────────
 function SupplementsSection({ supplements }: { supplements: string }) {
+  const t = useTranslations("LabAnalyzer");
   const items = supplements.split(/\n\n+/).filter(Boolean);
 
   return (
@@ -826,11 +828,11 @@ function SupplementsSection({ supplements }: { supplements: string }) {
           </svg>
         </div>
         <div className="flex-1">
-          <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">Supplements &amp; Lifestyle</p>
-          <p className="text-[10px] text-emerald-600 dark:text-emerald-500">Personalized to your flagged values</p>
+          <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">{t("supplementsTitle")}</p>
+          <p className="text-[10px] text-emerald-600 dark:text-emerald-500">{t("supplementsSubtitle")}</p>
         </div>
         <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full font-semibold border border-emerald-200 dark:border-emerald-800">
-          {items.length} recommendations
+          {t("supplementsCount", { count: items.length })}
         </span>
       </div>
 
@@ -859,13 +861,14 @@ function SupplementsSection({ supplements }: { supplements: string }) {
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-ink-tertiary flex-shrink-0">
           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
         </svg>
-        <p className="text-[10px] text-ink-tertiary">These are educational suggestions only. Always consult your doctor before starting any supplement.</p>
+        <p className="text-[10px] text-ink-tertiary">{t("supplementsDisclaimer")}</p>
       </div>
     </div>
   );
 }
 
 function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: ReportMode }) {
+  const t = useTranslations("LabAnalyzer");
   const [open, setOpen] = useState(true);
 
   const isRadiology = mode === "radiology";
@@ -878,7 +881,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
         </svg>
       ),
       color: "text-amber-600 bg-amber-50",
-      label: isRadiology ? "What Could Cause This Finding" : "Possible Causes",
+      label: isRadiology ? t("causesTitle") : "Possible Causes",
       sublabel: isRadiology ? "Conditions that can produce this imaging appearance" : "What could lead to these results?",
       content: result.etiology,
     },
@@ -889,7 +892,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
         </svg>
       ),
       color: "text-brand-blue bg-brand-blue-light",
-      label: isRadiology ? "What's Happening in the Tissue" : "Body Mechanism",
+      label: isRadiology ? t("mechanismTitle") : "Body Mechanism",
       sublabel: isRadiology ? "The biological process behind the imaging finding" : "What's happening inside your body?",
       content: result.mechanism,
     },
@@ -900,7 +903,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
         </svg>
       ),
       color: "text-purple-600 bg-purple-50",
-      label: isRadiology ? "Possible Diagnoses" : "Associated Conditions",
+      label: isRadiology ? t("diagnosesTitle") : t("conditionsTitle"),
       sublabel: isRadiology ? "What conditions are on the differential?" : "What conditions could be related?",
       content: result.diseases,
     },
@@ -915,8 +918,8 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
         className="w-full flex items-center justify-between px-5 py-4 bg-surface-raised hover:bg-surface-border/30 transition-colors"
       >
         <div className="flex items-center gap-2.5">
-          <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">Deep Dive Analysis</span>
-          <span className="text-xs bg-brand-blue text-white px-2 py-0.5 rounded-full font-semibold">NEW</span>
+          <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">{t("deepDiveTitle")}</span>
+          <span className="text-xs bg-brand-blue text-white px-2 py-0.5 rounded-full font-semibold">{t("deepDiveNew")}</span>
         </div>
         <svg viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 text-ink-tertiary transition-transform ${open ? "rotate-180" : ""}`}>
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -939,7 +942,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1">Which Specialist to See</p>
+                    <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1">{t("specialistTitle")}</p>
                     <p className="text-sm text-ink-secondary leading-relaxed mb-3">{result.specialist}</p>
 
                     {/* Action buttons */}
@@ -955,7 +958,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
                         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
                           <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                         </svg>
-                        Find one near you →
+                        {t("findNearYou")}
                       </a>
                       <a
                         href={zocdocUrl}
@@ -968,13 +971,13 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
                         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0">
                           <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                         </svg>
-                        Book on Zocdoc →
+                        {t("bookZocdoc")}
                       </a>
                     </div>
 
                     {/* Non-endorsement note */}
                     <p className="mt-2 text-[10px] text-ink-tertiary">
-                      Meridix Labs does not endorse any specific provider.
+                      {t("zocdocDisclaimer")}
                     </p>
                   </div>
                 </div>
@@ -1582,6 +1585,7 @@ function ResultsPanel({
   savedAnalysisId: string | null;
   isSignedIn: boolean;
 }) {
+  const t = useTranslations("LabAnalyzer");
   const [copied, setCopied] = useState(false);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
@@ -1825,9 +1829,9 @@ function ResultsPanel({
                     }`}
                   >
                     {cfg.icon}
-                    <span>{cfg.label}</span>
+                    <span>{t(cfg.labelKey)}</span>
                     {isActive && (
-                      <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">— {cfg.audience}</span>
+                      <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">— {t(cfg.audienceKey)}</span>
                     )}
                   </button>
                 );

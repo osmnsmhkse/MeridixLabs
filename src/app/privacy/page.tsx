@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Meridix Labs",
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
 const LAST_UPDATED = "May 5, 2026";
 const CONTACT_EMAIL = "contact@meridixlabs.com";
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const t = await getTranslations("Privacy");
   return (
     <div className="min-h-screen bg-white">
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -18,17 +20,15 @@ export default function PrivacyPolicyPage() {
         <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold mb-5 shadow-sm">
-            Privacy Policy
+            {t("title")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight leading-tight mb-4">
-            Your health data, <span className="text-gradient-blue">in plain English.</span>
+            {t("subtitle")}
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed max-w-2xl">
-            We collect the minimum needed to make the product useful, store it
-            securely, and let you delete it whenever you want. No selling, no
-            sharing, no surprises.
+            {t("intro")}
           </p>
-          <p className="mt-6 text-xs text-ink-tertiary">Last updated: {LAST_UPDATED}</p>
+          <p className="mt-6 text-xs text-ink-tertiary">{t("lastUpdated")} {LAST_UPDATED}</p>
         </div>
       </section>
 
@@ -36,7 +36,7 @@ export default function PrivacyPolicyPage() {
       <section className="py-12 bg-surface-raised border-y border-surface-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-4">
-            The 60-second version
+            {t("sixtySecTitle")}
           </h2>
           <ul className="space-y-3 text-sm text-ink-secondary leading-relaxed">
             <Bullet>
@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
 
           {/* 1. Who we are */}
-          <Section number="1" title="Who we are">
+          <Section number="1" title={t("s1Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Meridix Labs (&quot;Meridix,&quot; &quot;we,&quot; &quot;us&quot;) operates the
               website at meridixlabs.com and the related services that help you understand
@@ -89,7 +89,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 2. What we collect */}
-          <Section number="2" title="What information we collect">
+          <Section number="2" title={t("s2Title").replace(/^\d+\.\s*/, "")}>
             <h3 className="text-base font-bold text-ink mt-2 mb-2">
               2.1 — When you upload a lab report (anonymous)
             </h3>
@@ -177,7 +177,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 3. Why */}
-          <Section number="3" title="How we use your information">
+          <Section number="3" title={t("s3Title").replace(/^\d+\.\s*/, "")}>
             <p>We use the information we collect for these purposes only:</p>
             <ul className="space-y-2 mt-3">
               <Item>
@@ -205,7 +205,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 4. Storage and security */}
-          <Section number="4" title="How we store and protect your data">
+          <Section number="4" title={t("s4Title").replace(/^\d+\.\s*/, "")}>
             <ul className="space-y-2 mt-3">
               <Item>
                 <strong>Encryption in transit:</strong> All traffic between your browser
@@ -241,7 +241,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 5. Sub-processors */}
-          <Section number="5" title="Third parties we use to run the service">
+          <Section number="5" title={t("s5Title").replace(/^\d+\.\s*/, "")}>
             <p>
               We rely on a small number of trusted vendors to operate Meridix Labs. They
               are bound by their own privacy commitments, and we only share with them what
@@ -253,30 +253,45 @@ export default function PrivacyPolicyPage() {
                 purpose="AI interpretation of your lab reports and chat replies."
                 what="Your uploaded file (in memory only), the chat messages you send, and the structured patient context you provide."
                 policy="https://www.anthropic.com/legal/privacy"
+                purposeLabel={t("s5VendorPurpose")}
+                sharesLabel={t("s5VendorShares")}
+                policyLabel={t("privacyLink")}
               />
               <Vendor
                 name="Supabase"
                 purpose="Database and storage for accounts, interpretations, and chat history."
                 what="The data described in Section 2.2 above."
                 policy="https://supabase.com/privacy"
+                purposeLabel={t("s5VendorPurpose")}
+                sharesLabel={t("s5VendorShares")}
+                policyLabel={t("privacyLink")}
               />
               <Vendor
                 name="Clerk"
                 purpose="User authentication and account management."
                 what="Your email, name, and authentication tokens."
                 policy="https://clerk.com/privacy"
+                purposeLabel={t("s5VendorPurpose")}
+                sharesLabel={t("s5VendorShares")}
+                policyLabel={t("privacyLink")}
               />
               <Vendor
                 name="Resend"
                 purpose="Sending transactional email (e.g., a copy of an interpretation if you request one)."
                 what="Your email address and the contents of the email we send you."
                 policy="https://resend.com/legal/privacy-policy"
+                purposeLabel={t("s5VendorPurpose")}
+                sharesLabel={t("s5VendorShares")}
+                policyLabel={t("privacyLink")}
               />
               <Vendor
                 name="Vercel"
                 purpose="Website hosting and serverless infrastructure."
                 what="Standard server logs (IP address, request timestamps) for operational and security purposes."
                 policy="https://vercel.com/legal/privacy-policy"
+                purposeLabel={t("s5VendorPurpose")}
+                sharesLabel={t("s5VendorShares")}
+                policyLabel={t("privacyLink")}
               />
             </div>
             <p className="mt-4 text-xs text-ink-tertiary leading-relaxed">
@@ -286,7 +301,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 6. Cookies */}
-          <Section number="6" title="Cookies and similar technologies">
+          <Section number="6" title={t("s6Title").replace(/^\d+\.\s*/, "")}>
             <p>
               We use a small number of cookies and local-storage entries, all strictly
               necessary for the service to work:
@@ -310,7 +325,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 7. Data retention */}
-          <Section number="7" title="How long we keep your data">
+          <Section number="7" title={t("s7Title").replace(/^\d+\.\s*/, "")}>
             <ul className="space-y-2 mt-3">
               <Item>
                 <strong>Account data:</strong> Kept until you delete your account, or
@@ -335,7 +350,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 8. Your rights */}
-          <Section number="8" title="Your rights and choices">
+          <Section number="8" title={t("s8Title").replace(/^\d+\.\s*/, "")}>
             <p>
               You have the following rights over your data. To exercise any of them, use
               the dashboard tools described below or email us at{" "}
@@ -395,7 +410,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 9. Health data */}
-          <Section number="9" title="Important health-data notes">
+          <Section number="9" title={t("s9Title").replace(/^\d+\.\s*/, "")}>
             <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-5 mb-4">
               <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
                 <strong>Meridix Labs is an educational tool, not a medical service.</strong>{" "}
@@ -427,7 +442,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 10. Children */}
-          <Section number="10" title="Children's privacy">
+          <Section number="10" title={t("s10Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Meridix Labs is not intended for users under 16. We do not knowingly collect
               data from children under 16. If you believe a child has provided us with
@@ -436,7 +451,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 11. International */}
-          <Section number="11" title="International data transfers">
+          <Section number="11" title={t("s11Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Meridix Labs is operated from the Republic of Türkiye and serves users
               globally. Because our sub-processors (listed in Section 5) have
@@ -454,7 +469,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 12. Changes */}
-          <Section number="12" title="Changes to this policy">
+          <Section number="12" title={t("s12Title").replace(/^\d+\.\s*/, "")}>
             <p>
               We may update this Privacy Policy from time to time as the service evolves.
               When we make a material change, we will update the &quot;Last updated&quot;
@@ -465,7 +480,7 @@ export default function PrivacyPolicyPage() {
           </Section>
 
           {/* 13. Contact */}
-          <Section number="13" title="Contact us">
+          <Section number="13" title={t("s13Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Questions, requests, or concerns about your privacy? Email us at{" "}
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-blue hover:underline">
@@ -546,11 +561,17 @@ function Vendor({
   purpose,
   what,
   policy,
+  purposeLabel,
+  sharesLabel,
+  policyLabel,
 }: {
   name: string;
   purpose: string;
   what: string;
   policy: string;
+  purposeLabel: string;
+  sharesLabel: string;
+  policyLabel: string;
 }) {
   return (
     <div className="rounded-xl border border-surface-border bg-white dark:bg-slate-900 p-4">
@@ -562,14 +583,14 @@ function Vendor({
           rel="noopener noreferrer"
           className="text-xs text-brand-blue hover:underline whitespace-nowrap"
         >
-          Their privacy policy →
+          {policyLabel}
         </a>
       </div>
       <p className="text-xs text-ink-tertiary mb-1.5">
-        <strong className="text-ink-secondary">Purpose:</strong> {purpose}
+        <strong className="text-ink-secondary">{purposeLabel}</strong> {purpose}
       </p>
       <p className="text-xs text-ink-tertiary">
-        <strong className="text-ink-secondary">What we share:</strong> {what}
+        <strong className="text-ink-secondary">{sharesLabel}</strong> {what}
       </p>
     </div>
   );

@@ -4,6 +4,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollReveal from "@/components/ScrollReveal";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getLocale } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Meridix Labs — AI-Powered Medical Lab Analysis",
@@ -45,13 +47,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{__html: `
           try {
@@ -68,12 +73,14 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-surface text-ink">
-        <Providers>
-          <ScrollReveal />
-          <Navigation />
-          <main className="pt-16">{children}</main>
-          <Footer />
-        </Providers>
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <Providers>
+            <ScrollReveal />
+            <Navigation />
+            <main className="pt-16">{children}</main>
+            <Footer />
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

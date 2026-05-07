@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -28,29 +29,31 @@ interface Profile {
 }
 
 export default function ProfilePage() {
+  const t = useTranslations("Profile");
   if (!AUTH_ENABLED) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-surface px-4">
         <div className="max-w-md text-center">
-          <h1 className="text-xl font-bold text-ink">Accounts aren&apos;t enabled</h1>
+          <h1 className="text-xl font-bold text-ink">{t("authDisabledTitle")}</h1>
           <p className="mt-2 text-sm text-ink-secondary">
-            The account system is coming soon. Every Meridix Labs tool works without signing up.
+            {t("authDisabledBody")}
           </p>
           <Link href="/" className="mt-4 inline-flex items-center px-4 py-2 bg-brand-blue text-white font-semibold rounded-lg text-sm hover:bg-brand-blue-hover transition-all">
-            Go home
+            {t("goHome")}
           </Link>
         </div>
       </div>
     );
   }
   return (
-    <Suspense fallback={<div className="min-h-[calc(100vh-4rem)] flex items-center justify-center"><div className="text-sm text-ink-tertiary">Loading…</div></div>}>
+    <Suspense fallback={<div className="min-h-[calc(100vh-4rem)] flex items-center justify-center"><div className="text-sm text-ink-tertiary">{t("loadingProfile")}</div></div>}>
       <ProfileInner />
     </Suspense>
   );
 }
 
 function ProfileInner() {
+  const t = useTranslations("Profile");
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -115,7 +118,7 @@ function ProfileInner() {
   if (!isLoaded || loading) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-surface">
-        <div className="text-sm text-ink-tertiary">Loading profile…</div>
+        <div className="text-sm text-ink-tertiary">{t("loadingProfile")}</div>
       </div>
     );
   }
@@ -128,18 +131,18 @@ function ProfileInner() {
         <div className="mb-8">
           {welcome && (
             <div className="mb-4 rounded-xl border border-brand-blue/30 bg-brand-blue/5 px-4 py-3 text-sm text-ink">
-              Welcome to Meridix Labs. Fill out as much or as little as you want — every field is optional and you can skip this step entirely.
+              {t("welcomeTitle")} {t("welcomeBody")}
             </div>
           )}
-          <h1 className="text-2xl font-bold text-ink">Your profile</h1>
+          <h1 className="text-2xl font-bold text-ink">{t("yourProfile")}</h1>
           <p className="mt-1 text-sm text-ink-secondary">
-            We use this to personalize your lab analyses. You can skip everything — nothing here is required.
+            {t("profileDesc")}
           </p>
         </div>
 
         {/* Profile depth toggle */}
         <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-5 mb-6">
-          <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">How much do you want to share?</p>
+          <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide mb-3">{t("depthTitle")}</p>
           <div className="grid grid-cols-3 gap-2">
             {(["minimal", "standard", "comprehensive"] as const).map((d) => (
               <button
@@ -152,36 +155,36 @@ function ProfileInner() {
                     : "border-surface-border text-ink-secondary hover:border-brand-blue/50"
                 }`}
               >
-                {d}
+                {d === "minimal" ? t("depthMinimal") : d === "standard" ? t("depthStandard") : t("depthComprehensive")}
               </button>
             ))}
           </div>
           <p className="mt-3 text-xs text-ink-tertiary">
-            {depth === "minimal" && "Just age, sex, meds, and allergies — enough to personalize analyses."}
-            {depth === "standard" && "Adds height/weight, ethnicity, and fasting defaults for better reference ranges."}
-            {depth === "comprehensive" && "Adds conditions, family history, and lifestyle for the most tailored interpretation."}
+            {depth === "minimal" && t("depthMinimalDesc")}
+            {depth === "standard" && t("depthStandardDesc")}
+            {depth === "comprehensive" && t("depthComprehensiveDesc")}
           </p>
         </div>
 
         {/* Form */}
         <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-5 md:p-6 space-y-5">
-          <Section title="Basics">
+          <Section title={t("sectionBasics")}>
             <Row>
-              <Field label="Display name">
+              <Field label={t("fieldName")}>
                 <input
                   type="text"
                   value={profile.display_name ?? ""}
                   onChange={(e) => update("display_name", e.target.value || null)}
                   className={inputCx}
-                  placeholder="Your name"
+                  placeholder={t("namePlaceholder")}
                 />
               </Field>
-              <Field label="Email">
+              <Field label={t("fieldEmail")}>
                 <input type="email" value={profile.email ?? ""} disabled className={inputCx + " opacity-60 cursor-not-allowed"} />
               </Field>
             </Row>
             <Row>
-              <Field label="Age">
+              <Field label={t("fieldAge")}>
                 <input
                   type="number"
                   min={0}
@@ -191,43 +194,43 @@ function ProfileInner() {
                   className={inputCx}
                 />
               </Field>
-              <Field label="Sex">
+              <Field label={t("fieldSex")}>
                 <select
                   value={profile.sex ?? ""}
                   onChange={(e) => update("sex", (e.target.value || null) as Profile["sex"])}
                   className={inputCx}
                 >
                   <option value="">—</option>
-                  <option value="female">Female</option>
-                  <option value="male">Male</option>
-                  <option value="other">Other / prefer not to say</option>
+                  <option value="female">{t("sexFemale")}</option>
+                  <option value="male">{t("sexMale")}</option>
+                  <option value="other">{t("sexOther")}</option>
                 </select>
               </Field>
             </Row>
-            <Field label="Medications (one per line)">
+            <Field label={t("fieldMedications")}>
               <textarea
                 rows={3}
                 value={profile.medications ?? ""}
                 onChange={(e) => update("medications", e.target.value || null)}
                 className={textareaCx}
-                placeholder="e.g., Metformin 500mg&#10;Lisinopril 10mg"
+                placeholder={t("medPlaceholder")}
               />
             </Field>
-            <Field label="Allergies">
+            <Field label={t("fieldAllergies")}>
               <input
                 type="text"
                 value={profile.allergies ?? ""}
                 onChange={(e) => update("allergies", e.target.value || null)}
                 className={inputCx}
-                placeholder="e.g., penicillin, peanuts"
+                placeholder={t("allergyPlaceholder")}
               />
             </Field>
           </Section>
 
           {(depth === "standard" || depth === "comprehensive") && (
-            <Section title="Standard details">
+            <Section title={t("sectionStandard")}>
               <Row>
-                <Field label="Weight (kg)">
+                <Field label={t("fieldWeight")}>
                   <input
                     type="number"
                     step="0.1"
@@ -236,7 +239,7 @@ function ProfileInner() {
                     className={inputCx}
                   />
                 </Field>
-                <Field label="Height (cm)">
+                <Field label={t("fieldHeight")}>
                   <input
                     type="number"
                     value={profile.height_cm ?? ""}
@@ -245,13 +248,13 @@ function ProfileInner() {
                   />
                 </Field>
               </Row>
-              <Field label="Ethnicity">
+              <Field label={t("fieldEthnicity")}>
                 <input
                   type="text"
                   value={profile.ethnicity ?? ""}
                   onChange={(e) => update("ethnicity", e.target.value || null)}
                   className={inputCx}
-                  placeholder="Affects some reference ranges (e.g., eGFR)"
+                  placeholder={t("ethnicityNote")}
                 />
               </Field>
               <label className="flex items-center gap-2 text-sm text-ink-secondary">
@@ -261,38 +264,38 @@ function ProfileInner() {
                   onChange={(e) => update("fasting_default", e.target.checked)}
                   className="w-4 h-4 rounded border-surface-border"
                 />
-                I usually fast before lab draws
+                {t("fastingLabel")}
               </label>
             </Section>
           )}
 
           {depth === "comprehensive" && (
-            <Section title="Comprehensive">
-              <Field label="Known conditions / diagnoses">
+            <Section title={t("sectionComprehensive")}>
+              <Field label={t("fieldConditions")}>
                 <textarea
                   rows={3}
                   value={profile.conditions ?? ""}
                   onChange={(e) => update("conditions", e.target.value || null)}
                   className={textareaCx}
-                  placeholder="e.g., Type 2 diabetes (2019), Hypothyroidism"
+                  placeholder={t("conditionsPlaceholder")}
                 />
               </Field>
-              <Field label="Family history">
+              <Field label={t("fieldFamilyHistory")}>
                 <textarea
                   rows={3}
                   value={profile.family_history ?? ""}
                   onChange={(e) => update("family_history", e.target.value || null)}
                   className={textareaCx}
-                  placeholder="e.g., Father: MI at 52; Mother: breast cancer"
+                  placeholder={t("familyPlaceholder")}
                 />
               </Field>
-              <Field label="Lifestyle notes">
+              <Field label={t("fieldLifestyle")}>
                 <textarea
                   rows={3}
                   value={profile.lifestyle_notes ?? ""}
                   onChange={(e) => update("lifestyle_notes", e.target.value || null)}
                   className={textareaCx}
-                  placeholder="Alcohol, smoking, exercise patterns, diet, sleep…"
+                  placeholder={t("lifestylePlaceholder")}
                 />
               </Field>
             </Section>
@@ -306,20 +309,20 @@ function ProfileInner() {
               disabled={saving}
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold rounded-lg text-sm disabled:opacity-50 transition-all"
             >
-              {saving ? "Saving…" : "Save profile"}
+              {saving ? "Saving…" : t("saveProfile")}
             </button>
             <Link
               href="/dashboard"
               className="inline-flex items-center px-4 py-2.5 text-sm font-medium text-ink-secondary hover:text-ink"
             >
-              Go to dashboard
+              {t("goDashboard")}
             </Link>
             {saved && <span className="text-sm text-emerald-600">Saved ✓</span>}
           </div>
         </div>
 
         <p className="mt-4 text-xs text-ink-tertiary">
-          Your data is stored encrypted and never sold. You can delete any field — or your entire account — at any time.
+          {t("privacyNote")}
         </p>
       </div>
     </div>

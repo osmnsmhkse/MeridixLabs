@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getAllPosts, formatDate, estimateReadTime } from "@/lib/blog";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Blog — Meridix Labs",
@@ -16,7 +17,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const t = await getTranslations("Blog");
   const posts = getAllPosts();
 
   return (
@@ -25,15 +27,13 @@ export default function BlogIndexPage() {
       <section className="gradient-hero pt-36 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-            Health Education
+            {t("badge")}
           </span>
           <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-4">
-            The Meridix Labs{" "}
-            <span className="text-gradient-blue">Blog</span>
+            {t("title")}
           </h1>
           <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed">
-            Plain-English guides to understanding your lab results — written
-            for curious patients, not just clinicians.
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -62,7 +62,7 @@ export default function BlogIndexPage() {
                     <div className="flex items-center gap-3 text-xs text-ink-tertiary mb-3">
                       <span>{formatDate(post.date)}</span>
                       <span>·</span>
-                      <span>{readTime} min read</span>
+                      <span>{readTime} {t("minRead")}</span>
                     </div>
 
                     {/* Title */}
@@ -77,7 +77,7 @@ export default function BlogIndexPage() {
 
                     {/* Read more */}
                     <div className="mt-5 flex items-center gap-1 text-sm font-semibold text-brand-blue">
-                      Read article
+                      {t("readArticle")}
                       <svg
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -102,17 +102,16 @@ export default function BlogIndexPage() {
       <section className="py-16 bg-surface-raised border-t border-surface-border">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <p className="text-lg font-semibold text-ink mb-2">
-            Have your own lab results to understand?
+            {t("ctaTitle")}
           </p>
           <p className="text-ink-secondary text-sm mb-6">
-            Upload them to Meridix Labs and get an instant AI interpretation
-            — in plain English or full clinical detail.
+            {t("ctaBody")}
           </p>
           <Link
             href="/app"
             className="inline-flex items-center gap-2 px-7 py-3.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-sm transition-all duration-200 shadow-md shadow-brand-blue/20"
           >
-            Analyze My Results — Free →
+            {t("ctaButton")}
           </Link>
         </div>
       </section>
