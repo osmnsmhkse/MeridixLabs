@@ -1595,6 +1595,7 @@ function ResultsPanel({
 }) {
   const t = useTranslations("LabAnalyzer");
   const [copied, setCopied] = useState(false);
+  const chatRef = useRef<HTMLElement>(null);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
   const handleCopy = async () => {
@@ -1823,8 +1824,8 @@ function ResultsPanel({
           })()}
 
           {/* Tier tabs */}
-          <div className={`border-b border-surface-border px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
-            <div className="flex gap-0.5">
+          <div className={`border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
+            <div className="flex">
               {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
                 const cfg = TIER_CONFIG[tier];
                 const isActive = tier === activeTier;
@@ -1832,7 +1833,7 @@ function ResultsPanel({
                   <button
                     key={tier}
                     onClick={() => setActiveTier(tier)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg text-sm font-semibold transition-all duration-200 ${
+                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
                       isActive ? cfg.activeClass : `text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40 ${cfg.inactiveIconClass}`
                     }`}
                   >
@@ -2003,7 +2004,7 @@ function ResultsPanel({
         </div>
 
         {/* ─── ASK FOLLOW-UP QUESTIONS (sticky on xl) ─────────────────────── */}
-        <aside className="xl:sticky xl:top-24 print:hidden min-w-0">
+        <aside ref={chatRef} className="xl:sticky xl:top-24 print:hidden min-w-0 scroll-mt-6">
           <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 xl:hidden">
             {t("askAi")}
           </p>
@@ -2027,6 +2028,18 @@ function ResultsPanel({
           <strong>Meridix Labs is an educational tool.</strong> This is not medical advice. Always consult a qualified physician.
         </p>
       </div>
+
+      {/* Mobile floating chat button — scrolls to the chat panel (hidden on xl where chat is already sticky) */}
+      <button
+        onClick={() => chatRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+        className="fixed bottom-6 right-5 z-40 xl:hidden flex items-center gap-2 pl-3.5 pr-4 py-3 rounded-full bg-brand-blue text-white text-sm font-bold shadow-xl shadow-brand-blue/30 hover:bg-brand-blue-hover active:scale-95 transition-all print:hidden"
+        aria-label="Open AI chat"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+          <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+        </svg>
+        Ask AI
+      </button>
 
       {/* Toast notification */}
       {copied && (

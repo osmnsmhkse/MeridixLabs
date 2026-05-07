@@ -560,7 +560,7 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
                   }`}
                 />
                 <div className="min-w-0 flex-1">
-                  <p className={`text-[11px] font-semibold truncate ${
+                  <p className={`text-[11px] font-semibold leading-tight break-words ${
                     allClear ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"
                   }`}>{meta.label}</p>
                   <p className="text-[10px] tabular-nums text-ink-tertiary mt-0.5">
