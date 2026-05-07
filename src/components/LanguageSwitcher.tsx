@@ -92,17 +92,11 @@ export default function LanguageSwitcher({ compact = false }: Props) {
         onClick={() => setOpen(!open)}
         aria-label="Switch language"
         aria-expanded={open}
-        className={`flex items-center gap-1.5 rounded-lg text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors ${
-          compact ? "w-9 h-9 justify-center" : "px-2.5 py-1.5 text-xs font-semibold"
-        }`}
+        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors text-xs font-semibold"
       >
-        <GlobeIcon className="w-4 h-4 flex-shrink-0" />
-        {!compact && (
-          <>
-            <span className="hidden sm:inline">{currentNative}</span>
-            <ChevronIcon open={open} />
-          </>
-        )}
+        <GlobeIcon className="w-3.5 h-3.5 flex-shrink-0" />
+        <span>{lang.toUpperCase()}</span>
+        <ChevronIcon open={open} />
       </button>
 
       {open && (
