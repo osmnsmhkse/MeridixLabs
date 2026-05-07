@@ -300,7 +300,7 @@ export default function Navigation() {
 
     {/* Mobile menu (below pill) */}
     {mobileOpen && (
-      <div className="md:hidden fixed top-16 left-4 right-4 z-40 bg-white dark:bg-slate-900 border border-surface-border rounded-2xl shadow-lift overflow-hidden">
+      <div className="md:hidden fixed top-16 left-4 right-4 z-40 bg-white dark:bg-slate-900 border border-surface-border rounded-2xl shadow-lift overflow-y-auto max-h-[80vh]">
         <div className="py-3 space-y-1 px-2">
             {/* Tools section in mobile */}
             <button
@@ -367,9 +367,9 @@ export default function Navigation() {
               {t("forDoctors")}
             </Link>
 
-            <div className="px-4 py-2 flex items-center gap-2">
+            <div className="px-2 py-1 flex items-center gap-2">
               <ThemeToggle />
-              <LanguageSwitcher />
+              <LanguageSwitcher inline />
             </div>
 
             {AUTH_ENABLED && (

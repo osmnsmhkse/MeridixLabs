@@ -41,9 +41,14 @@ function ChevronIcon({ open }: { open: boolean }) {
 interface Props {
   /** When true, renders a compact icon-only trigger (for tight nav bars). */
   compact?: boolean;
+  /**
+   * When true, the language list expands inline (no floating dropdown).
+   * Use inside mobile menus where an absolute-positioned dropdown would be clipped.
+   */
+  inline?: boolean;
 }
 
-export default function LanguageSwitcher({ compact = false }: Props) {
+export default function LanguageSwitcher({ compact = false, inline = false }: Props) {
   const { lang, setLang } = useLanguage();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -85,6 +90,51 @@ export default function LanguageSwitcher({ compact = false }: Props) {
   }
 
   const currentNative = LANGUAGES[lang]?.native ?? lang.toUpperCase();
+
+  // ── Inline mode (used inside mobile menus to avoid overflow clipping) ────────
+  if (inline) {
+    return (
+      <div className="w-full">
+        <button
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          className="w-full flex items-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
+        >
+          <GlobeIcon className="w-4 h-4 flex-shrink-0" />
+          <span className="flex-1 text-left">{currentNative}</span>
+          <ChevronIcon open={open} />
+        </button>
+        {open && (
+          <div className="mt-1 mx-2 rounded-xl border border-surface-border bg-surface-raised/60 overflow-hidden">
+            {(Object.entries(LANGUAGES) as [LangCode, { english: string; native: string }][]).map(
+              ([code, { english, native }]) => {
+                const isSelected = code === lang;
+                return (
+                  <button
+                    key={code}
+                    onClick={() => select(code)}
+                    className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left transition-colors ${
+                      isSelected
+                        ? "bg-brand-blue/8 text-brand-blue"
+                        : "text-ink hover:bg-surface-raised"
+                    }`}
+                  >
+                    <span className="text-sm font-medium">{native}</span>
+                    <span className="text-xs text-ink-tertiary">{english}</span>
+                    {isSelected && (
+                      <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5 flex-shrink-0 text-brand-blue">
+                        <path fillRule="evenodd" d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                );
+              },
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className="relative">
