@@ -8,7 +8,7 @@
     "analyzeResults": "Sonuçları Analiz Et",
     "analyzeMy": "Sonuçlarımı Analiz Et",
     "labAnalyzer": "Lab Analizörü",
-    "labAnalyzerDesc": "Kan testini yükle, sade bir Türkçe açıklama al",
+    "labAnalyzerDesc": "Kan testini yükle, sade bir dilde anında açıklama al",
     "symptomChecker": "Belirti Kontrolü",
     "symptomCheckerDesc": "Google'dan önce belirtinin ne anlama geldiğini öğren",
     "diagnosisExplainer": "Tanı Açıklayıcı",
@@ -27,8 +27,8 @@
   "Hero": {
     "badge": "Yapay zeka destekli tıbbi yorum",
     "title": "Sağlığın,",
-    "highlight": "sonunda anlaşılır oldu.",
-    "subtitle": "Belirtilerden tanılara, kan testlerinden sonuçlara — Meridix Labs, tüm sağlık yolculuğunu sade bir dille adım adım açıklayan tek platformdur. Jargon yok. Karmaşıklık yok. Bekleme odası gerektirmiyor.",
+    "highlight": "artık açıklandı.",
+    "subtitle": "Belirtilerden tanılara, kan testlerinden sonuçlara — Meridix Labs, tüm sağlık yolculuğunu sade bir dille adım adım açıklayan tek platformdur. Jargon yok. Karmaşıklık yok. Randevu gerektirmiyor.",
     "seeHow": "Nasıl çalışır?",
     "startHere": "Buradan başla",
     "trustEncrypted": "Şifreli ve gizli",
@@ -37,7 +37,8 @@
     "trustFree": "Ücretsiz dene",
     "labCard": "Sonuçların mı var?",
     "symptomCard": "Kendini iyi hissetmiyor musun?",
-    "diagnosisCard": "Yeni mi teşhis konuldu?"
+    "diagnosisCard": "Yeni mi teşhis konuldu?",
+    "heroCta": "Sonuçlarımı Ücretsiz Analiz Et"
   },
   "HowItWorks": {
     "badge": "Basit süreç",
@@ -72,7 +73,7 @@
     "subtitle": "Yeni bir belirti, kafa karıştırıcı bir lab sonucu veya henüz anlamadığın bir tanı — o an için bir araç geliştirdik.",
     "mostUsed": "En çok kullanılan",
     "labTitle": "Lab Analizörü",
-    "labDesc": "Kan testi, lipid paneli, CBC veya metabolik panel yükle. Sade Türkçe, orta derinlik veya tam klinik detayda anında yorum al — anormal değerler, mekanizmalar ve uzman rehberliğiyle.",
+    "labDesc": "Kan testi, lipid paneli, CBC veya metabolik panel yükle. Sade dilde, orta derinlikte veya tam klinik detayda anında yorum al — anormal değerler, mekanizmalar ve uzman rehberliğiyle.",
     "labCta": "Sonuçlarımı analiz et",
     "labTags": "Kan testleri,Lipid panelleri,İdrar tahlili,CBC,Metabolik paneller",
     "symptomLabel": "Belirti Kontrolü",
@@ -662,8 +663,8 @@
     "flagged": "İşaretlendi"
   },
   "AppleHealth": {
-    "title": "Giyilebilir cihaz veriniz mi var?",
-    "subtitle": "Daha kapsamlı bir tablo için lab sonuçlarınızla birleştirin.",
+    "title": "Giyilebilir cihaz verin mi var?",
+    "subtitle": "Daha kapsamlı bir tablo için lab sonuçlarınla birleştir.",
     "importButton": "Apple Health Verilerini İçe Aktar",
     "howToExport": "Apple Health'ten nasıl dışa aktarılır",
     "step1Title": "Health uygulamasını aç",

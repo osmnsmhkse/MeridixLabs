@@ -37,7 +37,8 @@
     "trustFree": "免费试用",
     "labCard": "收到结果了？",
     "symptomCard": "感觉不舒服？",
-    "diagnosisCard": "刚刚确诊？"
+    "diagnosisCard": "刚刚确诊？",
+    "heroCta": "免费分析我的结果"
   },
   "HowItWorks": {
     "badge": "简单流程",

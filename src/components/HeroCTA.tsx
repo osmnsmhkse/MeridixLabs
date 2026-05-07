@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // ── Variant config ────────────────────────────────────────────────────────────
 
@@ -56,6 +58,8 @@ export default function HeroCTA() {
   const [variant, setVariant] = useState<Variant | null>(null);
   const trackedShown = useRef(false);
   const router = useRouter();
+  const t = useTranslations("Hero");
+  const { lang } = useLanguage();
 
   // Assign or restore variant from localStorage on first client render
   useEffect(() => {
@@ -83,6 +87,10 @@ export default function HeroCTA() {
   const baseClass =
     "inline-flex items-center gap-2 px-8 py-4 bg-brand-blue text-white font-bold rounded-xl text-base shadow-lg shadow-brand-blue/25";
 
+  // For non-English locales use the translated CTA; for English keep A/B variant text.
+  const displayText =
+    lang !== "en" || !variant ? t("heroCta") : VARIANT_TEXT[variant];
+
   // Invisible placeholder while hydrating — keeps layout stable (no shift)
   if (!variant) {
     return (
@@ -92,7 +100,7 @@ export default function HeroCTA() {
         tabIndex={-1}
       >
         <UploadIcon />
-        Analyze My Results — Free
+        {displayText}
       </button>
     );
   }
@@ -103,7 +111,7 @@ export default function HeroCTA() {
       className={`${baseClass} hover:bg-brand-blue-hover transition-all duration-200 hover:shadow-xl hover:shadow-brand-blue/30 hover:-translate-y-0.5`}
     >
       <UploadIcon />
-      {VARIANT_TEXT[variant]}
+      {displayText}
     </button>
   );
 }

@@ -117,7 +117,7 @@ export default function LandingPage() {
                   </svg>
                 ),
                 step: tHero("startHere"),
-                title: "Symptom Checker",
+                title: tSuite("symptomLabel"),
                 desc: tSuite("symptomDesc"),
               },
               {
@@ -132,7 +132,7 @@ export default function LandingPage() {
                   </svg>
                 ),
                 step: tHero("labCard"),
-                title: "Lab Analyzer",
+                title: tSuite("labTitle"),
                 desc: tSuite("labDesc"),
               },
               {
@@ -146,7 +146,7 @@ export default function LandingPage() {
                   </svg>
                 ),
                 step: tHero("diagnosisCard"),
-                title: "Diagnosis Explainer",
+                title: tSuite("diagnosisLabel"),
                 desc: tSuite("diagnosisDesc"),
               },
             ].map((item) => (

@@ -37,7 +37,8 @@
     "trustFree": "Free to try",
     "labCard": "Got results?",
     "symptomCard": "Not feeling right?",
-    "diagnosisCard": "Just diagnosed?"
+    "diagnosisCard": "Just diagnosed?",
+    "heroCta": "Analyze My Results — Free"
   },
   "HowItWorks": {
     "badge": "Simple process",

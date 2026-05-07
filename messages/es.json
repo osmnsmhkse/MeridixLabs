@@ -37,7 +37,8 @@
     "trustFree": "Prueba gratuita",
     "labCard": "¿Tienes resultados?",
     "symptomCard": "¿No te encuentras bien?",
-    "diagnosisCard": "¿Te acaban de diagnosticar?"
+    "diagnosisCard": "¿Te acaban de diagnosticar?",
+    "heroCta": "Analizar mis resultados — Gratis"
   },
   "HowItWorks": {
     "badge": "Un proceso sencillo",
