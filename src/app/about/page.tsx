@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "About — Meridix Labs",
@@ -7,7 +8,8 @@ export const metadata: Metadata = {
     "We believe everyone deserves to understand their own health data. Learn about the mission behind Meridix Labs.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const t = await getTranslations("About");
   return (
     <div className="min-h-screen">
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -15,7 +17,7 @@ export default function AboutPage() {
         <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <span className="inline-block px-4 py-2 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-sm font-semibold mb-6 shadow-sm">
-            Our mission
+            {t("missionBadge")}
           </span>
           <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-6">
             Everyone deserves to
@@ -23,9 +25,7 @@ export default function AboutPage() {
             <span className="text-gradient-blue">understand their health.</span>
           </h1>
           <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed">
-            We built Meridix Labs because we were tired of leaving the doctor's
-            office with a printout full of numbers and no idea what any of it
-            meant.
+            {t("missionBody1")}
           </p>
         </div>
       </section>
@@ -36,45 +36,18 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-extrabold text-ink tracking-tight mb-5">
-                The gap we're closing
+                {t("gapTitle")}
               </h2>
               <div className="space-y-4 text-ink-secondary leading-relaxed">
-                <p>
-                  Every year, billions of lab tests are ordered around the world.
-                  Patients receive their results — often through a portal, sometimes
-                  in the mail — and are expected to make sense of values they've
-                  never seen before, with reference ranges that seem designed to
-                  confuse.
-                </p>
-                <p>
-                  The brilliant doctor who ordered those tests is busy. The
-                  follow-up appointment is weeks away. And the patient is left with
-                  anxiety, questions, and no answers.
-                </p>
-                <p>
-                  That's the gap Meridix Labs exists to close. Not to replace your
-                  physician — but to be the brilliant, patient friend who can sit
-                  down with you and explain what those numbers actually mean.
-                </p>
+                <p>{t("gapBody1")}</p>
+                <p>{t("gapBody2")}</p>
               </div>
             </div>
             <div className="space-y-4">
               {[
-                {
-                  stat: "1 in 3",
-                  label:
-                    "patients don't understand their lab results when they leave",
-                },
-                {
-                  stat: "67%",
-                  label:
-                    "of people feel anxious when they receive abnormal results without context",
-                },
-                {
-                  stat: "< 8 min",
-                  label:
-                    "is the average time a physician spends discussing lab findings per visit",
-                },
+                { stat: t("stat1Number"), label: t("stat1Label") },
+                { stat: t("stat2Number"), label: t("stat2Label") },
+                { stat: t("stat3Number"), label: t("stat3Label") },
               ].map((item) => (
                 <div
                   key={item.stat}
@@ -96,7 +69,7 @@ export default function AboutPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-4xl font-extrabold text-ink tracking-tight">
-              What we believe
+              {t("valuesTitle")}
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -110,8 +83,8 @@ export default function AboutPage() {
                   </svg>
                 ),
                 color: "text-brand-blue bg-brand-blue/8",
-                title: "Clarity over complexity",
-                desc: "Medical information should be accessible to anyone who wants it — not locked behind jargon.",
+                title: t("value1Title"),
+                desc: t("value1Desc"),
               },
               {
                 icon: (
@@ -122,8 +95,8 @@ export default function AboutPage() {
                   </svg>
                 ),
                 color: "text-violet-600 bg-violet-50",
-                title: "You are the expert on you",
-                desc: "We give you information so you can have a better, more informed conversation with your doctor.",
+                title: t("value2Title"),
+                desc: t("value2Desc"),
               },
               {
                 icon: (
@@ -133,8 +106,8 @@ export default function AboutPage() {
                   </svg>
                 ),
                 color: "text-emerald-600 bg-emerald-50",
-                title: "Privacy is non-negotiable",
-                desc: "Your file is never stored. Your interpretation is encrypted, tied to your account, and deletable anytime — we never share or sell your health data.",
+                title: t("value3Title"),
+                desc: t("value3Desc"),
               },
               {
                 icon: (
@@ -144,8 +117,8 @@ export default function AboutPage() {
                   </svg>
                 ),
                 color: "text-amber-600 bg-amber-50",
-                title: "Honest, never alarmist",
-                desc: "We explain — we don't diagnose. We are warm and accurate, not sensational or scary.",
+                title: t("value4Title"),
+                desc: t("value4Desc"),
               },
               {
                 icon: (
@@ -155,8 +128,8 @@ export default function AboutPage() {
                   </svg>
                 ),
                 color: "text-sky-600 bg-sky-50",
-                title: "Health literacy for everyone",
-                desc: "Whether you're a worried parent or a medical student, everyone deserves the right level of detail.",
+                title: t("value5Title"),
+                desc: t("value5Desc"),
               },
               {
                 icon: (
@@ -165,8 +138,8 @@ export default function AboutPage() {
                   </svg>
                 ),
                 color: "text-rose-600 bg-rose-50",
-                title: "Doctors remain essential",
-                desc: "We exist to prepare you for your doctor visit, not to replace it. Always.",
+                title: t("value6Title"),
+                desc: t("value6Desc"),
               },
             ].map((v) => (
               <div
@@ -192,31 +165,18 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-extrabold text-ink tracking-tight mb-5">
-                Built on world-class AI
+                {t("aiTitle")}
               </h2>
               <div className="space-y-4 text-ink-secondary leading-relaxed text-sm">
-                <p>
-                  Meridix Labs is powered by Claude, Anthropic's frontier AI model,
-                  which has been trained on vast medical literature and clinical
-                  guidelines. We've carefully designed our prompting to ensure
-                  interpretations are accurate, calibrated, and never alarmist.
-                </p>
-                <p>
-                  Our three-tier system (Simple, Medium, Expert) was designed with
-                  input from physicians, nurses, and patients to ensure each level
-                  is genuinely useful — not just dumbed down or jargon-filled.
-                </p>
-                <p>
-                  Every response includes a practical "What should you do?" section,
-                  because knowledge without guidance is incomplete.
-                </p>
+                <p>{t("aiBody1")}</p>
+                <p>{t("aiBody2")}</p>
               </div>
             </div>
             <div className="space-y-3">
               {[
                 {
-                  label: "AI Model",
-                  value: "Claude by Anthropic",
+                  label: t("specModel"),
+                  value: t("specModelVal"),
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 010 2h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 010-2h1a7 7 0 017-7h1V5.73A2 2 0 0110 4a2 2 0 012-2z"/>
@@ -226,8 +186,8 @@ export default function AboutPage() {
                   color: "text-brand-blue bg-brand-blue/10",
                 },
                 {
-                  label: "Interpretation depth",
-                  value: "3 tiers — Simple to Expert",
+                  label: t("specDepth"),
+                  value: t("specDepthVal"),
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M18 20V10M12 20V4M6 20v-6"/>
@@ -236,8 +196,8 @@ export default function AboutPage() {
                   color: "text-violet-600 bg-violet-50",
                 },
                 {
-                  label: "Supported test types",
-                  value: "All standard lab panels",
+                  label: t("specTests"),
+                  value: t("specTestsVal"),
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
@@ -246,8 +206,8 @@ export default function AboutPage() {
                   color: "text-emerald-600 bg-emerald-50",
                 },
                 {
-                  label: "Data retention",
-                  value: "Encrypted · account-bound · deletable",
+                  label: t("specRetention"),
+                  value: t("specRetentionVal"),
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -257,8 +217,8 @@ export default function AboutPage() {
                   color: "text-slate-600 bg-slate-100",
                 },
                 {
-                  label: "Format support",
-                  value: "PDF, JPG, PNG",
+                  label: t("specFormat"),
+                  value: t("specFormatVal"),
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                       <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -306,15 +266,10 @@ export default function AboutPage() {
                 clipRule="evenodd"
               />
             </svg>
-            Important notice
+            {t("disclaimerTitle")}
           </div>
           <p className="text-amber-800 text-sm leading-relaxed">
-            Meridix Labs is an educational tool designed to help you understand
-            your lab results. It is <strong>not</strong> a medical device, does
-            not provide diagnoses, and is not a substitute for professional
-            medical advice, diagnosis, or treatment. Always seek the guidance of
-            a qualified physician or other qualified health provider with any
-            questions you may have regarding a medical condition.
+            {t("disclaimerBody")}
           </p>
         </div>
       </section>
@@ -323,16 +278,16 @@ export default function AboutPage() {
       <section className="py-24 gradient-blue">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-extrabold text-white mb-4">
-            Try it now — it's free.
+            {t("ctaTitle")}
           </h2>
           <p className="text-white/70 mb-8">
-            No sign-up. No credit card. Just your lab results and instant clarity.
+            {t("ctaSubtitle")}
           </p>
           <Link
             href="/app"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-brand-blue-light text-brand-blue font-bold rounded-xl text-base transition-all duration-200 shadow-xl shadow-black/10"
           >
-            Analyze My Results
+            {t("ctaButton")}
           </Link>
         </div>
       </section>

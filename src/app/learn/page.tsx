@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslations } from "next-intl";
 import type { PracticeCase, EvaluationResult } from "@/types/learn";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -30,9 +31,9 @@ interface SessionData {
 
 // ── Config ────────────────────────────────────────────────────────────────────
 const DIFFICULTY_CONFIG = {
-  beginner:     { label: "Beginner",     xp: 50,  color: "emerald", desc: "1–2 abnormals · common conditions" },
-  intermediate: { label: "Intermediate", xp: 100, color: "amber",   desc: "3–4 abnormals · clinical patterns" },
-  advanced:     { label: "Advanced",     xp: 200, color: "red",     desc: "5+ abnormals · multi-system" },
+  beginner:     { label: "diffBeginner",     xp: 50,  color: "emerald", desc: "diffBeginnerDesc" },
+  intermediate: { label: "diffIntermediate", xp: 100, color: "amber",   desc: "diffIntermediateDesc" },
+  advanced:     { label: "diffAdvanced",     xp: 200, color: "red",     desc: "diffAdvancedDesc" },
 } as const;
 
 const SPECIALTY_CONFIG: Record<Specialty, { label: string; icon: React.ReactNode; color: string }> = {
@@ -160,6 +161,7 @@ function TimerDisplay({ seconds, total }: { seconds: number; total: number }) {
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function LearnPage() {
+  const t = useTranslations("Learn");
   const [pageState,      setPageState]      = useState<PageState>("idle");
   const [difficulty,     setDifficulty]     = useState<Difficulty>("beginner");
   const [specialty,      setSpecialty]      = useState<Specialty>("mixed");

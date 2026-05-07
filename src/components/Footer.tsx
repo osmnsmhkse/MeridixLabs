@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
+
   return (
     <footer className="bg-surface-raised border-t border-surface-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
@@ -26,24 +31,26 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm text-ink-secondary leading-relaxed max-w-xs">
-              Your health, clearly explained. We believe everyone deserves to understand their own medical data — simply, accurately, and without the jargon.
+              {t("tagline")}
             </p>
             <div className="mt-5">
               <span className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary bg-surface dark:bg-slate-800 px-3 py-1.5 rounded-full border border-surface-border dark:border-slate-700">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
-                AI-powered health insights
+                {t("poweredBy")}
               </span>
             </div>
           </div>
 
           {/* Product */}
           <div>
-            <h3 className="text-xs font-semibold text-ink uppercase tracking-wider mb-4">Product</h3>
+            <h3 className="text-xs font-semibold text-ink uppercase tracking-wider mb-4">
+              {t("productSection")}
+            </h3>
             <ul className="space-y-2.5">
               {[
-                { label: "Analyze Results",  href: "/app"           },
-                { label: "How It Works",     href: "/#how-it-works" },
-                { label: "Features",         href: "/#features"     },
+                { label: t("analyzeResults"), href: "/app"           },
+                { label: t("howItWorks"),     href: "/#how-it-works" },
+                { label: t("features"),       href: "/#features"     },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-sm text-ink-secondary hover:text-brand-blue transition-colors">
@@ -56,21 +63,23 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-xs font-semibold text-ink uppercase tracking-wider mb-4">Company</h3>
+            <h3 className="text-xs font-semibold text-ink uppercase tracking-wider mb-4">
+              {t("companySection")}
+            </h3>
             <ul className="space-y-2.5 mb-5">
               <li>
                 <Link href="/about" className="text-sm text-ink-secondary hover:text-brand-blue transition-colors">
-                  About
+                  {t("about")}
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" className="text-sm text-ink-secondary hover:text-brand-blue transition-colors">
-                  Privacy Policy
+                  {t("privacyPolicy")}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-sm text-ink-secondary hover:text-brand-blue transition-colors">
-                  Terms of Service
+                  {t("termsOfService")}
                 </Link>
               </li>
             </ul>
@@ -80,7 +89,7 @@ export default function Footer() {
                 href="https://twitter.com/meridixlabs"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Follow on X"
+                aria-label={t("followX")}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-surface-border dark:border-slate-700 bg-surface dark:bg-slate-800 text-ink-tertiary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 transition-all duration-200"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
@@ -91,7 +100,7 @@ export default function Footer() {
               {/* LinkedIn */}
               <a
                 href="#"
-                aria-label="Connect on LinkedIn"
+                aria-label={t("linkedin")}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-surface-border dark:border-slate-700 bg-surface dark:bg-slate-800 text-ink-tertiary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 transition-all duration-200"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
@@ -102,7 +111,7 @@ export default function Footer() {
               {/* Mail */}
               <a
                 href="mailto:contact@meridixlabs.com"
-                aria-label="Send us an email"
+                aria-label={t("email")}
                 className="w-8 h-8 flex items-center justify-center rounded-lg border border-surface-border dark:border-slate-700 bg-surface dark:bg-slate-800 text-ink-tertiary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 transition-all duration-200"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-3.5 h-3.5">
@@ -118,10 +127,10 @@ export default function Footer() {
       <div className="border-t border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-xs text-ink-tertiary">
-            &copy; {new Date().getFullYear()} Meridix Labs. All rights reserved.
+            &copy; {new Date().getFullYear()} Meridix Labs. {t("rights")}
           </p>
           <p className="text-xs text-ink-tertiary text-center md:text-right max-w-md">
-            Meridix Labs is an educational tool. This is not medical advice. Always consult a qualified physician.
+            {t("disclaimer")}
           </p>
         </div>
       </div>

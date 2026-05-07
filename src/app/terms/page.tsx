@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "Terms of Service — Meridix Labs",
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
 const LAST_UPDATED = "May 5, 2026";
 const CONTACT_EMAIL = "contact@meridixlabs.com";
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const t = await getTranslations("Terms");
   return (
     <div className="min-h-screen bg-white">
       {/* ─── HERO ─────────────────────────────────────────────── */}
@@ -18,16 +20,15 @@ export default function TermsPage() {
         <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold mb-5 shadow-sm">
-            Terms of Service
+            {t("title")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight leading-tight mb-4">
-            The rules of the road, <span className="text-gradient-blue">in plain English.</span>
+            {t("subtitle")}
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed max-w-2xl">
-            By using Meridix Labs you agree to these terms. We&apos;ve kept them short
-            and readable. The most important section is #3 — please read it.
+            {t("intro")}
           </p>
-          <p className="mt-6 text-xs text-ink-tertiary">Last updated: {LAST_UPDATED}</p>
+          <p className="mt-6 text-xs text-ink-tertiary">{t("lastUpdated")} {LAST_UPDATED}</p>
         </div>
       </section>
 
@@ -36,7 +37,7 @@ export default function TermsPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
 
           {/* 1 */}
-          <Section number="1" title="Who these terms are between">
+          <Section number="1" title={t("s1Title").replace(/^\d+\.\s*/, "")}>
             <p>
               These Terms of Service (&quot;Terms&quot;) are an agreement between you
               and Meridix Labs (&quot;Meridix,&quot; &quot;we,&quot; &quot;us&quot;).
@@ -51,7 +52,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 2 */}
-          <Section number="2" title="What Meridix Labs is">
+          <Section number="2" title={t("s2Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Meridix Labs is an educational tool that uses AI to help you understand
               your medical lab results, symptoms, and diagnoses in plain language. We
@@ -63,10 +64,10 @@ export default function TermsPage() {
           </Section>
 
           {/* 3 — the important one */}
-          <Section number="3" title="Meridix Labs is NOT medical advice">
+          <Section number="3" title={t("s3Title").replace(/^\d+\.\s*/, "")}>
             <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-5 mb-4">
               <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed">
-                <strong>Read this section carefully.</strong> Meridix Labs does not
+                <strong>{t("readCarefully")}</strong> Meridix Labs does not
                 provide medical advice, diagnosis, or treatment. The Service is for
                 educational and informational purposes only. Using Meridix Labs does
                 not establish a doctor-patient relationship.
@@ -103,7 +104,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 4 */}
-          <Section number="4" title="Your account">
+          <Section number="4" title={t("s4Title").replace(/^\d+\.\s*/, "")}>
             <p>
               You can use most of the Service anonymously. If you create an account,
               you are responsible for keeping your sign-in credentials safe and for any
@@ -117,7 +118,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 5 */}
-          <Section number="5" title="What you may not do">
+          <Section number="5" title={t("s5Title").replace(/^\d+\.\s*/, "")}>
             <p>You agree not to:</p>
             <ul className="space-y-2 mt-3">
               <Item>
@@ -152,7 +153,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 6 */}
-          <Section number="6" title="Your content">
+          <Section number="6" title={t("s6Title").replace(/^\d+\.\s*/, "")}>
             <p>
               You keep ownership of the lab reports you upload and the questions you
               ask. By using the Service, you grant Meridix Labs a limited, worldwide,
@@ -172,7 +173,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 7 */}
-          <Section number="7" title="Our content">
+          <Section number="7" title={t("s7Title").replace(/^\d+\.\s*/, "")}>
             <p>
               The Service&apos;s code, design, branding, copy, and any documentation we
               produce are owned by Meridix Labs and protected by copyright and other
@@ -188,7 +189,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 8 */}
-          <Section number="8" title="Service availability and changes">
+          <Section number="8" title={t("s8Title").replace(/^\d+\.\s*/, "")}>
             <p>
               We work hard to keep the Service available, but we don&apos;t promise it
               will always be uninterrupted or error-free. We may add, remove, or change
@@ -203,7 +204,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 9 */}
-          <Section number="9" title="Disclaimer of warranties">
+          <Section number="9" title={t("s9Title").replace(/^\d+\.\s*/, "")}>
             <p className="text-xs text-ink-tertiary leading-relaxed uppercase tracking-wide">
               The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot;
               basis, without warranties of any kind, whether express or implied,
@@ -216,7 +217,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 10 */}
-          <Section number="10" title="Limitation of liability">
+          <Section number="10" title={t("s10Title").replace(/^\d+\.\s*/, "")}>
             <p className="text-xs text-ink-tertiary leading-relaxed uppercase tracking-wide">
               To the maximum extent permitted by law, Meridix Labs and its affiliates
               shall not be liable for any indirect, incidental, special, consequential,
@@ -236,7 +237,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 11 */}
-          <Section number="11" title="Indemnification">
+          <Section number="11" title={t("s11Title").replace(/^\d+\.\s*/, "")}>
             <p>
               You agree to defend, indemnify, and hold harmless Meridix Labs from any
               claims, damages, or costs arising out of (a) your use of the Service in
@@ -246,7 +247,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 12 */}
-          <Section number="12" title="Termination">
+          <Section number="12" title={t("s12Title").replace(/^\d+\.\s*/, "")}>
             <p>
               You can stop using the Service and delete your account at any time. We
               can suspend or terminate your access if you violate these Terms. The
@@ -257,7 +258,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 13 */}
-          <Section number="13" title="Governing law and disputes">
+          <Section number="13" title={t("s13Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Meridix Labs is operated by an individual founder based in the Republic
               of Türkiye. These Terms are governed by the laws of the Republic of
@@ -278,7 +279,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 14 */}
-          <Section number="14" title="Changes to these terms">
+          <Section number="14" title={t("s14Title").replace(/^\d+\.\s*/, "")}>
             <p>
               We may update these Terms from time to time. When we do, we&apos;ll
               update the &quot;Last updated&quot; date at the top of this page and, for
@@ -289,7 +290,7 @@ export default function TermsPage() {
           </Section>
 
           {/* 15 */}
-          <Section number="15" title="Contact">
+          <Section number="15" title={t("s15Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Questions about these Terms? Email us at{" "}
               <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-blue hover:underline">

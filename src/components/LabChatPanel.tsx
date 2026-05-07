@@ -22,6 +22,7 @@ import {
   type Msg,
 } from "@/components/ChatComponents";
 import { suggestFollowUpQuestions } from "@/lib/labQuestions";
+import { useTranslations } from "next-intl";
 
 type Tier = "simple" | "medium" | "expert";
 
@@ -109,6 +110,7 @@ export default function LabChatPanel({
   savedAnalysisId,
   isSignedIn,
 }: Props) {
+  const t = useTranslations("LabChat");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -281,9 +283,9 @@ export default function LabChatPanel({
             <MeridixMark className="w-4 h-4 text-white" />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-bold text-ink leading-none">Ask follow-up questions</p>
+            <p className="text-sm font-bold text-ink leading-none">{t("panelTitle")}</p>
             <p className="text-[11px] text-ink-tertiary leading-tight mt-1">
-              Grounded in this report · {tier} explanation
+              {t("panelSubtitle")} · {tier} explanation
               {isSample ? " · sample data" : ""}
             </p>
           </div>
@@ -361,7 +363,7 @@ export default function LabChatPanel({
                 send();
               }
             }}
-            placeholder="Ask about a value, what to do next, or anything in the interpretation…"
+            placeholder={t("inputPlaceholder")}
             rows={1}
             disabled={pending}
             className="block w-full resize-none bg-transparent px-4 pt-3 pb-1.5 text-sm text-ink placeholder-ink-tertiary outline-none max-h-[160px]"
@@ -412,7 +414,7 @@ export default function LabChatPanel({
         </form>
 
         <p className="mt-2 text-[10px] text-ink-tertiary text-center">
-          AI-generated. Educational only — not medical advice. Confirm important decisions with your physician.
+          {t("disclaimer")}
         </p>
       </div>
     </div>

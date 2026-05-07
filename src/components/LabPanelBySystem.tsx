@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { findBiomarker, BODY_SYSTEMS, type BiomarkerDef, type BodySystem } from "@/lib/biomarkers";
+import { useTranslations } from "next-intl";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -372,6 +373,7 @@ function InRangeTable({ labs }: { labs: ParsedLab[] }) {
 // ── System panel ──────────────────────────────────────────────────────────────
 
 function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: boolean }) {
+  const t = useTranslations("LabPanel");
   const [showInRange, setShowInRange] = useState(defaultOpen);
   const meta = BODY_SYSTEMS[group.system];
   const description = SYSTEM_DESCRIPTIONS[group.system];
@@ -404,11 +406,11 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
           </div>
           {flaggedCount > 0 ? (
             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
-              {flaggedCount} flagged
+              {flaggedCount} {t("flagged")}
             </span>
           ) : (
             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 uppercase tracking-wider">
-              All clear
+              {t("normal")}
             </span>
           )}
         </div>
@@ -458,6 +460,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | null; flags?: RawLab[] | null }) {
+  const t = useTranslations("LabPanel");
   const groups = useMemo<SystemGroup[]>(() => {
     // Prefer labs (full panel); fall back to flags only
     const source: RawLab[] = (labs && labs.length > 0) ? labs : (flags ?? []);
@@ -529,7 +532,7 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
             {totalFlagged > 0 && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500" aria-hidden />
-                {totalFlagged} flagged
+                {totalFlagged} {t("flagged")}
               </span>
             )}
           </div>

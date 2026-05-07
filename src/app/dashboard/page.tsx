@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -39,18 +40,19 @@ export default function DashboardPage() {
 }
 
 function AuthDisabledNotice() {
+  const t = useTranslations("Profile");
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-surface px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-bold text-ink">Accounts aren&apos;t enabled</h1>
+        <h1 className="text-xl font-bold text-ink">{t("authDisabledTitle")}</h1>
         <p className="mt-2 text-sm text-ink-secondary">
-          The account system is coming soon. Every Meridix Labs tool works without signing up.
+          {t("authDisabledBody")}
         </p>
         <Link
           href="/"
           className="mt-4 inline-flex items-center px-4 py-2 bg-brand-blue text-white font-semibold rounded-lg text-sm hover:bg-brand-blue-hover transition-all"
         >
-          Go home
+          {t("goHome")}
         </Link>
       </div>
     </div>
@@ -58,6 +60,7 @@ function AuthDisabledNotice() {
 }
 
 function DashboardInner() {
+  const t = useTranslations("Dashboard");
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
@@ -251,7 +254,7 @@ function DashboardInner() {
 
                 {/* Score hero */}
                 <div className="md:col-span-4 p-6 border-b md:border-b-0 md:border-r border-surface-border flex flex-col">
-                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-1">Overall Health Score</p>
+                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-1">{t("healthScore")}</p>
                   <p className="text-[10px] text-ink-tertiary mb-4">Aggregated across all reports</p>
 
                   <div className="flex items-center gap-5 flex-1">
@@ -309,7 +312,7 @@ function DashboardInner() {
 
                 {/* Zone donut */}
                 <div className="md:col-span-3 p-6 flex flex-col">
-                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">Zone Breakdown</p>
+                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">{t("zoneBreaddown")}</p>
                   <div className="flex-1 flex items-center justify-center">
                     {zoneStats.total > 0 ? (
                       <ZoneDonut stats={zoneStats} />
@@ -364,7 +367,7 @@ function DashboardInner() {
 
                 {/* Key metrics */}
                 <div className="md:col-span-3 p-6">
-                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">Key Metrics</p>
+                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">{t("keyMetrics")}</p>
                   <div className="space-y-3">
                     <MetricRow icon="markers" label="Markers" value={zoneStats.total > 0 ? String(zoneStats.total) : String(analyses.reduce((a, b) => a + ((b.labs_raw as unknown[] | null ?? []).length), 0))} />
                     <MetricRow icon="reports" label="Reports" value={String(analyses.length)} />
@@ -432,7 +435,7 @@ function DashboardInner() {
                 </div>
               ) : insights.length === 0 ? (
                 <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 p-5 text-sm text-ink-tertiary">
-                  Upload more reports to see longitudinal insights.
+                  {t("noInsights")}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1074,17 +1077,18 @@ function scoreColor(n: number): string {
 }
 
 function EmptyState() {
+  const t = useTranslations("Dashboard");
   return (
     <div className="rounded-2xl border-2 border-dashed border-surface-border bg-white dark:bg-slate-900 p-10 text-center">
-      <h3 className="text-lg font-bold text-ink">No reports yet</h3>
+      <h3 className="text-lg font-bold text-ink">{t("noReports")}</h3>
       <p className="mt-1.5 text-sm text-ink-secondary max-w-sm mx-auto">
-        Upload your first blood test to see it explained, scored, and tracked over time.
+        {t("noReportsDesc")}
       </p>
       <Link
         href="/app"
         className="mt-4 inline-flex items-center gap-2 px-4 py-2.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold rounded-lg text-sm transition-all"
       >
-        Analyze a report
+        {t("uploadFirst")}
       </Link>
     </div>
   );

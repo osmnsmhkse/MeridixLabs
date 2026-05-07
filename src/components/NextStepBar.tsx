@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface NextStep {
   href: string;
   label: string;
-  description: string;
+  descKey: "symptomDesc" | "diagnosisDesc" | "labDesc" | "trendDesc";
   color: string;        // text color class
   bg: string;          // icon bg class
   iconBg: string;      // filled icon background
@@ -14,7 +17,7 @@ const ALL_STEPS: Record<string, NextStep> = {
   symptom: {
     href: "/symptom",
     label: "Symptom Checker",
-    description: "Understand what a symptom most likely means",
+    descKey: "symptomDesc",
     color: "text-emerald-600 dark:text-emerald-400",
     bg: "bg-emerald-50 dark:bg-emerald-900/20",
     iconBg: "bg-emerald-100 dark:bg-emerald-900/40",
@@ -27,7 +30,7 @@ const ALL_STEPS: Record<string, NextStep> = {
   diagnosed: {
     href: "/diagnosed",
     label: "Diagnosis Explainer",
-    description: "Just got a diagnosis? Learn what it means for your life",
+    descKey: "diagnosisDesc",
     color: "text-violet-600 dark:text-violet-400",
     bg: "bg-violet-50 dark:bg-violet-900/20",
     iconBg: "bg-violet-100 dark:bg-violet-900/40",
@@ -40,7 +43,7 @@ const ALL_STEPS: Record<string, NextStep> = {
   app: {
     href: "/app",
     label: "Lab Analyzer",
-    description: "Upload a blood test and get a plain-English explanation",
+    descKey: "labDesc",
     color: "text-brand-blue",
     bg: "bg-brand-blue-light dark:bg-brand-blue/10",
     iconBg: "bg-brand-blue/10 dark:bg-brand-blue/20",
@@ -54,7 +57,7 @@ const ALL_STEPS: Record<string, NextStep> = {
   trends: {
     href: "/trends",
     label: "Trend Tracker",
-    description: "See how your biomarkers change across multiple tests",
+    descKey: "trendDesc",
     color: "text-amber-600 dark:text-amber-400",
     bg: "bg-amber-50 dark:bg-amber-900/20",
     iconBg: "bg-amber-100 dark:bg-amber-900/40",
@@ -78,13 +81,14 @@ interface NextStepBarProps {
 }
 
 export default function NextStepBar({ currentPage }: NextStepBarProps) {
+  const t = useTranslations("NextStepBar");
   const keys = SUGGESTIONS[currentPage] ?? [];
   const steps = keys.map((k) => ALL_STEPS[k]).filter(Boolean);
 
   return (
     <div className="border-t border-surface-border mt-10 pt-8">
       <p className="text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-4">
-        What to do next
+        {t("title")}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {steps.map((step) => (
@@ -98,7 +102,7 @@ export default function NextStepBar({ currentPage }: NextStepBarProps) {
             </div>
             <div className="min-w-0">
               <p className={`text-sm font-semibold ${step.color}`}>{step.label}</p>
-              <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{step.description}</p>
+              <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{t(step.descKey)}</p>
             </div>
             <svg viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 flex-shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${step.color}`}>
               <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
