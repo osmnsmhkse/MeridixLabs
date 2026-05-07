@@ -1595,6 +1595,7 @@ function ResultsPanel({
 }) {
   const t = useTranslations("LabAnalyzer");
   const [copied, setCopied] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"results" | "report" | "ask">("results");
   const chatRef = useRef<HTMLElement>(null);
   const paragraphs = result[activeTier].split(/\n+/).filter(Boolean);
 
@@ -1773,12 +1774,60 @@ function ResultsPanel({
         );
       })()}
 
+      {/* ─── MOBILE TAB STRIP (hidden on xl where the sidebar layout takes over) ── */}
+      <div className="xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
+        <div className="flex">
+          {([
+            {
+              id: "results" as const,
+              label: "Results",
+              icon: (
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                </svg>
+              ),
+            },
+            {
+              id: "report" as const,
+              label: "Report",
+              icon: (
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                </svg>
+              ),
+            },
+            {
+              id: "ask" as const,
+              label: "Ask AI",
+              icon: (
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                  <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                </svg>
+              ),
+            },
+          ] as const).map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setMobileTab(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-3.5 text-xs font-bold transition-colors border-b-2 ${
+                mobileTab === tab.id
+                  ? "text-brand-blue border-brand-blue"
+                  : "text-ink-tertiary border-transparent hover:text-ink-secondary"
+              }`}
+            >
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* ─── 2-COLUMN RESULTS LAYOUT (xl: results | sticky chat) ──────────────── */}
       <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6 xl:items-start space-y-5 xl:space-y-0">
-        <div className="space-y-5 min-w-0">
+        <div className={`space-y-5 min-w-0 ${mobileTab === "ask" ? "hidden xl:block" : ""}`}>
 
       {/* ─── SECTION 1: YOUR RESULTS ─────────────────────────────────────────── */}
-      <div>
+      <div className={mobileTab === "report" ? "hidden xl:block" : ""}>
         <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
           {t("yourResults")}
         </p>
@@ -1883,6 +1932,9 @@ function ResultsPanel({
           </div>
         </div>
       </div>
+
+      {/* ─── SECTIONS 2-4: REPORT CONTENT (hidden on mobile 'results'/'ask' tabs) */}
+      <div className={`space-y-5 ${mobileTab === "results" ? "hidden xl:block" : ""}`}>
 
       {/* ─── SECTION 2: DEEPER ANALYSIS ──────────────────────────────────────── */}
       {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (
@@ -2001,13 +2053,12 @@ function ResultsPanel({
         </div>
       </div>
 
+      </div>{/* end report-content wrapper */}
+
         </div>
 
         {/* ─── ASK FOLLOW-UP QUESTIONS (sticky on xl) ─────────────────────── */}
-        <aside ref={chatRef} className="xl:sticky xl:top-24 print:hidden min-w-0 scroll-mt-6">
-          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 xl:hidden">
-            {t("askAi")}
-          </p>
+        <aside ref={chatRef} className={`xl:sticky xl:top-24 print:hidden min-w-0 scroll-mt-6 ${mobileTab !== "ask" ? "hidden xl:block" : ""}`}>
           <LabChatPanel
             result={result}
             tier={activeTier}
@@ -2028,18 +2079,6 @@ function ResultsPanel({
           <strong>Meridix Labs is an educational tool.</strong> This is not medical advice. Always consult a qualified physician.
         </p>
       </div>
-
-      {/* Mobile floating chat button — scrolls to the chat panel (hidden on xl where chat is already sticky) */}
-      <button
-        onClick={() => chatRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
-        className="fixed bottom-6 right-5 z-40 xl:hidden flex items-center gap-2 pl-3.5 pr-4 py-3 rounded-full bg-brand-blue text-white text-sm font-bold shadow-xl shadow-brand-blue/30 hover:bg-brand-blue-hover active:scale-95 transition-all print:hidden"
-        aria-label="Open AI chat"
-      >
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
-          <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-        </svg>
-        Ask AI
-      </button>
 
       {/* Toast notification */}
       {copied && (
