@@ -9,6 +9,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { track } from "@/lib/track";
 import { Show, UserButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
@@ -229,6 +230,7 @@ export default function Navigation() {
           {/* Right side */}
           <div className="hidden md:flex items-center gap-1.5 ml-auto">
             <ThemeToggle />
+            <LanguageSwitcher compact />
             <Link
               href="/for-doctors"
               className={`inline-flex items-center gap-1.5 px-3.5 py-2 border font-medium rounded-full text-sm transition-all duration-200 ${
@@ -367,6 +369,7 @@ export default function Navigation() {
 
             <div className="px-4 py-2 flex items-center gap-2">
               <ThemeToggle />
+              <LanguageSwitcher />
             </div>
 
             {AUTH_ENABLED && (
