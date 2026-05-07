@@ -305,7 +305,7 @@ export default function LandingPage() {
               <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
             </span>
             <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">
-              {tSuite("title")}<br className="hidden sm:block" /> {tSuite("titleHighlight")}
+              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}{tSuite("titleHighlight")}
             </h2>
             <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto">
               {tSuite("subtitle")}

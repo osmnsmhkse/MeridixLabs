@@ -20,9 +20,9 @@ export default async function AboutPage() {
             {t("missionBadge")}
           </span>
           <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-6">
-            Everyone deserves to
+            {t("missionTitleLine1")}
             <br />
-            <span className="text-gradient-blue">understand their health.</span>
+            <span className="text-gradient-blue">{t("missionTitleLine2")}</span>
           </h1>
           <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed">
             {t("missionBody1")}

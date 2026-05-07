@@ -458,7 +458,10 @@ function StepRow({
 }
 
 function LoadingAnimation({ mode }: { mode: ReportMode }) {
-  const steps = mode === "radiology" ? LOADING_STEPS_RADIOLOGY : LOADING_STEPS_LAB;
+  const t = useTranslations("LabAnalyzer");
+  const steps = mode === "radiology"
+    ? [t("loadingRadiology1"), t("loadingRadiology2"), t("loadingRadiology3"), t("loadingRadiology4")]
+    : [t("loadingLab1"), t("loadingLab2"), t("loadingLab3"), t("loadingLab4")];
   const [activeStep, setActiveStep] = useState(0);
   const [patienceIdx, setPatienceIdx] = useState(0);
   const [showPatience, setShowPatience] = useState(false);
@@ -528,7 +531,7 @@ function LoadingAnimation({ mode }: { mode: ReportMode }) {
 
       {/* Privacy reassurance */}
       <p className="text-xs text-ink-tertiary text-center max-w-[280px] leading-relaxed">
-        Your file is never stored. Only the AI interpretation is saved to your account.
+        {t("loadingPrivacy")}
       </p>
     </div>
   );
@@ -608,24 +611,24 @@ function computeConfidence(flag: AnalysisFlag, interpretationText: string): Conf
 // ── Confidence pill ───────────────────────────────────────────────────────────
 
 function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"] }) {
+  const t = useTranslations("LabAnalyzer");
   if (confidence === "borderline") {
     return (
       <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold leading-none whitespace-nowrap">
-        ⚠ Borderline
+        ⚠ {t("pillBorderline")}
       </span>
     );
   }
   if (confidence === "abnormal") {
     return (
       <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-[10px] font-bold leading-none whitespace-nowrap">
-        {status === "high" ? "↑" : "↓"} Abnormal
+        {status === "high" ? "↑" : "↓"} {t("pillAbnormal")}
       </span>
     );
   }
-  // normal
   return (
     <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-[10px] font-bold leading-none whitespace-nowrap">
-      ✓ Normal
+      ✓ {t("pillNormal")}
     </span>
   );
 }
@@ -642,6 +645,7 @@ function RangeGauge({
   max: number;
   unit: string;
 }) {
+  const t = useTranslations("LabAnalyzer");
   const range = max - min;
   if (range <= 0) return null;
 
@@ -696,7 +700,7 @@ function RangeGauge({
       {/* Labels row — left = min, center = "Normal zone", right = max */}
       <div className="flex items-center justify-between mt-2 px-0.5">
         <span className="text-[9px] text-ink-tertiary tabular-nums">{min}</span>
-        <span className="text-[9px] text-ink-tertiary/60 tracking-wide">normal range</span>
+        <span className="text-[9px] text-ink-tertiary/60 tracking-wide">{t("normalRange")}</span>
         <span className="text-[9px] text-ink-tertiary tabular-nums">{max}</span>
       </div>
     </div>
@@ -881,8 +885,8 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
         </svg>
       ),
       color: "text-amber-600 bg-amber-50",
-      label: isRadiology ? t("causesTitle") : "Possible Causes",
-      sublabel: isRadiology ? "Conditions that can produce this imaging appearance" : "What could lead to these results?",
+      label: isRadiology ? t("causesTitle") : t("possibleCausesTitle"),
+      sublabel: isRadiology ? t("causesSubLabelRadiology") : t("possibleCausesSubLabel"),
       content: result.etiology,
     },
     {
@@ -892,8 +896,8 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
         </svg>
       ),
       color: "text-brand-blue bg-brand-blue-light",
-      label: isRadiology ? t("mechanismTitle") : "Body Mechanism",
-      sublabel: isRadiology ? "The biological process behind the imaging finding" : "What's happening inside your body?",
+      label: isRadiology ? t("mechanismTitle") : t("bodyMechanismTitle"),
+      sublabel: isRadiology ? t("mechanismSubLabelRadiology") : t("bodyMechanismSubLabel"),
       content: result.mechanism,
     },
     {
@@ -904,7 +908,7 @@ function DeepDiveSection({ result, mode }: { result: AnalysisResult; mode: Repor
       ),
       color: "text-purple-600 bg-purple-50",
       label: isRadiology ? t("diagnosesTitle") : t("conditionsTitle"),
-      sublabel: isRadiology ? "What conditions are on the differential?" : "What conditions could be related?",
+      sublabel: isRadiology ? t("diagnosesSubLabel") : t("conditionsSubLabel"),
       content: result.diseases,
     },
   ].filter((s) => s.content);
@@ -1016,6 +1020,7 @@ interface TrialCategory {
 }
 
 function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
+  const t = useTranslations("LabAnalyzer");
   const [open, setOpen]           = useState(false);
   const [trials, setTrials]       = useState<TrialCategory[] | null>(null);
   const [loading, setLoading]     = useState(false);
@@ -1059,9 +1064,9 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
       >
         <div className="flex items-center gap-2.5">
           <span className="text-base leading-none">📋</span>
-          <span className="text-sm font-semibold text-ink">Relevant clinical trials</span>
+          <span className="text-sm font-semibold text-ink">{t("clinicalTrialsTitle")}</span>
           <span className="hidden sm:inline-flex items-center gap-1 text-xs text-ink-tertiary border border-surface-border rounded-full px-2.5 py-0.5 bg-surface-raised ml-1">
-            {open && trials ? `${trials.length} condition${trials.length !== 1 ? "s" : ""}` : "Click to explore"}
+            {open && trials ? `${trials.length} condition${trials.length !== 1 ? "s" : ""}` : t("clinicalTrialsClickExplore")}
           </span>
         </div>
         <svg
@@ -1082,8 +1087,8 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
                 <div className="absolute inset-0 border-[3px] border-brand-blue/20 rounded-full" />
                 <div className="absolute inset-0 border-[3px] border-brand-blue border-t-transparent rounded-full animate-spin" />
               </div>
-              <p className="text-sm text-ink-secondary font-medium">Finding relevant trial categories…</p>
-              <p className="text-xs text-ink-tertiary">Matching your flagged values to known condition types</p>
+              <p className="text-sm text-ink-secondary font-medium">{t("clinicalTrialsLoading")}</p>
+              <p className="text-xs text-ink-tertiary">{t("clinicalTrialsLoadingSubtitle")}</p>
             </div>
           )}
 
@@ -1100,7 +1105,7 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
                 onClick={() => { setError(null); fetchTrials(); }}
                 className="w-full py-2.5 rounded-xl border border-surface-border text-sm font-semibold text-ink-secondary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light transition-all duration-150"
               >
-                Try again
+                {t("clinicalTrialsTryAgain")}
               </button>
             </div>
           )}
@@ -1110,7 +1115,7 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
             <div className="p-5 space-y-4">
               {/* Context note */}
               <p className="text-xs text-ink-tertiary leading-relaxed">
-                Based on your flagged lab values, the following condition categories commonly have active clinical trials you may be eligible to explore.
+                {t("clinicalTrialsContextNote")}
               </p>
 
               {/* Trial cards */}
@@ -1143,7 +1148,7 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
                         className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold transition-colors mt-0.5"
                         aria-label={`Search ClinicalTrials.gov for ${trial.condition}`}
                       >
-                        Search trials
+                        {t("clinicalTrialsSearchBtn")}
                         <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 flex-shrink-0">
                           <path fillRule="evenodd" d="M4.22 11.78a.75.75 0 010-1.06l5.72-5.72H6.75a.75.75 0 010-1.5h5.5a.75.75 0 01.75.75v5.5a.75.75 0 01-1.5 0V6.06l-5.72 5.72a.75.75 0 01-1.06 0z" clipRule="evenodd" />
                         </svg>
@@ -1156,7 +1161,7 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
                       </svg>
                       <p className="text-[10px] text-ink-tertiary">
-                        Opens <strong>ClinicalTrials.gov</strong> — NIH&apos;s official registry of clinical studies
+                        {t("clinicalTrialsNIHNote")}
                       </p>
                     </div>
                   </div>
@@ -1169,7 +1174,7 @@ function ClinicalTrialsSection({ flags }: { flags: AnalysisFlag[] }) {
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
                 <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
-                  <strong>Eligibility for any trial must be determined by a physician.</strong> Meridix Labs does not endorse any specific trial or institution. These links open an independent, publicly accessible database maintained by the NIH.
+                  {t("clinicalTrialsEligibilityNote")}
                 </p>
               </div>
             </div>
@@ -1189,6 +1194,7 @@ function DoctorQuestionsSection({
   mode: ReportMode;
   lang: string;
 }) {
+  const t = useTranslations("LabAnalyzer");
   const [open, setOpen]               = useState(false);
   const [questions, setQuestions]     = useState<string[] | null>(null);
   const [loading, setLoading]         = useState(false);
@@ -1249,15 +1255,15 @@ function DoctorQuestionsSection({
               <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
             </svg>
           </div>
-          <span className="text-sm font-semibold text-ink">Questions to bring to your doctor</span>
+          <span className="text-sm font-semibold text-ink">{t("doctorQuestionsTitle")}</span>
           {!open && !questions && (
             <span className="hidden sm:inline-flex items-center gap-1 text-xs text-ink-tertiary border border-surface-border rounded-full px-2.5 py-0.5 bg-surface-raised ml-1">
-              Click to generate
+              {t("doctorQuestionsClickGenerate")}
             </span>
           )}
           {questions && (
             <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">
-              {questions.length} ready
+              {t("doctorQuestionsReadyCount", { count: questions.length })}
             </span>
           )}
         </div>
@@ -1279,8 +1285,8 @@ function DoctorQuestionsSection({
                 <div className="absolute inset-0 border-3 border-brand-blue/20 rounded-full" />
                 <div className="absolute inset-0 border-[3px] border-brand-blue border-t-transparent rounded-full animate-spin" />
               </div>
-              <p className="text-sm text-ink-secondary font-medium">Crafting your questions…</p>
-              <p className="text-xs text-ink-tertiary">Tailoring to your specific results</p>
+              <p className="text-sm text-ink-secondary font-medium">{t("doctorQuestionsGenerating")}</p>
+              <p className="text-xs text-ink-tertiary">{t("doctorQuestionsGeneratingSubtitle")}</p>
             </div>
           )}
 
@@ -1296,7 +1302,7 @@ function DoctorQuestionsSection({
                 onClick={() => { setError(null); generate(); }}
                 className="w-full py-2.5 rounded-xl border border-surface-border text-sm font-semibold text-ink-secondary hover:text-ink hover:border-brand-blue/30 hover:bg-brand-blue-light transition-all duration-150"
               >
-                Try again
+                {t("clinicalTrialsTryAgain")}
               </button>
             </div>
           )}
@@ -1352,7 +1358,7 @@ function DoctorQuestionsSection({
                 onClick={() => { setQuestions(null); generate(); }}
                 className="w-full text-xs text-ink-tertiary hover:text-ink-secondary transition-colors py-1"
               >
-                ↻ Generate different questions
+                {t("doctorQuestionsRegenerateBtn")}
               </button>
             </div>
           )}
@@ -1363,6 +1369,7 @@ function DoctorQuestionsSection({
 }
 
 function EmailSection({ result }: { result: AnalysisResult }) {
+  const t = useTranslations("LabAnalyzer");
   const [open, setOpen]       = useState(false);
   const [email, setEmail]     = useState("");
   const [status, setStatus]   = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -1411,9 +1418,9 @@ function EmailSection({ result }: { result: AnalysisResult }) {
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
           </svg>
-          <span className="text-sm font-semibold text-ink">Email this to myself</span>
+          <span className="text-sm font-semibold text-ink">{t("emailTitle")}</span>
           {status === "sent" && (
-            <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">Sent!</span>
+            <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">{t("emailSentBadge")}</span>
           )}
         </div>
         <svg
@@ -1432,7 +1439,7 @@ function EmailSection({ result }: { result: AnalysisResult }) {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               <div>
-                <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">Sent! Check your inbox.</p>
+                <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">{t("emailSentTitle")}</p>
                 <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Your interpretation has been sent to {email}</p>
               </div>
             </div>
@@ -1459,9 +1466,9 @@ function EmailSection({ result }: { result: AnalysisResult }) {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Sending…
+                      {t("emailSendingBtn")}
                     </>
-                  ) : "Send"}
+                  ) : t("emailSendBtn")}
                 </button>
               </div>
 
@@ -1473,7 +1480,7 @@ function EmailSection({ result }: { result: AnalysisResult }) {
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                We don&apos;t store your email. The full report file is never sent — only the AI interpretation.
+                {t("emailPrivacyNote")}
               </p>
             </>
           )}
@@ -1484,6 +1491,7 @@ function EmailSection({ result }: { result: AnalysisResult }) {
 }
 
 function ShareSection({ simple }: { simple: string }) {
+  const t = useTranslations("LabAnalyzer");
   const [copied, setCopied] = useState(false);
 
   const shareText = `Here's a summary of my lab results from Meridix Labs:\n\n${simple}\n\nFull interpretation at meridixlabs.com`;
@@ -1508,7 +1516,7 @@ function ShareSection({ simple }: { simple: string }) {
           <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
           <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
         </svg>
-        <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Share with family</p>
+        <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">{t("shareTitle")}</p>
       </div>
       <div className="p-5 space-y-3">
         <div className="flex flex-col sm:flex-row gap-2.5">
@@ -1521,7 +1529,7 @@ function ShareSection({ simple }: { simple: string }) {
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#25D366] flex-shrink-0">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
             </svg>
-            Share via WhatsApp
+            {t("shareWhatsApp")}
           </button>
 
           {/* Copy summary */}
@@ -1538,14 +1546,14 @@ function ShareSection({ simple }: { simple: string }) {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-                Copied!
+                {t("copySummaryDone")}
               </>
             ) : (
               <>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
                 </svg>
-                Copy summary
+                {t("copySummary")}
               </>
             )}
           </button>
@@ -1555,7 +1563,7 @@ function ShareSection({ simple }: { simple: string }) {
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
           </svg>
-          Only the simple summary is shared — never the full report or file.
+          {t("sharePrivacyNote")}
         </p>
       </div>
     </div>
@@ -1650,7 +1658,7 @@ function ResultsPanel({
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
-          <p className="text-sm text-amber-800 font-medium">This is a sample report for demonstration purposes</p>
+          <p className="text-sm text-amber-800 font-medium">{t("sampleDemoNote")}</p>
         </div>
       )}
 
@@ -1672,7 +1680,7 @@ function ResultsPanel({
           <div>
             <p className="text-sm font-semibold text-ink truncate max-w-[200px] sm:max-w-sm">{fileName}</p>
             <p className="text-xs text-ink-tertiary">
-              {mode === "radiology" ? "Radiology / Pathology — Analysis complete" : "Analysis complete"}
+              {mode === "radiology" ? t("analysisCompleteRadiology") : t("analysisComplete")}
             </p>
           </div>
         </div>
@@ -1683,7 +1691,7 @@ function ResultsPanel({
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
             <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
           </svg>
-          New upload
+          {t("newUpload")}
         </button>
       </div>
 
@@ -1696,7 +1704,7 @@ function ResultsPanel({
             iconBg: "bg-emerald-100 dark:bg-emerald-800/40",
             iconColor: "text-emerald-600 dark:text-emerald-400",
             labelColor: "text-emerald-800 dark:text-emerald-300",
-            label: "All values look normal",
+            label: t("statusNormal"),
             icon: (
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -1709,7 +1717,7 @@ function ResultsPanel({
             iconBg: "bg-amber-100 dark:bg-amber-800/40",
             iconColor: "text-amber-600 dark:text-amber-400",
             labelColor: "text-amber-800 dark:text-amber-300",
-            label: "One or two values to discuss with your doctor",
+            label: t("statusAmber"),
             icon: (
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -1722,7 +1730,7 @@ function ResultsPanel({
             iconBg: "bg-red-100 dark:bg-red-800/40",
             iconColor: "text-red-600 dark:text-red-400",
             labelColor: "text-red-800 dark:text-red-300",
-            label: "Multiple values need medical attention",
+            label: t("statusRed"),
             icon: (
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -1732,9 +1740,9 @@ function ResultsPanel({
         } as const;
 
         const URGENCY_CONFIG = {
-          routine: { label: "Routine follow-up", color: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
-          soon:    { label: "Discuss with a doctor soon", color: "text-red-700 dark:text-red-400", dot: "bg-red-500" },
-          weeks:   { label: "Schedule an appointment within a few weeks", color: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
+          routine: { label: t("urgencyRoutine"), color: "text-emerald-700 dark:text-emerald-400", dot: "bg-emerald-500" },
+          soon:    { label: t("urgencySoon"), color: "text-red-700 dark:text-red-400", dot: "bg-red-500" },
+          weeks:   { label: t("urgencyWeeks"), color: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
         } as const;
 
         const sc = STATUS_CONFIG[result.overall_status!];
@@ -1771,7 +1779,7 @@ function ResultsPanel({
       {/* ─── SECTION 1: YOUR RESULTS ─────────────────────────────────────────── */}
       <div>
         <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-          Your Results
+          {t("yourResults")}
         </p>
 
         {/* Single unified card: flags + tier tabs + interpretation + action */}
@@ -1789,7 +1797,7 @@ function ResultsPanel({
               <>
                 <div className="px-5 py-3 border-b border-surface-border bg-surface-raised flex items-center justify-between">
                   <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">
-                    {mode === "radiology" ? "Key Findings" : "Flagged Values"}
+                    {mode === "radiology" ? t("keyFindings") : t("flaggedValues")}
                   </p>
                   <span className="text-[11px] text-ink-tertiary bg-white dark:bg-slate-700 border border-surface-border px-2 py-0.5 rounded-full">
                     {result.flags.length} value{result.flags.length !== 1 ? "s" : ""}
@@ -1806,7 +1814,7 @@ function ResultsPanel({
                       <path fillRule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm8-3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4.5zm0 7a.75.75 0 110-1.5.75.75 0 010 1.5z" clipRule="evenodd" />
                     </svg>
                     <p className="text-[11px] text-yellow-800 dark:text-yellow-300 leading-relaxed">
-                      Borderline values may require clinical context to interpret accurately. Always confirm with your physician.
+                      {t("borderlineWarning")}
                     </p>
                   </div>
                 )}
@@ -1852,7 +1860,7 @@ function ResultsPanel({
           {mode === "lab" && (((result.labs?.length ?? 0) > 0) || ((result.flags?.length ?? 0) > 0)) && (
             <div className="border-t border-surface-border bg-surface-raised/30 px-5 py-5">
               <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">
-                Grouped by Body System
+                {t("groupedBySystem")}
               </p>
               <LabPanelBySystem labs={result.labs} flags={result.flags} />
             </div>
@@ -1867,7 +1875,7 @@ function ResultsPanel({
                 </svg>
               </div>
               <div>
-                <p className="text-xs font-bold text-brand-blue-dark dark:text-brand-blue uppercase tracking-widest mb-1.5">What should you do?</p>
+                <p className="text-xs font-bold text-brand-blue-dark dark:text-brand-blue uppercase tracking-widest mb-1.5">{t("whatShouldYouDo")}</p>
                 <p className="text-sm text-ink-secondary leading-relaxed">{result.action}</p>
               </div>
             </div>
@@ -1879,7 +1887,7 @@ function ResultsPanel({
       {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (
         <div>
           <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-            Deeper Analysis
+            {t("deeperAnalysis")}
           </p>
           <div className="space-y-3">
             <DeepDiveSection result={result} mode={mode} />
@@ -1926,7 +1934,7 @@ function ResultsPanel({
       {result.supplements && mode === "lab" && (
         <div>
           <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-            Supplements &amp; Lifestyle
+            {t("supplementsLifestyle")}
           </p>
           <SupplementsSection supplements={result.supplements} />
         </div>
@@ -1935,7 +1943,7 @@ function ResultsPanel({
       {/* ─── SECTION 3: NEXT STEPS ────────────────────────────────────────────── */}
       <div>
         <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-          Next Steps
+          {t("nextSteps")}
         </p>
         <div className="space-y-3">
           <DoctorQuestionsSection result={result} mode={mode} lang={lang} />
@@ -1948,7 +1956,7 @@ function ResultsPanel({
       {/* ─── SECTION 4: SAVE & SHARE ─────────────────────────────────────────── */}
       <div className="print:hidden">
         <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
-          Save &amp; Share
+          {t("saveShare")}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           <ShareSection simple={result.simple} />
@@ -1968,7 +1976,7 @@ function ResultsPanel({
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                Copied!
+                {t("copySummaryDone")}
               </>
             ) : (
               <>
@@ -1976,7 +1984,7 @@ function ResultsPanel({
                   <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                   <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
                 </svg>
-                Copy to Clipboard
+                {t("copyToClipboard")}
               </>
             )}
           </button>
@@ -1987,7 +1995,7 @@ function ResultsPanel({
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
               <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h6a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 112 0 1 1 0 01-2 0zm2 1v2h4v-2H8z" clipRule="evenodd" />
             </svg>
-            Download as PDF
+            {t("downloadPdf")}
           </button>
         </div>
       </div>
@@ -1997,7 +2005,7 @@ function ResultsPanel({
         {/* ─── ASK FOLLOW-UP QUESTIONS (sticky on xl) ─────────────────────── */}
         <aside className="xl:sticky xl:top-24 print:hidden min-w-0">
           <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5 xl:hidden">
-            Ask the AI
+            {t("askAi")}
           </p>
           <LabChatPanel
             result={result}
@@ -2026,7 +2034,7 @@ function ResultsPanel({
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-400">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
-          Copied to clipboard!
+          {t("copiedToClipboard")}
         </div>
       )}
 
@@ -2057,6 +2065,7 @@ function FilePreview({
   onClear: () => void;
   onAnalyze: () => void;
 }) {
+  const t = useTranslations("LabAnalyzer");
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-4 p-4 rounded-2xl border border-brand-blue/30 bg-brand-blue-light/50">
@@ -2068,7 +2077,7 @@ function FilePreview({
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-ink truncate">{preview.name}</p>
           <p className="text-xs text-ink-tertiary mt-0.5">{preview.size}</p>
-          <p className="text-xs text-brand-blue mt-1 font-medium">Ready to analyze</p>
+          <p className="text-xs text-brand-blue mt-1 font-medium">{t("readyToAnalyze")}</p>
         </div>
         <button
           onClick={onClear}
@@ -2086,7 +2095,7 @@ function FilePreview({
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
           <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
         </svg>
-        Analyze My Results
+        {t("analyzeBtnLabel")}
       </button>
     </div>
   );
@@ -2094,6 +2103,7 @@ function FilePreview({
 
 // ── Mobile upload UI ─────────────────────────────────────────────────────────
 function MobileUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => void; error: string | null }) {
+  const t = useTranslations("LabAnalyzer");
   const [preview, setPreview] = useState<{ name: string; size: string } | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -2140,7 +2150,7 @@ function MobileUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) 
           <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
         </svg>
-        Take a Photo of Your Lab Report
+        {t("takePhotoBtn")}
       </button>
 
       {/* Files button — secondary */}
@@ -2151,7 +2161,7 @@ function MobileUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) 
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
         </svg>
-        Choose from Files
+        {t("chooseFilesBtn")}
       </button>
 
       {error && <ErrorBanner message={error} />}
@@ -2173,7 +2183,7 @@ function ErrorBanner({ message }: { message: string }) {
 
 // ── Desktop upload UI (original drag-and-drop) ───────────────────────────────
 function DesktopUploadZone({ onFileSelect, error }: { onFileSelect: (file: File) => void; error: string | null }) {
-
+  const t = useTranslations("LabAnalyzer");
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<{ name: string; size: string; type: string } | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -2276,7 +2286,7 @@ function DesktopUploadZone({ onFileSelect, error }: { onFileSelect: (file: File)
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
             <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
           </svg>
-          Analyze My Results
+          {t("analyzeBtnLabel")}
         </button>
       )}
     </div>
@@ -2437,6 +2447,7 @@ function ContextForm({
 }
 
 export default function AppPage() {
+  const t = useTranslations("LabAnalyzer");
   const { lang } = useLanguage();
   const { userData, recordInterpretation, dismissBanner, daysSinceLastVisit } = useReturningUser();
   const [state, setState] = useState<"idle" | "context" | "loading" | "success" | "error">("idle");
@@ -2710,14 +2721,14 @@ export default function AppPage() {
             /* Default hero */
             <>
               <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-                AI Lab Interpreter
+                {t("heroBadge")}
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
-                Upload your lab report.{" "}
-                <span className="text-gradient-blue">Understand it in seconds.</span>
+                {t("heroTitle")}{" "}
+                <span className="text-gradient-blue">{t("heroHighlight")}</span>
               </h1>
               <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
-                Our AI reads every value, flags what's abnormal, and explains the biology — in plain English or full clinical detail.
+                {t("heroSubtitle")}
               </p>
             </>
           )}
@@ -2727,19 +2738,19 @@ export default function AppPage() {
             {[
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-emerald-500"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>,
-                label: "File never stored",
+                label: t("trustFileNeverStored"),
               },
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>,
-                label: "Free to try",
+                label: t("trustFreeToTry"),
               },
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-amber-500"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>,
-                label: "Results in seconds",
+                label: t("trustResultsInSeconds"),
               },
               {
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-500"><path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16A8 8 0 0010 2zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd" /></svg>,
-                label: "10 languages",
+                label: t("trust10Languages"),
               },
             ].map((b) => (
               <span key={b.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border dark:border-slate-700 text-xs text-ink-secondary font-medium shadow-sm">
@@ -2754,7 +2765,7 @@ export default function AppPage() {
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3.5 h-3.5">
                 <circle cx="10" cy="10" r="8" /><path d="M10 2c-2 3-2 13 0 16M10 2c2 3 2 13 0 16M2 10h16" strokeLinecap="round" />
               </svg>
-              Results will be in {LANGUAGES[lang]?.english ?? lang}
+              {t("resultsWillBeIn", { lang: LANGUAGES[lang]?.native ?? lang })}
             </div>
           )}
         </div>
@@ -2781,12 +2792,12 @@ export default function AppPage() {
                   {
                     mode: "lab",
                     icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clipRule="evenodd" /></svg>,
-                    label: "Lab Results",
+                    label: t("modeLabResults"),
                   },
                   {
                     mode: "radiology",
                     icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" /></svg>,
-                    label: "Radiology / Pathology",
+                    label: t("modeRadiology"),
                   },
                 ] as { mode: ReportMode; icon: React.ReactNode; label: string }[]).map((opt) => (
                   <button
