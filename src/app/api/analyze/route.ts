@@ -58,7 +58,7 @@ Fields required:
 
 1. "overall_status" — ONE of exactly three string values: "normal" (all values within reference range or clinically insignificant deviations), "amber" (one or two values mildly abnormal and worth discussing with a doctor), or "red" (multiple or significantly abnormal values that need medical attention). Choose based on clinical significance, not just raw flag count.
 
-2. "summary_headline" — A single plain-English sentence (max 2 sentences) summarizing the most important finding(s). Write as if speaking directly to the patient. Example: "Your glucose is slightly elevated and your sodium is a little low — both are worth a conversation with your doctor." Never use alarmist language.
+2. "summary_headline" — A single plain-language sentence (max 2 sentences) summarizing the most important finding(s). Write as if speaking directly to the patient. IMPORTANT: This must be written in ${languageName} — not English. Never use alarmist language.
 
 3. "urgency" — ONE of exactly three string values: "routine" (no urgent action needed, standard follow-up), "weeks" (schedule an appointment within a few weeks), or "soon" (discuss with a doctor soon — not urgent but don't delay). Never suggest emergency care.
 
@@ -125,7 +125,7 @@ Fields required:
 
 1. "overall_status" — ONE of exactly three string values: "normal" (report is entirely normal or findings are incidental/benign with no follow-up needed), "amber" (one or two findings that warrant a conversation with a physician but are not urgent), or "red" (findings that need prompt medical attention or specialist referral). Choose based on clinical significance.
 
-2. "summary_headline" — A single plain-English sentence (max 2 sentences) summarizing the most important finding. Write directly to the patient. Example: "Your scan showed a tiny lung nodule — this is extremely common, likely benign, and just needs a routine check in a year." Never use alarming language.
+2. "summary_headline" — A single plain-language sentence (max 2 sentences) summarizing the most important finding. Write directly to the patient. IMPORTANT: This must be written in ${languageName} — not English. Never use alarming language.
 
 3. "urgency" — ONE of exactly three string values: "routine" (no urgent action, standard follow-up or surveillance), "weeks" (schedule an appointment within a few weeks), or "soon" (discuss with a doctor soon — not an emergency but prompt follow-up warranted). Never suggest emergency care.
 
