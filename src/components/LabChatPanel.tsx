@@ -22,7 +22,7 @@ import {
   type Msg,
 } from "@/components/ChatComponents";
 import { suggestFollowUpQuestions } from "@/lib/labQuestions";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 type Tier = "simple" | "medium" | "expert";
 
@@ -111,6 +111,7 @@ export default function LabChatPanel({
   isSignedIn,
 }: Props) {
   const t = useTranslations("LabChat");
+  const locale = useLocale();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -177,8 +178,8 @@ export default function LabChatPanel({
 
   // ── Generate suggested questions from flags ──
   const suggestions = useMemo(
-    () => suggestFollowUpQuestions(result.flags ?? [], tier),
-    [result.flags, tier],
+    () => suggestFollowUpQuestions(result.flags ?? [], tier, locale),
+    [result.flags, tier, locale],
   );
 
   // ── Send a message and stream the reply ──
@@ -285,8 +286,8 @@ export default function LabChatPanel({
           <div className="min-w-0">
             <p className="text-sm font-bold text-ink leading-none">{t("panelTitle")}</p>
             <p className="text-[11px] text-ink-tertiary leading-tight mt-1">
-              {t("panelSubtitle")} · {tier} explanation
-              {isSample ? " · sample data" : ""}
+              {t("panelSubtitle")} · {t(`${tier}Explanation`)}
+              {isSample ? ` · ${t("sampleData")}` : ""}
             </p>
           </div>
         </div>
@@ -295,9 +296,9 @@ export default function LabChatPanel({
             <button
               onClick={newChat}
               className="text-xs font-semibold text-ink-secondary hover:text-brand-blue px-3 py-1.5 rounded-lg border border-surface-border hover:border-brand-blue transition-colors"
-              title="Clear this conversation"
+              title={t("clearChat")}
             >
-              Clear
+              {t("clearChat")}
             </button>
           )}
         </div>
@@ -431,12 +432,12 @@ function EmptyState({
   onSend: (q: string) => void;
   historyLoaded: boolean;
 }) {
+  const t = useTranslations("LabChat");
   return (
     <div>
       <div className="mb-4">
         <p className="text-sm text-ink-secondary leading-relaxed">
-          Have questions about your results? Ask anything — I&apos;m grounded in the values and
-          interpretation above. Try one of these to start:
+          {t("chatIntro")}
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -456,7 +457,7 @@ function EmptyState({
         ))}
       </div>
       {!historyLoaded && (
-        <p className="mt-4 text-[11px] text-ink-tertiary">Loading history…</p>
+        <p className="mt-4 text-[11px] text-ink-tertiary">{t("historyLoading")}</p>
       )}
     </div>
   );

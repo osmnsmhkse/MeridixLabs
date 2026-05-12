@@ -64,7 +64,19 @@
     "expertDesc": "Langage clinique complet",
     "noBackground": "Sans formation médicale",
     "educated": "Patient informé",
-    "clinician": "Clinicien / étudiant en médecine"
+    "clinician": "Clinicien / étudiant en médecine",
+    "simpleExample": "\"Votre glycémie est un peu élevée — imaginez que votre sang contient plus de sucre que la normale. Ce n'est pas alarmant en soi, mais votre médecin devrait le savoir.\"",
+    "mediumExample": "\"Votre glycémie à jeun de 112 mg/dL se situe dans la plage prédiabétique (100–125 mg/dL). Cela indique que la réponse insulinique de votre corps pourrait commencer à perdre en efficacité.\"",
+    "expertExample": "\"Glycémie à jeun 112 mg/dL (réf : 70–99). Compatible avec une anomalie de la glycémie à jeun selon les critères ADA. HbA1c + HGPO recommandés pour stratifier le risque de DT2. Réviser les composantes du MetS : IMC, bilan lipidique, PA.\"",
+    "demoSimpleSummary": "Votre glycémie est légèrement élevée et votre sodium est dans le bas de la fourchette — à mentionner lors de votre prochain bilan.",
+    "demoSimpleSpecialistLabel": "Quel spécialiste ?",
+    "demoSimpleSpecialistBody": "Envisagez de consulter un <b>Endocrinologue</b> pour évaluer le métabolisme du glucose et exclure le prédiabète.",
+    "demoMediumSummary": "La glycémie à jeun de 112 mg/dL est dans la plage d'anomalie de la glycémie à jeun (100–125 mg/dL selon l'ADA). Le sodium est légèrement bas à 134 mEq/L — souvent lié à l'alimentation ou à l'hydratation. Tous les autres marqueurs métaboliques sont dans les limites normales.",
+    "demoMediumSpecialistLabel": "Prochaines étapes",
+    "demoMediumSpecialistBody": "Envisagez de répéter la glycémie à jeun avec une <b>HbA1c</b> pour confirmer la tendance glycémique. Revoir les habitudes d'apport en sodium et d'hydratation avec votre <b>Médecin Généraliste</b>.",
+    "demoExpertSummary": "Anomalie de la glycémie à jeun confirmée : glycémie à jeun 112 mg/dL répond aux critères du prédiabète ADA (100–125 mg/dL). HbA1c, insuline à jeun et HOMA-IR recommandés. Hyponatrémie légère (Na 134 mEq/L) — probablement euvolémique/alimentaire ; réévaluer avant de rechercher un SIADH.",
+    "demoExpertSpecialistLabel": "Raisonnement clinique",
+    "demoExpertSpecialistBody": "Selon ACC/AHA 2019 : évaluation formelle du risque ASCVD à 10 ans indiquée. Orienter vers l'<b>Endocrinologie</b> si HOMA-IR > 2,5. Surveiller la tendance du sodium avant un bilan surrénalien."
   },
   "Suite": {
     "badge": "Quatre outils, une mission",
@@ -765,7 +777,14 @@
     "panelSubtitle": "Basé sur ce rapport",
     "disclaimer": "Généré par IA. Éducatif uniquement — pas un avis médical.",
     "meridixAI": "Meridix IA",
-    "inputPlaceholder": "Poser une question sur vos résultats…"
+    "inputPlaceholder": "Poser une question sur vos résultats…",
+    "chatIntro": "Vous avez des questions sur vos résultats ? Posez n'importe quoi — je me base sur les valeurs et l'interprétation ci-dessus. Essayez l'une de ces questions :",
+    "sampleData": "données exemple",
+    "clearChat": "Effacer",
+    "historyLoading": "Chargement de l'historique…",
+    "simpleExplanation": "Explication simple",
+    "mediumExplanation": "Explication intermédiaire",
+    "expertExplanation": "Explication expert"
   },
   "LabPanel": {
     "cardiovascular": "Cardiovasculaire",

@@ -64,7 +64,19 @@
     "expertDesc": "Full clinical language",
     "noBackground": "No medical background",
     "educated": "Educated patient",
-    "clinician": "Clinician / med student"
+    "clinician": "Clinician / med student",
+    "simpleExample": "\"Your glucose is a little high — think of it like your blood has more sugar than usual. It doesn't mean anything scary on its own, but your doctor should know.\"",
+    "mediumExample": "\"Your fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125 mg/dL). This signals that your body's insulin response may be starting to lose efficiency.\"",
+    "expertExample": "\"Fasting glucose 112 mg/dL (ref: 70–99). Consistent with IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components: BMI, lipid panel, BP.\"",
+    "demoSimpleSummary": "Your glucose is slightly elevated and sodium is on the low end — worth mentioning at your next check-up.",
+    "demoSimpleSpecialistLabel": "Which specialist?",
+    "demoSimpleSpecialistBody": "Consider seeing an <b>Endocrinologist</b> to evaluate glucose metabolism and rule out pre-diabetes.",
+    "demoMediumSummary": "Fasting glucose at 112 mg/dL falls in the impaired fasting glucose range (100–125 mg/dL per ADA). Sodium is mildly low at 134 mEq/L — often dietary or hydration related. All other metabolic markers are within normal limits.",
+    "demoMediumSpecialistLabel": "Next steps",
+    "demoMediumSpecialistBody": "Consider repeating fasting glucose with an <b>HbA1c</b> to confirm glycemic trend. Review sodium intake and hydration habits with your <b>Primary Care Physician</b>.",
+    "demoExpertSummary": "IFG confirmed: fasting glucose 112 mg/dL meets ADA prediabetes criteria (100–125 mg/dL). Recommend HbA1c, fasting insulin, and HOMA-IR. Mild hyponatremia (Na 134 mEq/L) — likely euvolemic/dietary; reassess before pursuing SIADH workup.",
+    "demoExpertSpecialistLabel": "Clinical reasoning",
+    "demoExpertSpecialistBody": "Per ACC/AHA 2019: formal 10-yr ASCVD risk assessment indicated. Refer to <b>Endocrinology</b> if HOMA-IR > 2.5. Monitor sodium trend before adrenal workup."
   },
   "Suite": {
     "badge": "Four tools, one mission",
@@ -765,7 +777,14 @@
     "panelSubtitle": "Grounded in this report",
     "disclaimer": "AI-generated. Educational only — not medical advice.",
     "meridixAI": "Meridix AI",
-    "inputPlaceholder": "Ask about your results…"
+    "inputPlaceholder": "Ask about your results…",
+    "chatIntro": "Have questions about your results? Ask anything — I'm grounded in the values and interpretation above. Try one of these to start:",
+    "sampleData": "sample data",
+    "clearChat": "Clear",
+    "historyLoading": "Loading history…",
+    "simpleExplanation": "Simple explanation",
+    "mediumExplanation": "Medium explanation",
+    "expertExplanation": "Expert explanation"
   },
   "LabPanel": {
     "cardiovascular": "Cardiovascular",

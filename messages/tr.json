@@ -64,7 +64,19 @@
     "expertDesc": "Tam klinik dil",
     "noBackground": "Tıbbi bilgi gerektirmiyor",
     "educated": "Bilinçli hasta",
-    "clinician": "Klinisyen / tıp öğrencisi"
+    "clinician": "Klinisyen / tıp öğrencisi",
+    "simpleExample": "\"Glikozunuz biraz yüksek — bunu, kanınızda normalden fazla şeker olması olarak düşünebilirsiniz. Tek başına korkutucu bir şey değil ama doktorunuzun bilmesi gerek.\"",
+    "mediumExample": "\"Açlık glikozunuz 112 mg/dL ile prediyabetik aralığa (100–125 mg/dL) giriyor. Bu, vücudunuzun insülin yanıtının verimliliğini kaybetmeye başladığına işaret edebilir.\"",
+    "expertExample": "\"Açlık glikozu 112 mg/dL (ref: 70–99). ADA kriterlerine göre IFG ile uyumlu. T2DM riskini sınıflandırmak için HbA1c + OGTT önerilir. MetS bileşenlerini gözden geçirin: VKİ, lipid paneli, KB.\"",
+    "demoSimpleSummary": "Glikozunuz hafifçe yüksek, sodyumunuz düşük tarafta — bir sonraki kontrolünüzde doktorunuza belirtmeye değer.",
+    "demoSimpleSpecialistLabel": "Hangi uzman?",
+    "demoSimpleSpecialistBody": "Glikoz metabolizmasını değerlendirmek ve prediyabeti dışlamak için bir <b>Endokrinoloji</b> uzmanına görünmeyi düşünün.",
+    "demoMediumSummary": "112 mg/dL açlık glikozu, bozulmuş açlık glikozu aralığına (ADA'ya göre 100–125 mg/dL) giriyor. 134 mEq/L sodyum hafifçe düşük — genellikle diyetle veya hidrasyonla ilgilidir. Diğer tüm metabolik belirteçler normal sınırlarda.",
+    "demoMediumSpecialistLabel": "Sonraki adımlar",
+    "demoMediumSpecialistBody": "Glikemik trendi doğrulamak için açlık glikozunu <b>HbA1c</b> ile tekrarlayın. Sodyum alımını ve hidrasyon alışkanlıklarını <b>Birinci Basamak Hekiminizle</b> gözden geçirin.",
+    "demoExpertSummary": "IFG doğrulandı: açlık glikozu 112 mg/dL, ADA prediyabet kriterlerini (100–125 mg/dL) karşılıyor. HbA1c, açlık insülini ve HOMA-IR önerilir. Hafif hiponatremi (Na 134 mEq/L) — muhtemelen övolemik/diyetle ilgili; SIADH araştırmadan önce yeniden değerlendirin.",
+    "demoExpertSpecialistLabel": "Klinik gerekçe",
+    "demoExpertSpecialistBody": "ACC/AHA 2019'a göre: resmi 10 yıllık ASCVD risk değerlendirmesi önerilir. HOMA-IR > 2,5 ise <b>Endokrinoloji</b>'ye sevk edin. Adrenal araştırmadan önce sodyum trendini izleyin."
   },
   "Suite": {
     "badge": "Dört araç, tek misyon",
@@ -765,7 +777,14 @@
     "panelSubtitle": "Bu rapora dayalı",
     "disclaimer": "Yapay zeka tarafından oluşturuldu. Yalnızca eğitim amaçlı — tıbbi tavsiye değildir.",
     "meridixAI": "Meridix Yapay Zeka",
-    "inputPlaceholder": "Sonuçların hakkında sor…"
+    "inputPlaceholder": "Sonuçların hakkında sor…",
+    "chatIntro": "Sonuçlarınız hakkında sorularınız mı var? Her şeyi sorabilirsiniz — yukarıdaki değerler ve yorumlar temelinde yanıt veriyorum. Başlamak için bunlardan birini deneyin:",
+    "sampleData": "örnek veri",
+    "clearChat": "Temizle",
+    "historyLoading": "Geçmiş yükleniyor…",
+    "simpleExplanation": "Basit açıklama",
+    "mediumExplanation": "Orta düzey açıklama",
+    "expertExplanation": "Uzman açıklaması"
   },
   "LabPanel": {
     "cardiovascular": "Kardiyovasküler",

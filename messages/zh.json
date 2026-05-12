@@ -64,7 +64,19 @@
     "expertDesc": "完整临床语言",
     "noBackground": "无医学背景",
     "educated": "知情患者",
-    "clinician": "临床医生/医学生"
+    "clinician": "临床医生/医学生",
+    "simpleExample": "\"您的血糖略高——可以想象为血液中的糖分比平时多一点。这本身并不意味着什么严重的问题，但最好让医生知道。\"",
+    "mediumExample": "\"您的空腹血糖112 mg/dL处于糖尿病前期范围（100–125 mg/dL）。这表明您身体的胰岛素反应可能开始降低效率。\"",
+    "expertExample": "\"空腹血糖112 mg/dL（参考值：70–99）。符合ADA标准的空腹血糖受损。建议检测HbA1c + OGTT以评估2型糖尿病风险。审查代谢综合征组成：BMI、血脂、血压。\"",
+    "demoSimpleSummary": "您的血糖略高，钠处于低值范围——值得在下次检查时向医生提及。",
+    "demoSimpleSpecialistLabel": "推荐科室？",
+    "demoSimpleSpecialistBody": "建议就诊<b>内分泌科</b>医生，评估葡萄糖代谢并排除糖尿病前期。",
+    "demoMediumSummary": "空腹血糖112 mg/dL属于空腹血糖受损范围（ADA标准100–125 mg/dL）。钠轻度偏低134 mEq/L——通常与饮食或水化有关。其他代谢指标均在正常范围内。",
+    "demoMediumSpecialistLabel": "下一步",
+    "demoMediumSpecialistBody": "考虑复查空腹血糖并检测<b>HbA1c</b>以确认血糖趋势。与<b>全科医生</b>一起回顾钠摄入量和补水习惯。",
+    "demoExpertSummary": "空腹血糖受损确认：空腹血糖112 mg/dL符合ADA糖尿病前期标准（100–125 mg/dL）。建议检测HbA1c、空腹胰岛素和HOMA-IR。轻度低钠血症（Na 134 mEq/L）——可能为等容量性/饮食性；在追查SIADH前重新评估。",
+    "demoExpertSpecialistLabel": "临床推理",
+    "demoExpertSpecialistBody": "根据ACC/AHA 2019：建议进行正式的10年ASCVD风险评估。若HOMA-IR > 2.5，转诊至<b>内分泌科</b>。在肾上腺检查前监测钠的趋势。"
   },
   "Suite": {
     "badge": "四种工具，一个使命",
@@ -765,7 +777,14 @@
     "panelSubtitle": "基于此报告",
     "disclaimer": "AI生成。仅供教育用途——不是医疗建议。",
     "meridixAI": "Meridix AI",
-    "inputPlaceholder": "询问关于您的结果…"
+    "inputPlaceholder": "询问关于您的结果…",
+    "chatIntro": "对您的结果有疑问？尽管问——我基于上面的数值和解读来回答。可以从这些问题开始：",
+    "sampleData": "示例数据",
+    "clearChat": "清除",
+    "historyLoading": "加载历史记录…",
+    "simpleExplanation": "简单说明",
+    "mediumExplanation": "中级说明",
+    "expertExplanation": "专业说明"
   },
   "LabPanel": {
     "cardiovascular": "心血管",

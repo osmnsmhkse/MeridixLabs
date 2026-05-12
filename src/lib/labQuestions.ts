@@ -229,7 +229,83 @@ const TIER_NORMAL_FALLBACKS: Record<Tier, Suggestion[]> = {
   ],
 };
 
-export function suggestFollowUpQuestions(flags: Flag[], tier: Tier): Suggestion[] {
+// ── Turkish locale bank ───────────────────────────────────────────────
+const QUESTION_BANK_TR: Record<string, Partial<Record<Direction, Suggestion>>> = {
+  glucose:          { high: { label: "Glikoz düşürme",      question: "Glikozumu düşürmek için ne yapabilirim ve prediyabet konusunda ne kadar endişe etmeliyim?" }, low:  { label: "Düşük glikoz",      question: "Glikozum neden düşük olabilir ve bu benim için ne anlama geliyor?" } },
+  hba1c:            { high: { label: "HbA1c bağlamı",       question: "HbA1c'm son 3 aydaki kan şekerim hakkında ne söylüyor?" } },
+  ldl:              { high: { label: "Kalp riski",           question: "LDL'm konusunda endişelenmeli miyim? Kardiyoloğa görünmem gerekiyor mu?" }, low: { label: "Düşük LDL", question: "Düşük LDL bir sorun mu yoksa genellikle iyi bir şey mi?" } },
+  hdl:              { low:  { label: "HDL artırma",          question: "HDL kolesterolümü doğal yollarla nasıl artırabilirim?" } },
+  total_cholesterol:{ high: { label: "Toplam kolesterol",    question: "Diğer lipit değerlerime göre toplam kolesterolüm ne kadar endişe verici?" } },
+  triglycerides:    { high: { label: "Yüksek trigliserit",   question: "Trigliseritlere en çok hangi yaşam tarzı değişiklikleri yardımcı olur ve ne kadar sürede düşebilirler?" } },
+  vitamin_d:        { low:  { label: "D vitamini planı",     question: "Ne kadar D vitamini almalıyım ve seviyeler ne zaman normale döner?" }, high: { label: "Yüksek D vitamini", question: "D vitamini seviyem çok yüksek mi? Takviyeyi bırakmalı mıyım?" } },
+  b12:              { low:  { label: "Düşük B12",            question: "Düşük B12'ye ne yol açar ve emilim sorunları için test yaptırmalı mıyım?" } },
+  folate:           { low:  { label: "Düşük folat",          question: "Folatı artırmaya yardımcı olan yiyecekler veya takviyeler nelerdir?" } },
+  ferritin:         { low:  { label: "Demir depoları",       question: "Düşük ferritim anemi mi demek? Sırada ne yapmalıyım?" }, high: { label: "Yüksek ferritin", question: "Yüksek ferritine ne yol açabilir ve araştırmalı mıyım?" } },
+  iron:             { low:  { label: "Düşük demir",          question: "Demir seviyelerimi nasıl yükseltmeliyim ve hangi takviye formu en iyi?" } },
+  hemoglobin:       { low:  { label: "Anemi?",               question: "Düşük hemoglobin anemi mi demek? Sonraki adım ne?" }, high: { label: "Yüksek hemoglobin", question: "Hemoglobinimin yüksek olmasına ne yol açabilir?" } },
+  hematocrit:       { low:  { label: "Düşük hematokrit",     question: "Diğer değerlerimle birlikte düşük hematokrit ne anlama gelir?" }, high: { label: "Yüksek hematokrit", question: "Yüksek hematokritten endişe etmeli miyim?" } },
+  platelets:        { low:  { label: "Düşük trombosit",      question: "Düşük trombosit sayısına ne yol açabilir ve benim seviyemde ne kadar ciddi?" }, high: { label: "Yüksek trombosit", question: "Trombositler neden yüksek olabilir?" } },
+  tsh:              { high: { label: "Tiroid yavaş mı?",     question: "TSH'm hipotiroidizmi gösterebilir mi? Serbest T3 ve T4 kontrolü yaptırmalı mıyım?" }, low: { label: "Tiroid hızlı mı?", question: "Düşük TSH'm aşırı aktif tiroid anlamına gelebilir mi?" } },
+  ft3:              { high: { label: "T3 yüksek",            question: "Yüksek serbest T3 benim için ne anlama geliyor?" }, low: { label: "T3 düşük", question: "Düşük serbest T3 benim için ne anlama geliyor?" } },
+  ft4:              { high: { label: "T4 yüksek",            question: "Serbest T4 sonucum tiroidim hakkında ne söylüyor?" }, low: { label: "T4 düşük", question: "Düşük serbest T4 klinik olarak ne anlama geliyor?" } },
+  ast:              { high: { label: "Karaciğer enzimleri",  question: "Yüksek karaciğer enzimlerinden endişe etmeli miyim? Muhtemel neden nedir?" } },
+  alt:              { high: { label: "Karaciğer enzimleri",  question: "Yüksek ALT'tan endişe etmeli miyim? Muhtemel neden nedir?" } },
+  ggt:              { high: { label: "GGT yüksek",           question: "Yüksek GGT genellikle neyi işaret eder?" } },
+  alp:              { high: { label: "ALP yüksek",           question: "Yüksek alkalen fosfataza ne yol açabilir?" } },
+  bilirubin:        { high: { label: "Bilirubin",            question: "Bilirubinimin yüksek olmasına ne yol açabilir?" } },
+  creatinine:       { high: { label: "Böbrek kontrolü",      question: "Kreatininim böbrek sorununu gösteriyor mu? Nefrologa gitmeli miyim?" }, low: { label: "Düşük kreatinin", question: "Düşük kreatinin endişe verici midir?" } },
+  bun:              { high: { label: "Yüksek BUN",           question: "Yüksek BUN'a ne yol açabilir ve kreatininimle nasıl karşılaştırılır?" } },
+  egfr:             { low:  { label: "Düşük eGFR",           question: "eGFR'm böbrek fonksiyonu hakkında ne söylüyor ve sırada ne yapmalıyım?" } },
+  uric_acid:        { high: { label: "Gut riski",            question: "Yüksek ürik asit gut riskim olduğu anlamına mı geliyor? Hangi değişiklikler düşürür?" } },
+  sodium:           { low:  { label: "Düşük sodyum",         question: "Düşük sodyumuma ne yol açıyor olabilir ve ne kadar ciddi?" }, high: { label: "Yüksek sodyum", question: "Sodyumum neden yüksek olabilir?" } },
+  potassium:        { low:  { label: "Düşük potasyum",       question: "Düşük potasyuma ne yol açar ve ne yapmalıyım?" }, high: { label: "Yüksek potasyum", question: "Yüksek potasyumdan endişe etmeli miyim?" } },
+  calcium:          { low:  { label: "Düşük kalsiyum",       question: "Diğer değerlerimle birlikte düşük kalsiyum ne anlama geliyor?" }, high: { label: "Yüksek kalsiyum", question: "Kalsiyumum neden yüksek olabilir?" } },
+  magnesium:        { low:  { label: "Düşük magnezyum",      question: "Magnezyumumu nasıl artırabilirim ve düşük seviyelerin belirtileri nelerdir?" } },
+  crp:              { high: { label: "İltihaplanma",         question: "Yüksek CRP vücudumdaki iltihaplanma hakkında ne anlama geliyor?" } },
+  esr:              { high: { label: "İltihaplanma",         question: "Yüksek ESR neye işaret edebilir?" } },
+  insulin:          { high: { label: "İnsülin direnci",      question: "Yüksek insülinim insülin direncine işaret ediyor mu?" } },
+  testosterone:     { low:  { label: "Düşük testosteron",    question: "Düşük testosterona ne yol açabilir ve doktoruma ne sormalıyım?" }, high: { label: "Yüksek testosteron", question: "Testosteron seviyesini yükseltebilecek nedir?" } },
+  psa:              { high: { label: "Prostat kontrolü",     question: "Yüksek PSA'm için ürologa görünmeli miyim?" } },
+  cortisol:         { high: { label: "Yüksek kortizol",      question: "Yüksek kortizolüme ne yol açıyor olabilir?" }, low: { label: "Düşük kortizol", question: "Kortizol neden düşük olabilir?" } },
+  wbc:              { high: { label: "Yüksek WBC",           question: "Yüksek beyaz kan hücresi sayısına ne yol açabilir?" }, low: { label: "Düşük WBC", question: "Düşük WBC'den endişe etmeli miyim?" } },
+  rbc:              { high: { label: "Yüksek RBC",           question: "Yüksek kırmızı kan hücresi sayısına ne yol açabilir?" }, low: { label: "Düşük RBC", question: "Düşük kırmızı kan hücresi sayısına ne yol açabilir?" } },
+};
+
+const FALLBACKS_TR: Suggestion[] = [
+  { label: "Uzman?",             question: "Bu sonuçlara göre hangi uzmanı görmem gerekiyor?" },
+  { label: "Sonraki adımlar",    question: "Şu an için en önemli sonraki adımlar nelerdir?" },
+  { label: "Yaşam tarzı",        question: "Hangi yaşam tarzı değişiklikleri bu değerlere en büyük etkiyi yapardı?" },
+  { label: "Tekrar test",        question: "Bu testleri ne zaman tekrar yaptırmalıyım ve hangisi en önemli?" },
+];
+
+const TIER_NORMAL_FALLBACKS_TR: Record<Tier, Suggestion[]> = {
+  simple: [
+    { label: "Genel bakış",        question: "Bu sonuçların benim için ne anlama geldiğini bir paragrafta özetleyebilir misin?" },
+    { label: "Takip edilecek?",    question: "Her şey normal aralıkta olsa da dikkat etmem gereken bir şey var mı?" },
+    { label: "Sağlığı koru",       question: "Bu kadar iyi sonuçları sürdürmek için ne yapabilirim?" },
+    { label: "Tekrar test",        question: "Tekrar ne zaman test yaptırmalıyım?" },
+  ],
+  medium: [
+    { label: "Takip edilecek",     question: "Normal aralıktaki değerlerimden herhangi biri bir eşiğe yakın mı?" },
+    { label: "Optimizasyon",       question: "Referans aralıkları dışında, daha fazla optimize etmeye değer değer var mı?" },
+    { label: "Tekrar test",        question: "Bu belirteçler için makul yeniden test aralığı nedir?" },
+    { label: "İlgili testler",     question: "Bir sonraki sefere eklemeyi düşünmem gereken ilgili testler var mı?" },
+  ],
+  expert: [
+    { label: "Subklinik sinyaller",question: "Değerlerin tümü normal aralıkta olsa da işaret edilmeye değer subklinik örüntüler var mı?" },
+    { label: "Takip paneli",       question: "Bu taban değere göre hangi takip panelini önerirsiniz?" },
+    { label: "Kardiyovasküler risk",question: "Bu değerler 10 yıllık ASCVD risk tahminini nasıl etkiler?" },
+    { label: "Gözetim",            question: "Bu profile göre önerilen gözetim aralığı nedir?" },
+  ],
+};
+
+function getBankForLocale(locale: string) {
+  if (locale === "tr") return { bank: QUESTION_BANK_TR, fallbacks: FALLBACKS_TR, tierFallbacks: TIER_NORMAL_FALLBACKS_TR };
+  return { bank: QUESTION_BANK, fallbacks: FALLBACKS, tierFallbacks: TIER_NORMAL_FALLBACKS };
+}
+
+export function suggestFollowUpQuestions(flags: Flag[], tier: Tier, locale = "en"): Suggestion[] {
+  const { bank, fallbacks, tierFallbacks } = getBankForLocale(locale);
   const out: Suggestion[] = [];
   const seen = new Set<string>();
 
@@ -238,7 +314,7 @@ export function suggestFollowUpQuestions(flags: Flag[], tier: Tier): Suggestion[
     if (f.status !== "high" && f.status !== "low") continue;
     const key = normalizeMarker(f.marker);
     if (seen.has(key)) continue;
-    const entry = QUESTION_BANK[key]?.[f.status];
+    const entry = bank[key]?.[f.status];
     if (entry) {
       out.push(entry);
       seen.add(key);
@@ -248,7 +324,7 @@ export function suggestFollowUpQuestions(flags: Flag[], tier: Tier): Suggestion[
 
   // 2. If we have flags but didn't fill 4, top up with fallbacks
   if (out.length > 0 && out.length < 4) {
-    for (const fb of FALLBACKS) {
+    for (const fb of fallbacks) {
       if (out.length >= 4) break;
       out.push(fb);
     }
@@ -256,7 +332,7 @@ export function suggestFollowUpQuestions(flags: Flag[], tier: Tier): Suggestion[
 
   // 3. No flags at all → tier-aware "all normal" prompts
   if (out.length === 0) {
-    out.push(...TIER_NORMAL_FALLBACKS[tier].slice(0, 4));
+    out.push(...tierFallbacks[tier].slice(0, 4));
   }
 
   return out.slice(0, 4);

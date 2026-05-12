@@ -64,7 +64,19 @@
     "expertDesc": "Linguaggio clinico completo",
     "noBackground": "Nessuna formazione medica",
     "educated": "Paziente informato",
-    "clinician": "Clinico / studente di medicina"
+    "clinician": "Clinico / studente di medicina",
+    "simpleExample": "\"La tua glicemia è un po' alta — immaginala come se il tuo sangue avesse più zucchero del normale. Di per sé non è nulla di allarmante, ma il tuo medico dovrebbe saperlo.\"",
+    "mediumExample": "\"La tua glicemia a digiuno di 112 mg/dL rientra nel range prediabetico (100–125 mg/dL). Questo segnala che la risposta insulinica del tuo corpo potrebbe iniziare a perdere efficienza.\"",
+    "expertExample": "\"Glicemia a digiuno 112 mg/dL (rif: 70–99). Compatibile con IFG secondo i criteri ADA. Si raccomandano HbA1c + OGTT per stratificare il rischio di DM2. Valutare componenti della MetS: BMI, profilo lipidico, PA.\"",
+    "demoSimpleSummary": "La tua glicemia è leggermente elevata e il sodio è nella fascia bassa — vale la pena menzionarlo al prossimo controllo.",
+    "demoSimpleSpecialistLabel": "Quale specialista?",
+    "demoSimpleSpecialistBody": "Considera di consultare un <b>Endocrinologo</b> per valutare il metabolismo del glucosio ed escludere il prediabete.",
+    "demoMediumSummary": "La glicemia a digiuno di 112 mg/dL rientra nel range della glicemia a digiuno alterata (100–125 mg/dL secondo ADA). Il sodio è lievemente basso a 134 mEq/L — spesso correlato a dieta o idratazione. Tutti gli altri marker metabolici rientrano nei limiti normali.",
+    "demoMediumSpecialistLabel": "Prossimi passi",
+    "demoMediumSpecialistBody": "Considera di ripetere la glicemia a digiuno con una <b>HbA1c</b> per confermare la tendenza glicemica. Rivedi l'apporto di sodio e le abitudini di idratazione con il tuo <b>Medico di Medicina Generale</b>.",
+    "demoExpertSummary": "IFG confermata: glicemia a digiuno 112 mg/dL soddisfa i criteri ADA per il prediabete (100–125 mg/dL). Si raccomandano HbA1c, insulina a digiuno e HOMA-IR. Iponatriemia lieve (Na 134 mEq/L) — probabilmente euvolèmica/dietetica; rivalutare prima di approfondire per SIADH.",
+    "demoExpertSpecialistLabel": "Ragionamento clinico",
+    "demoExpertSpecialistBody": "Secondo ACC/AHA 2019: valutazione formale del rischio ASCVD a 10 anni indicata. Inviare a <b>Endocrinologia</b> se HOMA-IR > 2,5. Monitorare la tendenza del sodio prima di indagini surrenali."
   },
   "Suite": {
     "badge": "Quattro strumenti, una missione",
@@ -765,7 +777,14 @@
     "panelSubtitle": "Basato su questo rapporto",
     "disclaimer": "Generato da IA. Solo educativo — non un consiglio medico.",
     "meridixAI": "Meridix IA",
-    "inputPlaceholder": "Chiedi dei tuoi risultati…"
+    "inputPlaceholder": "Chiedi dei tuoi risultati…",
+    "chatIntro": "Hai domande sui tuoi risultati? Chiedi pure — mi baso sui valori e sull'interpretazione sopra. Prova una di queste:",
+    "sampleData": "dati di esempio",
+    "clearChat": "Cancella",
+    "historyLoading": "Caricamento cronologia…",
+    "simpleExplanation": "Spiegazione semplice",
+    "mediumExplanation": "Spiegazione intermedia",
+    "expertExplanation": "Spiegazione esperto"
   },
   "LabPanel": {
     "cardiovascular": "Cardiovascolare",

@@ -1,26 +1,12 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import HeroCTA from "@/components/HeroCTA";
 
-const DEMO_TIERS = {
-  Simple: {
-    summary: "Your glucose is slightly elevated and sodium is on the low end — worth mentioning at your next check-up.",
-    specialist: { label: "Which specialist?", body: <>Consider seeing an <strong>Endocrinologist</strong> to evaluate glucose metabolism and rule out pre-diabetes.</> },
-  },
-  Medium: {
-    summary: "Fasting glucose at 112 mg/dL falls in the impaired fasting glucose range (100–125 mg/dL per ADA). Sodium is mildly low at 134 mEq/L — often dietary or hydration related. All other metabolic markers are within normal limits.",
-    specialist: { label: "Next steps", body: <>Consider repeating fasting glucose with an <strong>HbA1c</strong> to confirm glycemic trend. Review sodium intake and hydration habits with your <strong>Primary Care Physician</strong>.</> },
-  },
-  Expert: {
-    summary: "IFG confirmed: fasting glucose 112 mg/dL meets ADA prediabetes criteria (100–125 mg/dL). Recommend HbA1c, fasting insulin, and HOMA-IR. Mild hyponatremia (Na 134 mEq/L) — likely euvolemic/dietary; reassess before pursuing SIADH workup.",
-    specialist: { label: "Clinical reasoning", body: <>Per ACC/AHA 2019: formal 10-yr ASCVD risk assessment indicated. Refer to <strong>Endocrinology</strong> if HOMA-IR &gt; 2.5. Monitor sodium trend before adrenal workup.</> },
-  },
-} as const;
-
-type DemoTier = keyof typeof DEMO_TIERS;
+type DemoTier = "Simple" | "Medium" | "Expert";
 
 export default function LandingPage() {
   const [demoTier, setDemoTier] = useState<DemoTier>("Simple");
@@ -34,6 +20,30 @@ export default function LandingPage() {
   const tCTA = useTranslations("CTA");
   const tDisclaimer = useTranslations("Disclaimer");
   const tTestimonials = useTranslations("Testimonials");
+
+  const DEMO_TIERS: Record<DemoTier, { summary: string; specialist: { label: string; body: React.ReactNode } }> = {
+    Simple: {
+      summary: tTiers("demoSimpleSummary"),
+      specialist: {
+        label: tTiers("demoSimpleSpecialistLabel"),
+        body: tTiers.rich("demoSimpleSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
+      },
+    },
+    Medium: {
+      summary: tTiers("demoMediumSummary"),
+      specialist: {
+        label: tTiers("demoMediumSpecialistLabel"),
+        body: tTiers.rich("demoMediumSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
+      },
+    },
+    Expert: {
+      summary: tTiers("demoExpertSummary"),
+      specialist: {
+        label: tTiers("demoExpertSpecialistLabel"),
+        body: tTiers.rich("demoExpertSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
+      },
+    },
+  };
 
   return (
     <div className="min-h-screen">
@@ -256,7 +266,7 @@ export default function LandingPage() {
                 glowColor: "hover:shadow-emerald-500/8",
                 audience: tTiers("noBackground"),
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-500"><path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" /></svg>,
-                example: '"Your glucose is a little high — think of it like your blood has more sugar than usual. It doesn\'t mean anything scary on its own, but your doctor should know."',
+                example: tTiers("simpleExample"),
                 highlight: tTiers("simpleDesc"),
               },
               {
@@ -266,7 +276,7 @@ export default function LandingPage() {
                 glowColor: "hover:shadow-brand-blue/10",
                 audience: tTiers("educated"),
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>,
-                example: '"Your fasting glucose of 112 mg/dL falls in the pre-diabetic range (100–125 mg/dL). This signals that your body\'s insulin response may be starting to lose efficiency."',
+                example: tTiers("mediumExample"),
                 highlight: tTiers("mediumDesc"),
               },
               {
@@ -276,7 +286,7 @@ export default function LandingPage() {
                 glowColor: "hover:shadow-purple-500/8",
                 audience: tTiers("clinician"),
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-purple-500"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg>,
-                example: '"Fasting glucose 112 mg/dL (ref: 70–99). Consistent with IFG per ADA criteria. Consider HbA1c + OGTT to stratify T2DM risk. Review MetS components: BMI, lipid panel, BP."',
+                example: tTiers("expertExample"),
                 highlight: tTiers("expertDesc"),
               },
             ].map((tier, i) => (
