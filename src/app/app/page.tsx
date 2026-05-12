@@ -1780,7 +1780,7 @@ function ResultsPanel({
           {([
             {
               id: "results" as const,
-              label: "Results",
+              label: t("yourResults"),
               icon: (
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
                   <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
@@ -1789,7 +1789,7 @@ function ResultsPanel({
             },
             {
               id: "report" as const,
-              label: "Report",
+              label: t("reportTab"),
               icon: (
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
                   <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
@@ -1798,7 +1798,7 @@ function ResultsPanel({
             },
             {
               id: "ask" as const,
-              label: "Ask AI",
+              label: t("askAi"),
               icon: (
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
                   <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
@@ -2298,7 +2298,7 @@ function DesktopUploadZone({ onFileSelect, error }: { onFileSelect: (file: File)
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-ink truncate">{preview.name}</p>
               <p className="text-xs text-ink-tertiary mt-0.5">{preview.size}</p>
-              <p className="text-xs text-brand-blue mt-1">Ready to analyze</p>
+              <p className="text-xs text-brand-blue mt-1">{t("readyToAnalyze")}</p>
             </div>
             <button
               onClick={(e) => { e.stopPropagation(); clearFile(); }}
@@ -2316,13 +2316,13 @@ function DesktopUploadZone({ onFileSelect, error }: { onFileSelect: (file: File)
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
             </div>
-            <p className="text-base font-semibold text-ink mb-1">Drop your lab report here</p>
-            <p className="text-sm text-ink-secondary mb-4">or click to browse files</p>
+            <p className="text-base font-semibold text-ink mb-1">{t("dropReportHere")}</p>
+            <p className="text-sm text-ink-secondary mb-4">{t("orClickBrowse")}</p>
             <div className="flex items-center gap-2 text-xs text-ink-tertiary">
               {["PDF", "JPG", "PNG"].map((fmt) => (
                 <span key={fmt} className="px-2 py-1 rounded-md bg-surface-raised border border-surface-border font-medium">{fmt}</span>
               ))}
-              <span>· up to 10 MB</span>
+              <span>{t("upTo10MB")}</span>
             </div>
           </div>
         )}
@@ -2500,6 +2500,7 @@ function ContextForm({
 
 export default function AppPage() {
   const t = useTranslations("LabAnalyzer");
+  const tc = useTranslations("Common");
   const { lang } = useLanguage();
   const { userData, recordInterpretation, dismissBanner, daysSinceLastVisit } = useReturningUser();
   const [state, setState] = useState<"idle" | "context" | "loading" | "success" | "error">("idle");
@@ -2752,20 +2753,20 @@ export default function AppPage() {
             /* Returning user greeting */
             <>
               <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-                Welcome back
+                {t("welcomeBack")}
               </span>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
-                Ready to analyze{" "}
-                <span className="text-gradient-blue">another report?</span>
+                {t("welcomeReadyTitle")}{" "}
+                <span className="text-gradient-blue">{t("welcomeReadyHighlight")}</span>
               </h1>
               <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
                 {daysSinceLastVisit >= 30
-                  ? "It's been a while — time for a check-up?"
-                  : `You've interpreted ${userData.interpretationCount} report${userData.interpretationCount === 1 ? "" : "s"} with Meridix Labs.`}
+                  ? t("welcomeAway")
+                  : t("welcomeInterpreted", { count: userData.interpretationCount })}
               </p>
               {daysSinceLastVisit >= 30 && (
                 <p className="mt-1 text-sm text-ink-tertiary">
-                  You&apos;ve interpreted {userData.interpretationCount} report{userData.interpretationCount === 1 ? "" : "s"} with Meridix Labs.
+                  {t("welcomeInterpreted", { count: userData.interpretationCount })}
                 </p>
               )}
             </>
@@ -2872,7 +2873,7 @@ export default function AppPage() {
                 <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800">
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-purple-500 mt-px flex-shrink-0 flex-shrink-0"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" /></svg>
                   <p className="text-xs text-purple-700 leading-relaxed">
-                    <strong>Radiology &amp; Pathology mode:</strong> Upload a CT, MRI, X-ray, ultrasound, or biopsy report. The AI will identify every finding, flag what needs follow-up, and explain incidental findings clearly.
+                    {t("radiologyModeHint")}
                   </p>
                 </div>
               )}
@@ -2882,7 +2883,7 @@ export default function AppPage() {
                 <>
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-px bg-surface-border" />
-                    <span className="text-xs text-ink-tertiary font-medium">or</span>
+                    <span className="text-xs text-ink-tertiary font-medium">{tc("or")}</span>
                     <div className="flex-1 h-px bg-surface-border" />
                   </div>
                   <button
@@ -2892,7 +2893,7 @@ export default function AppPage() {
                     <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                     </svg>
-                    See a live demo — no upload needed
+                    {t("seeDemo")}
                     <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
                       <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
                     </svg>
@@ -2909,9 +2910,9 @@ export default function AppPage() {
               {/* Privacy trust strip */}
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 pt-2">
                 {[
-                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M8 1a.5.5 0 01.5.5v1h1A1.5 1.5 0 0111 4v7.5a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 015 11.5V4a1.5 1.5 0 011.5-1.5h1V1.5A.5.5 0 018 1zm0 5a.5.5 0 100 1 .5.5 0 000-1z" clipRule="evenodd" /></svg>, text: "File never stored" },
-                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-brand-blue"><path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>, text: "End-to-end encrypted" },
-                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-violet-500"><path fillRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm3.354-9.646a.5.5 0 00-.708-.708L7 9.293 5.354 7.646a.5.5 0 10-.708.708l2 2a.5.5 0 00.708 0l4-4z" clipRule="evenodd" /></svg>, text: "No data sold, ever" },
+                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M8 1a.5.5 0 01.5.5v1h1A1.5 1.5 0 0111 4v7.5a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 015 11.5V4a1.5 1.5 0 011.5-1.5h1V1.5A.5.5 0 018 1zm0 5a.5.5 0 100 1 .5.5 0 000-1z" clipRule="evenodd" /></svg>, text: t("trustFileNeverStored") },
+                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-brand-blue"><path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>, text: t("endToEndEncrypted") },
+                  { icon: <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3 text-violet-500"><path fillRule="evenodd" d="M8 15A7 7 0 108 1a7 7 0 000 14zm3.354-9.646a.5.5 0 00-.708-.708L7 9.293 5.354 7.646a.5.5 0 10-.708.708l2 2a.5.5 0 00.708 0l4-4z" clipRule="evenodd" /></svg>, text: t("noDataSold") },
                 ].map((item) => (
                   <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-ink-tertiary">
                     {item.icon}
@@ -2945,7 +2946,7 @@ export default function AppPage() {
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-ink">Couldn&apos;t save to your account</p>
+              <p className="text-sm font-semibold text-ink">{t("couldntSave")}</p>
               <p className="mt-0.5 text-xs text-ink-secondary break-all">{saveError}</p>
             </div>
           </div>
@@ -2995,7 +2996,7 @@ export default function AppPage() {
                     onClick={dismissBanner}
                     className="text-xs text-ink-tertiary hover:text-ink-secondary transition-colors px-2 py-1"
                   >
-                    Maybe later
+                    {t("maybeLater")}
                   </button>
                 </div>
               </div>
@@ -3021,7 +3022,7 @@ export default function AppPage() {
               onClick={dismissBanner}
               className="text-xs text-ink-tertiary hover:text-ink-secondary transition-colors flex-shrink-0 mt-1 px-2 py-1 rounded-lg hover:bg-surface-raised"
             >
-              Maybe later
+              {t("maybeLater")}
             </button>
           </div>
         )}
@@ -3033,25 +3034,25 @@ export default function AppPage() {
             <div className="text-center mb-6">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-[11px] font-bold text-brand-blue uppercase tracking-widest mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
-                Live preview · See what you&apos;ll get
+                {t("demoLiveBadge")}
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-[1.1]">
-                Your full report — in <span className="text-brand-blue">12 seconds</span>
+                {t("demoFullReportIn")} <span className="text-brand-blue">{t("demo12Seconds")}</span>
               </h3>
               <p className="mt-2 text-sm text-ink-secondary max-w-xl mx-auto">
-                Three reading depths, flagged values explained, specialist guidance, an action plan, and supplement recommendations — all from one upload.
+                {t("demoSubtitle")}
               </p>
             </div>
 
             {/* Feature chips */}
             <div className="flex items-center justify-center gap-2 flex-wrap mb-6">
               {[
-                { icon: "🔬", label: "3 reading depths" },
-                { icon: "🚩", label: "Flag detection" },
-                { icon: "👨‍⚕️", label: "Specialist match" },
-                { icon: "💊", label: "Supplement plan" },
-                { icon: "⚡", label: "Action steps" },
-                { icon: "📊", label: "Trend tracking" },
+                { icon: "🔬", label: t("demoChip3Depths") },
+                { icon: "🚩", label: t("demoChipFlags") },
+                { icon: "👨‍⚕️", label: t("demoChipSpecialist") },
+                { icon: "💊", label: t("demoChipSupplement") },
+                { icon: "⚡", label: t("demoChipAction") },
+                { icon: "📊", label: t("demoChipTrend") },
               ].map((f) => (
                 <span key={f.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border text-xs font-medium text-ink-secondary shadow-soft">
                   <span aria-hidden>{f.icon}</span>{f.label}
@@ -3088,7 +3089,7 @@ export default function AppPage() {
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         <div className="text-right">
-                          <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Health Score</p>
+                          <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("demoHealthScore")}</p>
                           <p className="text-2xl font-black text-amber-600 leading-none tabular-nums">72</p>
                         </div>
                         <div className="relative w-12 h-12">
@@ -3106,8 +3107,8 @@ export default function AppPage() {
                     {/* Flags strip */}
                     <div className="px-5 pt-4 pb-3.5">
                       <div className="flex items-center justify-between mb-2.5">
-                        <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">3 values need attention</span>
-                        <span className="text-[10px] text-emerald-600 font-bold">9 in range ✓</span>
+                        <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("demoFlaggedCount")}</span>
+                        <span className="text-[10px] text-emerald-600 font-bold">{t("demoInRange")}</span>
                       </div>
                       <div className="flex items-center gap-2 flex-wrap">
                         {[
@@ -3130,9 +3131,9 @@ export default function AppPage() {
                     {/* Tabs */}
                     <div className="border-t border-surface-border px-5 pt-3 bg-surface-raised/40 flex gap-0.5">
                       {([
-                        { id: "simple",  label: "💬 Simple",  hint: "Plain English" },
-                        { id: "medium",  label: "📋 Medium",  hint: "More detail" },
-                        { id: "expert",  label: "🔬 Expert",  hint: "Clinical depth" },
+                        { id: "simple",  label: `💬 ${t("tierSimple")}`,  hint: t("tierSimpleLabel") },
+                        { id: "medium",  label: `📋 ${t("tierMedium")}`,  hint: t("tierMediumLabel") },
+                        { id: "expert",  label: `🔬 ${t("tierExpert")}`,  hint: t("tierExpertLabel") },
                       ] as const).map((tab) => {
                         const active = tab.id === demoTier;
                         return (
@@ -3192,7 +3193,7 @@ export default function AppPage() {
                             </svg>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">Which specialist?</p>
+                            <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">{t("specialistTitle")}</p>
                             <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
                               <strong>Endocrinologist</strong> for glucose metabolism and pre-diabetes evaluation.
                             </p>
@@ -3207,7 +3208,7 @@ export default function AppPage() {
                             </svg>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">What to do</p>
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">{t("demoWhatToDo")}</p>
                             <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
                               HbA1c test in 4–6 weeks · D3 2,000 IU daily · 30-min walk after meals.
                             </p>
@@ -3220,7 +3221,7 @@ export default function AppPage() {
                     <div className="px-5 py-3 border-t border-surface-border bg-gradient-to-r from-emerald-500/5 to-transparent flex items-center gap-2.5">
                       <span className="text-base">💊</span>
                       <p className="text-xs text-ink-secondary">
-                        <span className="font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider text-[10px]">Supplement plan </span>
+                        <span className="font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider text-[10px]">{t("demoChipSupplement")} </span>
                         <strong>Vitamin D3</strong> 2,000 IU · <strong>Berberine</strong> 500 mg · <strong>Omega-3</strong> 1,000 mg — full dosing &amp; rationale included.
                       </p>
                     </div>
@@ -3245,14 +3246,14 @@ export default function AppPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 px-2.5 py-1 rounded-full uppercase tracking-wider">Routine follow-up</span>
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 px-2.5 py-1 rounded-full uppercase tracking-wider">{t("urgencyRoutine")}</span>
                       </div>
                     </div>
 
                     {/* Findings strip */}
                     <div className="px-5 pt-4 pb-3.5">
                       <div className="flex items-center justify-between mb-2.5">
-                        <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Key findings</span>
+                        <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("keyFindings")}</span>
                       </div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <div className="relative flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 overflow-hidden">
@@ -3274,9 +3275,9 @@ export default function AppPage() {
                     {/* Tabs */}
                     <div className="border-t border-surface-border px-5 pt-3 bg-surface-raised/40 flex gap-0.5">
                       {([
-                        { id: "simple",  label: "💬 Simple"  },
-                        { id: "medium",  label: "📋 Medium"  },
-                        { id: "expert",  label: "🔬 Expert"  },
+                        { id: "simple",  label: `💬 ${t("tierSimple")}`  },
+                        { id: "medium",  label: `📋 ${t("tierMedium")}`  },
+                        { id: "expert",  label: `🔬 ${t("tierExpert")}`  },
                       ] as const).map((tab) => {
                         const active = tab.id === demoTier;
                         return (
@@ -3351,7 +3352,7 @@ export default function AppPage() {
                             </svg>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">What to do</p>
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">{t("demoWhatToDo")}</p>
                             <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
                               No urgent action · routine follow-up only · keep this report for your records.
                             </p>
@@ -3367,13 +3368,13 @@ export default function AppPage() {
             {/* Trust footer */}
             <div className="mt-6 flex items-center justify-center gap-5 flex-wrap text-[11px] text-ink-tertiary">
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> No signup needed
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t("demoTrustNoSignup")}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" /> File never stored
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" /> {t("trustFileNeverStored")}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-500" /> 100% educational use
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500" /> {t("demoTrustEducational")}
               </span>
             </div>
           </div>
