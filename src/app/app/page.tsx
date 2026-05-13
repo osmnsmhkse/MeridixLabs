@@ -2718,7 +2718,19 @@ export default function AppPage() {
     setErrorCode(null);
     setFileSizeMB(undefined);
     // Load pre-built demo result instantly — no API call needed
-    setResult(DEMO_RESULT);
+    setResult({
+      ...DEMO_RESULT,
+      summary_headline: t("demoResultSummaryHeadline"),
+      simple: t("demoResultSimple"),
+      medium: t("demoResultMedium"),
+      expert: t("demoResultExpert"),
+      etiology: t("demoResultEtiology"),
+      mechanism: t("demoResultMechanism"),
+      diseases: t("demoResultDiseases"),
+      specialist: t("demoResultSpecialist"),
+      action: t("demoResultAction"),
+      supplements: t("demoResultSupplements"),
+    });
     setState("success");
   };
 
@@ -3083,7 +3095,7 @@ export default function AppPage() {
                           <p className="text-sm font-bold text-ink truncate">Sample_Lab_Panel.pdf</p>
                           <p className="text-[11px] text-ink-tertiary flex items-center gap-1.5">
                             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                            Analyzed in 11.4s · 12 markers detected
+                            {t("demoAnalyzedLab")}
                           </p>
                         </div>
                       </div>
@@ -3098,7 +3110,7 @@ export default function AppPage() {
                             <circle cx="24" cy="24" r="20" fill="none" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" strokeDasharray={2 * Math.PI * 20} strokeDashoffset={2 * Math.PI * 20 * (1 - 72 / 100)} />
                           </svg>
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-[10px] font-bold text-amber-600">FAIR</span>
+                            <span className="text-[10px] font-bold text-amber-600">{t("demoFairScore")}</span>
                           </div>
                         </div>
                       </div>
@@ -3157,7 +3169,7 @@ export default function AppPage() {
                             <span className="text-sm">💬</span>
                           </div>
                           <p className="text-sm text-ink-secondary leading-relaxed">
-                            Your blood sugar is a little high and your vitamin D is low — both are common and easy to address. The good news: your kidney and liver markers all look great. Worth a chat with your doctor about lifestyle tweaks.
+                            {t("demoSimpleContent")}
                           </p>
                         </div>
                       )}
@@ -3167,7 +3179,7 @@ export default function AppPage() {
                             <span className="text-sm">📋</span>
                           </div>
                           <p className="text-sm text-ink-secondary leading-relaxed">
-                            Fasting glucose of 112 mg/dL falls in the impaired fasting glucose range (100–125 per ADA). LDL at 134 mg/dL is borderline-high (ATP-III). Vitamin D at 18 ng/mL indicates insufficiency. All three respond well to diet, exercise, and supplementation.
+                            {t("demoMediumContent")}
                           </p>
                         </div>
                       )}
@@ -3177,7 +3189,7 @@ export default function AppPage() {
                             <span className="text-sm">🔬</span>
                           </div>
                           <p className="text-sm text-ink-secondary leading-relaxed">
-                            IFG per ADA (FPG 100–125 mg/dL). Recommend HbA1c + 2-hr OGTT to stratify T2DM progression risk. Borderline LDL — formal 10-yr ASCVD assessment per ACC/AHA 2019. 25-OH vit D insufficiency: cholecalciferol 2,000 IU daily, recheck in 12 weeks.
+                            {t("demoExpertContent")}
                           </p>
                         </div>
                       )}
@@ -3195,7 +3207,7 @@ export default function AppPage() {
                           <div className="min-w-0">
                             <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">{t("specialistTitle")}</p>
                             <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
-                              <strong>Endocrinologist</strong> for glucose metabolism and pre-diabetes evaluation.
+                              {t("demoSpecialistContent")}
                             </p>
                           </div>
                         </div>
@@ -3210,7 +3222,7 @@ export default function AppPage() {
                           <div className="min-w-0">
                             <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">{t("demoWhatToDo")}</p>
                             <p className="text-xs text-ink-secondary leading-relaxed mt-0.5">
-                              HbA1c test in 4–6 weeks · D3 2,000 IU daily · 30-min walk after meals.
+                              {t("demoActionContent")}
                             </p>
                           </div>
                         </div>
@@ -3222,7 +3234,7 @@ export default function AppPage() {
                       <span className="text-base">💊</span>
                       <p className="text-xs text-ink-secondary">
                         <span className="font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider text-[10px]">{t("demoChipSupplement")} </span>
-                        <strong>Vitamin D3</strong> 2,000 IU · <strong>Berberine</strong> 500 mg · <strong>Omega-3</strong> 1,000 mg — full dosing &amp; rationale included.
+                        {t("demoSupplementList")}
                       </p>
                     </div>
                   </>
@@ -3241,7 +3253,7 @@ export default function AppPage() {
                           <p className="text-sm font-bold text-ink truncate">Chest_CT_Report.pdf</p>
                           <p className="text-[11px] text-ink-tertiary flex items-center gap-1.5">
                             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                            Analyzed in 9.7s · 2 findings
+                            {t("demoAnalyzedRadio")}
                           </p>
                         </div>
                       </div>

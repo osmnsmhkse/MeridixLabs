@@ -186,24 +186,10 @@ function SystemIcon({ system, className = "" }: { system: BodySystem; className?
   }
 }
 
-// ── System metadata ───────────────────────────────────────────────────────────
-
-const SYSTEM_DESCRIPTIONS: Record<BodySystem, string> = {
-  cardiovascular: "Heart & blood vessel health — lipids, atherogenic markers, CV risk indicators.",
-  metabolic: "How your body processes sugar and energy — glucose, insulin, HbA1c.",
-  liver: "Liver enzymes and function markers — ALT, AST, ALP, GGT, bilirubin.",
-  kidney: "Kidney filtration and waste handling — creatinine, eGFR, BUN, uric acid.",
-  thyroid: "Metabolism regulation — TSH, free T3, free T4, thyroid antibodies.",
-  inflammation: "Markers of inflammation and infection — CRP, ESR, ferritin.",
-  hematology: "Blood cells and clotting — RBC, WBC, hemoglobin, platelets, MCV.",
-  nutrients: "Vitamins, minerals, electrolytes — D, B12, folate, iron, magnesium.",
-  hormonal: "Sex hormones and adrenal function — testosterone, estradiol, cortisol.",
-  other: "Tests we couldn't categorize into a body system.",
-};
-
 // ── Visual range bar ──────────────────────────────────────────────────────────
 
 function RangeBar({ lab }: { lab: ParsedLab }) {
+  const t = useTranslations("LabPanel");
   const { numValue, refLow, refHigh, status } = lab;
   if (numValue == null || (refLow == null && refHigh == null)) return null;
 
@@ -266,7 +252,7 @@ function RangeBar({ lab }: { lab: ParsedLab }) {
 
       {/* Threshold labels + zone hints */}
       <div className="relative h-4 mt-1.5 text-[10px] font-medium text-ink-tertiary">
-        <span className="absolute left-0 text-red-500/80">Low</span>
+        <span className="absolute left-0 text-red-500/80">{t("lowLabel")}</span>
         {refLow != null && (
           <span className="absolute -translate-x-1/2 font-mono-data text-emerald-700 dark:text-emerald-400" style={{ left: `${lowPct}%` }}>
             {fmtNum(refLow)}
@@ -277,7 +263,7 @@ function RangeBar({ lab }: { lab: ParsedLab }) {
             {fmtNum(refHigh)}
           </span>
         )}
-        <span className="absolute right-0 text-red-500/80">High</span>
+        <span className="absolute right-0 text-red-500/80">{t("highLabel")}</span>
       </div>
     </div>
   );
@@ -291,12 +277,13 @@ function fmtNum(n: number): string {
 // ── Status badge ──────────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: ParsedLab["status"] }) {
+  const t = useTranslations("LabPanel");
   const cx =
     status === "high" ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" :
     status === "low" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" :
     status === "normal" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" :
     "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400";
-  const label = status === "high" ? "HIGH" : status === "low" ? "LOW" : status === "normal" ? "NORMAL" : "—";
+  const label = status === "high" ? t("highStatus") : status === "low" ? t("lowStatus") : status === "normal" ? t("normalStatus") : "—";
   return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${cx}`}>{label}</span>;
 }
 
@@ -338,14 +325,15 @@ function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
 // ── In-range table ────────────────────────────────────────────────────────────
 
 function InRangeTable({ labs }: { labs: ParsedLab[] }) {
+  const t = useTranslations("LabPanel");
   return (
     <div className="overflow-x-auto rounded-lg border border-surface-border">
       <table className="w-full text-sm">
         <thead className="bg-surface-raised">
           <tr className="text-left">
-            <th className="px-4 py-2.5 text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Marker</th>
-            <th className="px-4 py-2.5 text-right text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Result</th>
-            <th className="px-4 py-2.5 text-right text-[10px] font-bold text-ink-tertiary uppercase tracking-wider hidden sm:table-cell">Range</th>
+            <th className="px-4 py-2.5 text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("markerHeader")}</th>
+            <th className="px-4 py-2.5 text-right text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("resultHeader")}</th>
+            <th className="px-4 py-2.5 text-right text-[10px] font-bold text-ink-tertiary uppercase tracking-wider hidden sm:table-cell">{t("rangeHeader")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-surface-border">
@@ -376,7 +364,6 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
   const t = useTranslations("LabPanel");
   const [showInRange, setShowInRange] = useState(defaultOpen);
   const meta = BODY_SYSTEMS[group.system];
-  const description = SYSTEM_DESCRIPTIONS[group.system];
   const flaggedCount = group.flagged.length;
   const total = group.total;
   const optimalPct = total > 0 ? Math.round(((total - flaggedCount) / total) * 100) : 100;
@@ -393,13 +380,13 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
             <SystemIcon system={group.system} className="w-5 h-5" />
           </span>
           <div className="min-w-0">
-            <p className={`text-sm font-bold ${headerColor}`}>{meta.label}</p>
-            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5 hidden sm:block">{description}</p>
+            <p className={`text-sm font-bold ${headerColor}`}>{t(group.system as Parameters<typeof t>[0])}</p>
+            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5 hidden sm:block">{t(`${group.system}Desc` as Parameters<typeof t>[0])}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="flex flex-col items-end">
-            <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">In range</span>
+            <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("inRangeLabel")}</span>
             <span className={`text-xs font-bold tabular-nums ${optimalPct === 100 ? "text-emerald-600" : optimalPct >= 70 ? "text-amber-600" : "text-red-600"}`}>
               {total - flaggedCount}/{total} · {optimalPct}%
             </span>
@@ -442,7 +429,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
             className="w-full px-5 py-3 flex items-center justify-between hover:bg-surface-raised/40 transition-colors"
           >
             <span className="text-xs font-semibold text-ink-secondary">
-              {group.inRange.length} in-range marker{group.inRange.length === 1 ? "" : "s"}
+              {group.inRange.length} {t("inRangeMarkersLabel")}
             </span>
             <span className={`text-ink-tertiary transition-transform text-sm ${showInRange ? "rotate-180" : ""}`}>▾</span>
           </button>
@@ -518,16 +505,16 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
         {/* Headline summary */}
         <div className="flex items-end justify-between gap-3 flex-wrap mb-4">
           <div>
-            <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">Lab panel</p>
+            <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("labPanelHeader")}</p>
             <p className="text-2xl font-extrabold text-ink tabular-nums leading-tight mt-1">
               {totalMarkers}
-              <span className="text-base font-semibold text-ink-tertiary ml-1.5">markers · {groups.length} systems</span>
+              <span className="text-base font-semibold text-ink-tertiary ml-1.5">{t("markersUnit")} · {groups.length} {t("systemsUnit")}</span>
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
-              {totalMarkers - totalFlagged} in range · {inRangePct}%
+              {totalMarkers - totalFlagged} {t("inRangeUnit")} · {inRangePct}%
             </span>
             {totalFlagged > 0 && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/60">
@@ -562,11 +549,11 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
                 <div className="min-w-0 flex-1">
                   <p className={`text-[11px] font-semibold leading-tight break-words ${
                     allClear ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"
-                  }`}>{meta.label}</p>
+                  }`}>{t(g.system as Parameters<typeof t>[0])}</p>
                   <p className="text-[10px] tabular-nums text-ink-tertiary mt-0.5">
                     {allClear
-                      ? `${g.total}/${g.total} clear`
-                      : `${g.flagged.length} of ${g.total} flagged`}
+                      ? `${g.total}/${g.total} ${t("clearStatus")}`
+                      : `${g.flagged.length} ${t("ofConnector")} ${g.total} ${t("flagged")}`}
                   </p>
                 </div>
               </a>
