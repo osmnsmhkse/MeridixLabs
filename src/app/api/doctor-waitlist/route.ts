@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
 
       const adminNotification = resend.emails.send({
         from: "Meridix Labs <noreply@meridixlabs.com>",
-        to: ["osmansemihkose@gmail.com"],
+        to: ["osmanskose19@gmail.com"],
         subject: `[Waitlist] ${entry.name} — ${entry.practice_type}, ${entry.country}`,
         html: `
           <div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:24px;">
