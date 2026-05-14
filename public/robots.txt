@@ -6,5 +6,7 @@ Disallow: /dashboard/
 Disallow: /profile/
 Disallow: /api/
 Disallow: /logo-options/
+Disallow: /sign-in/
+Disallow: /sign-up/
 
 Sitemap: https://www.meridixlabs.com/sitemap.xml

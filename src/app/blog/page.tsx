@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Meridix Labs Blog",
     description:
       "Plain-English guides to understanding your lab results.",
-    url: "https://meridixlabs.com/blog",
+    url: "https://www.meridixlabs.com/blog",
     siteName: "Meridix Labs",
     type: "website",
   },
