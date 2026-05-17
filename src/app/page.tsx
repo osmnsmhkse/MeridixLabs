@@ -362,8 +362,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* 3 secondary tools */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* 4 secondary tools */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
               {
                 href: "/symptom",
@@ -400,6 +400,18 @@ export default function LandingPage() {
                 hoverGlow: "hover:shadow-amber-500/8",
                 iconBg: "bg-amber-100 dark:bg-amber-900/40",
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400"><path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" /></svg>,
+              },
+              {
+                href: "/medications",
+                label: tSuite("medicationLabel"),
+                title: tSuite("medicationTitle"),
+                desc: tSuite("medicationDesc"),
+                cta: tSuite("medicationCta"),
+                color: "text-teal-600 dark:text-teal-400",
+                hoverBorder: "hover:border-teal-300 dark:hover:border-teal-700",
+                hoverGlow: "hover:shadow-teal-500/8",
+                iconBg: "bg-teal-100 dark:bg-teal-900/40",
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-teal-600 dark:text-teal-400"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>,
               },
             ].map((tool, i) => (
               <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${i + 1} group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tool.hoverBorder} hover:shadow-xl ${tool.hoverGlow} transition-all duration-500 overflow-hidden card-hover`}>

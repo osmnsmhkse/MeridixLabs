@@ -13,7 +13,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/trends"];
+const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/trends", "/medications"];
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 
@@ -89,6 +89,18 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
       icon: (
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
           <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/medications",
+      label: t("medicationCompanion"),
+      description: t("medicationCompanionDesc"),
+      color: "text-teal-600 dark:text-teal-400",
+      bg: "bg-teal-50 dark:bg-teal-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M14.5 3a3.5 3.5 0 00-2.475 5.975L7.025 13.475a3.5 3.5 0 104.95 4.95l5-5a3.5 3.5 0 00-2.475-5.975h-.025L18.5 6.5A3.5 3.5 0 0014.5 3zm-1.768 5.732l-4 4 1.768 1.768 4-4-1.768-1.768z" clipRule="evenodd" />
         </svg>
       ),
     },
@@ -319,10 +331,11 @@ export default function Navigation() {
             {mobileToolsOpen && (
               <div className="ml-4 space-y-1 pb-1">
                 {[
-                  { href: "/app",       label: t("labAnalyzer"),        color: "text-brand-blue"                        },
-                  { href: "/symptom",   label: t("symptomChecker"),     color: "text-emerald-600 dark:text-emerald-400" },
-                  { href: "/diagnosed", label: t("diagnosisExplainer"), color: "text-violet-600 dark:text-violet-400"   },
-                  { href: "/trends",    label: t("trendTracker"),       color: "text-amber-600 dark:text-amber-400"     },
+                  { href: "/app",         label: t("labAnalyzer"),          color: "text-brand-blue"                        },
+                  { href: "/symptom",     label: t("symptomChecker"),       color: "text-emerald-600 dark:text-emerald-400" },
+                  { href: "/diagnosed",   label: t("diagnosisExplainer"),   color: "text-violet-600 dark:text-violet-400"   },
+                  { href: "/trends",      label: t("trendTracker"),         color: "text-amber-600 dark:text-amber-400"     },
+                  { href: "/medications", label: t("medicationCompanion"),  color: "text-teal-600 dark:text-teal-400"       },
                 ].map((tool) => (
                   <Link
                     key={tool.href}
