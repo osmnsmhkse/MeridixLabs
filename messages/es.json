@@ -231,7 +231,20 @@
     "relatedLabsTitle": "Análisis que pueden ayudar",
     "relatedLabsDesc": "Según tu síntoma, estos son los análisis que los médicos suelen solicitar para investigar más.",
     "relatedLabsSignUp": "Crea una cuenta gratuita para guardar este análisis y hacer seguimiento de tu salud con el tiempo.",
-    "relatedLabsButton": "Crear cuenta gratuita"
+    "relatedLabsButton": "Crear cuenta gratuita",
+    "emergencyNoteTitle": "Cuándo buscar atención de emergencia",
+    "homeCareTitle": "Lo que puedes hacer en casa",
+    "homeCareDesc": "Pasos prácticos antes o en lugar de ver a un médico",
+    "symptomChatTitle": "Pregunta a Meridix AI",
+    "symptomChatSubtitle": "Preguntas de seguimiento sobre este síntoma",
+    "symptomChatClear": "Nuevo chat",
+    "symptomChatIntro": "¿Tienes preguntas sobre tu análisis de síntomas? Pregunta lo que quieras — qué significan los resultados, qué vigilar o qué hacer a continuación.",
+    "symptomChatPlaceholder": "Haz una pregunta de seguimiento sobre tu síntoma…",
+    "symptomChatDisclaimer": "Contexto de salud generado por IA — no es un diagnóstico. Consulta a un profesional para consejo médico.",
+    "symptomChatQ1": "¿Debería preocuparme por esto?",
+    "symptomChatQ2": "¿Qué puedo hacer para sentirme mejor ahora?",
+    "symptomChatQ3": "¿Cuándo debería ver a un médico?",
+    "symptomChatQ4": "¿Podría estar relacionado con el estrés o el estilo de vida?"
   },
   "Diagnosed": {
     "badge": "Explicador de diagnósticos",

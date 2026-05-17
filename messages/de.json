@@ -231,7 +231,20 @@
     "relatedLabsTitle": "Labortests, die helfen können",
     "relatedLabsDesc": "Basierend auf Ihrem Symptom werden diese Labortests häufig von Ärzten zur weiteren Untersuchung angeordnet.",
     "relatedLabsSignUp": "Erstellen Sie ein kostenloses Konto, um diese Analyse zu speichern und Ihre Gesundheit im Laufe der Zeit zu verfolgen.",
-    "relatedLabsButton": "Kostenloses Konto erstellen"
+    "relatedLabsButton": "Kostenloses Konto erstellen",
+    "emergencyNoteTitle": "Wann Notfallversorgung aufsuchen",
+    "homeCareTitle": "Was Sie zu Hause tun können",
+    "homeCareDesc": "Praktische Schritte vor oder anstatt eines Arztbesuchs",
+    "symptomChatTitle": "Meridix AI fragen",
+    "symptomChatSubtitle": "Folgefragen zu diesem Symptom",
+    "symptomChatClear": "Neuer Chat",
+    "symptomChatIntro": "Haben Sie Fragen zu Ihrer Symptomanalyse? Fragen Sie alles — was die Ergebnisse bedeuten, worauf Sie achten sollten oder was als Nächstes zu tun ist.",
+    "symptomChatPlaceholder": "Stellen Sie eine Folgefrage zu Ihrem Symptom…",
+    "symptomChatDisclaimer": "KI-generierter Gesundheitskontext — keine Diagnose. Konsultieren Sie einen Fachmann für medizinische Beratung.",
+    "symptomChatQ1": "Sollte ich mir Sorgen machen?",
+    "symptomChatQ2": "Was kann ich jetzt tun, um mich besser zu fühlen?",
+    "symptomChatQ3": "Wann sollte ich wirklich einen Arzt aufsuchen?",
+    "symptomChatQ4": "Könnte das mit Stress oder Lebensstil zusammenhängen?"
   },
   "Diagnosed": {
     "badge": "Diagnose-Erklärer",

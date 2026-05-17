@@ -231,7 +231,20 @@
     "relatedLabsTitle": "可能有帮助的实验室检测",
     "relatedLabsDesc": "根据您的症状，医生通常会开具这些实验室检测进行进一步调查。",
     "relatedLabsSignUp": "创建免费账户以保存此分析并随时间追踪您的健康状况。",
-    "relatedLabsButton": "创建免费账户"
+    "relatedLabsButton": "创建免费账户",
+    "emergencyNoteTitle": "何时应寻求紧急护理",
+    "homeCareTitle": "您可以在家做什么",
+    "homeCareDesc": "就医前或替代就医的实用步骤",
+    "symptomChatTitle": "咨询 Meridix AI",
+    "symptomChatSubtitle": "关于此症状的后续问题",
+    "symptomChatClear": "新对话",
+    "symptomChatIntro": "对您的症状分析有疑问？随时提问——了解结果含义、需要关注什么或下一步该怎么做。",
+    "symptomChatPlaceholder": "就您的症状提出后续问题…",
+    "symptomChatDisclaimer": "AI生成的健康信息——非诊断。如需医疗建议请咨询专业人士。",
+    "symptomChatQ1": "我应该为此担心吗？",
+    "symptomChatQ2": "我现在可以做什么来感觉好些？",
+    "symptomChatQ3": "我什么时候应该去看医生？",
+    "symptomChatQ4": "这可能与压力或生活方式有关吗？"
   },
   "Diagnosed": {
     "badge": "诊断解释器",

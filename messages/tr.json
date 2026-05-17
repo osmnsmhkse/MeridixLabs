@@ -231,7 +231,20 @@
     "relatedLabsTitle": "Yardımcı olabilecek lab testleri",
     "relatedLabsDesc": "Belirtine göre, doktorların araştırmak için sıkça istediği lab testleri bunlardır.",
     "relatedLabsSignUp": "Bu analizi kaydetmek ve sağlığını takip etmek için ücretsiz hesap oluştur.",
-    "relatedLabsButton": "Ücretsiz hesap oluştur"
+    "relatedLabsButton": "Ücretsiz hesap oluştur",
+    "emergencyNoteTitle": "Acil bakım ne zaman gerekir",
+    "homeCareTitle": "Evde yapabilecekleriniz",
+    "homeCareDesc": "Doktora gitmeden önce veya yerine atabileceğiniz pratik adımlar",
+    "symptomChatTitle": "Meridix AI'ya Sorun",
+    "symptomChatSubtitle": "Bu belirtiyle ilgili takip soruları",
+    "symptomChatClear": "Yeni sohbet",
+    "symptomChatIntro": "Belirti analiziniz hakkında sorularınız mı var? Sonuçların ne anlama geldiğini, nelere dikkat etmeniz gerektiğini veya ne yapmanız gerektiğini sorun.",
+    "symptomChatPlaceholder": "Belirtinizle ilgili bir takip sorusu sorun…",
+    "symptomChatDisclaimer": "Yapay zeka tarafından oluşturulan sağlık bilgisi — tanı değildir. Tıbbi tavsiye için bir uzmana danışın.",
+    "symptomChatQ1": "Bunun için endişelenmeli miyim?",
+    "symptomChatQ2": "Şu anda kendimi daha iyi hissetmek için ne yapabilirim?",
+    "symptomChatQ3": "Ne zaman gerçekten bir doktora görünmeliyim?",
+    "symptomChatQ4": "Bu stres veya yaşam tarzıyla ilgili olabilir mi?"
   },
   "Diagnosed": {
     "badge": "Tanı Açıklayıcı",

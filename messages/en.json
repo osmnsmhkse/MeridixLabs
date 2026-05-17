@@ -231,7 +231,20 @@
     "relatedLabsTitle": "Lab tests that can help",
     "relatedLabsDesc": "Based on your symptom, these lab tests are often ordered by doctors to investigate further.",
     "relatedLabsSignUp": "Create a free account to save this analysis and track your health over time.",
-    "relatedLabsButton": "Create free account"
+    "relatedLabsButton": "Create free account",
+    "emergencyNoteTitle": "When to seek emergency care",
+    "homeCareTitle": "What you can do at home",
+    "homeCareDesc": "Practical steps before or instead of seeing a doctor",
+    "symptomChatTitle": "Ask Meridix AI",
+    "symptomChatSubtitle": "Follow-up questions about this symptom",
+    "symptomChatClear": "New chat",
+    "symptomChatIntro": "Have questions about your symptom analysis? Ask anything — what the results mean, what to watch for, or what to do next.",
+    "symptomChatPlaceholder": "Ask a follow-up question about your symptom…",
+    "symptomChatDisclaimer": "AI-generated health context — not a diagnosis. See a professional for medical advice.",
+    "symptomChatQ1": "Should I be worried about this?",
+    "symptomChatQ2": "What can I do to feel better right now?",
+    "symptomChatQ3": "When should I actually see a doctor?",
+    "symptomChatQ4": "Could this be related to stress or lifestyle?"
   },
   "Diagnosed": {
     "badge": "Diagnosis Explainer",

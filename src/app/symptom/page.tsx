@@ -1,9 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+
+const SymptomChatPanel = dynamic(() => import("@/components/SymptomChatPanel"), {
+  ssr: false,
+});
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -22,6 +27,7 @@ interface ParsedResult {
   seriousButRare: string;
   whatWouldChangeThis: string[];
   whatToDo: { urgency: Urgency; text: string };
+  homeCare: string[];
   stopReadingIf: string | null;
 }
 
@@ -33,6 +39,7 @@ const SECTION_KEYS = [
   "SERIOUS_BUT_RARE",
   "WHAT_WOULD_CHANGE_THIS",
   "WHAT_TO_DO",
+  "HOME_CARE",
   "STOP_READING_IF",
 ] as const;
 
@@ -103,6 +110,7 @@ function parseResult(raw: string): ParsedResult {
     seriousButRare: sections["SERIOUS_BUT_RARE"] ?? "",
     whatWouldChangeThis: parseBullets(sections["WHAT_WOULD_CHANGE_THIS"] ?? ""),
     whatToDo: parseWhatToDo(sections["WHAT_TO_DO"] ?? ""),
+    homeCare: parseBullets(sections["HOME_CARE"] ?? ""),
     stopReadingIf: parseStopReading(sections["STOP_READING_IF"] ?? ""),
   };
 }
@@ -185,6 +193,7 @@ export default function SymptomPage() {
 
   const [stage, setStage] = useState<Stage>("idle");
   const [result, setResult] = useState<ParsedResult | null>(null);
+  const [rawAnalysis, setRawAnalysis] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [queriedSymptom, setQueriedSymptom] = useState("");
 
@@ -209,8 +218,10 @@ export default function SymptomPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Unknown error");
-      const parsed = parseResult(data.text as string);
+      const rawText = data.text as string;
+      const parsed = parseResult(rawText);
       setResult(parsed);
+      setRawAnalysis(rawText);
       setStage("result");
 
       // Fire-and-forget: fetch related labs from user's history (works
@@ -410,17 +421,22 @@ export default function SymptomPage() {
       {/* Results */}
       {stage === "result" && result && (
         <div ref={resultRef} className="max-w-2xl mx-auto px-4 sm:px-6 mt-10 space-y-5">
-          {/* STOP_READING_IF sticky banner */}
+          {/* Emergency info note — collapsible, soft tone */}
           {result.stopReadingIf && (
-            <div className="sticky top-20 z-40 bg-red-600 text-white rounded-xl px-5 py-4 shadow-lg flex items-start gap-3">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 flex-shrink-0 mt-0.5">
-                <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-              </svg>
-              <div>
-                <p className="font-bold text-sm mb-0.5">{t("stopReading")}</p>
-                <p className="text-sm text-red-100">{result.stopReadingIf}</p>
+            <details className="group rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50/60 dark:bg-amber-950/20 overflow-hidden">
+              <summary className="flex items-center gap-3 px-5 py-3.5 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-500 dark:text-amber-400 flex-shrink-0">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
+                </svg>
+                <p className="text-sm font-semibold text-amber-800 dark:text-amber-300 flex-1">{t("emergencyNoteTitle")}</p>
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-400 dark:text-amber-500 transition-transform group-open:rotate-180">
+                  <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                </svg>
+              </summary>
+              <div className="px-5 pb-4 pt-1">
+                <p className="text-sm text-amber-900 dark:text-amber-300/90 leading-relaxed">{result.stopReadingIf}</p>
               </div>
-            </div>
+            </details>
           )}
 
           {/* Queried symptom label */}
@@ -527,15 +543,55 @@ export default function SymptomPage() {
             </div>
           )}
 
+          {/* HOME_CARE */}
+          {result.homeCare.length > 0 && (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-teal-200 dark:border-teal-800 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-teal-100 dark:border-teal-800/60 bg-teal-50/50 dark:bg-teal-950/20">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4.5 h-4.5 text-teal-600 dark:text-teal-400">
+                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="font-bold text-ink text-sm">{t("homeCareTitle")}</h2>
+                    <p className="text-[11px] text-ink-tertiary mt-0.5">{t("homeCareDesc")}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="px-5 py-4">
+                <ul className="space-y-3">
+                  {result.homeCare.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-ink-secondary leading-relaxed">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mt-0.5">
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-teal-600 dark:text-teal-400">
+                          <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                        </svg>
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
           {/* Symptom → lab cross-reference (Tier 3) */}
           {relatedLabs && relatedLabs.groups.length > 0 && (
             <RelatedLabsCard data={relatedLabs} />
           )}
 
+          {/* AI Chat */}
+          <SymptomChatPanel
+            symptom={queriedSymptom}
+            analysisSnapshot={rawAnalysis}
+            language={lang}
+          />
+
           {/* Try again */}
           <div className="text-center pt-2">
             <button
-              onClick={() => { setStage("idle"); setResult(null); setSymptom(""); setRelatedLabs(null); }}
+              onClick={() => { setStage("idle"); setResult(null); setRawAnalysis(""); setSymptom(""); setRelatedLabs(null); }}
               className="text-sm text-ink-tertiary hover:text-ink transition-colors underline underline-offset-2"
             >
               {t("checkAnother")}
