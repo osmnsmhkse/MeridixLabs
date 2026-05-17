@@ -119,19 +119,33 @@ export async function POST(request: NextRequest) {
       .replace("{movers}", moversTxt)
       .replace("{systems}", systemsTxt);
 
-    const resp = await client.messages.create({
+    const stream = client.messages.stream({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system: sys,
       messages: messages as Anthropic.MessageParam[],
     });
 
-    const reply = resp.content
-      .map((c) => (c.type === "text" ? c.text : ""))
-      .join("")
-      .trim();
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const event of stream) {
+            if (
+              event.type === "content_block_delta" &&
+              event.delta.type === "text_delta"
+            ) {
+              controller.enqueue(new TextEncoder().encode(event.delta.text));
+            }
+          }
+        } finally {
+          controller.close();
+        }
+      },
+    });
 
-    return NextResponse.json({ reply });
+    return new Response(readable, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
   } catch (err) {
     console.error("health-chat error:", err);
     return NextResponse.json({

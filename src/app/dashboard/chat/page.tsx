@@ -76,6 +76,7 @@ function ChatInner() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
+  const [streamingText, setStreamingText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [attachments, setAttachments] = useState<AttachmentDraft[]>([]);
   const [recording, setRecording] = useState(false);
@@ -94,7 +95,7 @@ function ChatInner() {
   // Auto-scroll on new messages / typing
   useEffect(() => {
     scrollerRef.current?.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, pending]);
+  }, [messages, streamingText, pending]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -131,6 +132,7 @@ function ChatInner() {
     setInput("");
     setAttachments([]);
     setPending(true);
+    setStreamingText("");
     setError(null);
 
     abortRef.current = new AbortController();
@@ -142,9 +144,25 @@ function ChatInner() {
         signal: abortRef.current.signal,
         body: JSON.stringify({ messages: next }),
       });
-      const j = await r.json();
-      if (!r.ok) throw new Error(j.detail || j.error || "Failed");
-      setMessages((m) => [...m, { role: "assistant", content: j.reply ?? "" }]);
+      if (!r.ok || !r.body) {
+        const detail = await r.text().catch(() => "");
+        throw new Error(detail || `Request failed (${r.status})`);
+      }
+
+      const reader = r.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        setStreamingText(buffer);
+      }
+      buffer += decoder.decode();
+      setStreamingText(buffer);
+
+      setMessages((m) => [...m, { role: "assistant", content: buffer.trim() || "(no response)" }]);
+      setStreamingText("");
     } catch (e) {
       if (e instanceof DOMException && e.name === "AbortError") {
         // Cancelled — leave the user msg in place, just clear pending
@@ -152,6 +170,7 @@ function ChatInner() {
         setError(e instanceof Error ? e.message : "Network error");
         setMessages((m) => m.slice(0, -1)); // rollback so they can retry
       }
+      setStreamingText("");
     } finally {
       setPending(false);
       abortRef.current = null;
@@ -313,7 +332,10 @@ function ChatInner() {
               {messages.map((m, i) => (
                 <Bubble key={i} message={m} />
               ))}
-              {pending && <ThinkingBubble />}
+              {pending && streamingText && (
+                <Bubble message={{ role: "assistant", content: streamingText }} />
+              )}
+              {pending && !streamingText && <ThinkingBubble />}
               {error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900/50 px-4 py-3 text-sm text-red-700 dark:text-red-300">
                   {error}
