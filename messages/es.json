@@ -244,7 +244,9 @@
     "symptomChatQ1": "¿Debería preocuparme por esto?",
     "symptomChatQ2": "¿Qué puedo hacer para sentirme mejor ahora?",
     "symptomChatQ3": "¿Cuándo debería ver a un médico?",
-    "symptomChatQ4": "¿Podría estar relacionado con el estrés o el estilo de vida?"
+    "symptomChatQ4": "¿Podría estar relacionado con el estrés o el estilo de vida?",
+    "mobileTabResults": "Resultados",
+    "mobileTabAsk": "Preguntar IA"
   },
   "Diagnosed": {
     "badge": "Explicador de diagnósticos",

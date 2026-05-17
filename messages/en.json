@@ -244,7 +244,9 @@
     "symptomChatQ1": "Should I be worried about this?",
     "symptomChatQ2": "What can I do to feel better right now?",
     "symptomChatQ3": "When should I actually see a doctor?",
-    "symptomChatQ4": "Could this be related to stress or lifestyle?"
+    "symptomChatQ4": "Could this be related to stress or lifestyle?",
+    "mobileTabResults": "Results",
+    "mobileTabAsk": "Ask AI"
   },
   "Diagnosed": {
     "badge": "Diagnosis Explainer",

@@ -244,7 +244,9 @@
     "symptomChatQ1": "我应该为此担心吗？",
     "symptomChatQ2": "我现在可以做什么来感觉好些？",
     "symptomChatQ3": "我什么时候应该去看医生？",
-    "symptomChatQ4": "这可能与压力或生活方式有关吗？"
+    "symptomChatQ4": "这可能与压力或生活方式有关吗？",
+    "mobileTabResults": "结果",
+    "mobileTabAsk": "咨询AI"
   },
   "Diagnosed": {
     "badge": "诊断解释器",
