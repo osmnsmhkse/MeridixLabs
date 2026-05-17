@@ -253,7 +253,7 @@
     "title": "Just got a diagnosis? Let's talk through it.",
     "subtitle": "Type in what your doctor told you. We'll explain what it means, what comes next, and what to ask.",
     "inputLabel": "Your diagnosis",
-    "placeholder": "e.g. Type 2 diabetes, herniated disc, atrial fibrillation, PCOS...",
+    "placeholder": "e.g. Type 2 diabetes, herniated disc, atrial fibrillation, PMOS...",
     "commonExamples": "Common examples:",
     "privacy": "We don't store what you type. This session is completely private.",
     "yourExplanation": "Your personalised explanation",

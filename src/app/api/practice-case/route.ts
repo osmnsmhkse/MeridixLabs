@@ -17,7 +17,7 @@ const DIFFICULTY_GUIDANCE = {
 const SPECIALTY_GUIDANCE: Record<string, string> = {
   mixed:         "Choose any medical specialty — vary across cardiology, endocrinology, nephrology, hematology, hepatology, and pulmonology.",
   cardiology:    "Focus on cardiovascular conditions: heart failure, ACS, arrhythmias, hypertensive emergency, lipid disorders, cardiac biomarkers (troponin, BNP, CK-MB). Include relevant cardiac labs.",
-  endocrinology: "Focus on endocrine conditions: diabetes (type 1/2, DKA, HHS), thyroid disorders (hypo/hyperthyroidism, thyroid storm), adrenal conditions (Cushing's, Addison's, pheochromocytoma), pituitary disorders, calcium/parathyroid disorders, PCOS.",
+  endocrinology: "Focus on endocrine conditions: diabetes (type 1/2, DKA, HHS), thyroid disorders (hypo/hyperthyroidism, thyroid storm), adrenal conditions (Cushing's, Addison's, pheochromocytoma), pituitary disorders, calcium/parathyroid disorders, PMOS.",
   nephrology:    "Focus on renal conditions: acute kidney injury, CKD, nephrotic/nephritic syndrome, electrolyte disorders (hypo/hypernatremia, hypo/hyperkalemia, acid-base disturbances). Include BMP/CMP with eGFR and urine markers.",
   hematology:    "Focus on blood conditions: anemia (iron deficiency, B12/folate, hemolytic, aplastic), polycythemia, leukemia patterns, lymphoma markers, bleeding/clotting disorders (hemophilia, TTP, DIC, thrombocytopenia). Include CBC with differential.",
   hepatology:    "Focus on liver/GI conditions: hepatitis (viral, alcoholic, autoimmune), cirrhosis, acute liver failure, cholestatic disease, pancreatitis, GI bleeding. Include LFTs, bilirubin, albumin, coagulation studies.",

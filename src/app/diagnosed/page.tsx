@@ -381,7 +381,7 @@ function LoadingState({ diagnosis }: { diagnosis: string }) {
 const EXAMPLE_CHIPS = [
   "Type 2 diabetes",
   "Hypertension",
-  "PCOS",
+  "PMOS",
   "Herniated disc",
   "Atrial fibrillation",
   "Hypothyroidism",
