@@ -272,7 +272,19 @@
     "sectionLifeNow": "Wie Ihr Leben jetzt aussieht",
     "sectionSixMonths": "Die nächsten 6 Monate",
     "sectionQuestions": "Fragen für Ihren Arzt",
-    "sectionExplaining": "Anderen erklären"
+    "sectionExplaining": "Anderen erklären",
+    "diagChatTitle": "Meridix AI fragen",
+    "diagChatSubtitle": "Fragen zu Ihrer Diagnose",
+    "diagChatClear": "Neuer Chat",
+    "diagChatIntro": "Haben Sie Fragen zu Ihrer Diagnose? Fragen Sie alles — was die Erkrankung bedeutet, Behandlungsmöglichkeiten, Lebensstiländerungen oder was Sie erwarten können.",
+    "diagChatPlaceholder": "Stellen Sie eine Frage zu Ihrer Diagnose…",
+    "diagChatDisclaimer": "KI-generierter Gesundheitskontext — keine Diagnose. Konsultieren Sie einen Fachmann für medizinische Beratung.",
+    "diagChatQ1": "Wird das mit der Zeit schlimmer?",
+    "diagChatQ2": "Welche Lebensstiländerungen helfen am meisten?",
+    "diagChatQ3": "Gibt es Behandlungsmöglichkeiten, nach denen ich fragen sollte?",
+    "diagChatQ4": "Wie wird das meinen Alltag beeinflussen?",
+    "mobileTabResults": "Erklärung",
+    "mobileTabAsk": "KI fragen"
   },
   "Trends": {
     "badge": "Neue Funktion",

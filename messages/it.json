@@ -272,7 +272,19 @@
     "sectionLifeNow": "Com'è la tua vita ora",
     "sectionSixMonths": "I prossimi 6 mesi",
     "sectionQuestions": "Domande per il tuo medico",
-    "sectionExplaining": "Spiegare agli altri"
+    "sectionExplaining": "Spiegare agli altri",
+    "diagChatTitle": "Chiedi a Meridix AI",
+    "diagChatSubtitle": "Domande sulla tua diagnosi",
+    "diagChatClear": "Nuova chat",
+    "diagChatIntro": "Hai domande sulla tua diagnosi? Chiedi qualsiasi cosa — cosa significa la condizione, opzioni di trattamento, cambiamenti nello stile di vita o cosa aspettarsi.",
+    "diagChatPlaceholder": "Fai una domanda sulla tua diagnosi…",
+    "diagChatDisclaimer": "Contesto sanitario generato dall'IA — non è una diagnosi. Consulta un professionista per un consiglio medico.",
+    "diagChatQ1": "Questo peggiorerà nel tempo?",
+    "diagChatQ2": "Quali cambiamenti nello stile di vita aiuteranno di più?",
+    "diagChatQ3": "Ci sono opzioni di trattamento di cui dovrei chiedere?",
+    "diagChatQ4": "Come influenzerà questo la mia vita quotidiana?",
+    "mobileTabResults": "Spiegazione",
+    "mobileTabAsk": "Chiedi all'IA"
   },
   "Trends": {
     "badge": "Nuova funzionalità",

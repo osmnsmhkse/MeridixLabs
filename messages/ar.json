@@ -272,7 +272,19 @@
     "sectionLifeNow": "كيف تبدو حياتك الآن",
     "sectionSixMonths": "الأشهر الستة القادمة",
     "sectionQuestions": "أسئلة لطبيبك",
-    "sectionExplaining": "الشرح للآخرين"
+    "sectionExplaining": "الشرح للآخرين",
+    "diagChatTitle": "اسأل Meridix AI",
+    "diagChatSubtitle": "أسئلة حول تشخيصك",
+    "diagChatClear": "محادثة جديدة",
+    "diagChatIntro": "هل لديك أسئلة حول تشخيصك؟ اسأل أي شيء — ماذا تعني الحالة، خيارات العلاج، تغييرات نمط الحياة، أو ما يمكن توقعه.",
+    "diagChatPlaceholder": "اطرح سؤالاً عن تشخيصك…",
+    "diagChatDisclaimer": "سياق صحي مُنشأ بالذكاء الاصطناعي — ليس تشخيصاً. استشر متخصصاً للحصول على نصيحة طبية.",
+    "diagChatQ1": "هل سيزداد هذا سوءاً بمرور الوقت؟",
+    "diagChatQ2": "ما تغييرات نمط الحياة التي ستساعد أكثر؟",
+    "diagChatQ3": "هل هناك خيارات علاج يجب أن أسأل عنها؟",
+    "diagChatQ4": "كيف سيؤثر هذا على حياتي اليومية؟",
+    "mobileTabResults": "الشرح",
+    "mobileTabAsk": "اسأل الذكاء"
   },
   "Trends": {
     "badge": "ميزة جديدة",

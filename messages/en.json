@@ -272,7 +272,19 @@
     "sectionLifeNow": "What your life looks like now",
     "sectionSixMonths": "The next 6 months",
     "sectionQuestions": "Questions for your doctor",
-    "sectionExplaining": "Explaining to others"
+    "sectionExplaining": "Explaining to others",
+    "diagChatTitle": "Ask Meridix AI",
+    "diagChatSubtitle": "Questions about your diagnosis",
+    "diagChatClear": "New chat",
+    "diagChatIntro": "Have questions about your diagnosis? Ask anything — what the condition means, treatment options, lifestyle changes, or what to expect next.",
+    "diagChatPlaceholder": "Ask a question about your diagnosis…",
+    "diagChatDisclaimer": "AI-generated health context — not a diagnosis. See a professional for medical advice.",
+    "diagChatQ1": "Will this get worse over time?",
+    "diagChatQ2": "What lifestyle changes will help the most?",
+    "diagChatQ3": "Are there treatment options I should ask about?",
+    "diagChatQ4": "How will this affect my daily life?",
+    "mobileTabResults": "Explanation",
+    "mobileTabAsk": "Ask AI"
   },
   "Trends": {
     "badge": "New Feature",

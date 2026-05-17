@@ -272,7 +272,19 @@
     "sectionLifeNow": "您现在的生活是什么样的",
     "sectionSixMonths": "接下来的6个月",
     "sectionQuestions": "向医生提问",
-    "sectionExplaining": "向他人解释"
+    "sectionExplaining": "向他人解释",
+    "diagChatTitle": "咨询 Meridix AI",
+    "diagChatSubtitle": "关于您的诊断的问题",
+    "diagChatClear": "新对话",
+    "diagChatIntro": "对您的诊断有疑问？随时提问——了解病情含义、治疗选择、生活方式改变或后续预期。",
+    "diagChatPlaceholder": "就您的诊断提问…",
+    "diagChatDisclaimer": "AI生成的健康信息——非诊断。如需医疗建议请咨询专业人士。",
+    "diagChatQ1": "这会随时间恶化吗？",
+    "diagChatQ2": "哪些生活方式改变最有帮助？",
+    "diagChatQ3": "有什么治疗方案我应该了解的？",
+    "diagChatQ4": "这将如何影响我的日常生活？",
+    "mobileTabResults": "说明",
+    "mobileTabAsk": "咨询AI"
   },
   "Trends": {
     "badge": "新功能",

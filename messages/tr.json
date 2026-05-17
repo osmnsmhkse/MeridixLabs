@@ -272,7 +272,19 @@
     "sectionLifeNow": "Hayatın şu an nasıl görünüyor",
     "sectionSixMonths": "Önümüzdeki 6 ay",
     "sectionQuestions": "Doktoruna soracağın sorular",
-    "sectionExplaining": "Başkalarına açıklamak"
+    "sectionExplaining": "Başkalarına açıklamak",
+    "diagChatTitle": "Meridix AI'ya Sorun",
+    "diagChatSubtitle": "Tanınız hakkında sorular",
+    "diagChatClear": "Yeni sohbet",
+    "diagChatIntro": "Tanınız hakkında sorularınız mı var? Ne anlama geldiğini, tedavi seçeneklerini, yaşam tarzı değişikliklerini veya bundan sonra ne beklemeniz gerektiğini sorun.",
+    "diagChatPlaceholder": "Tanınız hakkında bir soru sorun…",
+    "diagChatDisclaimer": "Yapay zeka tarafından oluşturulan sağlık bilgisi — tanı değildir. Tıbbi tavsiye için bir uzmana danışın.",
+    "diagChatQ1": "Bu zamanla kötüleşir mi?",
+    "diagChatQ2": "Hangi yaşam tarzı değişiklikleri en çok yardımcı olur?",
+    "diagChatQ3": "Sormam gereken tedavi seçenekleri var mı?",
+    "diagChatQ4": "Bu günlük hayatımı nasıl etkileyecek?",
+    "mobileTabResults": "Açıklama",
+    "mobileTabAsk": "AI'ya Sor"
   },
   "Trends": {
     "badge": "Yeni Özellik",
