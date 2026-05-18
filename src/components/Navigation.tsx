@@ -13,7 +13,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications"];
+const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications", "/visit"];
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 
@@ -114,6 +114,18 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
       icon: (
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
           <path fillRule="evenodd" d="M14.5 3a3.5 3.5 0 00-2.475 5.975L7.025 13.475a3.5 3.5 0 104.95 4.95l5-5a3.5 3.5 0 00-2.475-5.975h-.025L18.5 6.5A3.5 3.5 0 0014.5 3zm-1.768 5.732l-4 4 1.768 1.768 4-4-1.768-1.768z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/visit",
+      label: t("visitCompanion"),
+      description: t("visitCompanionDesc"),
+      color: "text-brand-indigo dark:text-indigo-400",
+      bg: "bg-indigo-50 dark:bg-indigo-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
         </svg>
       ),
     },
@@ -350,6 +362,7 @@ export default function Navigation() {
                   { href: "/imaging",     label: t("imagingExplainer"),     color: "text-sky-600 dark:text-sky-400"         },
                   { href: "/trends",      label: t("trendTracker"),         color: "text-amber-600 dark:text-amber-400"     },
                   { href: "/medications", label: t("medicationCompanion"),  color: "text-teal-600 dark:text-teal-400"       },
+                  { href: "/visit",       label: t("visitCompanion"),       color: "text-brand-indigo dark:text-indigo-400" },
                 ].map((tool) => (
                   <Link
                     key={tool.href}

@@ -362,8 +362,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* 5 secondary tools */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+          {/* Secondary tools */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 href: "/symptom",
@@ -424,6 +424,18 @@ export default function LandingPage() {
                 hoverGlow: "hover:shadow-teal-500/8",
                 iconBg: "bg-teal-100 dark:bg-teal-900/40",
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-teal-600 dark:text-teal-400"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>,
+              },
+              {
+                href: "/visit",
+                label: tSuite("visitLabel"),
+                title: tSuite("visitTitle"),
+                desc: tSuite("visitDesc"),
+                cta: tSuite("visitCta"),
+                color: "text-brand-indigo dark:text-indigo-400",
+                hoverBorder: "hover:border-indigo-300 dark:hover:border-indigo-700",
+                hoverGlow: "hover:shadow-indigo-500/8",
+                iconBg: "bg-indigo-100 dark:bg-indigo-900/40",
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-indigo dark:text-indigo-400"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>,
               },
             ].map((tool, i) => (
               <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${i + 1} group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tool.hoverBorder} hover:shadow-xl ${tool.hoverGlow} transition-all duration-500 overflow-hidden card-hover`}>
