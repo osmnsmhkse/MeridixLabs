@@ -119,7 +119,7 @@ function parseNumberedList(text: string): string[] {
   return items.filter(Boolean);
 }
 
-function parseLabeledBlocks<T extends Record<string, string>>(
+function parseLabeledBlocks<T>(
   text: string,
   startLabel: string,
   fields: readonly string[]
@@ -138,7 +138,7 @@ function parseLabeledBlocks<T extends Record<string, string>>(
       const m = block.match(re);
       out[field.toLowerCase()] = m ? m[1].trim() : "";
     }
-    items.push(out as T);
+    items.push(out as unknown as T);
   }
   return items;
 }
