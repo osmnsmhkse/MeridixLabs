@@ -28,7 +28,9 @@
     "imagingExplainer": "Imaging Report Explainer",
     "imagingExplainerDesc": "Upload a CT, MRI, X-ray, or ultrasound report — get a plain-English explanation",
     "visitCompanion": "Doctor's Visit Companion",
-    "visitCompanionDesc": "Prepare the right questions before your appointment — understand the notes after"
+    "visitCompanionDesc": "Prepare the right questions before your appointment — understand the notes after",
+    "geneticsExplainer": "Genetic Test Explainer",
+    "geneticsExplainerDesc": "Understand what a variant or DNA report actually means — calibrated, not alarmist"
   },
   "Hero": {
     "badge": "AI-powered medical interpretation",
@@ -117,7 +119,11 @@
     "visitLabel": "Got an appointment coming up?",
     "visitTitle": "Doctor's Visit Companion",
     "visitDesc": "Prepare the right questions before your visit. Understand everything that happened after.",
-    "visitCta": "Prepare my visit"
+    "visitCta": "Prepare my visit",
+    "geneticsLabel": "Got DNA results?",
+    "geneticsTitle": "Genetic Test Explainer",
+    "geneticsDesc": "23andMe, Invitae, MyHeritage — paste any variant or upload your full report and understand what it actually means.",
+    "geneticsCta": "Explain my genetics"
   },
   "Stats": {
     "reportsCount": "3,200+",
@@ -126,7 +132,7 @@
     "speedLabel": "Average result time",
     "tiersCount": "3",
     "tiersLabel": "Detail levels",
-    "toolsCount": "6",
+    "toolsCount": "7",
     "toolsLabel": "AI-powered tools",
     "encrypted": "Encrypted & private",
     "resultsInSeconds": "Results in seconds",

@@ -437,6 +437,18 @@ export default function LandingPage() {
                 iconBg: "bg-indigo-100 dark:bg-indigo-900/40",
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-indigo dark:text-indigo-400"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>,
               },
+              {
+                href: "/genetics",
+                label: tSuite("geneticsLabel"),
+                title: tSuite("geneticsTitle"),
+                desc: tSuite("geneticsDesc"),
+                cta: tSuite("geneticsCta"),
+                color: "text-fuchsia-600 dark:text-fuchsia-400",
+                hoverBorder: "hover:border-fuchsia-300 dark:hover:border-fuchsia-700",
+                hoverGlow: "hover:shadow-fuchsia-500/8",
+                iconBg: "bg-fuchsia-100 dark:bg-fuchsia-900/40",
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400"><path fillRule="evenodd" d="M3.5 2a.5.5 0 01.5.5V4h12V2.5a.5.5 0 011 0V4a4 4 0 01-1.553 3.163C13.86 8.292 12 9.756 12 12c0 2.244 1.86 3.708 3.447 4.837A4 4 0 0117 20v-1.5a.5.5 0 01-1 0V18H4v1.5a.5.5 0 01-1 0V20a4 4 0 011.553-3.163C6.14 15.708 8 14.244 8 12c0-2.244-1.86-3.708-3.447-4.837A4 4 0 013 4V2.5a.5.5 0 01.5-.5zM6 5h8c0 .76-.25 1.5-.84 2.07L10 9.65 6.84 7.07A2.83 2.83 0 016 5zm0 11l3-2.16V11l-2.95 2.21A2.79 2.79 0 006 16zm5-2.16l3 2.16c0-.78-.4-1.5-1.05-1.95L11 11v2.84z" clipRule="evenodd" /></svg>,
+              },
             ].map((tool, i) => (
               <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${i + 1} group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tool.hoverBorder} hover:shadow-xl ${tool.hoverGlow} transition-all duration-500 overflow-hidden card-hover`}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-current/5 to-transparent rounded-full -translate-y-10 translate-x-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

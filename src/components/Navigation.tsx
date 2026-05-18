@@ -13,7 +13,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications", "/visit"];
+const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications", "/visit", "/genetics"];
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 
@@ -126,6 +126,18 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
       icon: (
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
           <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/genetics",
+      label: t("geneticsExplainer"),
+      description: t("geneticsExplainerDesc"),
+      color: "text-fuchsia-600 dark:text-fuchsia-400",
+      bg: "bg-fuchsia-50 dark:bg-fuchsia-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M3.5 2a.5.5 0 01.5.5V4h12V2.5a.5.5 0 011 0V4a4 4 0 01-1.553 3.163C13.86 8.292 12 9.756 12 12c0 2.244 1.86 3.708 3.447 4.837A4 4 0 0117 20v-1.5a.5.5 0 01-1 0V18H4v1.5a.5.5 0 01-1 0V20a4 4 0 011.553-3.163C6.14 15.708 8 14.244 8 12c0-2.244-1.86-3.708-3.447-4.837A4 4 0 013 4V2.5a.5.5 0 01.5-.5zM6 5h8c0 .76-.25 1.5-.84 2.07L10 9.65 6.84 7.07A2.83 2.83 0 016 5zm0 11l3-2.16V11l-2.95 2.21A2.79 2.79 0 006 16zm5-2.16l3 2.16c0-.78-.4-1.5-1.05-1.95L11 11v2.84z" clipRule="evenodd" />
         </svg>
       ),
     },
@@ -363,6 +375,7 @@ export default function Navigation() {
                   { href: "/trends",      label: t("trendTracker"),         color: "text-amber-600 dark:text-amber-400"     },
                   { href: "/medications", label: t("medicationCompanion"),  color: "text-teal-600 dark:text-teal-400"       },
                   { href: "/visit",       label: t("visitCompanion"),       color: "text-brand-indigo dark:text-indigo-400" },
+                  { href: "/genetics",    label: t("geneticsExplainer"),    color: "text-fuchsia-600 dark:text-fuchsia-400" },
                 ].map((tool) => (
                   <Link
                     key={tool.href}
