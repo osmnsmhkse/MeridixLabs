@@ -13,7 +13,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/trends", "/medications"];
+const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications"];
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 
@@ -77,6 +77,19 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
       icon: (
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
           <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/imaging",
+      label: t("imagingExplainer"),
+      description: t("imagingExplainerDesc"),
+      color: "text-sky-600 dark:text-sky-400",
+      bg: "bg-sky-50 dark:bg-sky-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
         </svg>
       ),
     },
@@ -334,6 +347,7 @@ export default function Navigation() {
                   { href: "/app",         label: t("labAnalyzer"),          color: "text-brand-blue"                        },
                   { href: "/symptom",     label: t("symptomChecker"),       color: "text-emerald-600 dark:text-emerald-400" },
                   { href: "/diagnosed",   label: t("diagnosisExplainer"),   color: "text-violet-600 dark:text-violet-400"   },
+                  { href: "/imaging",     label: t("imagingExplainer"),     color: "text-sky-600 dark:text-sky-400"         },
                   { href: "/trends",      label: t("trendTracker"),         color: "text-amber-600 dark:text-amber-400"     },
                   { href: "/medications", label: t("medicationCompanion"),  color: "text-teal-600 dark:text-teal-400"       },
                 ].map((tool) => (

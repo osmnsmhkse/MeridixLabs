@@ -362,8 +362,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* 4 secondary tools */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* 5 secondary tools */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {[
               {
                 href: "/symptom",
@@ -388,6 +388,18 @@ export default function LandingPage() {
                 hoverGlow: "hover:shadow-violet-500/8",
                 iconBg: "bg-violet-100 dark:bg-violet-900/40",
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-violet-600 dark:text-violet-400"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>,
+              },
+              {
+                href: "/imaging",
+                label: tSuite("imagingLabel"),
+                title: tSuite("imagingTitle"),
+                desc: tSuite("imagingDesc"),
+                cta: tSuite("imagingCta"),
+                color: "text-sky-600 dark:text-sky-400",
+                hoverBorder: "hover:border-sky-300 dark:hover:border-sky-700",
+                hoverGlow: "hover:shadow-sky-500/8",
+                iconBg: "bg-sky-100 dark:bg-sky-900/40",
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-sky-600 dark:text-sky-400"><path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>,
               },
               {
                 href: "/trends",
