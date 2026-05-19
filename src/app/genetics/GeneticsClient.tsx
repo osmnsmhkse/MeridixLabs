@@ -6,7 +6,12 @@
 // counselor, and a static FAQ section for SEO.
 
 import { useCallback, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const GeneticsChatPanel = dynamic(() => import("@/components/GeneticsChatPanel"), {
+  ssr: false,
+});
 
 // ── Types (mirror the API JSON schema) ──────────────────────────────────────
 
@@ -431,6 +436,8 @@ export default function GeneticsClient() {
   const [tier, setTier] = useState<Tier>("medium");
 
   const [result, setResult] = useState<GeneticsResult | null>(null);
+  const [chatSnapshot, setChatSnapshot] = useState<string>("");
+  const [chatInputSummary, setChatInputSummary] = useState<string>("");
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [fileSizeMB, setFileSizeMB] = useState<string | undefined>(undefined);
@@ -482,7 +489,14 @@ export default function GeneticsClient() {
         setStage("error");
         return;
       }
-      setResult(json.data as GeneticsResult);
+      const data = json.data as GeneticsResult;
+      setResult(data);
+      setChatSnapshot(JSON.stringify(data, null, 2));
+      const summaryParts: string[] = [`Input mode: ${mode}`];
+      if (mode === "paste" && text.trim()) summaryParts.push(`Variant text:\n${text.trim()}`);
+      if (mode !== "paste" && file) summaryParts.push(`Uploaded: ${file.name} (${(file.size / 1024).toFixed(0)} KB)`);
+      if (context.trim()) summaryParts.push(`Context:\n${context.trim()}`);
+      setChatInputSummary(summaryParts.join("\n\n"));
       setStage("result");
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch {
@@ -803,6 +817,14 @@ export default function GeneticsClient() {
             {!SERIOUS.has(result.overall_significance) && (
               <CounselorCard rec={result.counselor_recommendation} />
             )}
+
+            {/* Follow-up chat */}
+            <GeneticsChatPanel
+              inputSummary={chatInputSummary}
+              analysisSnapshot={chatSnapshot}
+              tier={tier}
+              language={lang}
+            />
 
             {/* Disclaimer */}
             <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">

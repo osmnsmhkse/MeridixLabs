@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+
+const PediatricChatPanel = dynamic(() => import("@/components/PediatricChatPanel"), {
+  ssr: false,
+});
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -326,6 +331,8 @@ export default function PediatricPage() {
   const [tier, setTier] = useState<Tier>("medium");
   const [stage, setStage] = useState<Stage>("idle");
   const [result, setResult] = useState<ParsedResult | null>(null);
+  const [rawAnalysis, setRawAnalysis] = useState<string>("");
+  const [submittedSummary, setSubmittedSummary] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
   const resultRef = useRef<HTMLDivElement>(null);
@@ -379,6 +386,23 @@ export default function PediatricPage() {
       language: lang,
     };
 
+    // Build a human-readable summary the chat can use for follow-up context
+    const summaryLines: string[] = [];
+    if (payload.ageMonths !== null) summaryLines.push(`Age: ${payload.ageMonths} months`);
+    if (payload.ageYears !== null) summaryLines.push(`Age: ${payload.ageYears} years`);
+    if (payload.weight) summaryLines.push(`Weight: ${payload.weight}`);
+    if (payload.concerns.length) summaryLines.push(`Concerns: ${payload.concerns.join(", ")}`);
+    if (payload.concernDescription) summaryLines.push(`Parent describes: ${payload.concernDescription}`);
+    if (payload.tempValue) {
+      summaryLines.push(
+        `Temperature: ${payload.tempValue}°${payload.tempUnit}` +
+          (payload.tempMethod ? ` (${payload.tempMethod})` : "")
+      );
+    }
+    if (payload.duration) summaryLines.push(`Duration: ${payload.duration}`);
+    if (payload.otherContext) summaryLines.push(`Other context: ${payload.otherContext}`);
+    const summary = summaryLines.join("\n");
+
     try {
       const res = await fetch("/api/pediatric", {
         method: "POST",
@@ -392,6 +416,8 @@ export default function PediatricPage() {
         return;
       }
       setResult(parseResult(data.text));
+      setRawAnalysis(data.text);
+      setSubmittedSummary(summary);
       setStage("result");
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch {
@@ -665,6 +691,14 @@ export default function PediatricPage() {
           <WarningSignsSection items={result.warningSigns} />
           <CommonWorriesSection text={result.commonWorries} />
           <TrustInstinctCard text={result.trustYourInstinct} />
+
+          {/* Follow-up chat */}
+          <PediatricChatPanel
+            inputSummary={submittedSummary}
+            analysisSnapshot={rawAnalysis}
+            tier={tier}
+            language={lang}
+          />
 
           {/* Reset */}
           <div className="text-center pt-2">

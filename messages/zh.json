@@ -1094,23 +1094,19 @@
     "badge": "孩子生病了？",
     "title": "儿科症状伴侣",
     "subtitle": "当孩子生病时，给出冷静、基于循证的指导。",
-
     "tierTitle": "您想要多少细节？",
     "tierSimple": "简单",
     "tierMedium": "中等",
     "tierExpert": "专业",
-
     "ageLabel": "孩子的年龄",
     "ageHint": "这是最重要的一项 — 所有建议都从这里开始。",
     "ageUnitMonths": "月",
     "ageUnitYears": "岁",
     "agePlaceholderMonths": "例如 4",
     "agePlaceholderYears": "例如 6",
-
     "weightLabel": "体重",
     "weightHint": "仅用于剂量参考 — 我们从不计算具体剂量。",
     "weightPlaceholder": "例如 28",
-
     "concernsLabel": "您最担心什么？",
     "concernsHint": "选择所有适用项 — 并用自己的话补充几句。",
     "concernFever": "发烧",
@@ -1123,7 +1119,6 @@
     "concernInjury": "外伤",
     "concernOther": "其他",
     "concernDescriptionPlaceholder": "用您自己的话描述您所看到的情况……",
-
     "tempLabel": "体温",
     "tempHint": "测量方法很重要 — 对婴儿来说，直肠测量最准确。",
     "tempMethodLabel": "如何测量的？",
@@ -1134,30 +1129,24 @@
     "tempMethodForehead": "额头 / 颞部",
     "tempMethodArmpit": "腋下",
     "tempMethodUnsure": "不确定",
-
     "durationLabel": "这种情况持续多久了？",
     "durationLess6h": "不到 6 小时",
     "duration6to24h": "6–24 小时",
     "duration1to2d": "1–2 天",
     "duration3to5d": "3–5 天",
     "durationMore5d": "超过 5 天",
-
     "otherContextLabel": "还有什么值得告诉我们的？",
     "otherContextPlaceholder": "例如：一直拽右耳、8 小时没有湿尿布、最近接触过链球菌感染患者、已完成疫苗接种、有哮喘……",
-
     "optional": "可选",
     "submit": "获取指导",
     "reassurance": "我们不会保存您输入的内容。本次会话完全私密。",
-
     "loadingMessage": "我们正在与您一起思考",
     "loadingPrivacy": "您的信息保持私密 — 我们不会保存您分享的内容。",
-
     "decisionEyebrow": "您的建议",
     "decisionErNow": "立即拨打 120 / 911 或前往急诊",
     "decisionErToday": "今天前往急诊或紧急医疗中心",
     "decisionCallPed": "今天就联系您的儿科医生",
     "decisionWatchHome": "在家观察和照护",
-
     "sectionWhy": "为什么是这个建议",
     "sectionWhatToDo": "现在马上要做什么",
     "sectionWarning": "会改变建议的警示信号",
@@ -1165,9 +1154,48 @@
     "sectionWorries": "关于这种情况的常见担忧",
     "sectionWorriesDesc": "凌晨 2 点父母真正会搜索的问题 — 诚实地回答。",
     "sectionTrustInstinct": "相信您的直觉",
-
     "checkAnother": "查看其他担忧",
     "errorGeneric": "出了点问题。请重试。",
-    "disclaimer": "仅供教育参考。不能替代专业医疗护理。如果您的直觉告诉您事情不对劲，请相信它并寻求医疗帮助。"
+    "disclaimer": "仅供教育参考。不能替代专业医疗护理。如果您的直觉告诉您事情不对劲，请相信它并寻求医疗帮助。",
+    "chatTitle": "向 Meridix AI 提问",
+    "chatSubtitle": "关于孩子情况的后续问题",
+    "chatClear": "新对话",
+    "chatIntro": "有后续问题吗？您可以问任何关于建议的内容、需要注意的事项，或者如果情况发生变化该怎么办。",
+    "chatPlaceholder": "针对孩子情况提一个后续问题……",
+    "chatDisclaimer": "AI 生成的指导 — 不是诊断。如果情况发生变化，请相信您的直觉并寻求医疗帮助。",
+    "chatQ1": "接下来几个小时我应该注意什么？",
+    "chatQ2": "现在可以给退烧药吗？",
+    "chatQ3": "什么情况会改变「去急诊」的建议？",
+    "chatQ4": "如何帮助孩子保持充足水分？"
+  },
+  "Visit": {
+    "chatTitle": "向 Meridix AI 提问",
+    "chatSubtitlePrep": "就诊前的后续问题",
+    "chatSubtitleDebrief": "关于就诊的后续问题",
+    "chatClear": "新对话",
+    "chatIntroPrep": "对就诊准备有后续问题？尽管问 — 让某个问题更精准、找到合适的措辞，或思考要重点提出什么。",
+    "chatIntroDebrief": "对所讨论或开具的内容有疑问？尽管问 — 某个术语的含义、为什么建议某项治疗、或需要注意什么。",
+    "chatPlaceholder": "提一个后续问题……",
+    "chatDisclaimer": "AI 生成的内容 — 不是医疗建议。请始终咨询您的医生。",
+    "chatPrepQ1": "我最应该问的问题是什么？",
+    "chatPrepQ2": "如何清楚地描述我的症状？",
+    "chatPrepQ3": "我应该坚持要求做哪些检查？",
+    "chatPrepQ4": "如果医生不重视这个问题怎么办？",
+    "chatDebriefQ1": "这种药到底有什么作用？",
+    "chatDebriefQ2": "接下来几天我应该注意什么？",
+    "chatDebriefQ3": "我什么时候应该复诊 — 找谁复诊？",
+    "chatDebriefQ4": "这个诊断对我的长期健康意味着什么？"
+  },
+  "Genetics": {
+    "chatTitle": "向 Meridix AI 提问",
+    "chatSubtitle": "关于您基因变异的后续问题",
+    "chatClear": "新对话",
+    "chatIntro": "对您的变异或报告有后续问题？尽管问 — 它的含义、下一步该做什么，或者是否应该咨询遗传咨询师。",
+    "chatPlaceholder": "针对您的基因提一个后续问题……",
+    "chatDisclaimer": "AI 生成的基因背景信息 — 不是诊断。对于重要发现，请咨询经过认证的遗传咨询师。",
+    "chatQ1": "我真的应该有多担心这个？",
+    "chatQ2": "我需要做临床确认性检测吗？",
+    "chatQ3": "我的家人是否也应该接受检测？",
+    "chatQ4": "我应该带哪些问题去咨询遗传咨询师？"
   }
 }

@@ -1094,23 +1094,19 @@
     "badge": "Hasta çocuk?",
     "title": "Pediatrik Semptom Asistanı",
     "subtitle": "Çocuğunuz hasta olduğunda sakin, kanıta dayalı rehberlik.",
-
     "tierTitle": "Ne kadar ayrıntı istiyorsunuz?",
     "tierSimple": "Basit",
     "tierMedium": "Orta",
     "tierExpert": "Uzman",
-
     "ageLabel": "Çocuğunuzun yaşı",
     "ageHint": "Bu en önemli alan — tüm öneriler buradan başlıyor.",
     "ageUnitMonths": "Ay",
     "ageUnitYears": "Yıl",
     "agePlaceholderMonths": "ör. 4",
     "agePlaceholderYears": "ör. 6",
-
     "weightLabel": "Kilo",
     "weightHint": "Yalnızca doz bağlamı için — doz asla hesaplamayız.",
     "weightPlaceholder": "ör. 28",
-
     "concernsLabel": "Sizi ne endişelendiriyor?",
     "concernsHint": "Uygun olanların hepsini seçin — ve kendi sözlerinizle birkaç şey ekleyin.",
     "concernFever": "Ateş",
@@ -1123,7 +1119,6 @@
     "concernInjury": "Yaralanma",
     "concernOther": "Diğer",
     "concernDescriptionPlaceholder": "Gördüklerinizi kendi sözcüklerinizle anlatın…",
-
     "tempLabel": "Vücut sıcaklığı",
     "tempHint": "Nasıl ölçüldüğü önemli — bebeklerde rektal ölçüm en doğrusudur.",
     "tempMethodLabel": "Nasıl ölçüldü?",
@@ -1134,30 +1129,24 @@
     "tempMethodForehead": "Alın / temporal",
     "tempMethodArmpit": "Koltuk altı (aksiller)",
     "tempMethodUnsure": "Emin değilim",
-
     "durationLabel": "Bu ne kadar süredir devam ediyor?",
     "durationLess6h": "6 saatten az",
     "duration6to24h": "6–24 saat",
     "duration1to2d": "1–2 gün",
     "duration3to5d": "3–5 gün",
     "durationMore5d": "5 günden fazla",
-
     "otherContextLabel": "Bilmemiz gereken başka bir şey var mı?",
     "otherContextPlaceholder": "ör. sağ kulağını çekiştiriyor, 8 saattir ıslak bezi olmadı, son zamanlarda boğaz iltihabı olan biriyle temas etti, aşıları tam, astımı var…",
-
     "optional": "isteğe bağlı",
     "submit": "Rehberlik al",
     "reassurance": "Yazdıklarınızı kaydetmiyoruz. Bu oturum tamamen özel.",
-
     "loadingMessage": "Sizinle birlikte düşünüyoruz",
     "loadingPrivacy": "Bilgileriniz özel kalır — paylaştıklarınızı kaydetmiyoruz.",
-
     "decisionEyebrow": "Öneriniz",
     "decisionErNow": "112'yi arayın veya hemen acile gidin",
     "decisionErToday": "Bugün acil veya acil tıbbi bakım merkezine gidin",
     "decisionCallPed": "Bugün çocuk doktorunuzu arayın",
     "decisionWatchHome": "Evde gözlemleyin ve bakım yapın",
-
     "sectionWhy": "Neden bu yanıt",
     "sectionWhatToDo": "Şimdi tam olarak ne yapmalı",
     "sectionWarning": "Yanıtı değiştirecek uyarı işaretleri",
@@ -1165,9 +1154,48 @@
     "sectionWorries": "Bu konudaki yaygın endişeler",
     "sectionWorriesDesc": "Ebeveynlerin gece 2'de gerçekten Google'da aradıkları — dürüstçe yanıtlandı.",
     "sectionTrustInstinct": "İçgüdünüze güvenin",
-
     "checkAnother": "Başka bir endişeyi kontrol et",
     "errorGeneric": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
-    "disclaimer": "Yalnızca eğitici rehberlik. Profesyonel tıbbi bakımın yerini tutmaz. İçinizden bir şeylerin yanlış olduğunu hissediyorsanız, bu hisse güvenin ve bakım arayın."
+    "disclaimer": "Yalnızca eğitici rehberlik. Profesyonel tıbbi bakımın yerini tutmaz. İçinizden bir şeylerin yanlış olduğunu hissediyorsanız, bu hisse güvenin ve bakım arayın.",
+    "chatTitle": "Meridix AI'ye sor",
+    "chatSubtitle": "Çocuğunuzun durumu hakkında takip soruları",
+    "chatClear": "Yeni sohbet",
+    "chatIntro": "Bir takip sorunuz mu var? Önerilenler, nelere dikkat edileceği veya bir şey değişirse ne yapacağınız hakkında her şeyi sorabilirsiniz.",
+    "chatPlaceholder": "Çocuğunuz hakkında bir takip sorusu sorun…",
+    "chatDisclaimer": "Yapay zekâ tarafından oluşturulan rehberlik — tanı değildir. Bir şey değişirse içgüdünüze güvenin ve tıbbi yardım alın.",
+    "chatQ1": "Önümüzdeki birkaç saat içinde neye dikkat etmeliyim?",
+    "chatQ2": "Şu anda ateş düşürücü vermek uygun mu?",
+    "chatQ3": "'Acile gidin' yanıtını ne değiştirir?",
+    "chatQ4": "Susuz kalmamasına nasıl yardımcı olurum?"
+  },
+  "Visit": {
+    "chatTitle": "Meridix AI'ye sor",
+    "chatSubtitlePrep": "Ziyaretiniz öncesi takip soruları",
+    "chatSubtitleDebrief": "Ziyaretinizle ilgili takip soruları",
+    "chatClear": "Yeni sohbet",
+    "chatIntroPrep": "Ziyaretinize hazırlanırken bir takip sorunuz mu var? Her şeyi sorun — bir soruyu keskinleştirin, doğru kelimeleri bulun veya neyi gündeme getireceğinizi düşünün.",
+    "chatIntroDebrief": "Konuşulanlar veya yazılan reçete hakkında bir sorunuz mu var? Her şeyi sorun — bir terimin anlamı, neden bir şeyin önerildiği veya nelere dikkat etmeniz gerektiği.",
+    "chatPlaceholder": "Bir takip sorusu sorun…",
+    "chatDisclaimer": "Yapay zekâ tarafından oluşturulan bağlam — tıbbi tavsiye değildir. Daima doktorunuza danışın.",
+    "chatPrepQ1": "Sormam gereken en önemli soru nedir?",
+    "chatPrepQ2": "Belirtilerimi nasıl net bir şekilde anlatırım?",
+    "chatPrepQ3": "Hangi testleri yaptırmak için ısrar etmeliyim?",
+    "chatPrepQ4": "Ya doktorum bunu ciddiye almazsa?",
+    "chatDebriefQ1": "Bu ilaç gerçekten ne işe yarar?",
+    "chatDebriefQ2": "Önümüzdeki birkaç gün neye dikkat etmeliyim?",
+    "chatDebriefQ3": "Ne zaman kontrole gitmeliyim — ve kime?",
+    "chatDebriefQ4": "Bu tanı uzun vadeli sağlığım için ne anlama geliyor?"
+  },
+  "Genetics": {
+    "chatTitle": "Meridix AI'ye sor",
+    "chatSubtitle": "Varyantlarınız hakkında takip soruları",
+    "chatClear": "Yeni sohbet",
+    "chatIntro": "Varyantınız veya raporunuz hakkında bir takip sorunuz mu var? Her şeyi sorun — anlamı, sıradaki adım veya bir danışmana görünüp görünmemeniz gerektiği.",
+    "chatPlaceholder": "Genetiğiniz hakkında bir takip sorusu sorun…",
+    "chatDisclaimer": "Yapay zekâ tarafından oluşturulan genetik bağlam — tanı değildir. Önemli bulgular için sertifikalı bir genetik danışmana başvurun.",
+    "chatQ1": "Bu konuda gerçekten ne kadar endişelenmeliyim?",
+    "chatQ2": "Doğrulayıcı klinik test gerekiyor mu?",
+    "chatQ3": "Aile üyelerim test yaptırmalı mı?",
+    "chatQ4": "Bir genetik danışmana hangi soruları götürmeliyim?"
   }
 }

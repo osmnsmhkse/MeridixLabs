@@ -1094,23 +1094,19 @@
     "badge": "Enfant malade ?",
     "title": "Compagnon pédiatrique des symptômes",
     "subtitle": "Des conseils calmes et fondés sur des preuves quand votre enfant est malade.",
-
     "tierTitle": "Quel niveau de détail souhaitez-vous ?",
     "tierSimple": "Simple",
     "tierMedium": "Intermédiaire",
     "tierExpert": "Expert",
-
     "ageLabel": "Âge de votre enfant",
     "ageHint": "C'est le champ le plus important — chaque recommandation en découle.",
     "ageUnitMonths": "Mois",
     "ageUnitYears": "Années",
     "agePlaceholderMonths": "ex. 4",
     "agePlaceholderYears": "ex. 6",
-
     "weightLabel": "Poids",
     "weightHint": "Sert uniquement de contexte pour les doses — nous ne calculons jamais de doses.",
     "weightPlaceholder": "ex. 28",
-
     "concernsLabel": "Qu'est-ce qui vous inquiète ?",
     "concernsHint": "Choisissez tout ce qui s'applique — et ajoutez quelques mots à vous.",
     "concernFever": "Fièvre",
@@ -1123,7 +1119,6 @@
     "concernInjury": "Blessure",
     "concernOther": "Autre",
     "concernDescriptionPlaceholder": "Décrivez ce que vous observez avec vos propres mots…",
-
     "tempLabel": "Température",
     "tempHint": "La méthode de mesure compte — la mesure rectale est la plus précise chez les nourrissons.",
     "tempMethodLabel": "Comment la température a-t-elle été prise ?",
@@ -1134,30 +1129,24 @@
     "tempMethodForehead": "Front / temporal",
     "tempMethodArmpit": "Aisselle (axillaire)",
     "tempMethodUnsure": "Je ne sais pas",
-
     "durationLabel": "Depuis combien de temps cela dure-t-il ?",
     "durationLess6h": "Moins de 6 heures",
     "duration6to24h": "6 à 24 heures",
     "duration1to2d": "1 à 2 jours",
     "duration3to5d": "3 à 5 jours",
     "durationMore5d": "Plus de 5 jours",
-
     "otherContextLabel": "Autre chose à savoir ?",
     "otherContextPlaceholder": "ex. tire sur son oreille droite, pas de couche mouillée depuis 8 heures, a été en contact avec quelqu'un atteint d'angine streptococcique, vacciné, asthmatique…",
-
     "optional": "facultatif",
     "submit": "Obtenir des conseils",
     "reassurance": "Nous ne conservons pas ce que vous tapez. Cette session est entièrement privée.",
-
     "loadingMessage": "Nous y réfléchissons avec vous",
     "loadingPrivacy": "Vos informations restent privées — nous ne conservons pas ce que vous partagez.",
-
     "decisionEyebrow": "Votre recommandation",
     "decisionErNow": "Appelez le 911 ou allez aux urgences immédiatement",
     "decisionErToday": "Allez aux urgences ou en soins urgents aujourd'hui",
     "decisionCallPed": "Appelez votre pédiatre aujourd'hui",
     "decisionWatchHome": "Surveillez-le/la et soignez-le/la à la maison",
-
     "sectionWhy": "Pourquoi cette réponse",
     "sectionWhatToDo": "Que faire tout de suite",
     "sectionWarning": "Signes d'alerte qui changent la réponse",
@@ -1165,9 +1154,48 @@
     "sectionWorries": "Inquiétudes fréquentes à ce sujet",
     "sectionWorriesDesc": "Ce que les parents recherchent vraiment à 2 h du matin — répondu honnêtement.",
     "sectionTrustInstinct": "Faites confiance à votre instinct",
-
     "checkAnother": "Vérifier une autre inquiétude",
     "errorGeneric": "Une erreur s'est produite. Veuillez réessayer.",
-    "disclaimer": "Conseils éducatifs uniquement. Ne remplace pas les soins médicaux professionnels. Si votre instinct vous dit que quelque chose ne va pas, faites-lui confiance et consultez."
+    "disclaimer": "Conseils éducatifs uniquement. Ne remplace pas les soins médicaux professionnels. Si votre instinct vous dit que quelque chose ne va pas, faites-lui confiance et consultez.",
+    "chatTitle": "Demandez à Meridix AI",
+    "chatSubtitle": "Questions de suivi sur la situation de votre enfant",
+    "chatClear": "Nouveau chat",
+    "chatIntro": "Une question de suivi ? Demandez n'importe quoi sur ce qui a été recommandé, ce qu'il faut surveiller ou ce qu'il faut faire si quelque chose change.",
+    "chatPlaceholder": "Posez une question de suivi sur votre enfant…",
+    "chatDisclaimer": "Orientation générée par IA — pas un diagnostic. Si quelque chose change, fiez-vous à votre instinct et consultez.",
+    "chatQ1": "Que dois-je surveiller dans les prochaines heures ?",
+    "chatQ2": "Puis-je donner un antipyrétique maintenant ?",
+    "chatQ3": "Qu'est-ce qui changerait la réponse à « aller aux urgences » ?",
+    "chatQ4": "Comment l'aider à rester hydraté(e) ?"
+  },
+  "Visit": {
+    "chatTitle": "Demandez à Meridix AI",
+    "chatSubtitlePrep": "Questions de suivi avant votre visite",
+    "chatSubtitleDebrief": "Questions de suivi sur votre visite",
+    "chatClear": "Nouveau chat",
+    "chatIntroPrep": "Une question de suivi pour préparer votre visite ? Demandez n'importe quoi — affinez une question, trouvez le bon vocabulaire ou réfléchissez à ce qu'il faut aborder.",
+    "chatIntroDebrief": "Une question sur ce qui a été discuté ou prescrit ? Demandez n'importe quoi — ce que signifie un terme, pourquoi quelque chose a été recommandé, ou ce qu'il faut surveiller.",
+    "chatPlaceholder": "Posez une question de suivi…",
+    "chatDisclaimer": "Contexte généré par IA — pas un conseil médical. Consultez toujours votre médecin.",
+    "chatPrepQ1": "Quelle est la question la plus importante à poser ?",
+    "chatPrepQ2": "Comment décrire mes symptômes clairement ?",
+    "chatPrepQ3": "Quels examens devrais-je demander avec insistance ?",
+    "chatPrepQ4": "Et si mon médecin ne prend pas cela au sérieux ?",
+    "chatDebriefQ1": "Que fait réellement ce médicament ?",
+    "chatDebriefQ2": "Que dois-je surveiller au cours des prochains jours ?",
+    "chatDebriefQ3": "Quand devrais-je faire le suivi — et avec qui ?",
+    "chatDebriefQ4": "Que signifie ce diagnostic pour ma santé à long terme ?"
+  },
+  "Genetics": {
+    "chatTitle": "Demandez à Meridix AI",
+    "chatSubtitle": "Questions de suivi sur vos variants",
+    "chatClear": "Nouveau chat",
+    "chatIntro": "Une question de suivi sur votre variant ou rapport ? Demandez n'importe quoi — ce que cela signifie, quoi faire ensuite, ou si vous devriez voir un conseiller.",
+    "chatPlaceholder": "Posez une question de suivi sur votre génétique…",
+    "chatDisclaimer": "Contexte génétique généré par IA — pas un diagnostic. Pour les résultats importants, consultez un conseiller en génétique certifié.",
+    "chatQ1": "Dois-je vraiment m'inquiéter de cela ?",
+    "chatQ2": "Ai-je besoin d'un test clinique confirmatoire ?",
+    "chatQ3": "Les membres de ma famille devraient-ils se faire tester ?",
+    "chatQ4": "Quelles questions devrais-je apporter à un conseiller en génétique ?"
   }
 }

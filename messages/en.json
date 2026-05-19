@@ -1292,7 +1292,24 @@
     "errorFileType": "We accept PDF, JPG, PNG, and WebP files.",
     "disclaimer": "Educational tool only. This is not medical advice. Always consult a qualified physician.",
     "disclaimerPrep": "This tool helps you prepare questions — it does not replace your doctor's clinical judgment.",
-    "disclaimerDebrief": "We translate and explain what your doctor wrote — we never second-guess their decisions."
+    "disclaimerDebrief": "We translate and explain what your doctor wrote — we never second-guess their decisions.",
+
+    "chatTitle": "Ask Meridix AI",
+    "chatSubtitlePrep": "Follow-up questions before your visit",
+    "chatSubtitleDebrief": "Follow-up questions about your visit",
+    "chatClear": "New chat",
+    "chatIntroPrep": "Have a follow-up question about prepping for your visit? Ask anything — sharpen a question, find the right vocabulary, or think through what to raise.",
+    "chatIntroDebrief": "Have a follow-up question about what was discussed or prescribed? Ask anything — what a term means, why something was recommended, or what to watch for.",
+    "chatPlaceholder": "Ask a follow-up question…",
+    "chatDisclaimer": "AI-generated context — not medical advice. Always consult your doctor.",
+    "chatPrepQ1": "What's the most important question to ask?",
+    "chatPrepQ2": "How do I describe my symptoms clearly?",
+    "chatPrepQ3": "What tests should I push to get?",
+    "chatPrepQ4": "What if my doctor doesn't take this seriously?",
+    "chatDebriefQ1": "What does this medication actually do?",
+    "chatDebriefQ2": "What should I watch for over the next few days?",
+    "chatDebriefQ3": "When should I follow up — and with whom?",
+    "chatDebriefQ4": "What does this diagnosis mean for my long-term health?"
   },
   "Pediatric": {
     "badge": "Sick child?",
@@ -1372,6 +1389,29 @@
 
     "checkAnother": "Check another concern",
     "errorGeneric": "Something went wrong. Please try again.",
-    "disclaimer": "Educational guidance only. Not a substitute for professional medical care. If your gut tells you something is wrong, trust it and seek care."
+    "disclaimer": "Educational guidance only. Not a substitute for professional medical care. If your gut tells you something is wrong, trust it and seek care.",
+
+    "chatTitle": "Ask Meridix AI",
+    "chatSubtitle": "Follow-up questions about your child's situation",
+    "chatClear": "New chat",
+    "chatIntro": "Have a follow-up question? Ask anything about what was recommended, what to watch for, or what to do if something changes.",
+    "chatPlaceholder": "Ask a follow-up question about your child…",
+    "chatDisclaimer": "AI-generated guidance — not a diagnosis. If anything changes, trust your instinct and seek care.",
+    "chatQ1": "What should I watch for in the next few hours?",
+    "chatQ2": "Is it okay to give fever medicine right now?",
+    "chatQ3": "What changes the answer to 'go to the ER'?",
+    "chatQ4": "How do I help them stay hydrated?"
+  },
+  "Genetics": {
+    "chatTitle": "Ask Meridix AI",
+    "chatSubtitle": "Follow-up questions about your variants",
+    "chatClear": "New chat",
+    "chatIntro": "Have a follow-up question about your variant or report? Ask anything — what it means, what to do next, or whether you should see a counselor.",
+    "chatPlaceholder": "Ask a follow-up question about your genetics…",
+    "chatDisclaimer": "AI-generated genetic context — not a diagnosis. For significant findings, see a board-certified genetic counselor.",
+    "chatQ1": "How worried should I actually be about this?",
+    "chatQ2": "Do I need confirmatory clinical testing?",
+    "chatQ3": "Should my family members get tested?",
+    "chatQ4": "What questions should I bring to a genetic counselor?"
   }
 }

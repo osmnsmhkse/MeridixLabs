@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+
+const VisitChatPanel = dynamic(() => import("@/components/VisitChatPanel"), {
+  ssr: false,
+});
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -1019,12 +1024,16 @@ export default function VisitPage() {
   const [prepResults, setPrepResults] = useState("");
   const [prepHistory, setPrepHistory] = useState("");
   const [prepResult, setPrepResult] = useState<PrepResult | null>(null);
+  const [prepRawText, setPrepRawText] = useState("");
+  const [prepInputSummary, setPrepInputSummary] = useState("");
 
   // Mode B inputs + result
   const [debriefNotes, setDebriefNotes] = useState("");
   const [debriefFile, setDebriefFile] = useState<File | null>(null);
   const [debriefContext, setDebriefContext] = useState("");
   const [debriefResult, setDebriefResult] = useState<DebriefResult | null>(null);
+  const [debriefRawText, setDebriefRawText] = useState("");
+  const [debriefInputSummary, setDebriefInputSummary] = useState("");
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -1074,6 +1083,15 @@ export default function VisitPage() {
         return;
       }
       setPrepResult(parsePrepResult(json.text));
+      setPrepRawText(json.text);
+      const summary = [
+        `Main concern: ${concern}`,
+        prepResults.trim() && `Recent results: ${prepResults.trim()}`,
+        prepHistory.trim() && `Health context: ${prepHistory.trim()}`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+      setPrepInputSummary(summary);
       setStage("result");
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch {
@@ -1109,6 +1127,15 @@ export default function VisitPage() {
         return;
       }
       setDebriefResult(parseDebriefResult(json.text));
+      setDebriefRawText(json.text);
+      const summary = [
+        notes && `Notes / paperwork: ${notes}`,
+        debriefFile && `Uploaded: ${debriefFile.name} (${(debriefFile.size / 1024).toFixed(0)} KB)`,
+        debriefContext.trim() && `Specific question: ${debriefContext.trim()}`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+      setDebriefInputSummary(summary);
       setStage("result");
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } catch {
@@ -1326,6 +1353,13 @@ export default function VisitPage() {
                   <ConditionsSection items={prepResult.conditionsToRuleOut} />
                   <CommunicateSection data={prepResult.howToCommunicate} />
                   <WhatToBringSection items={prepResult.whatToBring} />
+                  <VisitChatPanel
+                    mode="prep"
+                    inputSummary={prepInputSummary}
+                    analysisSnapshot={prepRawText}
+                    tier={tier}
+                    language={lang}
+                  />
                 </>
               )
             )}
@@ -1341,6 +1375,13 @@ export default function VisitPage() {
                   <WarningSignsSection items={debriefResult.warningSigns} />
                   <JargonDecoderSection items={debriefResult.jargonDecoder} />
                   <RemainingQuestionsSection items={debriefResult.remainingQuestions} />
+                  <VisitChatPanel
+                    mode="debrief"
+                    inputSummary={debriefInputSummary}
+                    analysisSnapshot={debriefRawText}
+                    tier={tier}
+                    language={lang}
+                  />
                 </>
               )
             )}

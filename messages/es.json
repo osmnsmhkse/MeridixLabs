@@ -1094,23 +1094,19 @@
     "badge": "¿Niño enfermo?",
     "title": "Compañero pediátrico de síntomas",
     "subtitle": "Orientación serena y basada en evidencia para cuando tu hijo está enfermo.",
-
     "tierTitle": "¿Cuánto detalle quieres?",
     "tierSimple": "Simple",
     "tierMedium": "Intermedio",
     "tierExpert": "Experto",
-
     "ageLabel": "Edad de tu hijo/a",
     "ageHint": "Este es el campo más importante — cada recomendación parte de aquí.",
     "ageUnitMonths": "Meses",
     "ageUnitYears": "Años",
     "agePlaceholderMonths": "p. ej. 4",
     "agePlaceholderYears": "p. ej. 6",
-
     "weightLabel": "Peso",
     "weightHint": "Solo para contexto de dosis — nunca calculamos dosis.",
     "weightPlaceholder": "p. ej. 28",
-
     "concernsLabel": "¿Qué te preocupa?",
     "concernsHint": "Selecciona todas las que correspondan — y añade unas palabras tuyas.",
     "concernFever": "Fiebre",
@@ -1123,7 +1119,6 @@
     "concernInjury": "Lesión",
     "concernOther": "Otro",
     "concernDescriptionPlaceholder": "Describe lo que estás viendo con tus propias palabras…",
-
     "tempLabel": "Temperatura",
     "tempHint": "Cómo se midió la temperatura importa — la rectal es la más exacta en lactantes.",
     "tempMethodLabel": "¿Cómo se midió?",
@@ -1134,30 +1129,24 @@
     "tempMethodForehead": "Frente / temporal",
     "tempMethodArmpit": "Axila (axilar)",
     "tempMethodUnsure": "No estoy seguro/a",
-
     "durationLabel": "¿Cuánto tiempo lleva así?",
     "durationLess6h": "Menos de 6 horas",
     "duration6to24h": "6–24 horas",
     "duration1to2d": "1–2 días",
     "duration3to5d": "3–5 días",
     "durationMore5d": "Más de 5 días",
-
     "otherContextLabel": "¿Algo más que debamos saber?",
     "otherContextPlaceholder": "p. ej. se tira de la oreja derecha, sin pañal mojado en 8 horas, ha estado cerca de alguien con faringitis estreptocócica, vacunación completa, tiene asma…",
-
     "optional": "opcional",
     "submit": "Recibir orientación",
     "reassurance": "No guardamos lo que escribes. Esta sesión es completamente privada.",
-
     "loadingMessage": "Pensándolo contigo",
     "loadingPrivacy": "Tu información permanece privada — no guardamos lo que compartes.",
-
     "decisionEyebrow": "Tu recomendación",
     "decisionErNow": "Llama al 911 o acude a urgencias ya",
     "decisionErToday": "Acude a urgencias o atención inmediata hoy",
     "decisionCallPed": "Llama hoy a tu pediatra",
     "decisionWatchHome": "Obsérvalo/a y cuídalo/a en casa",
-
     "sectionWhy": "Por qué esta respuesta",
     "sectionWhatToDo": "Qué hacer ahora mismo",
     "sectionWarning": "Señales de alarma que cambian la respuesta",
@@ -1165,9 +1154,48 @@
     "sectionWorries": "Preocupaciones comunes sobre esto",
     "sectionWorriesDesc": "Lo que más buscan los padres en Google a las 2 de la mañana — respondido con honestidad.",
     "sectionTrustInstinct": "Confía en tu instinto",
-
     "checkAnother": "Consultar otra preocupación",
     "errorGeneric": "Algo salió mal. Por favor, inténtalo de nuevo.",
-    "disclaimer": "Orientación educativa únicamente. No sustituye la atención médica profesional. Si tu instinto te dice que algo va mal, confía en él y busca atención."
+    "disclaimer": "Orientación educativa únicamente. No sustituye la atención médica profesional. Si tu instinto te dice que algo va mal, confía en él y busca atención.",
+    "chatTitle": "Pregúntale a Meridix AI",
+    "chatSubtitle": "Preguntas de seguimiento sobre la situación de tu hijo/a",
+    "chatClear": "Nuevo chat",
+    "chatIntro": "¿Tienes alguna pregunta de seguimiento? Pregunta lo que quieras sobre lo recomendado, qué vigilar o qué hacer si algo cambia.",
+    "chatPlaceholder": "Haz una pregunta de seguimiento sobre tu hijo/a…",
+    "chatDisclaimer": "Orientación generada por IA — no es un diagnóstico. Si algo cambia, confía en tu instinto y busca atención.",
+    "chatQ1": "¿Qué debo vigilar en las próximas horas?",
+    "chatQ2": "¿Está bien dar medicamento para la fiebre ahora?",
+    "chatQ3": "¿Qué cambia la respuesta a «ir a urgencias»?",
+    "chatQ4": "¿Cómo le ayudo a mantenerse hidratado/a?"
+  },
+  "Visit": {
+    "chatTitle": "Pregúntale a Meridix AI",
+    "chatSubtitlePrep": "Preguntas de seguimiento antes de tu visita",
+    "chatSubtitleDebrief": "Preguntas de seguimiento sobre tu visita",
+    "chatClear": "Nuevo chat",
+    "chatIntroPrep": "¿Tienes una pregunta de seguimiento sobre la preparación de tu visita? Pregunta lo que quieras — afina una pregunta, encuentra el vocabulario adecuado o piensa qué plantear.",
+    "chatIntroDebrief": "¿Tienes una pregunta sobre lo que se habló o se recetó? Pregunta lo que quieras — qué significa un término, por qué se recomendó algo o qué vigilar.",
+    "chatPlaceholder": "Haz una pregunta de seguimiento…",
+    "chatDisclaimer": "Contexto generado por IA — no es consejo médico. Consulta siempre con tu médico.",
+    "chatPrepQ1": "¿Cuál es la pregunta más importante que debo hacer?",
+    "chatPrepQ2": "¿Cómo describo mis síntomas con claridad?",
+    "chatPrepQ3": "¿Qué pruebas debería insistir en pedir?",
+    "chatPrepQ4": "¿Y si mi médico no se lo toma en serio?",
+    "chatDebriefQ1": "¿Qué hace realmente este medicamento?",
+    "chatDebriefQ2": "¿Qué debo vigilar en los próximos días?",
+    "chatDebriefQ3": "¿Cuándo debo hacer seguimiento y con quién?",
+    "chatDebriefQ4": "¿Qué significa este diagnóstico para mi salud a largo plazo?"
+  },
+  "Genetics": {
+    "chatTitle": "Pregúntale a Meridix AI",
+    "chatSubtitle": "Preguntas de seguimiento sobre tus variantes",
+    "chatClear": "Nuevo chat",
+    "chatIntro": "¿Tienes alguna pregunta sobre tu variante o informe? Pregunta lo que quieras — qué significa, qué hacer a continuación o si deberías ver a un consejero.",
+    "chatPlaceholder": "Haz una pregunta de seguimiento sobre tu genética…",
+    "chatDisclaimer": "Contexto genético generado por IA — no es un diagnóstico. Para hallazgos importantes, consulta a un consejero genético certificado.",
+    "chatQ1": "¿Cuánto debería preocuparme realmente por esto?",
+    "chatQ2": "¿Necesito una prueba clínica confirmatoria?",
+    "chatQ3": "¿Deberían hacerse la prueba los miembros de mi familia?",
+    "chatQ4": "¿Qué preguntas debería llevar a un consejero genético?"
   }
 }
