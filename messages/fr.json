@@ -1166,7 +1166,9 @@
     "chatQ1": "Que dois-je surveiller dans les prochaines heures ?",
     "chatQ2": "Puis-je donner un antipyrétique maintenant ?",
     "chatQ3": "Qu'est-ce qui changerait la réponse à « aller aux urgences » ?",
-    "chatQ4": "Comment l'aider à rester hydraté(e) ?"
+    "chatQ4": "Comment l'aider à rester hydraté(e) ?",
+    "mobileTabResults": "Résultats",
+    "mobileTabAsk": "Demander à l'IA"
   },
   "Visit": {
     "chatTitle": "Demandez à Meridix AI",
@@ -1184,7 +1186,9 @@
     "chatDebriefQ1": "Que fait réellement ce médicament ?",
     "chatDebriefQ2": "Que dois-je surveiller au cours des prochains jours ?",
     "chatDebriefQ3": "Quand devrais-je faire le suivi — et avec qui ?",
-    "chatDebriefQ4": "Que signifie ce diagnostic pour ma santé à long terme ?"
+    "chatDebriefQ4": "Que signifie ce diagnostic pour ma santé à long terme ?",
+    "mobileTabResults": "Résultats",
+    "mobileTabAsk": "Demander à l'IA"
   },
   "Genetics": {
     "chatTitle": "Demandez à Meridix AI",

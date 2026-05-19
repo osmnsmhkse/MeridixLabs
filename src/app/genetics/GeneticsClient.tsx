@@ -441,6 +441,7 @@ export default function GeneticsClient() {
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [fileSizeMB, setFileSizeMB] = useState<string | undefined>(undefined);
+  const [mobileTab, setMobileTab] = useState<"results" | "ask">("results");
 
   const resultRef = useRef<HTMLDivElement>(null);
   const reportInputRef = useRef<HTMLInputElement>(null);
@@ -747,7 +748,38 @@ export default function GeneticsClient() {
 
         {/* ── Result ────────────────────────────────────────────────── */}
         {stage === "result" && result && (
-          <div ref={resultRef} className="space-y-5">
+          <div ref={resultRef}>
+            {/* Mobile tab switcher (hidden on xl+) */}
+            <div className="flex gap-1 mb-5 xl:hidden bg-slate-100 dark:bg-slate-800 rounded-xl p-1">
+              {([
+                { key: "results" as const, label: "Results", icon: (
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                    <path fillRule="evenodd" d="M4.5 2A1.5 1.5 0 003 3.5v13A1.5 1.5 0 004.5 18h11a1.5 1.5 0 001.5-1.5V7.621a1.5 1.5 0 00-.44-1.06l-4.12-4.122A1.5 1.5 0 0011.378 2H4.5zM10 8a.75.75 0 01.75.75v1.5h1.5a.75.75 0 010 1.5h-1.5v1.5a.75.75 0 01-1.5 0v-1.5h-1.5a.75.75 0 010-1.5h1.5v-1.5A.75.75 0 0110 8z" clipRule="evenodd" />
+                  </svg>
+                )},
+                { key: "ask" as const, label: "Ask AI", icon: (
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                    <path fillRule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902 1.168.188 2.352.327 3.55.414.28.02.521.18.642.413l1.713 3.293a.75.75 0 001.33 0l1.713-3.293a.783.783 0 01.642-.413 41.102 41.102 0 003.55-.414c1.437-.232 2.43-1.49 2.43-2.902V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zM6.75 6a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 2.5a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z" clipRule="evenodd" />
+                  </svg>
+                )},
+              ]).map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setMobileTab(tab.key)}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                    mobileTab === tab.key
+                      ? "bg-white dark:bg-slate-900 text-ink shadow-sm"
+                      : "text-ink-tertiary hover:text-ink-secondary"
+                  }`}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6 xl:items-start">
+            <div className={`space-y-5 min-w-0 ${mobileTab === "ask" ? "hidden xl:block" : ""}`}>
             {/* Status banner */}
             <StatusBanner result={result} />
 
@@ -818,14 +850,6 @@ export default function GeneticsClient() {
               <CounselorCard rec={result.counselor_recommendation} />
             )}
 
-            {/* Follow-up chat */}
-            <GeneticsChatPanel
-              inputSummary={chatInputSummary}
-              analysisSnapshot={chatSnapshot}
-              tier={tier}
-              language={lang}
-            />
-
             {/* Disclaimer */}
             <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
@@ -843,6 +867,18 @@ export default function GeneticsClient() {
             >
               Explain another variant or report
             </button>
+            </div>{/* end results column */}
+
+            {/* Sticky chat sidebar (xl+) / tab-switched (mobile) */}
+            <aside className={`xl:sticky xl:top-24 min-w-0 scroll-mt-6 ${mobileTab !== "ask" ? "hidden xl:block" : ""}`}>
+              <GeneticsChatPanel
+                inputSummary={chatInputSummary}
+                analysisSnapshot={chatSnapshot}
+                tier={tier}
+                language={lang}
+              />
+            </aside>
+            </div>{/* end 2-column grid */}
           </div>
         )}
 

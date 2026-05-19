@@ -1166,7 +1166,9 @@
     "chatQ1": "Önümüzdeki birkaç saat içinde neye dikkat etmeliyim?",
     "chatQ2": "Şu anda ateş düşürücü vermek uygun mu?",
     "chatQ3": "'Acile gidin' yanıtını ne değiştirir?",
-    "chatQ4": "Susuz kalmamasına nasıl yardımcı olurum?"
+    "chatQ4": "Susuz kalmamasına nasıl yardımcı olurum?",
+    "mobileTabResults": "Sonuçlar",
+    "mobileTabAsk": "Yapay zekâya sor"
   },
   "Visit": {
     "chatTitle": "Meridix AI'ye sor",
@@ -1184,7 +1186,9 @@
     "chatDebriefQ1": "Bu ilaç gerçekten ne işe yarar?",
     "chatDebriefQ2": "Önümüzdeki birkaç gün neye dikkat etmeliyim?",
     "chatDebriefQ3": "Ne zaman kontrole gitmeliyim — ve kime?",
-    "chatDebriefQ4": "Bu tanı uzun vadeli sağlığım için ne anlama geliyor?"
+    "chatDebriefQ4": "Bu tanı uzun vadeli sağlığım için ne anlama geliyor?",
+    "mobileTabResults": "Sonuçlar",
+    "mobileTabAsk": "Yapay zekâya sor"
   },
   "Genetics": {
     "chatTitle": "Meridix AI'ye sor",

@@ -1166,7 +1166,9 @@
     "chatQ1": "接下来几个小时我应该注意什么？",
     "chatQ2": "现在可以给退烧药吗？",
     "chatQ3": "什么情况会改变「去急诊」的建议？",
-    "chatQ4": "如何帮助孩子保持充足水分？"
+    "chatQ4": "如何帮助孩子保持充足水分？",
+    "mobileTabResults": "结果",
+    "mobileTabAsk": "询问 AI"
   },
   "Visit": {
     "chatTitle": "向 Meridix AI 提问",
@@ -1184,7 +1186,9 @@
     "chatDebriefQ1": "这种药到底有什么作用？",
     "chatDebriefQ2": "接下来几天我应该注意什么？",
     "chatDebriefQ3": "我什么时候应该复诊 — 找谁复诊？",
-    "chatDebriefQ4": "这个诊断对我的长期健康意味着什么？"
+    "chatDebriefQ4": "这个诊断对我的长期健康意味着什么？",
+    "mobileTabResults": "结果",
+    "mobileTabAsk": "询问 AI"
   },
   "Genetics": {
     "chatTitle": "向 Meridix AI 提问",

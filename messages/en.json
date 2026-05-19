@@ -1204,12 +1204,10 @@
     "badge": "Doctor's Visit Companion",
     "title": "Doctor's Visit Companion",
     "subtitle": "Prepare smarter. Leave with clarity.",
-
     "tabBefore": "Before My Visit",
     "tabAfter": "After My Visit",
     "tabBeforeSubtitle": "Get ready for your appointment",
     "tabAfterSubtitle": "Translate your visit notes",
-
     "tierTitle": "How much detail do you want?",
     "tierSimple": "Simple",
     "tierMedium": "Medium",
@@ -1217,7 +1215,6 @@
     "tierSimpleLabel": "Plain language",
     "tierMediumLabel": "Educated patient",
     "tierExpertLabel": "Clinical detail",
-
     "prepConcernLabel": "What's the main reason for your visit?",
     "prepConcernPlaceholder": "e.g. I've had a persistent headache for 3 weeks, mostly on one side, worse in the morning. Also some neck stiffness.",
     "prepResultsLabel": "Any recent lab work, imaging, or test results? (optional)",
@@ -1228,7 +1225,6 @@
     "prepLoading": "Preparing your visit kit…",
     "prepRequired": "Please describe the reason for your visit.",
     "prepReassurance": "We don't store what you type. This session is completely private.",
-
     "debriefNotesLabel": "Paste your after-visit summary or notes",
     "debriefNotesPlaceholder": "Paste the summary your doctor's office sent, your discharge paperwork, or just type what you remember from the appointment.",
     "debriefFileLabel": "Or upload your paperwork",
@@ -1242,7 +1238,6 @@
     "debriefLoading": "Translating your visit notes…",
     "debriefRequired": "Paste your notes or upload your paperwork to get started.",
     "debriefFilePrivacy": "Your file is never stored — only the AI interpretation is processed.",
-
     "sectionTopQuestions": "Your top questions to ask",
     "sectionTopQuestionsDesc": "Tailored to what you shared — not generic",
     "sectionTests": "Tests or imaging worth discussing",
@@ -1253,7 +1248,6 @@
     "sectionCommunicateDesc": "Your concern, written the way doctors are trained to hear it",
     "sectionWhatToBring": "What to bring or prepare",
     "sectionWhatToBringDesc": "A short checklist for your appointment",
-
     "sectionDiscussed": "What was discussed or diagnosed",
     "sectionDiscussedDesc": "The key clinical takeaways, in plain English",
     "sectionPrescribed": "What was prescribed or recommended",
@@ -1266,7 +1260,6 @@
     "sectionJargonDesc": "Every confusing term, translated into plain English",
     "sectionRemainingQuestions": "Questions you may still have",
     "sectionRemainingQuestionsDesc": "Worth raising at your next visit or via a portal message",
-
     "labelOnset": "Onset",
     "labelLocation": "Location",
     "labelDuration": "Duration",
@@ -1279,10 +1272,8 @@
     "labelGoal": "Goal",
     "labelWhen": "When",
     "labelTimeSensitive": "Time-sensitive",
-
     "clarifyTitle": "We need a bit more to work with",
     "clarifyHint": "Share a little more detail and we'll prepare something useful.",
-
     "copyAllQuestions": "Copy all questions",
     "copied": "Copied!",
     "startOver": "Start over",
@@ -1293,7 +1284,6 @@
     "disclaimer": "Educational tool only. This is not medical advice. Always consult a qualified physician.",
     "disclaimerPrep": "This tool helps you prepare questions — it does not replace your doctor's clinical judgment.",
     "disclaimerDebrief": "We translate and explain what your doctor wrote — we never second-guess their decisions.",
-
     "chatTitle": "Ask Meridix AI",
     "chatSubtitlePrep": "Follow-up questions before your visit",
     "chatSubtitleDebrief": "Follow-up questions about your visit",
@@ -1309,29 +1299,27 @@
     "chatDebriefQ1": "What does this medication actually do?",
     "chatDebriefQ2": "What should I watch for over the next few days?",
     "chatDebriefQ3": "When should I follow up — and with whom?",
-    "chatDebriefQ4": "What does this diagnosis mean for my long-term health?"
+    "chatDebriefQ4": "What does this diagnosis mean for my long-term health?",
+    "mobileTabResults": "Results",
+    "mobileTabAsk": "Ask AI"
   },
   "Pediatric": {
     "badge": "Sick child?",
     "title": "Pediatric Symptom Companion",
     "subtitle": "Calm, evidence-based guidance for when your child is sick.",
-
     "tierTitle": "How much detail do you want?",
     "tierSimple": "Simple",
     "tierMedium": "Medium",
     "tierExpert": "Expert",
-
     "ageLabel": "Your child's age",
     "ageHint": "This is the most important field — every recommendation flows from here.",
     "ageUnitMonths": "Months",
     "ageUnitYears": "Years",
     "agePlaceholderMonths": "e.g. 4",
     "agePlaceholderYears": "e.g. 6",
-
     "weightLabel": "Weight",
     "weightHint": "Used for dose context only — we never calculate doses.",
     "weightPlaceholder": "e.g. 28",
-
     "concernsLabel": "What's worrying you?",
     "concernsHint": "Pick all that apply — and add a few words in your own voice.",
     "concernFever": "Fever",
@@ -1344,7 +1332,6 @@
     "concernInjury": "Injury",
     "concernOther": "Other",
     "concernDescriptionPlaceholder": "Describe what you're seeing in your own words…",
-
     "tempLabel": "Temperature",
     "tempHint": "How the temperature was measured matters — rectal is most accurate for infants.",
     "tempMethodLabel": "How was it measured?",
@@ -1355,30 +1342,24 @@
     "tempMethodForehead": "Forehead / temporal",
     "tempMethodArmpit": "Armpit (axillary)",
     "tempMethodUnsure": "Not sure",
-
     "durationLabel": "How long has this been going on?",
     "durationLess6h": "Less than 6 hours",
     "duration6to24h": "6–24 hours",
     "duration1to2d": "1–2 days",
     "duration3to5d": "3–5 days",
     "durationMore5d": "More than 5 days",
-
     "otherContextLabel": "Anything else worth knowing?",
     "otherContextPlaceholder": "e.g. been pulling at right ear, no wet diaper in 8 hours, recently around someone with strep, fully vaccinated, has asthma…",
-
     "optional": "optional",
     "submit": "Get guidance",
     "reassurance": "We don't store what you type. This session is completely private.",
-
     "loadingMessage": "Thinking this through with you",
     "loadingPrivacy": "Your information stays private — we don't save what you share.",
-
     "decisionEyebrow": "Your recommendation",
     "decisionErNow": "Call 911 or go to the ER now",
     "decisionErToday": "Go to the ER or urgent care today",
     "decisionCallPed": "Call your pediatrician today",
     "decisionWatchHome": "Watch and care for them at home",
-
     "sectionWhy": "Why this answer",
     "sectionWhatToDo": "What to do right now",
     "sectionWarning": "Warning signs that change the answer",
@@ -1386,11 +1367,9 @@
     "sectionWorries": "Common worries about this",
     "sectionWorriesDesc": "What parents most often Google at 2am — addressed honestly.",
     "sectionTrustInstinct": "Trust your instinct",
-
     "checkAnother": "Check another concern",
     "errorGeneric": "Something went wrong. Please try again.",
     "disclaimer": "Educational guidance only. Not a substitute for professional medical care. If your gut tells you something is wrong, trust it and seek care.",
-
     "chatTitle": "Ask Meridix AI",
     "chatSubtitle": "Follow-up questions about your child's situation",
     "chatClear": "New chat",
@@ -1400,7 +1379,9 @@
     "chatQ1": "What should I watch for in the next few hours?",
     "chatQ2": "Is it okay to give fever medicine right now?",
     "chatQ3": "What changes the answer to 'go to the ER'?",
-    "chatQ4": "How do I help them stay hydrated?"
+    "chatQ4": "How do I help them stay hydrated?",
+    "mobileTabResults": "Results",
+    "mobileTabAsk": "Ask AI"
   },
   "Genetics": {
     "chatTitle": "Ask Meridix AI",

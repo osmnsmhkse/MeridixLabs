@@ -1166,7 +1166,9 @@
     "chatQ1": "Worauf sollte ich in den nächsten Stunden achten?",
     "chatQ2": "Darf ich jetzt ein Fiebermedikament geben?",
     "chatQ3": "Was würde die Antwort auf »in die Notaufnahme gehen« ändern?",
-    "chatQ4": "Wie helfe ich ihm/ihr, hydriert zu bleiben?"
+    "chatQ4": "Wie helfe ich ihm/ihr, hydriert zu bleiben?",
+    "mobileTabResults": "Ergebnisse",
+    "mobileTabAsk": "KI fragen"
   },
   "Visit": {
     "chatTitle": "Fragen Sie Meridix AI",
@@ -1184,7 +1186,9 @@
     "chatDebriefQ1": "Was bewirkt dieses Medikament eigentlich?",
     "chatDebriefQ2": "Worauf sollte ich in den nächsten Tagen achten?",
     "chatDebriefQ3": "Wann sollte ich nachfassen — und bei wem?",
-    "chatDebriefQ4": "Was bedeutet diese Diagnose für meine langfristige Gesundheit?"
+    "chatDebriefQ4": "Was bedeutet diese Diagnose für meine langfristige Gesundheit?",
+    "mobileTabResults": "Ergebnisse",
+    "mobileTabAsk": "KI fragen"
   },
   "Genetics": {
     "chatTitle": "Fragen Sie Meridix AI",

@@ -334,6 +334,7 @@ export default function PediatricPage() {
   const [rawAnalysis, setRawAnalysis] = useState<string>("");
   const [submittedSummary, setSubmittedSummary] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [mobileTab, setMobileTab] = useState<"results" | "ask">("results");
 
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -684,44 +685,83 @@ export default function PediatricPage() {
 
       {/* Result */}
       {stage === "result" && result && (
-        <div ref={resultRef} className="max-w-2xl mx-auto px-4 sm:px-6 mt-6 space-y-5 scroll-mt-24">
-          <DecisionCard result={result} />
-          <WhySection text={result.whyThisAnswer} />
-          <WhatToDoSection items={result.whatToDoNow} />
-          <WarningSignsSection items={result.warningSigns} />
-          <CommonWorriesSection text={result.commonWorries} />
-          <TrustInstinctCard text={result.trustYourInstinct} />
+        <div ref={resultRef} className="max-w-5xl mx-auto px-4 sm:px-6 mt-6 scroll-mt-24">
 
-          {/* Follow-up chat */}
-          <PediatricChatPanel
-            inputSummary={submittedSummary}
-            analysisSnapshot={rawAnalysis}
-            tier={tier}
-            language={lang}
-          />
-
-          {/* Reset */}
-          <div className="text-center pt-2">
-            <button
-              type="button"
-              onClick={reset}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-rose-300 dark:hover:border-rose-700 text-ink-secondary hover:text-ink text-sm font-semibold transition-all duration-150"
-            >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z" clipRule="evenodd" />
-              </svg>
-              {t("checkAnother")}
-            </button>
+          {/* Mobile tab switcher (hidden on xl+) */}
+          <div className="flex gap-1 mb-5 xl:hidden bg-slate-100 dark:bg-slate-800 rounded-xl p-1">
+            {([
+              { key: "results" as const, label: t("mobileTabResults"), icon: (
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path fillRule="evenodd" d="M4.5 2A1.5 1.5 0 003 3.5v13A1.5 1.5 0 004.5 18h11a1.5 1.5 0 001.5-1.5V7.621a1.5 1.5 0 00-.44-1.06l-4.12-4.122A1.5 1.5 0 0011.378 2H4.5zM10 8a.75.75 0 01.75.75v1.5h1.5a.75.75 0 010 1.5h-1.5v1.5a.75.75 0 01-1.5 0v-1.5h-1.5a.75.75 0 010-1.5h1.5v-1.5A.75.75 0 0110 8z" clipRule="evenodd" />
+                </svg>
+              )},
+              { key: "ask" as const, label: t("mobileTabAsk"), icon: (
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path fillRule="evenodd" d="M10 2c-2.236 0-4.43.18-6.57.524C1.993 2.755 1 4.014 1 5.426v5.148c0 1.413.993 2.67 2.43 2.902 1.168.188 2.352.327 3.55.414.28.02.521.18.642.413l1.713 3.293a.75.75 0 001.33 0l1.713-3.293a.783.783 0 01.642-.413 41.102 41.102 0 003.55-.414c1.437-.232 2.43-1.49 2.43-2.902V5.426c0-1.413-.993-2.67-2.43-2.902A41.289 41.289 0 0010 2zM6.75 6a.75.75 0 000 1.5h6.5a.75.75 0 000-1.5h-6.5zm0 2.5a.75.75 0 000 1.5h3.5a.75.75 0 000-1.5h-3.5z" clipRule="evenodd" />
+                </svg>
+              )},
+            ]).map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setMobileTab(tab.key)}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                  mobileTab === tab.key
+                    ? "bg-white dark:bg-slate-900 text-ink shadow-sm"
+                    : "text-ink-tertiary hover:text-ink-secondary"
+                }`}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          {/* Calm disclaimer */}
-          <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 mt-2">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-            <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-              {t("disclaimer")}
-            </p>
+          {/* 2-column grid: results left, sticky chat right (xl+) */}
+          <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-6 xl:items-start space-y-5 xl:space-y-0">
+
+            {/* ─── Results column ─── */}
+            <div className={`space-y-5 min-w-0 ${mobileTab === "ask" ? "hidden xl:block" : ""}`}>
+              <DecisionCard result={result} />
+              <WhySection text={result.whyThisAnswer} />
+              <WhatToDoSection items={result.whatToDoNow} />
+              <WarningSignsSection items={result.warningSigns} />
+              <CommonWorriesSection text={result.commonWorries} />
+              <TrustInstinctCard text={result.trustYourInstinct} />
+
+              {/* Reset */}
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-rose-300 dark:hover:border-rose-700 text-ink-secondary hover:text-ink text-sm font-semibold transition-all duration-150"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                  {t("checkAnother")}
+                </button>
+              </div>
+
+              {/* Calm disclaimer */}
+              <div className="flex items-start gap-2.5 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 mt-2">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+                  {t("disclaimer")}
+                </p>
+              </div>
+            </div>
+
+            {/* ─── Sticky chat sidebar (xl+) / tab-switched (mobile) ─── */}
+            <aside className={`xl:sticky xl:top-24 min-w-0 scroll-mt-6 ${mobileTab !== "ask" ? "hidden xl:block" : ""}`}>
+              <PediatricChatPanel
+                inputSummary={submittedSummary}
+                analysisSnapshot={rawAnalysis}
+                tier={tier}
+                language={lang}
+              />
+            </aside>
           </div>
         </div>
       )}
