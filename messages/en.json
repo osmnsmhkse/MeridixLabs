@@ -30,7 +30,9 @@
     "visitCompanion": "Doctor's Visit Companion",
     "visitCompanionDesc": "Prepare the right questions before your appointment — understand the notes after",
     "geneticsExplainer": "Genetic Test Explainer",
-    "geneticsExplainerDesc": "Understand what a variant or DNA report actually means — calibrated, not alarmist"
+    "geneticsExplainerDesc": "Understand what a variant or DNA report actually means — calibrated, not alarmist",
+    "pediatricCompanion": "Pediatric Symptom Companion",
+    "pediatricCompanionDesc": "Calm, evidence-based guidance for when your child is sick — built for the 2am moment"
   },
   "Hero": {
     "badge": "AI-powered medical interpretation",
@@ -123,7 +125,11 @@
     "geneticsLabel": "Got DNA results?",
     "geneticsTitle": "Genetic Test Explainer",
     "geneticsDesc": "23andMe, Invitae, MyHeritage — paste any variant or upload your full report and understand what it actually means.",
-    "geneticsCta": "Explain my genetics"
+    "geneticsCta": "Explain my genetics",
+    "pediatricLabel": "Sick child?",
+    "pediatricTitle": "Pediatric Symptom Companion",
+    "pediatricDesc": "Calm, evidence-based guidance for when your child is sick — built for the 2am decision moment.",
+    "pediatricCta": "Get guidance"
   },
   "Stats": {
     "reportsCount": "3,200+",
@@ -1287,5 +1293,85 @@
     "disclaimer": "Educational tool only. This is not medical advice. Always consult a qualified physician.",
     "disclaimerPrep": "This tool helps you prepare questions — it does not replace your doctor's clinical judgment.",
     "disclaimerDebrief": "We translate and explain what your doctor wrote — we never second-guess their decisions."
+  },
+  "Pediatric": {
+    "badge": "Sick child?",
+    "title": "Pediatric Symptom Companion",
+    "subtitle": "Calm, evidence-based guidance for when your child is sick.",
+
+    "tierTitle": "How much detail do you want?",
+    "tierSimple": "Simple",
+    "tierMedium": "Medium",
+    "tierExpert": "Expert",
+
+    "ageLabel": "Your child's age",
+    "ageHint": "This is the most important field — every recommendation flows from here.",
+    "ageUnitMonths": "Months",
+    "ageUnitYears": "Years",
+    "agePlaceholderMonths": "e.g. 4",
+    "agePlaceholderYears": "e.g. 6",
+
+    "weightLabel": "Weight",
+    "weightHint": "Used for dose context only — we never calculate doses.",
+    "weightPlaceholder": "e.g. 28",
+
+    "concernsLabel": "What's worrying you?",
+    "concernsHint": "Pick all that apply — and add a few words in your own voice.",
+    "concernFever": "Fever",
+    "concernCough": "Cough or breathing trouble",
+    "concernVomiting": "Vomiting or diarrhea",
+    "concernRash": "Rash",
+    "concernPain": "Pain",
+    "concernLethargy": "Lethargy or behavior change",
+    "concernCrying": "Inconsolable crying or fussiness",
+    "concernInjury": "Injury",
+    "concernOther": "Other",
+    "concernDescriptionPlaceholder": "Describe what you're seeing in your own words…",
+
+    "tempLabel": "Temperature",
+    "tempHint": "How the temperature was measured matters — rectal is most accurate for infants.",
+    "tempMethodLabel": "How was it measured?",
+    "tempMethodSelect": "Select method…",
+    "tempMethodRectal": "Rectal (most accurate for infants)",
+    "tempMethodOral": "Oral / under tongue",
+    "tempMethodEar": "Ear (tympanic)",
+    "tempMethodForehead": "Forehead / temporal",
+    "tempMethodArmpit": "Armpit (axillary)",
+    "tempMethodUnsure": "Not sure",
+
+    "durationLabel": "How long has this been going on?",
+    "durationLess6h": "Less than 6 hours",
+    "duration6to24h": "6–24 hours",
+    "duration1to2d": "1–2 days",
+    "duration3to5d": "3–5 days",
+    "durationMore5d": "More than 5 days",
+
+    "otherContextLabel": "Anything else worth knowing?",
+    "otherContextPlaceholder": "e.g. been pulling at right ear, no wet diaper in 8 hours, recently around someone with strep, fully vaccinated, has asthma…",
+
+    "optional": "optional",
+    "submit": "Get guidance",
+    "reassurance": "We don't store what you type. This session is completely private.",
+
+    "loadingMessage": "Thinking this through with you",
+    "loadingPrivacy": "Your information stays private — we don't save what you share.",
+
+    "decisionEyebrow": "Your recommendation",
+    "decisionErNow": "Call 911 or go to the ER now",
+    "decisionErToday": "Go to the ER or urgent care today",
+    "decisionCallPed": "Call your pediatrician today",
+    "decisionWatchHome": "Watch and care for them at home",
+
+    "sectionWhy": "Why this answer",
+    "sectionWhatToDo": "What to do right now",
+    "sectionWarning": "Warning signs that change the answer",
+    "sectionWarningDesc": "If any of these appear, the recommendation changes — act on them.",
+    "sectionWorries": "Common worries about this",
+    "sectionWorriesDesc": "What parents most often Google at 2am — addressed honestly.",
+    "sectionTrustInstinct": "Trust your instinct",
+
+    "checkAnother": "Check another concern",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "disclaimer": "Educational guidance only. Not a substitute for professional medical care. If your gut tells you something is wrong, trust it and seek care."
   }
 }

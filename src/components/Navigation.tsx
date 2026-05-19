@@ -13,7 +13,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications", "/visit", "/genetics"];
+const TOOL_HREFS = ["/app", "/symptom", "/diagnosed", "/imaging", "/trends", "/medications", "/visit", "/genetics", "/pediatric"];
 
 // ── Theme toggle ───────────────────────────────────────────────────────────
 
@@ -138,6 +138,18 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
       icon: (
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
           <path fillRule="evenodd" d="M3.5 2a.5.5 0 01.5.5V4h12V2.5a.5.5 0 011 0V4a4 4 0 01-1.553 3.163C13.86 8.292 12 9.756 12 12c0 2.244 1.86 3.708 3.447 4.837A4 4 0 0117 20v-1.5a.5.5 0 01-1 0V18H4v1.5a.5.5 0 01-1 0V20a4 4 0 011.553-3.163C6.14 15.708 8 14.244 8 12c0-2.244-1.86-3.708-3.447-4.837A4 4 0 013 4V2.5a.5.5 0 01.5-.5zM6 5h8c0 .76-.25 1.5-.84 2.07L10 9.65 6.84 7.07A2.83 2.83 0 016 5zm0 11l3-2.16V11l-2.95 2.21A2.79 2.79 0 006 16zm5-2.16l3 2.16c0-.78-.4-1.5-1.05-1.95L11 11v2.84z" clipRule="evenodd" />
+        </svg>
+      ),
+    },
+    {
+      href: "/pediatric",
+      label: t("pediatricCompanion"),
+      description: t("pediatricCompanionDesc"),
+      color: "text-rose-600 dark:text-rose-400",
+      bg: "bg-rose-50 dark:bg-rose-900/20",
+      icon: (
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
         </svg>
       ),
     },
@@ -376,6 +388,7 @@ export default function Navigation() {
                   { href: "/medications", label: t("medicationCompanion"),  color: "text-teal-600 dark:text-teal-400"       },
                   { href: "/visit",       label: t("visitCompanion"),       color: "text-brand-indigo dark:text-indigo-400" },
                   { href: "/genetics",    label: t("geneticsExplainer"),    color: "text-fuchsia-600 dark:text-fuchsia-400" },
+                  { href: "/pediatric",   label: t("pediatricCompanion"),   color: "text-rose-600 dark:text-rose-400"       },
                 ].map((tool) => (
                   <Link
                     key={tool.href}

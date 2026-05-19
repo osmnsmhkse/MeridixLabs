@@ -449,6 +449,18 @@ export default function LandingPage() {
                 iconBg: "bg-fuchsia-100 dark:bg-fuchsia-900/40",
                 icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400"><path fillRule="evenodd" d="M3.5 2a.5.5 0 01.5.5V4h12V2.5a.5.5 0 011 0V4a4 4 0 01-1.553 3.163C13.86 8.292 12 9.756 12 12c0 2.244 1.86 3.708 3.447 4.837A4 4 0 0117 20v-1.5a.5.5 0 01-1 0V18H4v1.5a.5.5 0 01-1 0V20a4 4 0 011.553-3.163C6.14 15.708 8 14.244 8 12c0-2.244-1.86-3.708-3.447-4.837A4 4 0 013 4V2.5a.5.5 0 01.5-.5zM6 5h8c0 .76-.25 1.5-.84 2.07L10 9.65 6.84 7.07A2.83 2.83 0 016 5zm0 11l3-2.16V11l-2.95 2.21A2.79 2.79 0 006 16zm5-2.16l3 2.16c0-.78-.4-1.5-1.05-1.95L11 11v2.84z" clipRule="evenodd" /></svg>,
               },
+              {
+                href: "/pediatric",
+                label: tSuite("pediatricLabel"),
+                title: tSuite("pediatricTitle"),
+                desc: tSuite("pediatricDesc"),
+                cta: tSuite("pediatricCta"),
+                color: "text-rose-600 dark:text-rose-400",
+                hoverBorder: "hover:border-rose-300 dark:hover:border-rose-700",
+                hoverGlow: "hover:shadow-rose-500/8",
+                iconBg: "bg-rose-100 dark:bg-rose-900/40",
+                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-rose-600 dark:text-rose-400"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" /></svg>,
+              },
             ].map((tool, i) => (
               <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${i + 1} group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tool.hoverBorder} hover:shadow-xl ${tool.hoverGlow} transition-all duration-500 overflow-hidden card-hover`}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-current/5 to-transparent rounded-full -translate-y-10 translate-x-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
