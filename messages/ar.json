@@ -24,7 +24,9 @@
     "dashboard": "لوحة التحكم",
     "profile": "الملف الشخصي",
     "medicationCompanion": "رفيق الأدوية",
-    "medicationCompanionDesc": "تحقق من أدويتك للتفاعلات والآثار الجانبية وعلامات التحذير"
+    "medicationCompanionDesc": "تحقق من أدويتك للتفاعلات والآثار الجانبية وعلامات التحذير",
+    "pediatricCompanion": "رفيق الأعراض للأطفال",
+    "pediatricCompanionDesc": "إرشادات هادئة قائمة على الأدلة عندما يكون طفلك مريضًا — مصممة للحظة الثانية صباحًا"
   },
   "Hero": {
     "badge": "تفسير طبي مدعوم بالذكاء الاصطناعي",
@@ -105,7 +107,11 @@
     "medicationLabel": "رفيق الأدوية",
     "medicationTitle": "افهم كل حبة دواء تتناولها",
     "medicationDesc": "أدخل قائمة أدويتك الكاملة واحصل على شرح بلغة بسيطة: ماذا يفعل كل دواء، ما الذي يتفاعل، وعلامات التحذير التي يجب ألا تتجاهلها أبدًا.",
-    "medicationCta": "فحص أدويتي"
+    "medicationCta": "فحص أدويتي",
+    "pediatricLabel": "طفل مريض؟",
+    "pediatricTitle": "رفيق الأعراض للأطفال",
+    "pediatricDesc": "إرشادات هادئة قائمة على الأدلة عندما يكون طفلك مريضًا — مصممة للحظة اتخاذ القرار في الثانية صباحًا.",
+    "pediatricCta": "احصل على إرشادات"
   },
   "Stats": {
     "reportsCount": "+3200",
@@ -114,7 +120,7 @@
     "speedLabel": "متوسط وقت النتيجة",
     "tiersCount": "3",
     "tiersLabel": "مستويات تفصيل",
-    "toolsCount": "4",
+    "toolsCount": "9",
     "toolsLabel": "أدوات بالذكاء الاصطناعي",
     "encrypted": "مشفّر وخاص",
     "resultsInSeconds": "نتائج في ثوانٍ",
@@ -1083,5 +1089,85 @@
     "suggestSideEffectsQ": "ما الآثار الجانبية لـ{med} التي يجب أن أتوقعها في البداية؟",
     "suggestRoutineLabel": "روتين",
     "suggestRoutineQ": "كيف يجب أن أتناول هذه الأدوية فيما يتعلق بالطعام والكحول والمكملات؟"
+  },
+  "Pediatric": {
+    "badge": "طفل مريض؟",
+    "title": "رفيق الأعراض للأطفال",
+    "subtitle": "إرشادات هادئة قائمة على الأدلة عندما يكون طفلك مريضًا.",
+
+    "tierTitle": "ما مقدار التفاصيل التي تريدها؟",
+    "tierSimple": "مبسّط",
+    "tierMedium": "متوسط",
+    "tierExpert": "خبير",
+
+    "ageLabel": "عمر طفلك",
+    "ageHint": "هذا أهم حقل — كل التوصيات تنطلق من هنا.",
+    "ageUnitMonths": "أشهر",
+    "ageUnitYears": "سنوات",
+    "agePlaceholderMonths": "مثال: 4",
+    "agePlaceholderYears": "مثال: 6",
+
+    "weightLabel": "الوزن",
+    "weightHint": "للسياق فقط في الجرعات — لا نحسب الجرعات أبدًا.",
+    "weightPlaceholder": "مثال: 28",
+
+    "concernsLabel": "ما الذي يقلقك؟",
+    "concernsHint": "اختر كل ما ينطبق — وأضف بعض الكلمات بأسلوبك الخاص.",
+    "concernFever": "حمى",
+    "concernCough": "سعال أو صعوبة في التنفس",
+    "concernVomiting": "قيء أو إسهال",
+    "concernRash": "طفح جلدي",
+    "concernPain": "ألم",
+    "concernLethargy": "خمول أو تغيّر في السلوك",
+    "concernCrying": "بكاء لا يمكن تهدئته أو تهيّج",
+    "concernInjury": "إصابة",
+    "concernOther": "غير ذلك",
+    "concernDescriptionPlaceholder": "صف ما تراه بكلماتك الخاصة…",
+
+    "tempLabel": "درجة الحرارة",
+    "tempHint": "طريقة القياس مهمة — القياس الشرجي هو الأدق للرضّع.",
+    "tempMethodLabel": "كيف تم القياس؟",
+    "tempMethodSelect": "اختر الطريقة…",
+    "tempMethodRectal": "شرجي (الأدق للرضّع)",
+    "tempMethodOral": "فموي / تحت اللسان",
+    "tempMethodEar": "أذن (طبلي)",
+    "tempMethodForehead": "جبهة / صدغي",
+    "tempMethodArmpit": "إبط (إبطي)",
+    "tempMethodUnsure": "لست متأكدًا",
+
+    "durationLabel": "منذ متى وهذا يحدث؟",
+    "durationLess6h": "أقل من 6 ساعات",
+    "duration6to24h": "6–24 ساعة",
+    "duration1to2d": "1–2 يوم",
+    "duration3to5d": "3–5 أيام",
+    "durationMore5d": "أكثر من 5 أيام",
+
+    "otherContextLabel": "أي شيء آخر يستحق المعرفة؟",
+    "otherContextPlaceholder": "مثال: يشد أذنه اليمنى، لا توجد حفاضة مبللة منذ 8 ساعات، كان مع شخص مصاب بالتهاب الحلق العقدي، تطعيمات كاملة، مصاب بالربو…",
+
+    "optional": "اختياري",
+    "submit": "احصل على إرشادات",
+    "reassurance": "نحن لا نحفظ ما تكتبه. هذه الجلسة خاصة تمامًا.",
+
+    "loadingMessage": "نفكر في الأمر معك",
+    "loadingPrivacy": "تبقى معلوماتك خاصة — نحن لا نحفظ ما تشاركه.",
+
+    "decisionEyebrow": "توصيتك",
+    "decisionErNow": "اتصل بـ 911 أو اذهب إلى الطوارئ الآن",
+    "decisionErToday": "اذهب إلى الطوارئ أو الرعاية العاجلة اليوم",
+    "decisionCallPed": "اتصل بطبيب الأطفال اليوم",
+    "decisionWatchHome": "راقبه واعتنِ به في المنزل",
+
+    "sectionWhy": "لماذا هذا الجواب",
+    "sectionWhatToDo": "ما يجب فعله الآن",
+    "sectionWarning": "علامات تحذيرية تغيّر الجواب",
+    "sectionWarningDesc": "إذا ظهرت أيٌّ منها، تتغير التوصية — تحرّك بناءً عليها.",
+    "sectionWorries": "مخاوف شائعة حول هذا",
+    "sectionWorriesDesc": "ما يبحث عنه الآباء فعليًا في الثانية صباحًا — بإجابة صادقة.",
+    "sectionTrustInstinct": "ثق بحدسك",
+
+    "checkAnother": "تحقّق من قلق آخر",
+    "errorGeneric": "حدث خطأ ما. يُرجى المحاولة مرة أخرى.",
+    "disclaimer": "إرشادات تثقيفية فقط. ليست بديلاً عن الرعاية الطبية المهنية. إذا كان حدسك يخبرك بأن شيئًا ما خاطئ، فثق به واطلب الرعاية."
   }
 }

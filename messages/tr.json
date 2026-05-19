@@ -24,7 +24,9 @@
     "dashboard": "Kontrol Paneli",
     "profile": "Profil",
     "medicationCompanion": "İlaç Asistanı",
-    "medicationCompanionDesc": "İlaçlarınızı kontrol edin: etkileşimler, yan etkiler ve uyarı işaretleri"
+    "medicationCompanionDesc": "İlaçlarınızı kontrol edin: etkileşimler, yan etkiler ve uyarı işaretleri",
+    "pediatricCompanion": "Pediatrik Semptom Asistanı",
+    "pediatricCompanionDesc": "Çocuğunuz hasta olduğunda sakin, kanıta dayalı rehberlik — gece 2'de karar verme anı için tasarlandı"
   },
   "Hero": {
     "badge": "Yapay zeka destekli tıbbi yorum",
@@ -105,7 +107,11 @@
     "medicationLabel": "İlaç Asistanı",
     "medicationTitle": "Aldığınız her hapı anlayın",
     "medicationDesc": "Tam ilaç listenizi girin ve sade Türkçeyle alın: her ilacın ne yaptığı, hangileri etkileşime girer ve asla göz ardı edilmemesi gereken uyarı işaretleri.",
-    "medicationCta": "İlaçlarımı kontrol et"
+    "medicationCta": "İlaçlarımı kontrol et",
+    "pediatricLabel": "Hasta çocuk?",
+    "pediatricTitle": "Pediatrik Semptom Asistanı",
+    "pediatricDesc": "Çocuğunuz hasta olduğunda sakin, kanıta dayalı rehberlik — gece 2'deki karar anı için tasarlandı.",
+    "pediatricCta": "Rehberlik al"
   },
   "Stats": {
     "reportsCount": "3.200+",
@@ -114,7 +120,7 @@
     "speedLabel": "Ortalama sonuç süresi",
     "tiersCount": "3",
     "tiersLabel": "Detay seviyesi",
-    "toolsCount": "4",
+    "toolsCount": "9",
     "toolsLabel": "Yapay zeka destekli araç",
     "encrypted": "Şifreli ve gizli",
     "resultsInSeconds": "Saniyeler içinde sonuç",
@@ -1083,5 +1089,85 @@
     "suggestSideEffectsQ": "{med} ilacının başlangıçta hangi yan etkilerini beklemeliyim?",
     "suggestRoutineLabel": "Rutin",
     "suggestRoutineQ": "Bu ilaçları yemek, alkol ve takviyelerle birlikte nasıl almalıyım?"
+  },
+  "Pediatric": {
+    "badge": "Hasta çocuk?",
+    "title": "Pediatrik Semptom Asistanı",
+    "subtitle": "Çocuğunuz hasta olduğunda sakin, kanıta dayalı rehberlik.",
+
+    "tierTitle": "Ne kadar ayrıntı istiyorsunuz?",
+    "tierSimple": "Basit",
+    "tierMedium": "Orta",
+    "tierExpert": "Uzman",
+
+    "ageLabel": "Çocuğunuzun yaşı",
+    "ageHint": "Bu en önemli alan — tüm öneriler buradan başlıyor.",
+    "ageUnitMonths": "Ay",
+    "ageUnitYears": "Yıl",
+    "agePlaceholderMonths": "ör. 4",
+    "agePlaceholderYears": "ör. 6",
+
+    "weightLabel": "Kilo",
+    "weightHint": "Yalnızca doz bağlamı için — doz asla hesaplamayız.",
+    "weightPlaceholder": "ör. 28",
+
+    "concernsLabel": "Sizi ne endişelendiriyor?",
+    "concernsHint": "Uygun olanların hepsini seçin — ve kendi sözlerinizle birkaç şey ekleyin.",
+    "concernFever": "Ateş",
+    "concernCough": "Öksürük veya solunum sıkıntısı",
+    "concernVomiting": "Kusma veya ishal",
+    "concernRash": "Döküntü",
+    "concernPain": "Ağrı",
+    "concernLethargy": "Halsizlik veya davranış değişikliği",
+    "concernCrying": "Yatıştırılamayan ağlama veya huzursuzluk",
+    "concernInjury": "Yaralanma",
+    "concernOther": "Diğer",
+    "concernDescriptionPlaceholder": "Gördüklerinizi kendi sözcüklerinizle anlatın…",
+
+    "tempLabel": "Vücut sıcaklığı",
+    "tempHint": "Nasıl ölçüldüğü önemli — bebeklerde rektal ölçüm en doğrusudur.",
+    "tempMethodLabel": "Nasıl ölçüldü?",
+    "tempMethodSelect": "Yöntem seçin…",
+    "tempMethodRectal": "Rektal (bebeklerde en doğru)",
+    "tempMethodOral": "Oral / dil altı",
+    "tempMethodEar": "Kulak (timpanik)",
+    "tempMethodForehead": "Alın / temporal",
+    "tempMethodArmpit": "Koltuk altı (aksiller)",
+    "tempMethodUnsure": "Emin değilim",
+
+    "durationLabel": "Bu ne kadar süredir devam ediyor?",
+    "durationLess6h": "6 saatten az",
+    "duration6to24h": "6–24 saat",
+    "duration1to2d": "1–2 gün",
+    "duration3to5d": "3–5 gün",
+    "durationMore5d": "5 günden fazla",
+
+    "otherContextLabel": "Bilmemiz gereken başka bir şey var mı?",
+    "otherContextPlaceholder": "ör. sağ kulağını çekiştiriyor, 8 saattir ıslak bezi olmadı, son zamanlarda boğaz iltihabı olan biriyle temas etti, aşıları tam, astımı var…",
+
+    "optional": "isteğe bağlı",
+    "submit": "Rehberlik al",
+    "reassurance": "Yazdıklarınızı kaydetmiyoruz. Bu oturum tamamen özel.",
+
+    "loadingMessage": "Sizinle birlikte düşünüyoruz",
+    "loadingPrivacy": "Bilgileriniz özel kalır — paylaştıklarınızı kaydetmiyoruz.",
+
+    "decisionEyebrow": "Öneriniz",
+    "decisionErNow": "112'yi arayın veya hemen acile gidin",
+    "decisionErToday": "Bugün acil veya acil tıbbi bakım merkezine gidin",
+    "decisionCallPed": "Bugün çocuk doktorunuzu arayın",
+    "decisionWatchHome": "Evde gözlemleyin ve bakım yapın",
+
+    "sectionWhy": "Neden bu yanıt",
+    "sectionWhatToDo": "Şimdi tam olarak ne yapmalı",
+    "sectionWarning": "Yanıtı değiştirecek uyarı işaretleri",
+    "sectionWarningDesc": "Bunlardan herhangi biri belirirse öneri değişir — harekete geçin.",
+    "sectionWorries": "Bu konudaki yaygın endişeler",
+    "sectionWorriesDesc": "Ebeveynlerin gece 2'de gerçekten Google'da aradıkları — dürüstçe yanıtlandı.",
+    "sectionTrustInstinct": "İçgüdünüze güvenin",
+
+    "checkAnother": "Başka bir endişeyi kontrol et",
+    "errorGeneric": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+    "disclaimer": "Yalnızca eğitici rehberlik. Profesyonel tıbbi bakımın yerini tutmaz. İçinizden bir şeylerin yanlış olduğunu hissediyorsanız, bu hisse güvenin ve bakım arayın."
   }
 }

@@ -24,7 +24,9 @@
     "dashboard": "Dashboard",
     "profile": "Profil",
     "medicationCompanion": "Medikamenten-Begleiter",
-    "medicationCompanionDesc": "Prüfen Sie Ihre Medikamente: Wechselwirkungen, Nebenwirkungen und Warnsignale"
+    "medicationCompanionDesc": "Prüfen Sie Ihre Medikamente: Wechselwirkungen, Nebenwirkungen und Warnsignale",
+    "pediatricCompanion": "Pädiatrischer Symptom-Begleiter",
+    "pediatricCompanionDesc": "Ruhige, evidenzbasierte Orientierung, wenn Ihr Kind krank ist — gemacht für den 2-Uhr-morgens-Moment"
   },
   "Hero": {
     "badge": "KI-gestützte medizinische Interpretation",
@@ -105,7 +107,11 @@
     "medicationLabel": "Medikamenten-Begleiter",
     "medicationTitle": "Verstehen Sie jede Tablette, die Sie nehmen",
     "medicationDesc": "Geben Sie Ihre vollständige Medikamentenliste ein und erhalten Sie eine verständliche Erklärung: was jedes Medikament tut, was wechselwirkt und welche Warnzeichen Sie nie ignorieren sollten.",
-    "medicationCta": "Meine Medikamente prüfen"
+    "medicationCta": "Meine Medikamente prüfen",
+    "pediatricLabel": "Krankes Kind?",
+    "pediatricTitle": "Pädiatrischer Symptom-Begleiter",
+    "pediatricDesc": "Ruhige, evidenzbasierte Orientierung, wenn Ihr Kind krank ist — gemacht für die Entscheidung um 2 Uhr morgens.",
+    "pediatricCta": "Orientierung erhalten"
   },
   "Stats": {
     "reportsCount": "3.200+",
@@ -114,7 +120,7 @@
     "speedLabel": "Durchschnittliche Ergebniszeit",
     "tiersCount": "3",
     "tiersLabel": "Detailstufen",
-    "toolsCount": "4",
+    "toolsCount": "9",
     "toolsLabel": "KI-gestützte Tools",
     "encrypted": "Verschlüsselt & privat",
     "resultsInSeconds": "Ergebnisse in Sekunden",
@@ -1083,5 +1089,85 @@
     "suggestSideEffectsQ": "Welche Nebenwirkungen von {med} sollte ich am Anfang erwarten?",
     "suggestRoutineLabel": "Routine",
     "suggestRoutineQ": "Wie sollte ich diese Medikamente in Bezug auf Essen, Alkohol und Nahrungsergänzungsmittel einnehmen?"
+  },
+  "Pediatric": {
+    "badge": "Krankes Kind?",
+    "title": "Pädiatrischer Symptom-Begleiter",
+    "subtitle": "Ruhige, evidenzbasierte Orientierung, wenn Ihr Kind krank ist.",
+
+    "tierTitle": "Wie viel Detail möchten Sie?",
+    "tierSimple": "Einfach",
+    "tierMedium": "Mittel",
+    "tierExpert": "Experte",
+
+    "ageLabel": "Alter Ihres Kindes",
+    "ageHint": "Dies ist das wichtigste Feld — jede Empfehlung baut darauf auf.",
+    "ageUnitMonths": "Monate",
+    "ageUnitYears": "Jahre",
+    "agePlaceholderMonths": "z. B. 4",
+    "agePlaceholderYears": "z. B. 6",
+
+    "weightLabel": "Gewicht",
+    "weightHint": "Nur als Dosierungskontext — wir berechnen niemals Dosen.",
+    "weightPlaceholder": "z. B. 28",
+
+    "concernsLabel": "Was beunruhigt Sie?",
+    "concernsHint": "Wählen Sie alles Zutreffende — und fügen Sie ein paar eigene Worte hinzu.",
+    "concernFever": "Fieber",
+    "concernCough": "Husten oder Atemprobleme",
+    "concernVomiting": "Erbrechen oder Durchfall",
+    "concernRash": "Hautausschlag",
+    "concernPain": "Schmerzen",
+    "concernLethargy": "Lethargie oder Verhaltensänderung",
+    "concernCrying": "Untröstliches Weinen oder Unruhe",
+    "concernInjury": "Verletzung",
+    "concernOther": "Sonstiges",
+    "concernDescriptionPlaceholder": "Beschreiben Sie mit eigenen Worten, was Sie beobachten…",
+
+    "tempLabel": "Temperatur",
+    "tempHint": "Wie die Temperatur gemessen wurde, ist wichtig — rektal ist bei Säuglingen am genauesten.",
+    "tempMethodLabel": "Wie wurde gemessen?",
+    "tempMethodSelect": "Methode wählen…",
+    "tempMethodRectal": "Rektal (am genauesten bei Säuglingen)",
+    "tempMethodOral": "Oral / unter der Zunge",
+    "tempMethodEar": "Ohr (tympanisch)",
+    "tempMethodForehead": "Stirn / temporal",
+    "tempMethodArmpit": "Achsel (axillär)",
+    "tempMethodUnsure": "Nicht sicher",
+
+    "durationLabel": "Wie lange geht das schon?",
+    "durationLess6h": "Weniger als 6 Stunden",
+    "duration6to24h": "6–24 Stunden",
+    "duration1to2d": "1–2 Tage",
+    "duration3to5d": "3–5 Tage",
+    "durationMore5d": "Mehr als 5 Tage",
+
+    "otherContextLabel": "Gibt es sonst etwas, das wir wissen sollten?",
+    "otherContextPlaceholder": "z. B. zieht am rechten Ohr, seit 8 Stunden keine nasse Windel, war in Kontakt mit jemandem mit Streptokokken, vollständig geimpft, hat Asthma…",
+
+    "optional": "optional",
+    "submit": "Orientierung erhalten",
+    "reassurance": "Wir speichern nicht, was Sie eingeben. Diese Sitzung ist vollständig privat.",
+
+    "loadingMessage": "Wir denken gemeinsam mit Ihnen nach",
+    "loadingPrivacy": "Ihre Daten bleiben privat — wir speichern nicht, was Sie teilen.",
+
+    "decisionEyebrow": "Ihre Empfehlung",
+    "decisionErNow": "Rufen Sie 112 / 911 oder fahren Sie sofort in die Notaufnahme",
+    "decisionErToday": "Heute in die Notaufnahme oder Notfallambulanz",
+    "decisionCallPed": "Rufen Sie heute Ihren Kinderarzt an",
+    "decisionWatchHome": "Beobachten und zu Hause pflegen",
+
+    "sectionWhy": "Warum diese Antwort",
+    "sectionWhatToDo": "Was Sie jetzt sofort tun sollten",
+    "sectionWarning": "Warnzeichen, die die Antwort ändern",
+    "sectionWarningDesc": "Wenn eines dieser Zeichen auftritt, ändert sich die Empfehlung — handeln Sie.",
+    "sectionWorries": "Häufige Sorgen dazu",
+    "sectionWorriesDesc": "Was Eltern wirklich um 2 Uhr morgens googeln — ehrlich beantwortet.",
+    "sectionTrustInstinct": "Vertrauen Sie Ihrem Instinkt",
+
+    "checkAnother": "Weitere Sorge prüfen",
+    "errorGeneric": "Etwas ist schiefgegangen. Bitte versuchen Sie es erneut.",
+    "disclaimer": "Nur Bildungsorientierung. Kein Ersatz für professionelle medizinische Versorgung. Wenn Ihr Bauchgefühl Ihnen sagt, dass etwas nicht stimmt, vertrauen Sie ihm und suchen Sie ärztliche Hilfe."
   }
 }

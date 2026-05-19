@@ -24,7 +24,9 @@
     "dashboard": "Dashboard",
     "profile": "Profilo",
     "medicationCompanion": "Compagno dei farmaci",
-    "medicationCompanionDesc": "Controlla i tuoi farmaci: interazioni, effetti collaterali e segnali di allarme"
+    "medicationCompanionDesc": "Controlla i tuoi farmaci: interazioni, effetti collaterali e segnali di allarme",
+    "pediatricCompanion": "Compagno pediatrico dei sintomi",
+    "pediatricCompanionDesc": "Guida calma e basata sull'evidenza per quando tuo figlio sta male — pensata per quel momento delle 2 del mattino"
   },
   "Hero": {
     "badge": "Interpretazione medica con IA",
@@ -105,7 +107,11 @@
     "medicationLabel": "Compagno dei farmaci",
     "medicationTitle": "Capisci ogni pillola che prendi",
     "medicationDesc": "Inserisci l'elenco completo dei tuoi farmaci e ottieni una spiegazione chiara: cosa fa ogni farmaco, cosa interagisce e quali segnali di allarme non ignorare mai.",
-    "medicationCta": "Controlla i miei farmaci"
+    "medicationCta": "Controlla i miei farmaci",
+    "pediatricLabel": "Bambino malato?",
+    "pediatricTitle": "Compagno pediatrico dei sintomi",
+    "pediatricDesc": "Guida calma e basata sull'evidenza per quando tuo figlio sta male — pensata per la decisione delle 2 del mattino.",
+    "pediatricCta": "Ottieni indicazioni"
   },
   "Stats": {
     "reportsCount": "3.200+",
@@ -114,7 +120,7 @@
     "speedLabel": "Tempo medio dei risultati",
     "tiersCount": "3",
     "tiersLabel": "Livelli di dettaglio",
-    "toolsCount": "4",
+    "toolsCount": "9",
     "toolsLabel": "Strumenti con IA",
     "encrypted": "Crittografato e privato",
     "resultsInSeconds": "Risultati in secondi",
@@ -1083,5 +1089,85 @@
     "suggestSideEffectsQ": "Quali effetti collaterali di {med} dovrei aspettarmi all'inizio?",
     "suggestRoutineLabel": "Routine",
     "suggestRoutineQ": "Come dovrei assumere questi farmaci rispetto al cibo, all'alcol e agli integratori?"
+  },
+  "Pediatric": {
+    "badge": "Bambino malato?",
+    "title": "Compagno pediatrico dei sintomi",
+    "subtitle": "Guida calma e basata sull'evidenza per quando tuo figlio sta male.",
+
+    "tierTitle": "Quanto dettaglio vuoi?",
+    "tierSimple": "Semplice",
+    "tierMedium": "Intermedio",
+    "tierExpert": "Esperto",
+
+    "ageLabel": "Età di tuo figlio/a",
+    "ageHint": "È il campo più importante — ogni raccomandazione parte da qui.",
+    "ageUnitMonths": "Mesi",
+    "ageUnitYears": "Anni",
+    "agePlaceholderMonths": "es. 4",
+    "agePlaceholderYears": "es. 6",
+
+    "weightLabel": "Peso",
+    "weightHint": "Solo come contesto per le dosi — non calcoliamo mai dosi.",
+    "weightPlaceholder": "es. 28",
+
+    "concernsLabel": "Cosa ti preoccupa?",
+    "concernsHint": "Seleziona tutto ciò che si applica — e aggiungi qualche parola tua.",
+    "concernFever": "Febbre",
+    "concernCough": "Tosse o difficoltà a respirare",
+    "concernVomiting": "Vomito o diarrea",
+    "concernRash": "Eruzione cutanea",
+    "concernPain": "Dolore",
+    "concernLethargy": "Letargia o cambiamento di comportamento",
+    "concernCrying": "Pianto inconsolabile o irritabilità",
+    "concernInjury": "Trauma o lesione",
+    "concernOther": "Altro",
+    "concernDescriptionPlaceholder": "Descrivi con parole tue ciò che stai osservando…",
+
+    "tempLabel": "Temperatura",
+    "tempHint": "Il metodo di misurazione conta — quella rettale è la più accurata nei neonati.",
+    "tempMethodLabel": "Come è stata misurata?",
+    "tempMethodSelect": "Seleziona il metodo…",
+    "tempMethodRectal": "Rettale (la più accurata nei neonati)",
+    "tempMethodOral": "Orale / sotto la lingua",
+    "tempMethodEar": "Auricolare (timpanica)",
+    "tempMethodForehead": "Fronte / temporale",
+    "tempMethodArmpit": "Ascellare",
+    "tempMethodUnsure": "Non sono sicuro/a",
+
+    "durationLabel": "Da quanto tempo va avanti?",
+    "durationLess6h": "Meno di 6 ore",
+    "duration6to24h": "6–24 ore",
+    "duration1to2d": "1–2 giorni",
+    "duration3to5d": "3–5 giorni",
+    "durationMore5d": "Più di 5 giorni",
+
+    "otherContextLabel": "C'è altro che dovremmo sapere?",
+    "otherContextPlaceholder": "es. si tira l'orecchio destro, nessun pannolino bagnato da 8 ore, è stato in contatto con qualcuno con faringite streptococcica, vaccinato, ha l'asma…",
+
+    "optional": "facoltativo",
+    "submit": "Ottieni indicazioni",
+    "reassurance": "Non conserviamo ciò che scrivi. Questa sessione è completamente privata.",
+
+    "loadingMessage": "Ci stiamo ragionando con te",
+    "loadingPrivacy": "Le tue informazioni rimangono private — non conserviamo ciò che condividi.",
+
+    "decisionEyebrow": "La tua raccomandazione",
+    "decisionErNow": "Chiama il 112 / 911 o vai al pronto soccorso ora",
+    "decisionErToday": "Vai al pronto soccorso o in guardia medica oggi",
+    "decisionCallPed": "Chiama oggi il tuo pediatra",
+    "decisionWatchHome": "Osservalo/a e curalo/a a casa",
+
+    "sectionWhy": "Perché questa risposta",
+    "sectionWhatToDo": "Cosa fare proprio adesso",
+    "sectionWarning": "Segnali d'allarme che cambiano la risposta",
+    "sectionWarningDesc": "Se compare uno di questi segnali, la raccomandazione cambia — agisci.",
+    "sectionWorries": "Preoccupazioni comuni su questo",
+    "sectionWorriesDesc": "Ciò che i genitori cercano davvero su Google alle 2 di notte — risposta onesta.",
+    "sectionTrustInstinct": "Fidati del tuo istinto",
+
+    "checkAnother": "Controlla un'altra preoccupazione",
+    "errorGeneric": "Qualcosa è andato storto. Riprova.",
+    "disclaimer": "Solo guida educativa. Non sostituisce le cure mediche professionali. Se il tuo istinto ti dice che qualcosa non va, fidati e cerca assistenza."
   }
 }

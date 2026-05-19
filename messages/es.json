@@ -24,7 +24,9 @@
     "dashboard": "Panel principal",
     "profile": "Perfil",
     "medicationCompanion": "Compañero de medicamentos",
-    "medicationCompanionDesc": "Revisa tus medicamentos: interacciones, efectos secundarios y señales de alerta"
+    "medicationCompanionDesc": "Revisa tus medicamentos: interacciones, efectos secundarios y señales de alerta",
+    "pediatricCompanion": "Compañero pediátrico de síntomas",
+    "pediatricCompanionDesc": "Orientación serena y basada en evidencia para cuando tu hijo está enfermo — pensada para esos momentos de las 2 de la mañana"
   },
   "Hero": {
     "badge": "Interpretación médica con IA",
@@ -105,7 +107,11 @@
     "medicationLabel": "Compañero de medicamentos",
     "medicationTitle": "Entiende cada pastilla que tomas",
     "medicationDesc": "Introduce tu lista completa de medicamentos y obtén una explicación en lenguaje claro: qué hace cada uno, qué interactúa y qué señales de alerta no debes ignorar.",
-    "medicationCta": "Revisar mis medicamentos"
+    "medicationCta": "Revisar mis medicamentos",
+    "pediatricLabel": "¿Niño enfermo?",
+    "pediatricTitle": "Compañero pediátrico de síntomas",
+    "pediatricDesc": "Orientación serena y basada en evidencia para cuando tu hijo está enfermo — pensada para esa decisión a las 2 de la mañana.",
+    "pediatricCta": "Recibir orientación"
   },
   "Stats": {
     "reportsCount": "3.200+",
@@ -114,7 +120,7 @@
     "speedLabel": "Tiempo medio de resultado",
     "tiersCount": "3",
     "tiersLabel": "Niveles de detalle",
-    "toolsCount": "4",
+    "toolsCount": "9",
     "toolsLabel": "Herramientas con IA",
     "encrypted": "Cifrado y privado",
     "resultsInSeconds": "Resultados en segundos",
@@ -1083,5 +1089,85 @@
     "suggestSideEffectsQ": "¿Qué efectos secundarios de {med} debo esperar al principio?",
     "suggestRoutineLabel": "Rutina",
     "suggestRoutineQ": "¿Cómo debo tomar estos medicamentos respecto a comidas, alcohol y suplementos?"
+  },
+  "Pediatric": {
+    "badge": "¿Niño enfermo?",
+    "title": "Compañero pediátrico de síntomas",
+    "subtitle": "Orientación serena y basada en evidencia para cuando tu hijo está enfermo.",
+
+    "tierTitle": "¿Cuánto detalle quieres?",
+    "tierSimple": "Simple",
+    "tierMedium": "Intermedio",
+    "tierExpert": "Experto",
+
+    "ageLabel": "Edad de tu hijo/a",
+    "ageHint": "Este es el campo más importante — cada recomendación parte de aquí.",
+    "ageUnitMonths": "Meses",
+    "ageUnitYears": "Años",
+    "agePlaceholderMonths": "p. ej. 4",
+    "agePlaceholderYears": "p. ej. 6",
+
+    "weightLabel": "Peso",
+    "weightHint": "Solo para contexto de dosis — nunca calculamos dosis.",
+    "weightPlaceholder": "p. ej. 28",
+
+    "concernsLabel": "¿Qué te preocupa?",
+    "concernsHint": "Selecciona todas las que correspondan — y añade unas palabras tuyas.",
+    "concernFever": "Fiebre",
+    "concernCough": "Tos o dificultad para respirar",
+    "concernVomiting": "Vómitos o diarrea",
+    "concernRash": "Erupción",
+    "concernPain": "Dolor",
+    "concernLethargy": "Letargo o cambio de comportamiento",
+    "concernCrying": "Llanto inconsolable o irritabilidad",
+    "concernInjury": "Lesión",
+    "concernOther": "Otro",
+    "concernDescriptionPlaceholder": "Describe lo que estás viendo con tus propias palabras…",
+
+    "tempLabel": "Temperatura",
+    "tempHint": "Cómo se midió la temperatura importa — la rectal es la más exacta en lactantes.",
+    "tempMethodLabel": "¿Cómo se midió?",
+    "tempMethodSelect": "Selecciona el método…",
+    "tempMethodRectal": "Rectal (la más exacta en lactantes)",
+    "tempMethodOral": "Oral / debajo de la lengua",
+    "tempMethodEar": "Oído (timpánica)",
+    "tempMethodForehead": "Frente / temporal",
+    "tempMethodArmpit": "Axila (axilar)",
+    "tempMethodUnsure": "No estoy seguro/a",
+
+    "durationLabel": "¿Cuánto tiempo lleva así?",
+    "durationLess6h": "Menos de 6 horas",
+    "duration6to24h": "6–24 horas",
+    "duration1to2d": "1–2 días",
+    "duration3to5d": "3–5 días",
+    "durationMore5d": "Más de 5 días",
+
+    "otherContextLabel": "¿Algo más que debamos saber?",
+    "otherContextPlaceholder": "p. ej. se tira de la oreja derecha, sin pañal mojado en 8 horas, ha estado cerca de alguien con faringitis estreptocócica, vacunación completa, tiene asma…",
+
+    "optional": "opcional",
+    "submit": "Recibir orientación",
+    "reassurance": "No guardamos lo que escribes. Esta sesión es completamente privada.",
+
+    "loadingMessage": "Pensándolo contigo",
+    "loadingPrivacy": "Tu información permanece privada — no guardamos lo que compartes.",
+
+    "decisionEyebrow": "Tu recomendación",
+    "decisionErNow": "Llama al 911 o acude a urgencias ya",
+    "decisionErToday": "Acude a urgencias o atención inmediata hoy",
+    "decisionCallPed": "Llama hoy a tu pediatra",
+    "decisionWatchHome": "Obsérvalo/a y cuídalo/a en casa",
+
+    "sectionWhy": "Por qué esta respuesta",
+    "sectionWhatToDo": "Qué hacer ahora mismo",
+    "sectionWarning": "Señales de alarma que cambian la respuesta",
+    "sectionWarningDesc": "Si aparece cualquiera de estas señales, la recomendación cambia — actúa.",
+    "sectionWorries": "Preocupaciones comunes sobre esto",
+    "sectionWorriesDesc": "Lo que más buscan los padres en Google a las 2 de la mañana — respondido con honestidad.",
+    "sectionTrustInstinct": "Confía en tu instinto",
+
+    "checkAnother": "Consultar otra preocupación",
+    "errorGeneric": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "disclaimer": "Orientación educativa únicamente. No sustituye la atención médica profesional. Si tu instinto te dice que algo va mal, confía en él y busca atención."
   }
 }
