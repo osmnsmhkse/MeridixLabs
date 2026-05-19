@@ -1,15 +1,104 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import HeroCTA from "@/components/HeroCTA";
 
 type DemoTier = "Simple" | "Medium" | "Expert";
 
+// ─── Mouse spotlight tracker ───────────────────────────────────────
+function useSpotlight<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+      el.style.setProperty("--my", `${e.clientY - rect.top}px`);
+    };
+    el.addEventListener("mousemove", onMove);
+    return () => el.removeEventListener("mousemove", onMove);
+  }, []);
+  return ref;
+}
+
+// ─── Live ticking number (no API — just simulates motion) ─────────
+function LiveTick({ base, jitter = 4, suffix = "", className = "" }: { base: number; jitter?: number; suffix?: string; className?: string }) {
+  const [v, setV] = useState(base);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setV(base + Math.floor((Math.random() - 0.5) * jitter * 2));
+    }, 1800);
+    return () => clearInterval(id);
+  }, [base, jitter]);
+  return <span className={`display-num num-flicker ${className}`}>{v.toLocaleString()}{suffix}</span>;
+}
+
+// ─── Sparkline svg (decorative, deterministic-ish) ────────────────
+function Spark({ color = "#22D3EE", h = 32, w = 96 }: { color?: string; h?: number; w?: number }) {
+  const points = [4, 9, 6, 14, 10, 18, 12, 22, 16, 26, 12, 30, 24, 20];
+  const max = Math.max(...points);
+  const step = w / (points.length - 1);
+  const path = points.map((p, i) => `${i === 0 ? "M" : "L"} ${i * step} ${h - (p / max) * (h - 4) - 2}`).join(" ");
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-full">
+      <defs>
+        <linearGradient id={`sg-${color.replace("#", "")}`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={`${path} L ${w} ${h} L 0 ${h} Z`} fill={`url(#sg-${color.replace("#", "")})`} />
+      <path className="sparkline-path" d={path} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ─── Activity strip (pulsing vertical bars) ───────────────────────
+function ActivityStrip({ count = 36 }: { count?: number }) {
+  return (
+    <div className="flex items-end gap-[2px] h-8">
+      {Array.from({ length: count }).map((_, i) => (
+        <span
+          key={i}
+          className="bar-tick w-[3px] rounded-sm bg-gradient-to-t from-brand-blue/40 to-cyan-400"
+          style={{ animationDelay: `${(i % 12) * 0.08}s`, height: `${20 + (i * 37) % 60}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Terminal-style section divider ───────────────────────────────
+function TerminalRule({ id, label }: { id: string; label: string }) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="terminal-divider">
+        <span className="text-brand-blue">┌─</span>
+        <span>SYS::{id}</span>
+        <span className="text-ink-tertiary">·</span>
+        <span className="text-ink-secondary">{label}</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── HUD bracket helper for any wrapping div ──────────────────────
+function HudBrackets({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`hud-brackets ${className}`}>
+      <span className="hud-tr" />
+      <span className="hud-bl" />
+      {children}
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const [demoTier, setDemoTier] = useState<DemoTier>("Simple");
+  const heroRef = useSpotlight<HTMLDivElement>();
 
   const tHero = useTranslations("Hero");
   const tHow = useTranslations("HowItWorks");
@@ -24,670 +113,745 @@ export default function LandingPage() {
   const DEMO_TIERS: Record<DemoTier, { summary: string; specialist: { label: string; body: React.ReactNode } }> = {
     Simple: {
       summary: tTiers("demoSimpleSummary"),
-      specialist: {
-        label: tTiers("demoSimpleSpecialistLabel"),
-        body: tTiers.rich("demoSimpleSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
-      },
+      specialist: { label: tTiers("demoSimpleSpecialistLabel"), body: tTiers.rich("demoSimpleSpecialistBody", { b: (c) => <strong className="panel-text-bright">{c}</strong> }) },
     },
     Medium: {
       summary: tTiers("demoMediumSummary"),
-      specialist: {
-        label: tTiers("demoMediumSpecialistLabel"),
-        body: tTiers.rich("demoMediumSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
-      },
+      specialist: { label: tTiers("demoMediumSpecialistLabel"), body: tTiers.rich("demoMediumSpecialistBody", { b: (c) => <strong className="panel-text-bright">{c}</strong> }) },
     },
     Expert: {
       summary: tTiers("demoExpertSummary"),
-      specialist: {
-        label: tTiers("demoExpertSpecialistLabel"),
-        body: tTiers.rich("demoExpertSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
-      },
+      specialist: { label: tTiers("demoExpertSpecialistLabel"), body: tTiers.rich("demoExpertSpecialistBody", { b: (c) => <strong className="panel-text-bright">{c}</strong> }) },
     },
   };
 
   return (
     <div className="min-h-screen">
 
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero">
-        {/* Mesh drift ambient */}
-        <div className="mesh-bg" />
-        {/* Masked grid */}
-        <div className="grid-mask" />
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* HERO — instrument console                                */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <section
+        ref={heroRef}
+        className="relative min-h-[92vh] flex items-center overflow-hidden gradient-hero pt-20 pb-24"
+      >
+        <div className="crt-grid" />
+        <div className="spotlight" />
+        <div className="crt-scanlines" />
 
-        {/* Orbiting particles */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 pointer-events-none">
-          <div className="orbit-particle absolute">
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-blue/50" />
-          </div>
-          <div className="orbit-particle-sm absolute">
-            <div className="w-1 h-1 rounded-full bg-brand-indigo/60" />
-          </div>
-        </div>
+        {/* Glow orbs */}
+        <div className="absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full orb-float pointer-events-none"
+             style={{ background: "radial-gradient(circle at 50% 50%, rgba(74,133,239,0.22), transparent 70%)", filter: "blur(50px)" }} />
+        <div className="absolute -bottom-40 -right-20 w-[520px] h-[520px] rounded-full orb-float pointer-events-none"
+             style={{ background: "radial-gradient(circle at 50% 50%, rgba(99,102,241,0.18), transparent 70%)", filter: "blur(60px)", animationDelay: "-6s" }} />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 text-center">
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white dark:bg-slate-900 border border-surface-border text-ink-secondary text-sm font-medium mb-8 reveal shadow-soft">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-50" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue" />
-            </span>
-            <span className="text-ink font-medium">{tHero("badge")}</span>
-            <span className="text-ink-tertiary kicker-mono">v2</span>
-          </div>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-extrabold text-ink leading-[0.97] tracking-tightest mb-6 reveal reveal-delay-1">
-            {tHero("title")}{" "}
-            <span className="text-gradient-blue">{tHero("highlight")}</span>
-          </h1>
-
-          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-ink-secondary leading-relaxed mb-10 reveal reveal-delay-2">
-            {tHero("subtitle")}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 reveal reveal-delay-3">
-            <HeroCTA />
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center gap-2 px-7 py-3.5 border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-medium rounded-2xl text-base transition-all duration-300 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm hover:shadow-soft"
-            >
-              {tHero("seeHow")}
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </a>
-          </div>
-
-          {/* Trust signals */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-8 reveal reveal-delay-4">
-            {[
-              { icon: "✓", text: tHero("trustEncrypted") },
-              { icon: "⚡", text: tHero("trustSpeed") },
-              { icon: "◎", text: tHero("trustAI") },
-              { icon: "✦", text: tHero("trustFree") },
-            ].map((s) => (
-              <span key={s.text} className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary">
-                <span className="text-brand-blue">{s.icon}</span>
-                {s.text}
-              </span>
-            ))}
-          </div>
-
-          {/* 3-tool entry points */}
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto reveal reveal-delay-4">
-            {[
-              {
-                href: "/symptom",
-                color: "text-emerald-600 dark:text-emerald-400",
-                border: "border-emerald-200/60 dark:border-emerald-800/40 hover:border-emerald-400/60",
-                iconBg: "bg-emerald-100 dark:bg-emerald-900/40",
-                icon: (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                    <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" />
-                  </svg>
-                ),
-                step: tHero("startHere"),
-                title: tSuite("symptomLabel"),
-                desc: tSuite("symptomDesc"),
-              },
-              {
-                href: "/app",
-                color: "text-brand-blue",
-                border: "border-brand-blue/20 dark:border-brand-blue/30 hover:border-brand-blue/50",
-                iconBg: "bg-brand-blue/10",
-                icon: (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                  </svg>
-                ),
-                step: tHero("labCard"),
-                title: tSuite("labTitle"),
-                desc: tSuite("labDesc"),
-              },
-              {
-                href: "/diagnosed",
-                color: "text-violet-600 dark:text-violet-400",
-                border: "border-violet-200/60 dark:border-violet-800/40 hover:border-violet-400/60",
-                iconBg: "bg-violet-100 dark:bg-violet-900/40",
-                icon: (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                  </svg>
-                ),
-                step: tHero("diagnosisCard"),
-                title: tSuite("diagnosisLabel"),
-                desc: tSuite("diagnosisDesc"),
-              },
-            ].map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`group flex flex-col gap-3 p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border ${item.border} transition-all duration-300 hover:shadow-lift hover:-translate-y-1`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className={`kicker-mono ${item.color} opacity-60`}>{item.step}</span>
-                  <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3.5 h-3.5 ${item.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                    <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.color} flex items-center justify-center flex-shrink-0`}>
-                    {item.icon}
-                  </div>
-                  <p className={`text-sm font-semibold ${item.color}`}>{item.title}</p>
-                </div>
-                <p className="text-xs text-ink-tertiary leading-relaxed">{item.desc}</p>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Gradient line at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 gradient-line" />
-      </section>
-
-      {/* ─── HOW IT WORKS ─────────────────────────────────────── */}
-      <section id="how-it-works" className="relative py-28 bg-white dark:bg-slate-900 overflow-hidden">
-        <div className="absolute inset-0 grid-mask opacity-60" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 reveal">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full text-brand-blue shadow-soft">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
-              <span className="kicker-mono text-brand-blue">{tHow("badge")}</span>
-            </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">{tHow("title")}</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">{tHow("subtitle")}</p>
-          </div>
-
-          {/* Steps with connecting line */}
-          <div className="relative">
-            {/* Dashed connecting line (desktop) */}
-            <div className="hidden md:block absolute top-[68px] left-[16.6%] right-[16.6%] h-px"
-              style={{ background: "repeating-linear-gradient(to right, rgba(74,133,239,0.25) 0 6px, transparent 6px 14px)" }} />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  step: "01",
-                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>,
-                  title: tHow("step1Title"),
-                  description: tHow("step1Desc"),
-                },
-                {
-                  step: "02",
-                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" /></svg>,
-                  title: tHow("step2Title"),
-                  description: tHow("step2Desc"),
-                },
-                {
-                  step: "03",
-                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>,
-                  title: tHow("step3Title"),
-                  description: tHow("step3Desc"),
-                },
-              ].map((item, i) => (
-                <div key={i} className={`reveal reveal-delay-${i + 1} group relative flex flex-col items-center text-center p-8 rounded-2xl border border-surface-border bg-white dark:bg-slate-900 hover:border-brand-blue/25 transition-all duration-300 shadow-soft hover:shadow-lift`}>
-                  {/* Step number badge — mono style */}
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-surface-border shadow-soft">
-                    <span className="step-badge text-brand-blue">{tHow("step")} {item.step}</span>
-                  </div>
-                  {/* Icon with conic spin */}
-                  <div className="conic-icon w-14 h-14 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-surface-border rounded-2xl flex items-center justify-center text-brand-blue mb-6 mt-3 group-hover:border-brand-blue/30 transition-all duration-300">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-ink mb-3 tracking-tighter3">{item.title}</h3>
-                  <p className="text-ink-secondary text-sm leading-relaxed">{item.description}</p>
-                </div>
-              ))}
+          {/* Top status bar */}
+          <div className="flex items-center justify-between mb-10 reveal">
+            <div className="flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-surface-border">
+              <span className="w-2 h-2 rounded-full live-dot" />
+              <span className="kicker-mono text-emerald-600 dark:text-emerald-400">SYSTEM ONLINE</span>
+              <span className="text-ink-tertiary">·</span>
+              <span className="kicker-mono text-ink-tertiary">v2.4 / meridix-core</span>
+            </div>
+            <div className="hidden md:flex items-center gap-4 kicker-mono text-ink-tertiary">
+              <span>LAT&nbsp;<span className="text-brand-blue">128ms</span></span>
+              <span className="text-ink-tertiary/40">|</span>
+              <span>UPTIME&nbsp;<span className="text-emerald-500">99.98%</span></span>
+              <span className="text-ink-tertiary/40">|</span>
+              <span>NODES&nbsp;<span className="text-brand-blue">07</span></span>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ─── TIER SHOWCASE ────────────────────────────────────── */}
-      <section className="relative py-28 bg-surface-raised overflow-hidden">
-        <div className="absolute inset-0 grid-mask opacity-50" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 reveal">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full text-brand-blue shadow-soft">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" /></svg>
-              <span className="kicker-mono text-brand-blue">{tTiers("badge")}</span>
-            </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">{tTiers("title")}</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">{tTiers("subtitle")}</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                tier: tTiers("simple"),
-                badge: "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800",
-                borderHover: "hover:border-emerald-300 dark:hover:border-emerald-700",
-                glowColor: "hover:shadow-emerald-500/8",
-                audience: tTiers("noBackground"),
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-500"><path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" /></svg>,
-                example: tTiers("simpleExample"),
-                highlight: tTiers("simpleDesc"),
-              },
-              {
-                tier: tTiers("medium"),
-                badge: "bg-brand-blue-light text-brand-blue-dark border border-brand-blue-mid dark:bg-brand-blue/20 dark:text-blue-300 dark:border-brand-blue/40",
-                borderHover: "hover:border-brand-blue/40",
-                glowColor: "hover:shadow-brand-blue/10",
-                audience: tTiers("educated"),
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>,
-                example: tTiers("mediumExample"),
-                highlight: tTiers("mediumDesc"),
-              },
-              {
-                tier: tTiers("expert"),
-                badge: "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800",
-                borderHover: "hover:border-purple-300 dark:hover:border-purple-700",
-                glowColor: "hover:shadow-purple-500/8",
-                audience: tTiers("clinician"),
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-purple-500"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg>,
-                example: tTiers("expertExample"),
-                highlight: tTiers("expertDesc"),
-              },
-            ].map((tier, i) => (
-              <div key={i} className={`reveal reveal-delay-${i + 1} group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tier.borderHover} hover:shadow-lift transition-all duration-300 shadow-soft`}>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="conic-icon w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-surface-border flex items-center justify-center group-hover:border-current/20 transition-all duration-300">{tier.icon}</div>
-                  <span className={`kicker-mono px-2.5 py-1 rounded-full ${tier.badge}`}>{tier.audience}</span>
-                </div>
-                <h3 className="text-xl font-bold text-ink mb-3 tracking-tighter3">{tier.tier}</h3>
-                <p className="text-sm text-ink-secondary leading-relaxed mb-5 border-l-2 border-surface-border pl-4 italic">{tier.example}</p>
-                <div className="gradient-line mb-4" />
-                <p className="kicker-mono text-ink-tertiary">{tier.highlight}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* Left column — headline */}
+            <div className="lg:col-span-7 relative">
+              <span className="kicker-mono text-brand-blue mb-4 inline-block reveal">// {tHero("badge")}</span>
 
-      {/* ─── PRODUCT SUITE ────────────────────────────────────── */}
-      <section className="relative py-28 bg-slate-50 dark:bg-slate-950 overflow-hidden">
-        <div className="absolute inset-0 grid-mask opacity-40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14 reveal">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full shadow-soft">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
-              <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
-            </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">
-              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}{tSuite("titleHighlight")}
-            </h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto">
-              {tSuite("subtitle")}
-            </p>
-          </div>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-ink leading-[0.96] tracking-tightest mb-6 reveal reveal-delay-1">
+                {tHero("title")}{" "}
+                <span className="text-gradient-sci caret-blink">{tHero("highlight")}</span>
+              </h1>
 
-          {/* Featured tool — Lab Analyzer */}
-          <div className="reveal mb-6">
-            <Link
-              href="/app"
-              className="group relative flex flex-col sm:flex-row items-start gap-8 p-8 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border border-glow hover:shadow-2xl hover:shadow-brand-blue/10 transition-all duration-500 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/3 via-transparent to-brand-indigo/3 pointer-events-none" />
-              {/* Scan line effect */}
-              <div className="absolute inset-0 scan-line pointer-events-none opacity-20" />
-              <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-lg shadow-brand-blue/30 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-brand-blue/40 transition-all duration-500">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8 text-white">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0 relative">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-brand-blue/10 to-brand-indigo/10 rounded-full text-[11px] font-bold text-brand-blue uppercase tracking-wider">
-                    <span className="w-1 h-1 rounded-full bg-brand-blue animate-pulse" />
-                    {tSuite("mostUsed")}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-extrabold text-ink mb-2">{tSuite("labTitle")}</h3>
-                <p className="text-ink-secondary leading-relaxed mb-4 max-w-xl">
-                  {tSuite("labDesc")}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-5">
-                  {tSuite("labTags").split(",").map((tag) => (
-                    <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-ink-secondary text-xs rounded-full border border-surface-border">{tag.trim()}</span>
-                  ))}
-                </div>
-                <span className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue group-hover:gap-3 transition-all duration-300">
-                  {tSuite("labCta")}
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300">
-                    <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Secondary tools */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              {
-                href: "/symptom",
-                label: tSuite("symptomLabel"),
-                title: tSuite("symptomTitle"),
-                desc: tSuite("symptomDesc"),
-                cta: tSuite("symptomCta"),
-                color: "text-emerald-600 dark:text-emerald-400",
-                hoverBorder: "hover:border-emerald-300 dark:hover:border-emerald-700",
-                hoverGlow: "hover:shadow-emerald-500/8",
-                iconBg: "bg-emerald-100 dark:bg-emerald-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-600 dark:text-emerald-400"><path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/diagnosed",
-                label: tSuite("diagnosisLabel"),
-                title: tSuite("diagnosisTitle"),
-                desc: tSuite("diagnosisDesc"),
-                cta: tSuite("diagnosisCta"),
-                color: "text-violet-600 dark:text-violet-400",
-                hoverBorder: "hover:border-violet-300 dark:hover:border-violet-700",
-                hoverGlow: "hover:shadow-violet-500/8",
-                iconBg: "bg-violet-100 dark:bg-violet-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-violet-600 dark:text-violet-400"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/imaging",
-                label: tSuite("imagingLabel"),
-                title: tSuite("imagingTitle"),
-                desc: tSuite("imagingDesc"),
-                cta: tSuite("imagingCta"),
-                color: "text-sky-600 dark:text-sky-400",
-                hoverBorder: "hover:border-sky-300 dark:hover:border-sky-700",
-                hoverGlow: "hover:shadow-sky-500/8",
-                iconBg: "bg-sky-100 dark:bg-sky-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-sky-600 dark:text-sky-400"><path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/trends",
-                label: tSuite("trendLabel"),
-                title: tSuite("trendTitle"),
-                desc: tSuite("trendDesc"),
-                cta: tSuite("trendCta"),
-                color: "text-amber-600 dark:text-amber-400",
-                hoverBorder: "hover:border-amber-300 dark:hover:border-amber-700",
-                hoverGlow: "hover:shadow-amber-500/8",
-                iconBg: "bg-amber-100 dark:bg-amber-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400"><path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/medications",
-                label: tSuite("medicationLabel"),
-                title: tSuite("medicationTitle"),
-                desc: tSuite("medicationDesc"),
-                cta: tSuite("medicationCta"),
-                color: "text-teal-600 dark:text-teal-400",
-                hoverBorder: "hover:border-teal-300 dark:hover:border-teal-700",
-                hoverGlow: "hover:shadow-teal-500/8",
-                iconBg: "bg-teal-100 dark:bg-teal-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-teal-600 dark:text-teal-400"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/visit",
-                label: tSuite("visitLabel"),
-                title: tSuite("visitTitle"),
-                desc: tSuite("visitDesc"),
-                cta: tSuite("visitCta"),
-                color: "text-brand-indigo dark:text-indigo-400",
-                hoverBorder: "hover:border-indigo-300 dark:hover:border-indigo-700",
-                hoverGlow: "hover:shadow-indigo-500/8",
-                iconBg: "bg-indigo-100 dark:bg-indigo-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-indigo dark:text-indigo-400"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/genetics",
-                label: tSuite("geneticsLabel"),
-                title: tSuite("geneticsTitle"),
-                desc: tSuite("geneticsDesc"),
-                cta: tSuite("geneticsCta"),
-                color: "text-fuchsia-600 dark:text-fuchsia-400",
-                hoverBorder: "hover:border-fuchsia-300 dark:hover:border-fuchsia-700",
-                hoverGlow: "hover:shadow-fuchsia-500/8",
-                iconBg: "bg-fuchsia-100 dark:bg-fuchsia-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400"><path fillRule="evenodd" d="M3.5 2a.5.5 0 01.5.5V4h12V2.5a.5.5 0 011 0V4a4 4 0 01-1.553 3.163C13.86 8.292 12 9.756 12 12c0 2.244 1.86 3.708 3.447 4.837A4 4 0 0117 20v-1.5a.5.5 0 01-1 0V18H4v1.5a.5.5 0 01-1 0V20a4 4 0 011.553-3.163C6.14 15.708 8 14.244 8 12c0-2.244-1.86-3.708-3.447-4.837A4 4 0 013 4V2.5a.5.5 0 01.5-.5zM6 5h8c0 .76-.25 1.5-.84 2.07L10 9.65 6.84 7.07A2.83 2.83 0 016 5zm0 11l3-2.16V11l-2.95 2.21A2.79 2.79 0 006 16zm5-2.16l3 2.16c0-.78-.4-1.5-1.05-1.95L11 11v2.84z" clipRule="evenodd" /></svg>,
-              },
-              {
-                href: "/pediatric",
-                label: tSuite("pediatricLabel"),
-                title: tSuite("pediatricTitle"),
-                desc: tSuite("pediatricDesc"),
-                cta: tSuite("pediatricCta"),
-                color: "text-rose-600 dark:text-rose-400",
-                hoverBorder: "hover:border-rose-300 dark:hover:border-rose-700",
-                hoverGlow: "hover:shadow-rose-500/8",
-                iconBg: "bg-rose-100 dark:bg-rose-900/40",
-                icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-rose-600 dark:text-rose-400"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" /></svg>,
-              },
-            ].map((tool, i) => (
-              <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${i + 1} group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tool.hoverBorder} hover:shadow-xl ${tool.hoverGlow} transition-all duration-500 overflow-hidden card-hover`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-current/5 to-transparent rounded-full -translate-y-10 translate-x-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className={`w-11 h-11 rounded-xl ${tool.iconBg} flex items-center justify-center mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-500`}>
-                  {tool.icon}
-                </div>
-                <p className={`text-[11px] font-bold ${tool.color} uppercase tracking-wider mb-1.5`}>{tool.label}</p>
-                <h3 className="text-lg font-bold text-ink mb-2">{tool.title}</h3>
-                <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">{tool.desc}</p>
-                <span className={`inline-flex items-center gap-1.5 text-sm font-bold ${tool.color} group-hover:gap-2.5 transition-all duration-300`}>
-                  {tool.cta}
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300"><path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" /></svg>
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── TRUST STRIP ────────────────────────────────────── */}
-      <section className="relative py-20 bg-white dark:bg-slate-900 border-y border-surface-border overflow-hidden">
-        <div className="absolute inset-0 grid-mask opacity-30" />
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Stats strip — bordered like the reference design */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-surface-border border border-surface-border rounded-2xl overflow-hidden mb-16 reveal shadow-soft">
-            {[
-              { number: tStats("reportsCount"), label: tStats("reportsLabel"), color: "text-brand-blue" },
-              { number: tStats("speedCount"), label: tStats("speedLabel"), color: "text-emerald-500" },
-              { number: tStats("tiersCount"), label: tStats("tiersLabel"), color: "text-violet-500" },
-              { number: tStats("toolsCount"), label: tStats("toolsLabel"), color: "text-amber-500" },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center justify-center py-8 px-4 bg-white dark:bg-slate-900">
-                <span className={`text-3xl sm:text-4xl font-extrabold tracking-tightest ${stat.color}`}>{stat.number}</span>
-                <p className="mt-1.5 text-xs text-ink-tertiary">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Gradient divider */}
-          <div className="gradient-line mb-16" />
-
-          {/* Compact trust signals */}
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 mb-16 reveal reveal-delay-1">
-            {[
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: tStats("encrypted") },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, text: tStats("resultsInSeconds") },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V15" /></svg>, text: tStats("advancedAI") },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>, text: tStats("freeToTry") },
-            ].map((item) => (
-              <div key={item.text} className="flex items-center gap-2.5 text-sm text-ink-secondary">
-                <span className="text-brand-blue">{item.icon}</span>
-                {item.text}
-              </div>
-            ))}
-          </div>
-
-          {/* Feedback cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 reveal reveal-delay-2">
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-brand-blue/20 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-500">
-              <p className="text-sm text-ink-secondary leading-relaxed mb-4">
-                &ldquo;{tTestimonials("quote1")}&rdquo;
+              <p className="max-w-xl text-lg text-ink-secondary leading-relaxed mb-8 reveal reveal-delay-2">
+                {tHero("subtitle")}
               </p>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-white">S</span>
-                </div>
-                <span className="text-xs text-ink-tertiary">{tTestimonials("author1")}</span>
-              </div>
-            </div>
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-violet-500/20 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-500">
-              <p className="text-sm text-ink-secondary leading-relaxed mb-4">
-                &ldquo;{tTestimonials("quote2")}&rdquo;
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-white">M</span>
-                </div>
-                <span className="text-xs text-ink-tertiary">{tTestimonials("author2")}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ─── FEATURES ─────────────────────────────────────────── */}
-      <section id="features" className="relative py-28 bg-white dark:bg-slate-900 overflow-hidden">
-        <div className="absolute inset-0 grid-mask opacity-40" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="reveal">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full shadow-soft">
-                <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                <span className="kicker-mono text-brand-blue">{tFeatures("badge")}</span>
-              </span>
-              <h2 className="mt-4 text-4xl font-extrabold text-ink tracking-tightest leading-tight">{tFeatures("title")}</h2>
-              <p className="mt-4 text-lg text-ink-secondary leading-relaxed">{tFeatures("subtitle")}</p>
-              <div className="mt-10 space-y-5">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 reveal reveal-delay-3">
+                <HeroCTA />
+                <a
+                  href="#how-it-works"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl text-sm font-semibold text-ink-secondary hover:text-ink border border-surface-border hover:border-brand-blue/40 bg-white/70 dark:bg-slate-900/70 backdrop-blur transition"
+                >
+                  <span className="kicker-mono">›_</span>
+                  {tHero("seeHow")}
+                </a>
+              </div>
+
+              {/* Trust signals — terminal style */}
+              <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 reveal reveal-delay-4">
                 {[
-                  { title: tFeatures("flaggedTitle"), desc: tFeatures("flaggedDesc"), color: "text-red-500", bgColor: "bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
-                  { title: tFeatures("etiologyTitle"), desc: tFeatures("etiologyDesc"), color: "text-brand-blue", bgColor: "bg-brand-blue-light dark:bg-brand-blue/10 border-brand-blue-mid dark:border-brand-blue/20", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187 1.949-1.95A3 3 0 009 8.172z" clipRule="evenodd" /></svg> },
-                  { title: tFeatures("specialistTitle"), desc: tFeatures("specialistDesc"), color: "text-violet-500", bgColor: "bg-violet-50 dark:bg-violet-900/20 border-violet-100 dark:border-violet-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" /></svg> },
-                  { title: tFeatures("privacyTitle"), desc: tFeatures("privacyDesc"), color: "text-emerald-500", bgColor: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
-                  { title: tFeatures("speedTitle"), desc: tFeatures("speedDesc"), color: "text-amber-500", bgColor: "bg-amber-50 dark:bg-amber-900/20 border-amber-100 dark:border-amber-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
-                ].map((feat, i) => (
-                  <div key={feat.title} className={`reveal reveal-delay-${Math.min(i + 1, 5)} group flex items-start gap-4`}>
-                    <div className={`w-10 h-10 rounded-xl ${feat.bgColor} border flex items-center justify-center flex-shrink-0 ${feat.color} group-hover:scale-110 transition-transform duration-300`}>{feat.icon}</div>
-                    <div>
-                      <h4 className="font-semibold text-ink">{feat.title}</h4>
-                      <p className="text-sm text-ink-secondary mt-0.5">{feat.desc}</p>
-                    </div>
+                  { k: "01", t: tHero("trustEncrypted") },
+                  { k: "02", t: tHero("trustSpeed") },
+                  { k: "03", t: tHero("trustAI") },
+                  { k: "04", t: tHero("trustFree") },
+                ].map((s) => (
+                  <div key={s.k} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/60 dark:bg-slate-900/60 border border-surface-border">
+                    <span className="kicker-mono text-brand-blue">{s.k}</span>
+                    <span className="text-xs text-ink-secondary truncate">{s.t}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="relative reveal reveal-delay-2">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/6 to-brand-indigo/4 rounded-3xl blur-2xl" />
-              <div className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-brand-blue/10 border border-surface-border overflow-hidden scan-line">
-                <div className="bg-surface-raised px-6 py-4 border-b border-surface-border flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-indigo rounded-lg flex items-center justify-center">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                      </svg>
+
+            {/* Right column — live console panel */}
+            <div className="lg:col-span-5 relative reveal reveal-delay-2">
+              <HudBrackets>
+                <div className="sci-panel scan-sweep">
+                  {/* Panel chrome */}
+                  <div className="flex items-center justify-between px-4 py-2.5 border-b panel-border">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
                     </div>
-                    <span className="text-ink font-semibold text-sm">Basic Metabolic Panel</span>
+                    <span className="kicker-mono panel-text-dim">meridix://scan/active</span>
+                    <span className="kicker-mono text-cyan-live flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-live shadow-cyan-glow animate-pulse" />
+                      LIVE
+                    </span>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 text-brand-blue text-xs font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
-                    Analyzed
-                  </span>
+
+                  {/* Console body */}
+                  <div className="p-5 space-y-4">
+                    {/* Pseudo log lines */}
+                    <div className="font-mono text-[11px] leading-relaxed space-y-1">
+                      <p className="panel-text-dim">$ meridix --analyze report.pdf</p>
+                      <p className="panel-text">› <span className="text-cyan-live">[OK]</span> parsing reference ranges</p>
+                      <p className="panel-text">› <span className="text-cyan-live">[OK]</span> cross-checking 142 biomarkers</p>
+                      <p className="panel-text">› <span className="text-emerald-400">[OK]</span> generating interpretation<span className="caret-blink" /></p>
+                    </div>
+
+                    {/* Metric rows */}
+                    <div className="space-y-2 pt-2">
+                      <div className="panel-row-warn rounded-lg px-3 py-2.5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="kicker-mono text-amber-400">FLAG</span>
+                          <span className="text-sm panel-text-bright font-semibold">Glucose</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="display-num text-amber-400 text-sm">112</span>
+                          <span className="kicker-mono panel-text-dim ml-1">mg/dL</span>
+                        </div>
+                      </div>
+                      <div className="panel-row-ok rounded-lg px-3 py-2.5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="kicker-mono text-emerald-400">OK&nbsp;&nbsp;</span>
+                          <span className="text-sm panel-text-bright font-semibold">Creatinine</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="display-num text-emerald-400 text-sm">0.9</span>
+                          <span className="kicker-mono panel-text-dim ml-1">mg/dL</span>
+                        </div>
+                      </div>
+                      <div className="panel-row rounded-lg px-3 py-2.5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="kicker-mono panel-text-dim">···&nbsp;</span>
+                          <span className="text-sm panel-text-bright font-semibold">Sodium</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="display-num panel-text-bright text-sm">134</span>
+                          <span className="kicker-mono panel-text-dim ml-1">mEq/L</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mini activity strip */}
+                    <div className="pt-2">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="kicker-mono panel-text-dim">SIGNAL</span>
+                        <span className="kicker-mono text-cyan-live">+0.4σ</span>
+                      </div>
+                      <ActivityStrip count={42} />
+                    </div>
+                  </div>
+
+                  {/* Footer chrome */}
+                  <div className="px-4 py-2 border-t panel-border flex items-center justify-between">
+                    <span className="kicker-mono panel-text-dim">elapsed&nbsp;<span className="text-cyan-live">2.31s</span></span>
+                    <div className="tracer-line w-24" />
+                    <span className="kicker-mono panel-text-dim">conf&nbsp;<span className="text-emerald-400">97%</span></span>
+                  </div>
                 </div>
-                <div className="border-b border-surface-border px-6 pt-4 bg-white dark:bg-slate-800">
-                  <div className="flex gap-1">
-                    {(["Simple","Medium","Expert"] as DemoTier[]).map((t) => (
+              </HudBrackets>
+            </div>
+          </div>
+
+          {/* Quick-entry tools row */}
+          <div className="mt-14 reveal reveal-delay-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { href: "/symptom",   color: "emerald", k: "01", step: tHero("startHere"),       title: tSuite("symptomLabel"),  desc: tSuite("symptomDesc") },
+                { href: "/app",       color: "blue",    k: "02", step: tHero("labCard"),         title: tSuite("labTitle"),      desc: tSuite("labDesc") },
+                { href: "/diagnosed", color: "violet",  k: "03", step: tHero("diagnosisCard"),   title: tSuite("diagnosisLabel"),desc: tSuite("diagnosisDesc") },
+              ].map((item) => {
+                const cMap: Record<string, { text: string; border: string; dot: string }> = {
+                  emerald: { text: "text-emerald-500", border: "hover:border-emerald-400/60", dot: "bg-emerald-400" },
+                  blue:    { text: "text-brand-blue",  border: "hover:border-brand-blue/60",  dot: "bg-brand-blue" },
+                  violet:  { text: "text-violet-500",  border: "hover:border-violet-400/60",  dot: "bg-violet-400" },
+                };
+                const c = cMap[item.color];
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`group relative p-5 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-surface-border ${c.border} transition-all duration-300 hover:-translate-y-0.5`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="kicker-mono text-ink-tertiary">{item.k} · {item.step}</span>
+                      <span className={`w-1.5 h-1.5 rounded-full ${c.dot} opacity-60 group-hover:opacity-100`} />
+                    </div>
+                    <p className={`text-sm font-semibold ${c.text} mb-1`}>{item.title}</p>
+                    <p className="text-xs text-ink-tertiary leading-relaxed line-clamp-2">{item.desc}</p>
+                    <div className="tracer-line mt-3 opacity-30 group-hover:opacity-100 transition-opacity" />
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom edge tracer */}
+        <div className="absolute bottom-0 left-0 right-0 tracer-line" />
+      </section>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* HOW IT WORKS                                             */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="py-6 bg-white dark:bg-slate-900">
+        <TerminalRule id="02.01" label={tHow("badge")} />
+      </div>
+
+      <section id="how-it-works" className="relative py-24 bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="crt-grid opacity-50" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mb-14 reveal">
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest leading-[1.05]">
+              {tHow("title")}
+            </h2>
+            <p className="mt-4 text-lg text-ink-secondary">{tHow("subtitle")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-surface-border rounded-2xl overflow-hidden border border-surface-border">
+            {[
+              { k: "01", t: tHow("step1Title"), d: tHow("step1Desc") },
+              { k: "02", t: tHow("step2Title"), d: tHow("step2Desc") },
+              { k: "03", t: tHow("step3Title"), d: tHow("step3Desc") },
+            ].map((step, i) => (
+              <div
+                key={step.k}
+                className={`reveal reveal-delay-${i + 1} group relative bg-white dark:bg-slate-900 p-8 hover:bg-surface-raised transition-colors duration-300`}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <span className="display-num text-3xl text-brand-blue/70">{step.k}</span>
+                  <div className="flex items-center gap-1">
+                    <span className="w-1 h-1 rounded-full bg-brand-blue/40" />
+                    <span className="w-1 h-1 rounded-full bg-brand-blue/40" />
+                    <span className="w-1 h-1 rounded-full bg-brand-blue group-hover:shadow-cyan-glow transition-shadow" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-ink mb-2 tracking-tighter3">{step.t}</h3>
+                <p className="text-sm text-ink-secondary leading-relaxed">{step.d}</p>
+                <div className="tracer-line mt-6 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* TIERS                                                    */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="py-6 bg-surface-raised">
+        <TerminalRule id="02.02" label={tTiers("badge")} />
+      </div>
+
+      <section className="relative py-24 bg-surface-raised overflow-hidden">
+        <div className="crt-grid opacity-40" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mb-14 reveal">
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest leading-[1.05]">
+              {tTiers("title")}
+            </h2>
+            <p className="mt-4 text-lg text-ink-secondary">{tTiers("subtitle")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              { tier: tTiers("simple"),  k: "L01", audience: tTiers("noBackground"), example: tTiers("simpleExample"), highlight: tTiers("simpleDesc"), accent: "emerald" },
+              { tier: tTiers("medium"),  k: "L02", audience: tTiers("educated"),     example: tTiers("mediumExample"), highlight: tTiers("mediumDesc"), accent: "blue" },
+              { tier: tTiers("expert"),  k: "L03", audience: tTiers("clinician"),    example: tTiers("expertExample"), highlight: tTiers("expertDesc"), accent: "violet" },
+            ].map((tier, i) => {
+              const aMap: Record<string, { text: string; dot: string; border: string }> = {
+                emerald: { text: "text-emerald-500", dot: "bg-emerald-400", border: "hover:border-emerald-300/60" },
+                blue:    { text: "text-brand-blue",  dot: "bg-brand-blue",  border: "hover:border-brand-blue/40" },
+                violet:  { text: "text-violet-500",  dot: "bg-violet-400",  border: "hover:border-violet-300/60" },
+              };
+              const a = aMap[tier.accent];
+              return (
+                <HudBrackets key={tier.k} className={`reveal reveal-delay-${i + 1}`}>
+                  <div className={`p-6 bg-white dark:bg-slate-900 border border-surface-border ${a.border} rounded-2xl transition-all duration-300 hover:shadow-lift group`}>
+                    <div className="flex items-center justify-between mb-5">
+                      <span className="kicker-mono text-ink-tertiary">{tier.k}</span>
+                      <span className={`inline-flex items-center gap-1.5 kicker-mono ${a.text}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${a.dot}`} />
+                        {tier.audience}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-ink mb-3 tracking-tighter3">{tier.tier}</h3>
+                    <p className="text-sm text-ink-secondary leading-relaxed mb-5 pl-3 border-l-2 border-surface-border italic">{tier.example}</p>
+                    <div className="tracer-line mb-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <p className="kicker-mono text-ink-tertiary">{tier.highlight}</p>
+                  </div>
+                </HudBrackets>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* PRODUCT SUITE                                            */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="py-6 bg-slate-50 dark:bg-slate-950">
+        <TerminalRule id="03.00" label={tSuite("badge")} />
+      </div>
+
+      <section className="relative py-24 bg-slate-50 dark:bg-slate-950 overflow-hidden">
+        <div className="crt-grid opacity-30" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-12 gap-6 flex-wrap reveal">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest leading-[1.05]">
+                {tSuite("title")}{" "}<span className="text-gradient-sci">{tSuite("titleHighlight")}</span>
+              </h2>
+              <p className="mt-4 text-lg text-ink-secondary">{tSuite("subtitle")}</p>
+            </div>
+            <div className="hidden md:flex items-center gap-3 kicker-mono text-ink-tertiary">
+              <span>MODULES</span>
+              <span className="display-num text-2xl text-brand-blue">09</span>
+              <div className="w-px h-8 bg-surface-border" />
+              <ActivityStrip count={20} />
+            </div>
+          </div>
+
+          {/* Featured: Lab Analyzer */}
+          <HudBrackets className="mb-6 reveal">
+            <Link
+              href="/app"
+              className="group relative flex flex-col sm:flex-row items-start gap-8 p-8 rounded-2xl bg-white dark:bg-slate-900 border border-brand-blue/25 hover:border-brand-blue/50 hover:shadow-2xl hover:shadow-brand-blue/10 transition-all duration-500 overflow-hidden scan-sweep"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/4 via-transparent to-brand-indigo/4 pointer-events-none" />
+
+              <div className="relative flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-lg shadow-brand-blue/30 group-hover:scale-105 transition-transform">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-10 h-10 text-white">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
+                </svg>
+                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-live shadow-cyan-glow animate-pulse" />
+              </div>
+
+              <div className="flex-1 min-w-0 relative">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <span className="kicker-mono text-brand-blue">// MODULE_PRIMARY</span>
+                  <span className="kicker-mono px-2 py-0.5 rounded-full bg-brand-blue/10 text-brand-blue">{tSuite("mostUsed")}</span>
+                </div>
+                <h3 className="text-2xl font-extrabold text-ink mb-2 tracking-tighter3">{tSuite("labTitle")}</h3>
+                <p className="text-ink-secondary leading-relaxed mb-4 max-w-xl">{tSuite("labDesc")}</p>
+                <div className="flex flex-wrap gap-1.5 mb-5">
+                  {tSuite("labTags").split(",").map((tag) => (
+                    <span key={tag} className="kicker-mono px-2 py-1 bg-slate-100 dark:bg-slate-800 text-ink-secondary rounded-md border border-surface-border">{tag.trim()}</span>
+                  ))}
+                </div>
+                <span className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue group-hover:gap-3 transition-all">
+                  <span className="kicker-mono">›</span>
+                  {tSuite("labCta")}
+                </span>
+              </div>
+
+              {/* Side decoration — sparkline */}
+              <div className="hidden md:block relative w-32 h-20 flex-shrink-0">
+                <Spark color="#4A85EF" w={128} h={64} />
+                <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between">
+                  <span className="kicker-mono text-ink-tertiary">24H</span>
+                  <span className="kicker-mono text-brand-blue">+12%</span>
+                </div>
+              </div>
+            </Link>
+          </HudBrackets>
+
+          {/* Secondary tool grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { href: "/symptom",     label: tSuite("symptomLabel"),     title: tSuite("symptomTitle"),     desc: tSuite("symptomDesc"),     cta: tSuite("symptomCta"),     accent: "emerald", k: "S01" },
+              { href: "/diagnosed",   label: tSuite("diagnosisLabel"),   title: tSuite("diagnosisTitle"),   desc: tSuite("diagnosisDesc"),   cta: tSuite("diagnosisCta"),   accent: "violet",  k: "D02" },
+              { href: "/imaging",     label: tSuite("imagingLabel"),     title: tSuite("imagingTitle"),     desc: tSuite("imagingDesc"),     cta: tSuite("imagingCta"),     accent: "sky",     k: "I03" },
+              { href: "/trends",      label: tSuite("trendLabel"),       title: tSuite("trendTitle"),       desc: tSuite("trendDesc"),       cta: tSuite("trendCta"),       accent: "amber",   k: "T04" },
+              { href: "/medications", label: tSuite("medicationLabel"),  title: tSuite("medicationTitle"),  desc: tSuite("medicationDesc"),  cta: tSuite("medicationCta"),  accent: "teal",    k: "M05" },
+              { href: "/visit",       label: tSuite("visitLabel"),       title: tSuite("visitTitle"),       desc: tSuite("visitDesc"),       cta: tSuite("visitCta"),       accent: "indigo",  k: "V06" },
+              { href: "/genetics",    label: tSuite("geneticsLabel"),    title: tSuite("geneticsTitle"),    desc: tSuite("geneticsDesc"),    cta: tSuite("geneticsCta"),    accent: "fuchsia", k: "G07" },
+              { href: "/pediatric",   label: tSuite("pediatricLabel"),   title: tSuite("pediatricTitle"),   desc: tSuite("pediatricDesc"),   cta: tSuite("pediatricCta"),   accent: "rose",    k: "P08" },
+            ].map((tool) => {
+              const map: Record<string, { text: string; dot: string; border: string; spark: string }> = {
+                emerald: { text: "text-emerald-500", dot: "bg-emerald-400", border: "hover:border-emerald-300/70", spark: "#10B981" },
+                violet:  { text: "text-violet-500",  dot: "bg-violet-400",  border: "hover:border-violet-300/70",  spark: "#8B5CF6" },
+                sky:     { text: "text-sky-500",     dot: "bg-sky-400",     border: "hover:border-sky-300/70",     spark: "#0EA5E9" },
+                amber:   { text: "text-amber-500",   dot: "bg-amber-400",   border: "hover:border-amber-300/70",   spark: "#F59E0B" },
+                teal:    { text: "text-teal-500",    dot: "bg-teal-400",    border: "hover:border-teal-300/70",    spark: "#14B8A6" },
+                indigo:  { text: "text-brand-indigo",dot: "bg-indigo-400",  border: "hover:border-indigo-300/70",  spark: "#6366F1" },
+                fuchsia: { text: "text-fuchsia-500", dot: "bg-fuchsia-400", border: "hover:border-fuchsia-300/70", spark: "#D946EF" },
+                rose:    { text: "text-rose-500",    dot: "bg-rose-400",    border: "hover:border-rose-300/70",    spark: "#F43F5E" },
+              };
+              const c = map[tool.accent];
+              return (
+                <Link
+                  key={tool.href}
+                  href={tool.href}
+                  className={`group relative flex flex-col p-5 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${c.border} hover:shadow-xl transition-all duration-300 overflow-hidden`}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="kicker-mono text-ink-tertiary">{tool.k}</span>
+                    <span className={`flex items-center gap-1 kicker-mono ${c.text}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${c.dot} group-hover:shadow-cyan-glow`} />
+                      {tool.label}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-bold text-ink mb-1.5 tracking-tighter3 glitch-on-hover">{tool.title}</h3>
+                  <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4 line-clamp-3">{tool.desc}</p>
+                  <div className="flex items-end justify-between gap-3">
+                    <span className={`inline-flex items-center gap-1.5 text-sm font-bold ${c.text} group-hover:gap-2.5 transition-all`}>
+                      <span className="kicker-mono">›</span>
+                      {tool.cta}
+                    </span>
+                    <div className="w-16 h-6 opacity-50 group-hover:opacity-100 transition-opacity">
+                      <Spark color={c.spark} w={64} h={24} />
+                    </div>
+                  </div>
+                  <div className="tracer-line absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* TRUST / STATS                                            */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="py-6 bg-white dark:bg-slate-900">
+        <TerminalRule id="04.00" label="// telemetry feed" />
+      </div>
+
+      <section className="relative py-20 bg-white dark:bg-slate-900 border-y border-surface-border overflow-hidden">
+        <div className="crt-grid opacity-20" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Big stat readouts */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-surface-border rounded-2xl overflow-hidden border border-surface-border mb-14 reveal">
+            {[
+              { v: tStats("reportsCount"), l: tStats("reportsLabel"), c: "text-brand-blue",   spark: "#4A85EF" },
+              { v: tStats("speedCount"),   l: tStats("speedLabel"),   c: "text-emerald-500",  spark: "#10B981" },
+              { v: tStats("tiersCount"),   l: tStats("tiersLabel"),   c: "text-violet-500",   spark: "#8B5CF6" },
+              { v: tStats("toolsCount"),   l: tStats("toolsLabel"),   c: "text-amber-500",    spark: "#F59E0B" },
+            ].map((s) => (
+              <div key={s.l} className="relative bg-white dark:bg-slate-900 px-5 py-8 flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full live-dot" />
+                  <span className="kicker-mono text-ink-tertiary">LIVE</span>
+                </div>
+                <div className={`display-num text-4xl sm:text-5xl ${s.c} num-flicker`}>{s.v}</div>
+                <p className="text-xs text-ink-tertiary">{s.l}</p>
+                <div className="absolute right-3 top-3 w-16 h-8 opacity-60">
+                  <Spark color={s.spark} w={64} h={32} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Marquee strip — trust signals */}
+          <div className="mb-14 reveal reveal-delay-1 relative overflow-hidden border-y border-surface-border">
+            <div className="flex w-[200%] marquee-track">
+              {Array.from({ length: 2 }).map((_, dup) => (
+                <div key={dup} className="flex items-center gap-10 px-4 py-5 w-1/2 shrink-0">
+                  {[tStats("encrypted"), tStats("resultsInSeconds"), tStats("advancedAI"), tStats("freeToTry"), tStats("encrypted"), tStats("resultsInSeconds"), tStats("advancedAI"), tStats("freeToTry")].map((t, i) => (
+                    <span key={i} className="kicker-mono text-ink-tertiary inline-flex items-center gap-3 whitespace-nowrap">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" />
+                      {t}
+                      <span className="text-surface-border">/</span>
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Testimonials */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 reveal reveal-delay-2">
+            {[
+              { q: tTestimonials("quote1"), a: tTestimonials("author1"), accent: "from-brand-blue to-brand-indigo", letter: "S", id: "USR_001" },
+              { q: tTestimonials("quote2"), a: tTestimonials("author2"), accent: "from-violet-500 to-purple-600",   letter: "M", id: "USR_002" },
+            ].map((t) => (
+              <HudBrackets key={t.id}>
+                <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-brand-blue/30 transition-all">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="kicker-mono text-ink-tertiary">{t.id}</span>
+                    <span className="kicker-mono text-emerald-500 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      VERIFIED
+                    </span>
+                  </div>
+                  <p className="text-sm text-ink-secondary leading-relaxed mb-5">&ldquo;{t.q}&rdquo;</p>
+                  <div className="flex items-center gap-2 pt-4 border-t border-surface-border">
+                    <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${t.accent} flex items-center justify-center`}>
+                      <span className="text-[10px] font-bold text-white">{t.letter}</span>
+                    </div>
+                    <span className="text-xs text-ink-tertiary">{t.a}</span>
+                  </div>
+                </div>
+              </HudBrackets>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* FEATURES + LIVE DEMO                                     */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <div className="py-6 bg-white dark:bg-slate-900">
+        <TerminalRule id="05.00" label={tFeatures("badge")} />
+      </div>
+
+      <section id="features" className="relative py-24 bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="crt-grid opacity-30" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+            {/* Left — feature list */}
+            <div className="reveal">
+              <h2 className="text-4xl font-extrabold text-ink tracking-tightest leading-tight">{tFeatures("title")}</h2>
+              <p className="mt-4 text-lg text-ink-secondary leading-relaxed">{tFeatures("subtitle")}</p>
+              <div className="mt-10 space-y-4">
+                {[
+                  { k: "F01", t: tFeatures("flaggedTitle"),    d: tFeatures("flaggedDesc"),    c: "red" },
+                  { k: "F02", t: tFeatures("etiologyTitle"),   d: tFeatures("etiologyDesc"),   c: "blue" },
+                  { k: "F03", t: tFeatures("specialistTitle"), d: tFeatures("specialistDesc"), c: "violet" },
+                  { k: "F04", t: tFeatures("privacyTitle"),    d: tFeatures("privacyDesc"),    c: "emerald" },
+                  { k: "F05", t: tFeatures("speedTitle"),      d: tFeatures("speedDesc"),      c: "amber" },
+                ].map((feat, i) => {
+                  const cMap: Record<string, string> = {
+                    red:     "text-red-500",
+                    blue:    "text-brand-blue",
+                    violet:  "text-violet-500",
+                    emerald: "text-emerald-500",
+                    amber:   "text-amber-500",
+                  };
+                  return (
+                    <div key={feat.k} className={`reveal reveal-delay-${Math.min(i + 1, 5)} group flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-surface-border hover:bg-surface-raised transition`}>
+                      <div className="flex flex-col items-center gap-1 flex-shrink-0 pt-0.5">
+                        <span className={`kicker-mono ${cMap[feat.c]}`}>{feat.k}</span>
+                        <span className={`w-1.5 h-1.5 rounded-full ${cMap[feat.c]} bg-current opacity-70 group-hover:opacity-100`} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-ink tracking-tighter3">{feat.t}</h4>
+                        <p className="text-sm text-ink-secondary mt-1 leading-relaxed">{feat.d}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right — interactive tier demo (dark sci-panel) */}
+            <div className="relative reveal reveal-delay-2">
+              <HudBrackets>
+                <div className="sci-panel scan-sweep">
+                  <div className="px-5 py-3 border-b panel-border flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center">
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                          <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold panel-text-bright">Basic Metabolic Panel</p>
+                        <p className="kicker-mono panel-text-dim">scan_id://0x4A85EF · 09:42 UTC</p>
+                      </div>
+                    </div>
+                    <span className="kicker-mono text-cyan-live inline-flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-live shadow-cyan-glow animate-pulse" />
+                      ANALYZED
+                    </span>
+                  </div>
+
+                  {/* Tier tabs */}
+                  <div className="px-5 pt-4 flex gap-1">
+                    {(["Simple", "Medium", "Expert"] as DemoTier[]).map((t) => (
                       <button
                         key={t}
                         onClick={() => setDemoTier(t)}
-                        className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors duration-200 ${t === demoTier ? "bg-brand-blue-light text-brand-blue-dark border-b-2 border-brand-blue" : "text-ink-tertiary hover:text-ink-secondary"}`}
-                      >{t === "Simple" ? tTiers("simple") : t === "Medium" ? tTiers("medium") : tTiers("expert")}</button>
+                        className={`px-4 py-2 rounded-t-lg text-xs font-semibold transition-colors duration-200 kicker-mono ${
+                          t === demoTier
+                            ? "bg-brand-blue/15 text-cyan-live border-b-2 border-cyan-live"
+                            : "panel-text-dim hover:text-white"
+                        }`}
+                      >
+                        {t === "Simple" ? `L01·${tTiers("simple")}` : t === "Medium" ? `L02·${tTiers("medium")}` : `L03·${tTiers("expert")}`}
+                      </button>
                     ))}
                   </div>
-                </div>
-                <div className="p-6 space-y-3">
-                  <p className="text-sm text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].summary}</p>
-                  {/* Biomarker rows — left-border marker style */}
-                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400 rounded-l-xl" />
-                    <div className="flex items-center gap-2 pl-2"><span className="text-sm font-semibold text-ink">Glucose</span></div>
-                    <div className="text-right">
-                      <span className="font-mono-data text-sm font-semibold text-amber-600">112</span>
-                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
-                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 70–99</p>
+
+                  <div className="p-5 space-y-3">
+                    <p className="text-sm panel-text leading-relaxed">{DEMO_TIERS[demoTier].summary}</p>
+
+                    <div className="panel-row-warn rounded-lg px-3 py-2.5 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="kicker-mono text-amber-400">FLAG</span>
+                        <span className="text-sm panel-text-bright font-semibold">Glucose</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="display-num text-amber-400 text-sm">112</span>
+                        <span className="kicker-mono panel-text-dim ml-1">mg/dL</span>
+                        <p className="kicker-mono panel-text-dim">ref 70–99</p>
+                      </div>
+                    </div>
+                    <div className="panel-row-ok rounded-lg px-3 py-2.5 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="kicker-mono text-emerald-400">OK&nbsp;&nbsp;</span>
+                        <span className="text-sm panel-text-bright font-semibold">Creatinine</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="display-num text-emerald-400 text-sm">0.9</span>
+                        <span className="kicker-mono panel-text-dim ml-1">mg/dL</span>
+                        <p className="kicker-mono panel-text-dim">ref 0.7–1.2</p>
+                      </div>
+                    </div>
+
+                    <div className="rounded-lg px-3 py-3 border border-cyan-live/30 bg-cyan-live/5">
+                      <p className="kicker-mono text-cyan-live mb-1.5">// {DEMO_TIERS[demoTier].specialist.label}</p>
+                      <p className="text-xs panel-text leading-relaxed">{DEMO_TIERS[demoTier].specialist.body}</p>
                     </div>
                   </div>
-                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400 rounded-l-xl" />
-                    <div className="flex items-center gap-2 pl-2"><span className="text-sm font-semibold text-ink">Creatinine</span></div>
-                    <div className="text-right">
-                      <span className="font-mono-data text-sm font-semibold text-emerald-600">0.9</span>
-                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
-                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 0.7–1.2</p>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-brand-blue/5 to-brand-indigo/5 border border-brand-blue/20">
-                    <p className="kicker-mono text-brand-blue-dark mb-1">{DEMO_TIERS[demoTier].specialist.label}</p>
-                    <p className="text-xs text-ink-secondary">{DEMO_TIERS[demoTier].specialist.body}</p>
+
+                  <div className="px-5 py-2.5 border-t panel-border flex items-center justify-between">
+                    <span className="kicker-mono panel-text-dim">conf <span className="text-emerald-400">97%</span></span>
+                    <div className="tracer-line w-24" />
+                    <span className="kicker-mono panel-text-dim">elapsed <span className="text-cyan-live">2.31s</span></span>
                   </div>
                 </div>
+              </HudBrackets>
+
+              {/* Floating live ticker beside panel */}
+              <div className="absolute -top-4 -right-4 hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-surface-border shadow-lift">
+                <span className="kicker-mono text-ink-tertiary">REPORTS·24h</span>
+                <LiveTick base={1247} jitter={3} className="text-brand-blue text-sm" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── DISCLAIMER BAND ─────────────────────────────────── */}
-      <section className="py-5 bg-amber-50 dark:bg-amber-900/20 border-y border-amber-100 dark:border-amber-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3 text-center">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-500 flex-shrink-0">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-          </svg>
-          <p className="text-sm text-amber-800 dark:text-amber-300">
-            {tDisclaimer("short")}
-          </p>
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* DISCLAIMER BAND                                          */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <section className="py-4 bg-amber-50 dark:bg-amber-900/20 border-y border-amber-200/50 dark:border-amber-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3">
+          <span className="kicker-mono text-amber-700 dark:text-amber-400">// NOTICE</span>
+          <p className="text-sm text-amber-800 dark:text-amber-300">{tDisclaimer("short")}</p>
         </div>
       </section>
 
-      {/* ─── FINAL CTA ────────────────────────────────────────── */}
-      <section className="relative py-16 px-4 bg-white dark:bg-slate-950 overflow-hidden">
-        <div className="max-w-5xl mx-auto reveal">
-          {/* Dark gradient card with internal grid */}
-          <div
-            className="relative overflow-hidden rounded-3xl px-8 py-20 text-center dark-grid-overlay"
-            style={{
-              background: "radial-gradient(60% 80% at 50% 0%, rgba(99,102,241,0.4) 0, transparent 70%), radial-gradient(60% 80% at 50% 100%, rgba(74,133,239,0.4) 0, transparent 70%), linear-gradient(180deg, #16195a, #0e1040)",
-              border: "1px solid rgba(99,102,241,0.25)"
-            }}
-          >
-            <div className="relative z-10">
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tightest mb-5 leading-[1.02]">
-                {tCTA("title")}
-              </h2>
-              <p className="text-lg mb-10" style={{ color: "rgba(200,205,255,0.75)" }}>
-                {tCTA("subtitle")}
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Link
-                  href="/app"
-                  className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-2xl text-base font-semibold transition-all duration-300 hover:-translate-y-px"
-                  style={{ background: "linear-gradient(180deg, #fff, #e8eeff)", color: "#16195a", boxShadow: "0 10px 30px -10px rgba(255,255,255,0.3)" }}
-                >
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                  </svg>
-                  {tCTA("button")}
-                </Link>
-                <a
-                  href="#how-it-works"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-base font-medium transition-all duration-200"
-                  style={{ background: "transparent", color: "rgba(200,205,255,0.8)", border: "1px solid rgba(255,255,255,0.18)" }}
-                >
-                  {tCTA("seeHow")}
-                </a>
+      {/* ════════════════════════════════════════════════════════ */}
+      {/* FINAL CTA — dark holographic                             */}
+      {/* ════════════════════════════════════════════════════════ */}
+      <section className="relative py-20 px-4 bg-white dark:bg-slate-950 overflow-hidden">
+        <div className="max-w-6xl mx-auto reveal">
+          <HudBrackets>
+            <div
+              className="relative overflow-hidden rounded-3xl px-8 sm:px-12 py-20 text-center"
+              style={{
+                background:
+                  "radial-gradient(60% 80% at 50% 0%, rgba(99,102,241,0.45) 0, transparent 70%), radial-gradient(60% 80% at 50% 100%, rgba(34,211,238,0.25) 0, transparent 70%), linear-gradient(180deg, #0a0e26, #050818)",
+                border: "1px solid rgba(99,102,241,0.3)",
+              }}
+            >
+              {/* Internal grid */}
+              <div
+                className="absolute inset-0 opacity-40 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, rgba(74,133,239,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(74,133,239,0.08) 1px, transparent 1px)",
+                  backgroundSize: "40px 40px",
+                  WebkitMaskImage: "radial-gradient(70% 70% at 50% 50%, #000, transparent 80%)",
+                  maskImage: "radial-gradient(70% 70% at 50% 50%, #000, transparent 80%)",
+                }}
+              />
+              <div className="noise-overlay" />
+
+              {/* Status row */}
+              <div className="relative z-10 flex items-center justify-center gap-3 mb-8">
+                <span className="w-2 h-2 rounded-full live-dot" />
+                <span className="kicker-mono" style={{ color: "rgba(34,211,238,0.85)" }}>READY · awaiting input</span>
+              </div>
+
+              <div className="relative z-10">
+                <h2 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tightest mb-5 leading-[1.02]">
+                  {tCTA("title")}
+                </h2>
+                <p className="text-lg mb-10 max-w-xl mx-auto" style={{ color: "rgba(200,205,255,0.7)" }}>
+                  {tCTA("subtitle")}
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <Link
+                    href="/app"
+                    className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-base font-bold transition-all duration-300 hover:-translate-y-0.5"
+                    style={{
+                      background: "linear-gradient(180deg, #fff, #d8e0ff)",
+                      color: "#0a0e26",
+                      boxShadow: "0 10px 40px -10px rgba(74,133,239,0.5), inset 0 1px 0 rgba(255,255,255,0.8)",
+                    }}
+                  >
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                      <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                    {tCTA("button")}
+                    <span className="kicker-mono opacity-50 group-hover:opacity-100 transition">›</span>
+                  </Link>
+                  <a
+                    href="#how-it-works"
+                    className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl text-sm font-semibold transition"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      color: "rgba(200,205,255,0.85)",
+                      border: "1px solid rgba(255,255,255,0.16)",
+                    }}
+                  >
+                    <span className="kicker-mono">›_</span>
+                    {tCTA("seeHow")}
+                  </a>
+                </div>
+
+                {/* Bottom tracer + readout */}
+                <div className="mt-12 flex items-center gap-4 justify-center kicker-mono" style={{ color: "rgba(180,190,235,0.55)" }}>
+                  <span>SECURE_CHANNEL</span>
+                  <div className="w-20 tracer-line" />
+                  <span>TLS·1.3</span>
+                  <div className="w-20 tracer-line" />
+                  <span>HIPAA_READY</span>
+                </div>
               </div>
             </div>
-          </div>
+          </HudBrackets>
         </div>
       </section>
     </div>
