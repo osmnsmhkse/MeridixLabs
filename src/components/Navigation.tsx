@@ -169,7 +169,7 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className={`relative flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-colors group ${
+        className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
           isToolActive ? "text-brand-blue" : "text-ink-secondary hover:text-ink"
         }`}
       >
@@ -177,50 +177,36 @@ function ToolsDropdown({ pathname }: { pathname: string }) {
         <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`}>
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
-        <span className={`absolute left-3 right-3 -bottom-0.5 h-px bg-gradient-to-r from-transparent via-brand-blue to-transparent transition-opacity ${open || isToolActive ? "opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
       </button>
 
       {open && (
-        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[360px] bg-white dark:bg-slate-900 border border-surface-border rounded-2xl shadow-xl shadow-ink/15 overflow-hidden z-50">
-          {/* Terminal header */}
-          <div className="px-4 py-2.5 border-b border-surface-border bg-surface-raised flex items-center justify-between">
-            <span className="kicker-mono text-ink-tertiary">meridix://modules</span>
-            <span className="kicker-mono text-emerald-500 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              {TOOLS.length} ACTIVE
-            </span>
-          </div>
-
-          <div className="p-2 max-h-[60vh] overflow-y-auto">
-            {TOOLS.map((tool, i) => (
+        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-80 bg-white dark:bg-slate-900 border border-surface-border rounded-2xl shadow-xl shadow-ink/10 overflow-hidden z-50">
+          <div className="p-2">
+            {TOOLS.map((tool) => (
               <Link
                 key={tool.href}
                 href={tool.href}
                 onClick={() => setOpen(false)}
-                className={`flex items-start gap-3 px-3 py-2.5 rounded-xl transition-all group relative ${
+                className={`flex items-start gap-3 px-3 py-3 rounded-xl transition-colors group ${
                   pathname === tool.href
                     ? "bg-surface-raised"
                     : "hover:bg-surface-raised"
                 }`}
               >
-                <span className="kicker-mono text-ink-tertiary mt-1.5 w-7 flex-shrink-0">{String(i + 1).padStart(2, "0")}</span>
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${tool.bg} ${tool.color}`}>
                   {tool.icon}
                 </div>
-                <div className="flex-1 min-w-0">
+                <div>
                   <p className={`text-sm font-semibold ${pathname === tool.href ? tool.color : "text-ink"}`}>
                     {tool.label}
                   </p>
-                  <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed line-clamp-1">{tool.description}</p>
+                  <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{tool.description}</p>
                 </div>
-                <span className={`kicker-mono ${tool.color} opacity-0 group-hover:opacity-100 transition-opacity mt-1.5 flex-shrink-0`}>›</span>
               </Link>
             ))}
           </div>
-
-          <div className="px-4 py-2.5 border-t border-surface-border bg-surface-raised flex items-center justify-between">
-            <span className="kicker-mono text-ink-tertiary">{t("moreToolsSoon")}</span>
-            <span className="kicker-mono text-brand-blue">v2.4</span>
+          <div className="px-4 py-3 border-t border-surface-border bg-surface-raised">
+            <p className="text-[11px] text-ink-tertiary text-center">{t("moreToolsSoon")}</p>
           </div>
         </div>
       )}
@@ -257,36 +243,31 @@ export default function Navigation() {
     {/* ── Floating pill nav ─────────────────────────────── */}
     <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
       <div
-        className={`pointer-events-auto flex items-center gap-2 pl-3 pr-2 py-2 rounded-full transition-all duration-300 border relative overflow-hidden ${
+        className={`pointer-events-auto flex items-center gap-2 pl-4 pr-2 py-2 rounded-full transition-all duration-300 border ${
           scrolled
             ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-lift border-surface-border"
-            : "bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-surface-border shadow-soft"
+            : "bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-surface-border shadow-soft"
         }`}
-        style={{ width: "min(1180px, calc(100% - 0px))" }}
+        style={{ width: "min(1100px, calc(100% - 0px))" }}
       >
-          {/* Logo + live dot lockup */}
-          <Link href="/" className="flex items-center flex-shrink-0 mr-2 gap-2 group">
-            <span className="relative flex items-center">
-              <span className="absolute -left-0.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full live-dot" />
-              <span className="pl-3">
-                <Image
-                  src="/meridix-logo-light.svg"
-                  alt="Meridix Labs"
-                  width={130}
-                  height={34}
-                  priority
-                  className="block dark:hidden"
-                />
-                <Image
-                  src="/meridix-logo-dark.svg"
-                  alt="Meridix Labs"
-                  width={130}
-                  height={34}
-                  priority
-                  className="hidden dark:block"
-                />
-              </span>
-            </span>
+          {/* Logo */}
+          <Link href="/" className="flex items-center flex-shrink-0 mr-2">
+            <Image
+              src="/meridix-logo-light.svg"
+              alt="Meridix Labs"
+              width={136}
+              height={36}
+              priority
+              className="block dark:hidden"
+            />
+            <Image
+              src="/meridix-logo-dark.svg"
+              alt="Meridix Labs"
+              width={136}
+              height={36}
+              priority
+              className="hidden dark:block"
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -296,14 +277,13 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap group ${
+                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   isActive(link.href)
-                    ? "text-brand-blue"
-                    : "text-ink-secondary hover:text-ink"
+                    ? "text-brand-blue bg-brand-blue/8"
+                    : "text-ink-secondary hover:text-ink hover:bg-surface-raised"
                 }`}
               >
                 {link.label}
-                <span className={`absolute left-3 right-3 -bottom-0.5 h-px bg-gradient-to-r from-transparent via-brand-blue to-transparent transition-opacity ${isActive(link.href) ? "opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
               </Link>
             ))}
           </nav>
@@ -355,14 +335,12 @@ export default function Navigation() {
 
             <Link
               href="/app"
-              className="group relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-full text-sm transition-all duration-200 shadow-sm hover:shadow-glow-blue hover:-translate-y-px overflow-hidden"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-full text-sm transition-all duration-200 shadow-sm hover:shadow-glow-blue hover:-translate-y-px"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 relative">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                 <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
               </svg>
-              <span className="relative">{t("analyzeResults")}</span>
-              <span className="kicker-mono opacity-60 relative">›</span>
+              {t("analyzeResults")}
             </Link>
           </div>
 
