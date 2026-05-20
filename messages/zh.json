@@ -264,7 +264,22 @@
     "symptomChatQ3": "我什么时候应该去看医生？",
     "symptomChatQ4": "这可能与压力或生活方式有关吗？",
     "mobileTabResults": "结果",
-    "mobileTabAsk": "咨询AI"
+    "mobileTabAsk": "咨询AI",
+    "photoLabel": "上传照片",
+    "photoOptional": "（可选）",
+    "photoDropzone": "点击或拖入照片",
+    "photoFormats": "JPG、PNG 或 WEBP — 最大 5MB",
+    "photoAttached": "照片已附加",
+    "photoReplace": "替换",
+    "photoRemove": "移除",
+    "photoUploadAria": "上传患处照片",
+    "photoRemoveAria": "移除照片",
+    "photoPreviewAlt": "上传预览",
+    "photoFallbackQuery": "照片分析",
+    "photoAnalyzed": "分析已包含您上传的照片",
+    "photoErrorType": "请使用 JPG、PNG 或 WEBP 格式的图片。",
+    "photoErrorSize": "图片过大，请使用小于 5MB 的图片。",
+    "photoErrorProcess": "无法处理此图片，请尝试其他图片。"
   },
   "Diagnosed": {
     "badge": "诊断解释器",

@@ -264,7 +264,22 @@
     "symptomChatQ3": "Ne zaman gerçekten bir doktora görünmeliyim?",
     "symptomChatQ4": "Bu stres veya yaşam tarzıyla ilgili olabilir mi?",
     "mobileTabResults": "Sonuçlar",
-    "mobileTabAsk": "AI'ya Sor"
+    "mobileTabAsk": "AI'ya Sor",
+    "photoLabel": "Fotoğraf yükle",
+    "photoOptional": "(isteğe bağlı)",
+    "photoDropzone": "Bir fotoğraf eklemek için dokunun veya sürükleyip bırakın",
+    "photoFormats": "JPG, PNG veya WEBP — en fazla 5 MB",
+    "photoAttached": "Fotoğraf eklendi",
+    "photoReplace": "Değiştir",
+    "photoRemove": "Kaldır",
+    "photoUploadAria": "Etkilenen bölgenin fotoğrafını yükleyin",
+    "photoRemoveAria": "Fotoğrafı kaldır",
+    "photoPreviewAlt": "Yüklenen önizleme",
+    "photoFallbackQuery": "Fotoğraf analizi",
+    "photoAnalyzed": "Analize yüklediğiniz fotoğraf dâhil",
+    "photoErrorType": "Lütfen JPG, PNG veya WEBP formatında bir görüntü kullanın.",
+    "photoErrorSize": "Görüntü çok büyük. Lütfen 5 MB'ın altında bir görüntü kullanın.",
+    "photoErrorProcess": "Bu görüntü işlenemedi. Lütfen başka bir tane deneyin."
   },
   "Diagnosed": {
     "badge": "Tanı Açıklayıcı",

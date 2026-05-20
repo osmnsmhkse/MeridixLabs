@@ -270,18 +270,18 @@ export default function SymptomPage() {
     if (!file) return;
     setImageError("");
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setImageError("Please use a JPG, PNG, or WEBP image.");
+      setImageError(t("photoErrorType"));
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setImageError("Image is too large. Please use one under 5MB.");
+      setImageError(t("photoErrorSize"));
       return;
     }
     try {
       const compressed = await compressImage(file);
       setImage(compressed);
     } catch {
-      setImageError("Could not process this image. Please try another.");
+      setImageError(t("photoErrorProcess"));
     }
   }
 
@@ -297,7 +297,7 @@ export default function SymptomPage() {
     setStage("loading");
     setResult(null);
     setErrorMsg("");
-    setQueriedSymptom(sym || "Photo analysis");
+    setQueriedSymptom(sym || t("photoFallbackQuery"));
 
     try {
       const res = await fetch("/api/symptom", {
@@ -393,7 +393,7 @@ export default function SymptomPage() {
                 <path fillRule="evenodd" d="M1 8a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 018.07 3h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0016.07 6H17a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8zm13.5 3a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-1.5 0a3 3 0 11-6 0 3 3 0 016 0z" clipRule="evenodd" />
               </svg>
               <label className="text-sm font-semibold text-ink">
-                Upload a photo <span className="font-normal text-ink-tertiary">(optional)</span>
+                {t("photoLabel")} <span className="font-normal text-ink-tertiary">{t("photoOptional")}</span>
               </label>
             </div>
 
@@ -404,7 +404,7 @@ export default function SymptomPage() {
               capture="environment"
               onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
               className="hidden"
-              aria-label="Upload a photo of the affected area"
+              aria-label={t("photoUploadAria")}
             />
 
             {!image ? (
@@ -437,9 +437,9 @@ export default function SymptomPage() {
                     <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
                   </svg>
                   <p className="text-sm font-medium text-ink-secondary">
-                    Tap to add a photo, or drag &amp; drop
+                    {t("photoDropzone")}
                   </p>
-                  <p className="text-xs text-ink-tertiary">JPG, PNG, or WEBP — max 5MB</p>
+                  <p className="text-xs text-ink-tertiary">{t("photoFormats")}</p>
                 </div>
               </div>
             ) : (
@@ -447,12 +447,12 @@ export default function SymptomPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={image.previewUrl}
-                  alt="Uploaded preview"
+                  alt={t("photoPreviewAlt")}
                   className="w-14 h-14 rounded-lg object-cover flex-shrink-0 border border-surface-border"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-ink truncate">{image.filename}</p>
-                  <p className="text-xs text-ink-tertiary mt-0.5">Photo attached</p>
+                  <p className="text-xs text-ink-tertiary mt-0.5">{t("photoAttached")}</p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <button
@@ -460,15 +460,15 @@ export default function SymptomPage() {
                     onClick={() => fileInputRef.current?.click()}
                     className="text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline"
                   >
-                    Replace
+                    {t("photoReplace")}
                   </button>
                   <button
                     type="button"
                     onClick={removeImage}
                     className="text-xs font-medium text-red-600 dark:text-red-400 hover:underline"
-                    aria-label="Remove photo"
+                    aria-label={t("photoRemoveAria")}
                   >
-                    Remove
+                    {t("photoRemove")}
                   </button>
                 </div>
               </div>
@@ -678,7 +678,7 @@ export default function SymptomPage() {
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
                   <path fillRule="evenodd" d="M1 8a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 018.07 3h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0016.07 6H17a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8zm13.5 3a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-1.5 0a3 3 0 11-6 0 3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Analysis includes your uploaded photo
+                {t("photoAnalyzed")}
               </span>
             )}
           </div>

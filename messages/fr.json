@@ -264,7 +264,22 @@
     "symptomChatQ3": "Quand devrais-je vraiment consulter un médecin ?",
     "symptomChatQ4": "Cela pourrait-il être lié au stress ou au mode de vie ?",
     "mobileTabResults": "Résultats",
-    "mobileTabAsk": "Demander à l'IA"
+    "mobileTabAsk": "Demander à l'IA",
+    "photoLabel": "Ajouter une photo",
+    "photoOptional": "(facultatif)",
+    "photoDropzone": "Appuyez pour ajouter une photo, ou glissez-déposez",
+    "photoFormats": "JPG, PNG ou WEBP — 5 Mo max",
+    "photoAttached": "Photo ajoutée",
+    "photoReplace": "Remplacer",
+    "photoRemove": "Retirer",
+    "photoUploadAria": "Téléverser une photo de la zone concernée",
+    "photoRemoveAria": "Retirer la photo",
+    "photoPreviewAlt": "Aperçu téléversé",
+    "photoFallbackQuery": "Analyse photo",
+    "photoAnalyzed": "L'analyse inclut votre photo",
+    "photoErrorType": "Utilisez une image JPG, PNG ou WEBP.",
+    "photoErrorSize": "Image trop volumineuse. Utilisez un fichier de moins de 5 Mo.",
+    "photoErrorProcess": "Impossible de traiter cette image. Essayez-en une autre."
   },
   "Diagnosed": {
     "badge": "Explicateur de diagnostic",

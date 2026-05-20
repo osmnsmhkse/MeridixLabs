@@ -264,7 +264,22 @@
     "symptomChatQ3": "متى يجب أن أرى طبيباً فعلاً؟",
     "symptomChatQ4": "هل يمكن أن يكون هذا مرتبطاً بالتوتر أو نمط الحياة؟",
     "mobileTabResults": "النتائج",
-    "mobileTabAsk": "اسأل الذكاء"
+    "mobileTabAsk": "اسأل الذكاء",
+    "photoLabel": "أضف صورة",
+    "photoOptional": "(اختياري)",
+    "photoDropzone": "اضغط لإضافة صورة، أو اسحبها وأفلتها",
+    "photoFormats": "JPG أو PNG أو WEBP — بحد أقصى 5 ميغابايت",
+    "photoAttached": "تم إرفاق الصورة",
+    "photoReplace": "استبدال",
+    "photoRemove": "إزالة",
+    "photoUploadAria": "أضف صورة للمنطقة المصابة",
+    "photoRemoveAria": "إزالة الصورة",
+    "photoPreviewAlt": "معاينة الصورة المُحمَّلة",
+    "photoFallbackQuery": "تحليل الصورة",
+    "photoAnalyzed": "يتضمن التحليل صورتك المُحمَّلة",
+    "photoErrorType": "يرجى استخدام صورة بصيغة JPG أو PNG أو WEBP.",
+    "photoErrorSize": "الصورة كبيرة جدًا. يرجى استخدام صورة أقل من 5 ميغابايت.",
+    "photoErrorProcess": "تعذّر معالجة هذه الصورة. حاول صورة أخرى."
   },
   "Diagnosed": {
     "badge": "شارح التشخيص",

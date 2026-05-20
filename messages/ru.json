@@ -264,7 +264,22 @@
     "symptomChatQ3": "Когда мне действительно стоит обратиться к врачу?",
     "symptomChatQ4": "Может ли это быть связано со стрессом или образом жизни?",
     "mobileTabResults": "Результаты",
-    "mobileTabAsk": "Спросить ИИ"
+    "mobileTabAsk": "Спросить ИИ",
+    "photoLabel": "Загрузить фото",
+    "photoOptional": "(необязательно)",
+    "photoDropzone": "Нажмите, чтобы добавить фото, или перетащите",
+    "photoFormats": "JPG, PNG или WEBP — до 5 МБ",
+    "photoAttached": "Фото прикреплено",
+    "photoReplace": "Заменить",
+    "photoRemove": "Удалить",
+    "photoUploadAria": "Загрузите фото поражённого участка",
+    "photoRemoveAria": "Удалить фото",
+    "photoPreviewAlt": "Предпросмотр загрузки",
+    "photoFallbackQuery": "Анализ по фото",
+    "photoAnalyzed": "Анализ включает загруженное фото",
+    "photoErrorType": "Используйте изображение в формате JPG, PNG или WEBP.",
+    "photoErrorSize": "Изображение слишком большое. Используйте файл до 5 МБ.",
+    "photoErrorProcess": "Не удалось обработать это изображение. Попробуйте другое."
   },
   "Diagnosed": {
     "badge": "Объяснение диагноза",

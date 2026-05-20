@@ -282,7 +282,22 @@
     "symptomChatQ3": "When should I actually see a doctor?",
     "symptomChatQ4": "Could this be related to stress or lifestyle?",
     "mobileTabResults": "Results",
-    "mobileTabAsk": "Ask AI"
+    "mobileTabAsk": "Ask AI",
+    "photoLabel": "Upload a photo",
+    "photoOptional": "(optional)",
+    "photoDropzone": "Tap to add a photo, or drag & drop",
+    "photoFormats": "JPG, PNG, or WEBP — max 5MB",
+    "photoAttached": "Photo attached",
+    "photoReplace": "Replace",
+    "photoRemove": "Remove",
+    "photoUploadAria": "Upload a photo of the affected area",
+    "photoRemoveAria": "Remove photo",
+    "photoPreviewAlt": "Uploaded preview",
+    "photoFallbackQuery": "Photo analysis",
+    "photoAnalyzed": "Analysis includes your uploaded photo",
+    "photoErrorType": "Please use a JPG, PNG, or WEBP image.",
+    "photoErrorSize": "Image is too large. Please use one under 5MB.",
+    "photoErrorProcess": "Could not process this image. Please try another."
   },
   "Diagnosed": {
     "badge": "Diagnosis Explainer",
