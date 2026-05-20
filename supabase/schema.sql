@@ -147,12 +147,15 @@ alter table public.practice_sessions  enable row level security;
 -- updated_at trigger for users_profile
 -- ─────────────────────────────────────────────────────────────────────
 create or replace function public.set_updated_at()
-returns trigger as $$
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
 begin
   new.updated_at = now();
   return new;
 end;
-$$ language plpgsql;
+$$;
 
 drop trigger if exists users_profile_updated_at on public.users_profile;
 create trigger users_profile_updated_at
