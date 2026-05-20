@@ -3,6 +3,17 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+const SUPPORTED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+]);
+
+// Cap on base64 payload size — Claude vision tolerates up to ~5MB raw per image.
+// Base64 inflates by ~4/3, so 7MB of base64 ≈ 5.2MB raw.
+const MAX_IMAGE_BASE64_BYTES = 7 * 1024 * 1024;
+
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
   es: "Spanish",
@@ -41,6 +52,8 @@ function buildSystemPrompt(
       : "";
 
   return `You are a knowledgeable and calm medical educator. A person has come to you with a symptom and wants to understand what it might mean — not a diagnosis, but calibrated health context so they can think clearly and act appropriately.${contextBlock}
+
+The user may have attached a photo (e.g., a skin rash, wound, eye condition, swelling, or injury) in addition to — or instead of — their text description. When a photo is present, integrate visual observations with any text. If only a photo is provided with no description, analyze the photo on its own using the same structured output below. When the visible findings clearly point to a medical specialty (e.g., Dermatology, Ophthalmology, Orthopedics, ENT, Emergency Medicine), name that specialty inside the WHAT_TO_DO section.
 
 Your job is to give them the clearest, most honest, most useful answer possible. You are NOT their doctor. You are the well-informed friend who helps them understand what to look into next.
 
@@ -104,26 +117,64 @@ export async function POST(request: NextRequest) {
       duration?: string;
       history?: string;
       language?: string;
+      image?: { mediaType?: string; data?: string } | null;
     };
 
     const {
-      symptom,
+      symptom = "",
       age = "",
       sex = "",
       duration = "",
       history = "",
       language = "en",
+      image = null,
     } = body;
 
-    if (!symptom || typeof symptom !== "string" || symptom.trim().length < 2) {
+    const symptomClean = typeof symptom === "string" ? symptom.trim().slice(0, 400) : "";
+    const historyClean = typeof history === "string" ? history.trim().slice(0, 500) : "";
+
+    let imageBlock:
+      | { type: "image"; source: { type: "base64"; media_type: "image/jpeg" | "image/png" | "image/webp" | "image/gif"; data: string } }
+      | null = null;
+
+    if (image && typeof image.data === "string" && typeof image.mediaType === "string") {
+      if (!SUPPORTED_IMAGE_TYPES.has(image.mediaType)) {
+        return NextResponse.json(
+          { error: "Unsupported image format. Please use JPG, PNG, or WEBP." },
+          { status: 400 }
+        );
+      }
+      if (image.data.length > MAX_IMAGE_BASE64_BYTES) {
+        return NextResponse.json(
+          { error: "Image is too large. Please use an image under 5MB." },
+          { status: 400 }
+        );
+      }
+      imageBlock = {
+        type: "image",
+        source: {
+          type: "base64",
+          media_type: image.mediaType as "image/jpeg" | "image/png" | "image/webp" | "image/gif",
+          data: image.data,
+        },
+      };
+    }
+
+    // Need at least a symptom or an image.
+    if (symptomClean.length < 2 && !imageBlock) {
       return NextResponse.json(
-        { error: "Please describe a symptom." },
+        { error: "Please describe a symptom or upload a photo." },
         { status: 400 }
       );
     }
 
-    const symptomClean = symptom.trim().slice(0, 400);
-    const historyClean = history.trim().slice(0, 500);
+    const textForUser = symptomClean
+      ? `My symptom: ${symptomClean}`
+      : "I've attached a photo of what I'm concerned about. Please analyze it.";
+
+    const userContent: Anthropic.ContentBlockParam[] = [];
+    if (imageBlock) userContent.push(imageBlock);
+    userContent.push({ type: "text", text: textForUser });
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
@@ -136,18 +187,17 @@ export async function POST(request: NextRequest) {
         historyClean,
         language
       ),
-      messages: [
-        {
-          role: "user",
-          content: `My symptom: ${symptomClean}`,
-        },
-      ],
+      messages: [{ role: "user", content: userContent }],
     });
 
     const text =
       message.content[0].type === "text" ? message.content[0].text : "";
 
-    return NextResponse.json({ text, symptom: symptomClean });
+    return NextResponse.json({
+      text,
+      symptom: symptomClean,
+      hadImage: !!imageBlock,
+    });
   } catch (err) {
     console.error("symptom API error:", err);
     return NextResponse.json(

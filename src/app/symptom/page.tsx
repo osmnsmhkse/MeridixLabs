@@ -167,6 +167,62 @@ const URGENCY_CONFIG = {
   },
 };
 
+// ── Image compression (client-side) ────────────────────────────────────────
+
+const MAX_IMAGE_DIM = 1568;
+const JPEG_QUALITY = 0.85;
+const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+interface CompressedImage {
+  data: string;        // base64, no data URL prefix
+  mediaType: "image/jpeg";
+  previewUrl: string;  // full data URL for <img>
+  filename: string;
+}
+
+async function compressImage(file: File): Promise<CompressedImage> {
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error("read-failed"));
+    reader.readAsDataURL(file);
+  });
+
+  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+    const i = new Image();
+    i.onload = () => resolve(i);
+    i.onerror = () => reject(new Error("decode-failed"));
+    i.src = dataUrl;
+  });
+
+  let { width, height } = img;
+  if (width > MAX_IMAGE_DIM || height > MAX_IMAGE_DIM) {
+    if (width >= height) {
+      height = Math.round((height * MAX_IMAGE_DIM) / width);
+      width = MAX_IMAGE_DIM;
+    } else {
+      width = Math.round((width * MAX_IMAGE_DIM) / height);
+      height = MAX_IMAGE_DIM;
+    }
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas-unsupported");
+  ctx.drawImage(img, 0, 0, width, height);
+
+  const compressed = canvas.toDataURL("image/jpeg", JPEG_QUALITY);
+  return {
+    data: compressed.split(",")[1] ?? "",
+    mediaType: "image/jpeg",
+    previewUrl: compressed,
+    filename: file.name,
+  };
+}
+
 // ── Example chips ──────────────────────────────────────────────────────────
 
 const EXAMPLES = [
@@ -201,21 +257,61 @@ export default function SymptomPage() {
   // Symptom→lab cross-reference (Tier 3)
   const [relatedLabs, setRelatedLabs] = useState<RelatedLabsResponse | null>(null);
 
+  // Optional photo
+  const [image, setImage] = useState<CompressedImage | null>(null);
+  const [imageError, setImageError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const [resultHadImage, setResultHadImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const resultRef = useRef<HTMLDivElement>(null);
+
+  async function handleFile(file: File | null) {
+    if (!file) return;
+    setImageError("");
+    if (!ACCEPTED_TYPES.includes(file.type)) {
+      setImageError("Please use a JPG, PNG, or WEBP image.");
+      return;
+    }
+    if (file.size > MAX_FILE_BYTES) {
+      setImageError("Image is too large. Please use one under 5MB.");
+      return;
+    }
+    try {
+      const compressed = await compressImage(file);
+      setImage(compressed);
+    } catch {
+      setImageError("Could not process this image. Please try another.");
+    }
+  }
+
+  function removeImage() {
+    setImage(null);
+    setImageError("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
 
   async function submit(overrideSymptom?: string) {
     const sym = (overrideSymptom ?? symptom).trim();
-    if (!sym) return;
+    if (!sym && !image) return;
     setStage("loading");
     setResult(null);
     setErrorMsg("");
-    setQueriedSymptom(sym);
+    setQueriedSymptom(sym || "Photo analysis");
 
     try {
       const res = await fetch("/api/symptom", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ symptom: sym, age, sex, duration, history, language: lang }),
+        body: JSON.stringify({
+          symptom: sym,
+          age,
+          sex,
+          duration,
+          history,
+          language: lang,
+          image: image ? { mediaType: image.mediaType, data: image.data } : null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Unknown error");
@@ -223,19 +319,23 @@ export default function SymptomPage() {
       const parsed = parseResult(rawText);
       setResult(parsed);
       setRawAnalysis(rawText);
+      setResultHadImage(!!data.hadImage);
       setStage("result");
 
       // Fire-and-forget: fetch related labs from user's history (works
       // for anon users too — they get the recommendation list without values).
-      fetch("/api/symptom-related-labs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ symptoms: sym }),
-      })
-        .then((r) => r.json())
-        .then((j) => setRelatedLabs(j))
-        .catch(() => undefined);
+      // Skip when the user provided only a photo — no text to cross-reference.
+      if (sym) {
+        fetch("/api/symptom-related-labs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ symptoms: sym }),
+        })
+          .then((r) => r.json())
+          .then((j) => setRelatedLabs(j))
+          .catch(() => undefined);
+      }
     } catch (e) {
       setErrorMsg(e instanceof Error ? e.message : "Something went wrong.");
       setStage("error");
@@ -285,6 +385,99 @@ export default function SymptomPage() {
             placeholder={t("placeholder")}
             className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
           />
+
+          {/* Photo upload (optional) */}
+          <div className="mt-4">
+            <div className="flex items-center gap-1.5 mb-2">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-ink-tertiary">
+                <path fillRule="evenodd" d="M1 8a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 018.07 3h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0016.07 6H17a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8zm13.5 3a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-1.5 0a3 3 0 11-6 0 3 3 0 016 0z" clipRule="evenodd" />
+              </svg>
+              <label className="text-sm font-semibold text-ink">
+                Upload a photo <span className="font-normal text-ink-tertiary">(optional)</span>
+              </label>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              capture="environment"
+              onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+              className="hidden"
+              aria-label="Upload a photo of the affected area"
+            />
+
+            {!image ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                  handleFile(e.dataTransfer.files?.[0] ?? null);
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    fileInputRef.current?.click();
+                  }
+                }}
+                className={`cursor-pointer rounded-xl border-2 border-dashed px-4 py-5 text-center transition-colors ${
+                  isDragging
+                    ? "border-violet-500 bg-violet-50 dark:bg-violet-950/30"
+                    : "border-surface-border bg-slate-50/60 dark:bg-slate-800/40 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-violet-50/40 dark:hover:bg-violet-950/20"
+                }`}
+              >
+                <div className="flex flex-col items-center gap-1.5">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-6 h-6 text-ink-tertiary">
+                    <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+                    <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+                  </svg>
+                  <p className="text-sm font-medium text-ink-secondary">
+                    Tap to add a photo, or drag &amp; drop
+                  </p>
+                  <p className="text-xs text-ink-tertiary">JPG, PNG, or WEBP — max 5MB</p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800/60 p-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={image.previewUrl}
+                  alt="Uploaded preview"
+                  className="w-14 h-14 rounded-lg object-cover flex-shrink-0 border border-surface-border"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-ink truncate">{image.filename}</p>
+                  <p className="text-xs text-ink-tertiary mt-0.5">Photo attached</p>
+                </div>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline"
+                  >
+                    Replace
+                  </button>
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="text-xs font-medium text-red-600 dark:text-red-400 hover:underline"
+                    aria-label="Remove photo"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {imageError && (
+              <p className="mt-2 text-xs text-red-600 dark:text-red-400">{imageError}</p>
+            )}
+          </div>
 
           {/* Collapsible context */}
           <button
@@ -364,7 +557,7 @@ export default function SymptomPage() {
           {/* Submit */}
           <button
             onClick={() => submit()}
-            disabled={!symptom.trim() || stage === "loading"}
+            disabled={(!symptom.trim() && !image) || stage === "loading"}
             className="mt-5 w-full flex items-center justify-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-semibold rounded-xl text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-violet-500/20"
           >
             {stage === "loading" ? (
@@ -476,10 +669,18 @@ export default function SymptomPage() {
           )}
 
           {/* Queried symptom label */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <p className="text-sm text-ink-secondary">
               {t("resultsFor")} <span className="font-semibold text-ink">{queriedSymptom}</span>
             </p>
+            {resultHadImage && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-[11px] font-semibold">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                  <path fillRule="evenodd" d="M1 8a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 018.07 3h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0016.07 6H17a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8zm13.5 3a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-1.5 0a3 3 0 11-6 0 3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                Analysis includes your uploaded photo
+              </span>
+            )}
           </div>
 
           {/* MOST_LIKELY */}
@@ -620,7 +821,7 @@ export default function SymptomPage() {
           {/* Try again */}
           <div className="text-center pt-2">
             <button
-              onClick={() => { setStage("idle"); setResult(null); setRawAnalysis(""); setSymptom(""); setRelatedLabs(null); setMobileTab("results"); }}
+              onClick={() => { setStage("idle"); setResult(null); setRawAnalysis(""); setSymptom(""); setRelatedLabs(null); setMobileTab("results"); setImage(null); setImageError(""); setResultHadImage(false); if (fileInputRef.current) fileInputRef.current.value = ""; }}
               className="text-sm text-ink-tertiary hover:text-ink transition-colors underline underline-offset-2"
             >
               {t("checkAnother")}
