@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollReveal from "@/components/ScrollReveal";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
 
@@ -76,6 +77,7 @@ export default async function RootLayout({
             <Navigation />
             <main className="pt-16">{children}</main>
             <Footer />
+            <FeedbackWidget />
           </Providers>
         </NextIntlClientProvider>
       </body>
