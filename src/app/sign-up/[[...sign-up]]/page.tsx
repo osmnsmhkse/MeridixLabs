@@ -3,6 +3,7 @@ import { SignUp } from "@clerk/nextjs";
 export const metadata = {
   title: "Sign up · Meridix Labs",
   description: "Create your Meridix Labs account — save lab reports, track your biomarkers over time.",
+  robots: { index: false, follow: false },
 };
 
 export default function SignUpPage() {

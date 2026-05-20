@@ -3,6 +3,7 @@ import { SignIn } from "@clerk/nextjs";
 export const metadata = {
   title: "Sign in · Meridix Labs",
   description: "Sign in to your Meridix Labs account.",
+  robots: { index: false, follow: false },
 };
 
 export default function SignInPage() {

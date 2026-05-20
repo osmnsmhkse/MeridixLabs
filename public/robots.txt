@@ -1,12 +1,14 @@
 User-agent: *
 Allow: /
 
-Disallow: /admin/
-Disallow: /dashboard/
-Disallow: /profile/
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /profile
 Disallow: /api/
-Disallow: /logo-options/
-Disallow: /sign-in/
-Disallow: /sign-up/
+Disallow: /logo-options
+Disallow: /sign-in
+Disallow: /sign-up
+Disallow: /share
+Disallow: /visit
 
 Sitemap: https://www.meridixlabs.com/sitemap.xml
