@@ -15,6 +15,8 @@ const STATIC_PAGES: { url: string; priority: number; changeFrequency: MetadataRo
   { url: "/trends",      priority: 0.7,  changeFrequency: "monthly" },
   { url: "/genetics",    priority: 0.8,  changeFrequency: "monthly" },
   { url: "/pediatric",   priority: 0.8,  changeFrequency: "monthly" },
+  { url: "/womens-health", priority: 0.9, changeFrequency: "monthly" },
+  { url: "/womens-health/learn", priority: 0.5, changeFrequency: "monthly" },
   { url: "/privacy",     priority: 0.3,  changeFrequency: "yearly" },
   { url: "/terms",       priority: 0.3,  changeFrequency: "yearly" },
 ];
