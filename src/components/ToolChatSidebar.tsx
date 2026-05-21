@@ -11,8 +11,9 @@
 // Mobile:  floating round button bottom-right; tapping opens a slide-up
 //          drawer covering most of the screen.
 //
-// State:   stateless per tab — messages live in React state only and are
-//          dropped on refresh / navigation. The active tool's results
+// State:   localStorage, keyed by tool slug + a stable hash of the active
+//          toolContext, so each distinct result has its own thread and
+//          pre-results chats survive a refresh. The active tool's results
 //          (toolContext) are passed in by the parent provider; the sidebar
 //          forwards them to /api/chat so Claude can ground its answers.
 
@@ -38,6 +39,57 @@ interface Props {
 
 const SIDEBAR_WIDTH = "360px";
 
+// ── localStorage persistence ──────────────────────────────────────────────
+// Match the existing per-tool ChatPanel pattern: anonymous + signed-in
+// conversations are mirrored to localStorage keyed by tool slug and a
+// stable hash of the current toolContext, so each distinct result has its
+// own thread and pre-results chats survive a refresh.
+
+function hashString(input: string): string {
+  let h = 0;
+  for (let i = 0; i < input.length; i++) {
+    h = (h << 5) - h + input.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h).toString(36);
+}
+
+function localKeyFor(toolPath: string, toolContext: string | null): string {
+  const slug = toolPath.replace(/^\//, "") || "tool";
+  if (!toolContext || !toolContext.trim()) return `meridix_sidebar_${slug}_input`;
+  return `meridix_sidebar_${slug}_${hashString(toolContext)}`;
+}
+
+function readLocalHistory(key: string): Msg[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as Msg[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeLocalHistory(key: string, messages: Msg[]) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(messages));
+  } catch {
+    /* quota or disabled — ignore */
+  }
+}
+
+function clearLocalHistory(key: string) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    /* noop */
+  }
+}
+
 export default function ToolChatSidebar({ toolEntry, toolContext }: Props) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -54,16 +106,30 @@ export default function ToolChatSidebar({ toolEntry, toolContext }: Props) {
   const abortRef = useRef<AbortController | null>(null);
 
   const hasResults = Boolean(toolContext && toolContext.trim().length > 0);
+  const storageKey = useMemo(
+    () => localKeyFor(toolEntry.path, toolContext),
+    [toolEntry.path, toolContext],
+  );
 
-  // Reset conversation when the active tool changes (different page).
+  // Tracks the latest active storage key so the catch-on-abort handler can
+  // tell user-initiated cancels (key unchanged) from key-switch aborts
+  // (key changed mid-stream — load effect already swapped messages).
+  const storageKeyRef = useRef(storageKey);
   useEffect(() => {
-    setMessages([]);
+    storageKeyRef.current = storageKey;
+  }, [storageKey]);
+
+  // Load (and on subsequent key changes, swap to) the persisted conversation
+  // for the active tool + results pair. Abort any in-flight stream so the
+  // previous tool's pending reply doesn't land in the new thread.
+  useEffect(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
     setStreamingText("");
     setError(null);
     setPending(false);
-    abortRef.current?.abort();
-    abortRef.current = null;
-  }, [toolEntry.path]);
+    setMessages(readLocalHistory(storageKey));
+  }, [storageKey]);
 
   // Auto-scroll to latest
   useEffect(() => {
@@ -96,6 +162,7 @@ export default function ToolChatSidebar({ toolEntry, toolContext }: Props) {
       setPending(true);
       setStreamingText("");
 
+      const sendKey = storageKey;
       abortRef.current = new AbortController();
 
       try {
@@ -128,14 +195,28 @@ export default function ToolChatSidebar({ toolEntry, toolContext }: Props) {
         }
         buffer += decoder.decode();
 
-        setMessages([...next, { role: "assistant", content: buffer.trim() || "(no response)" }]);
+        const finalMessages: Msg[] = [
+          ...next,
+          { role: "assistant", content: buffer.trim() || "(no response)" },
+        ];
+        // Always persist under the key the conversation belongs to; only
+        // mirror to visible state if we're still on that thread.
+        writeLocalHistory(sendKey, finalMessages);
+        if (storageKeyRef.current === sendKey) {
+          setMessages(finalMessages);
+        }
         setStreamingText("");
       } catch (e) {
+        // If the storage key changed mid-stream, the load effect has already
+        // replaced messages with the new conversation — don't slice anything.
+        const stillSameThread = storageKeyRef.current === sendKey;
         if (e instanceof DOMException && e.name === "AbortError") {
-          setMessages((m) => m.slice(0, -1));
+          if (stillSameThread) setMessages((m) => m.slice(0, -1));
         } else {
-          setError(e instanceof Error ? e.message : "Network error");
-          setMessages((m) => m.slice(0, -1));
+          if (stillSameThread) {
+            setError(e instanceof Error ? e.message : "Network error");
+            setMessages((m) => m.slice(0, -1));
+          }
         }
         setStreamingText("");
       } finally {
@@ -143,8 +224,8 @@ export default function ToolChatSidebar({ toolEntry, toolContext }: Props) {
         abortRef.current = null;
       }
     },
-    [input, pending, messages, toolEntry.toolName, toolContext],
-  );
+    [input, pending, messages, toolEntry.toolName, toolContext, storageKey],
+  ); // storageKey is captured at call time as sendKey; included to satisfy lint
 
   const cancelPending = useCallback(() => {
     abortRef.current?.abort();
@@ -155,7 +236,8 @@ export default function ToolChatSidebar({ toolEntry, toolContext }: Props) {
     setMessages([]);
     setStreamingText("");
     setError(null);
-  }, [pending, cancelPending]);
+    clearLocalHistory(storageKey);
+  }, [pending, cancelPending, storageKey]);
 
   const hasInput = input.trim().length > 0;
 
