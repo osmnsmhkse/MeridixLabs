@@ -21,6 +21,7 @@ import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import LabChatPanel from "@/components/LabChatPanel";
 import NextStepBar from "@/components/NextStepBar";
+import { useToolContext } from "@/components/ToolChatProvider";
 import { track } from "@/lib/track";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -1424,6 +1425,7 @@ export default function ImagingPage() {
 
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
   const [fileSizeMB, setFileSizeMB] = useState<string | undefined>(undefined);
   const [fileName, setFileName] = useState<string>("");

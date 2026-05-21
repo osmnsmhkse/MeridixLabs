@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
 import type { MedicationAnalysis } from "@/components/MedicationChatPanel";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const MedicationChatPanel = dynamic(() => import("@/components/MedicationChatPanel"), {
   ssr: false,
@@ -69,6 +70,7 @@ export default function MedicationsPage() {
   const [hasRecentLabAnalysis, setHasRecentLabAnalysis] = useState(false);
 
   const [result, setResult] = useState<MedicationAnalysis | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [activeTier, setActiveTier] = useState<Tier>("simple");
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");

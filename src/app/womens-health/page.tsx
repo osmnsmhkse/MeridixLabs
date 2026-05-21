@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const WomensHealthChatPanel = dynamic(
   () => import("@/components/WomensHealthChatPanel"),
@@ -857,6 +858,16 @@ export default function WomensHealthPage() {
   const [cResult, setCResult] = useState<ModeCResult | null>(null);
   const [cRaw, setCRaw] = useState("");
   const [cSummary, setCSummary] = useState("");
+
+  useToolContext(
+    aResult
+      ? JSON.stringify({ mode: "cycle", ...aResult })
+      : bResult
+        ? JSON.stringify({ mode: "lifestage", ...bResult })
+        : cResult
+          ? JSON.stringify({ mode: "pregnancy", ...cResult })
+          : null,
+  );
 
   const resultRef = useRef<HTMLDivElement>(null);
 

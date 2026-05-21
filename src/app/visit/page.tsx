@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const VisitChatPanel = dynamic(() => import("@/components/VisitChatPanel"), {
   ssr: false,
@@ -1035,6 +1036,14 @@ export default function VisitPage() {
   const [debriefResult, setDebriefResult] = useState<DebriefResult | null>(null);
   const [debriefRawText, setDebriefRawText] = useState("");
   const [debriefInputSummary, setDebriefInputSummary] = useState("");
+
+  useToolContext(
+    prepResult
+      ? JSON.stringify({ mode: "prep", ...prepResult })
+      : debriefResult
+        ? JSON.stringify({ mode: "debrief", ...debriefResult })
+        : null,
+  );
 
   const resultRef = useRef<HTMLDivElement>(null);
 

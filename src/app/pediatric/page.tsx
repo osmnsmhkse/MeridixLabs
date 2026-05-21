@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const PediatricChatPanel = dynamic(() => import("@/components/PediatricChatPanel"), {
   ssr: false,
@@ -331,6 +332,7 @@ export default function PediatricPage() {
   const [tier, setTier] = useState<Tier>("medium");
   const [stage, setStage] = useState<Stage>("idle");
   const [result, setResult] = useState<ParsedResult | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [rawAnalysis, setRawAnalysis] = useState<string>("");
   const [submittedSummary, setSubmittedSummary] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");

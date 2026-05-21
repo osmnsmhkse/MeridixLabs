@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollReveal from "@/components/ScrollReveal";
 import FeedbackWidget from "@/components/FeedbackWidget";
+import { ToolChatProvider } from "@/components/ToolChatProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
 
@@ -75,8 +76,10 @@ export default async function RootLayout({
           <Providers>
             <ScrollReveal />
             <Navigation />
-            <main className="pt-16">{children}</main>
-            <Footer />
+            <ToolChatProvider>
+              <main className="pt-16">{children}</main>
+              <Footer />
+            </ToolChatProvider>
             <FeedbackWidget />
           </Providers>
         </NextIntlClientProvider>

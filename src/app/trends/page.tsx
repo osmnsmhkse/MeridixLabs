@@ -17,6 +17,7 @@ import {
   Area,
 } from "recharts";
 import TrendChatPanel from "@/components/TrendChatPanel";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface AnalysisFlag {
@@ -385,6 +386,7 @@ export default function TrendsPage() {
 
   const [selectedMarker, setSelectedMarker] = useState<string>("");
   const [trendSummary, setTrendSummary] = useState<string>("");
+  useToolContext(trendSummary || null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "detail" | "timeline">("overview");
   const [filterCategory, setFilterCategory] = useState<string>("All");

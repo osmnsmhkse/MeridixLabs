@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const DiagnosisChatPanel = dynamic(() => import("@/components/DiagnosisChatPanel"), {
   ssr: false,
@@ -393,6 +394,7 @@ export default function DiagnosedPage() {
   const [state, setState] = useState<PageState>("idle");
   const [input, setInput] = useState("");
   const [result, setResult] = useState<DiagnosisResult | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [rawExplanation, setRawExplanation] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [mobileTab, setMobileTab] = useState<"results" | "ask">("results");

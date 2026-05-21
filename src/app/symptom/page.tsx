@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const SymptomChatPanel = dynamic(() => import("@/components/SymptomChatPanel"), {
   ssr: false,
@@ -249,6 +250,7 @@ export default function SymptomPage() {
 
   const [stage, setStage] = useState<Stage>("idle");
   const [result, setResult] = useState<ParsedResult | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [rawAnalysis, setRawAnalysis] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [queriedSymptom, setQueriedSymptom] = useState("");

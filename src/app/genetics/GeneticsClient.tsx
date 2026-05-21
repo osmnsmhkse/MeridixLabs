@@ -8,6 +8,7 @@
 import { useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useToolContext } from "@/components/ToolChatProvider";
 
 const GeneticsChatPanel = dynamic(() => import("@/components/GeneticsChatPanel"), {
   ssr: false,
@@ -436,6 +437,7 @@ export default function GeneticsClient() {
   const [tier, setTier] = useState<Tier>("medium");
 
   const [result, setResult] = useState<GeneticsResult | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [chatSnapshot, setChatSnapshot] = useState<string>("");
   const [chatInputSummary, setChatInputSummary] = useState<string>("");
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);

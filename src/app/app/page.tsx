@@ -9,6 +9,7 @@ import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
 import LabChatPanel from "@/components/LabChatPanel";
+import { useToolContext } from "@/components/ToolChatProvider";
 import { track } from "@/lib/track";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -2505,6 +2506,7 @@ export default function AppPage() {
   const { userData, recordInterpretation, dismissBanner, daysSinceLastVisit } = useReturningUser();
   const [state, setState] = useState<"idle" | "context" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  useToolContext(result ? JSON.stringify(result) : null);
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<ErrorCode | null>(null);
   const [fileSizeMB, setFileSizeMB] = useState<string | undefined>(undefined);
