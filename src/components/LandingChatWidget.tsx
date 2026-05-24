@@ -6,6 +6,7 @@
 // Tap → opens a drawer with a general Meridix assistant (no result context).
 // Streams replies from /api/chat using toolName "Meridix General".
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   useCallback,
@@ -14,6 +15,12 @@ import {
   useRef,
   useState,
 } from "react";
+import {
+  ClipboardList,
+  FlaskConical,
+  Stethoscope,
+  TrendingUp,
+} from "lucide-react";
 import {
   Bubble,
   MeridixMark,
@@ -25,6 +32,97 @@ function isLandingPath(pathname: string | null): boolean {
   if (!pathname) return false;
   const stripped = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, "") || "/";
   return stripped === "/";
+}
+
+// ── Referral parsing ─────────────────────────────────────────────────────────
+// The system prompt asks the model to append a <referral>{json}</referral>
+// block at the end of every reply. We strip it from the visible text and use
+// the structured payload to render an inline CTA card under the message.
+
+type ReferralSlug =
+  | "lab-analyzer"
+  | "symptom-checker"
+  | "diagnosis-explainer"
+  | "trend-tracker";
+
+interface Referral {
+  tool: ReferralSlug;
+  reason: string;
+}
+
+interface ToolMeta {
+  label: string;
+  href: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}
+
+const TOOL_META: Record<ReferralSlug, ToolMeta> = {
+  "lab-analyzer": { label: "Lab Analyzer", href: "/app", Icon: FlaskConical },
+  "symptom-checker": { label: "Symptom Checker", href: "/symptom", Icon: Stethoscope },
+  "diagnosis-explainer": { label: "Diagnosis Explainer", href: "/diagnosed", Icon: ClipboardList },
+  "trend-tracker": { label: "Trend Tracker", href: "/trends", Icon: TrendingUp },
+};
+
+function parseReferral(raw: string): { text: string; referral: Referral | null } {
+  const full = raw.match(/<referral>([\s\S]*?)<\/referral>/i);
+  if (full && typeof full.index === "number") {
+    let referral: Referral | null = null;
+    try {
+      const obj = JSON.parse(full[1].trim());
+      if (
+        obj &&
+        typeof obj === "object" &&
+        typeof obj.tool === "string" &&
+        obj.tool in TOOL_META
+      ) {
+        referral = {
+          tool: obj.tool as ReferralSlug,
+          reason: typeof obj.reason === "string" ? obj.reason : "",
+        };
+      }
+    } catch {
+      /* malformed JSON — drop the referral but still strip the tags */
+    }
+    const cleaned = (raw.slice(0, full.index) + raw.slice(full.index + full[0].length)).trim();
+    return { text: cleaned, referral };
+  }
+  // During streaming, hide the partial opening tag from the visible text.
+  const partial = raw.indexOf("<referral");
+  if (partial !== -1) {
+    return { text: raw.slice(0, partial).trim(), referral: null };
+  }
+  return { text: raw, referral: null };
+}
+
+function ReferralCard({ referral }: { referral: Referral }) {
+  const tool = TOOL_META[referral.tool];
+  const Icon = tool.Icon;
+  return (
+    <Link
+      href={tool.href}
+      className="ml-11 block rounded-2xl border border-brand-blue/20 bg-gradient-to-br from-brand-blue/5 to-brand-indigo/5 hover:from-brand-blue/10 hover:to-brand-indigo/10 transition-colors p-4 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+    >
+      <div className="flex items-start gap-3">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center flex-shrink-0 shadow-sm">
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-ink leading-tight">
+            This sounds like a job for the {tool.label}
+          </p>
+          {referral.reason && (
+            <p className="text-xs text-ink-secondary mt-1 leading-relaxed">
+              {referral.reason}
+            </p>
+          )}
+          <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue transition-all group-hover:gap-2">
+            Try it now
+            <span aria-hidden>→</span>
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 export default function LandingChatWidget() {
@@ -271,12 +369,27 @@ export default function LandingChatWidget() {
                 </div>
               ) : (
                 <div className="space-y-5">
-                  {messages.map((m, i) => (
-                    <Bubble key={i} message={m} />
-                  ))}
-                  {pending && streamingText && (
-                    <Bubble message={{ role: "assistant", content: streamingText }} />
-                  )}
+                  {messages.map((m, i) => {
+                    if (m.role !== "assistant" || typeof m.content !== "string") {
+                      return <Bubble key={i} message={m} />;
+                    }
+                    const { text, referral } = parseReferral(m.content);
+                    return (
+                      <div key={i} className="space-y-3">
+                        <Bubble message={{ role: "assistant", content: text }} />
+                        {referral && <ReferralCard referral={referral} />}
+                      </div>
+                    );
+                  })}
+                  {pending && streamingText && (() => {
+                    const { text, referral } = parseReferral(streamingText);
+                    return (
+                      <div className="space-y-3">
+                        <Bubble message={{ role: "assistant", content: text }} />
+                        {referral && <ReferralCard referral={referral} />}
+                      </div>
+                    );
+                  })()}
                   {pending && !streamingText && <ThinkingBubble />}
                   {error && (
                     <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900/50 px-4 py-3 text-sm text-red-700 dark:text-red-300">
