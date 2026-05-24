@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { MessageSquare, Star, X } from "lucide-react";
 
 type FeedbackCategory =
@@ -49,6 +50,13 @@ export default function FeedbackWidget() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pulse, setPulse] = useState(true);
+
+  const pathname = usePathname();
+  // On the landing page the floating Meridix chat button occupies bottom-6 right-6,
+  // so stack feedback above it. Elsewhere keep the original corner position.
+  const isLanding =
+    (pathname?.replace(/^\/[a-z]{2}(?=\/|$)/i, "") || "/") === "/";
+  const triggerPosition = isLanding ? "bottom-24 right-6" : "bottom-6 right-6";
 
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -147,7 +155,7 @@ export default function FeedbackWidget() {
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         className={[
-          "fixed bottom-6 right-6 z-50",
+          `fixed ${triggerPosition} z-50`,
           "inline-flex items-center gap-2 rounded-full",
           "bg-gradient-brand text-white",
           "px-4 py-3 text-sm font-semibold",

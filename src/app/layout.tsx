@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollReveal from "@/components/ScrollReveal";
 import FeedbackWidget from "@/components/FeedbackWidget";
+import LandingChatWidget from "@/components/LandingChatWidget";
 import { ToolChatProvider } from "@/components/ToolChatProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
@@ -81,6 +82,7 @@ export default async function RootLayout({
               <Footer />
             </ToolChatProvider>
             <FeedbackWidget />
+            <LandingChatWidget />
           </Providers>
         </NextIntlClientProvider>
       </body>

@@ -22,6 +22,17 @@ export interface ToolChatEntry {
 
 export const TOOL_CHAT_REGISTRY: ToolChatEntry[] = [
   {
+    path: "/",
+    toolName: "Meridix General",
+    preResultsWelcome:
+      "Hi! I'm the Meridix assistant. Ask me about what Meridix does, which tool fits your question, or any general health literacy topic.",
+    postResultsWelcome:
+      "Hi! I'm the Meridix assistant. Ask me about what Meridix does, which tool fits your question, or any general health literacy topic.",
+    placeholder: "Ask about Meridix or a health topic…",
+    systemHint:
+      "The user is on the Meridix Labs landing page and has NOT uploaded any results yet. Position yourself as the general Meridix assistant: help them understand what Meridix does, which tool fits their question (Lab Analyzer, Symptom Checker, Diagnosis Explainer, Imaging Report Explainer, Trend Tracker, Medication Companion, Doctor's Visit Companion, Genetic Test Explainer, Pediatric Symptom Companion, Women's Health Companion), and answer general health literacy questions. Do not diagnose. Keep replies short and inviting.",
+  },
+  {
     path: "/app",
     toolName: "Lab Analyzer",
     preResultsWelcome:
