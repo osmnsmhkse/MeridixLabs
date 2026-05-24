@@ -2,12 +2,11 @@
 
 // LandingChatWidget
 // ─────────────────────────────────────────────────────────────────────────────
-// Floating round chat button shown ONLY on the landing page ("/").
+// Floating round chat button shown globally on every page.
 // Tap → opens a drawer with a general Meridix assistant (no result context).
 // Streams replies from /api/chat using toolName "Meridix General".
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -27,12 +26,6 @@ import {
   ThinkingBubble,
   type Msg,
 } from "@/components/ChatComponents";
-
-function isLandingPath(pathname: string | null): boolean {
-  if (!pathname) return false;
-  const stripped = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, "") || "/";
-  return stripped === "/";
-}
 
 // ── Referral parsing ─────────────────────────────────────────────────────────
 // The system prompt asks the model to append a <referral>{json}</referral>
@@ -126,9 +119,6 @@ function ReferralCard({ referral }: { referral: Referral }) {
 }
 
 export default function LandingChatWidget() {
-  const pathname = usePathname();
-  const onLanding = isLandingPath(pathname);
-
   const [open, setOpen] = useState(false);
   const [pulse, setPulse] = useState(true);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -260,8 +250,6 @@ export default function LandingChatWidget() {
     [],
   );
 
-  if (!onLanding) return null;
-
   return (
     <>
       {/* Floating round trigger */}
@@ -273,7 +261,7 @@ export default function LandingChatWidget() {
           aria-label="Open Meridix Assistant"
           aria-haspopup="dialog"
           className={[
-            "fixed bottom-6 right-6 z-40",
+            "fixed bottom-6 right-6 z-50",
             "w-14 h-14 rounded-full",
             "bg-gradient-brand text-white",
             "shadow-glow-blue hover:shadow-card-hover",

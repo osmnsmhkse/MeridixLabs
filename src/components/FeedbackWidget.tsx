@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import { MessageSquare, Star, X } from "lucide-react";
 
 type FeedbackCategory =
@@ -51,12 +50,8 @@ export default function FeedbackWidget() {
   const [error, setError] = useState<string | null>(null);
   const [pulse, setPulse] = useState(true);
 
-  const pathname = usePathname();
-  // On the landing page the floating Meridix chat button occupies bottom-6 right-6,
-  // so stack feedback above it. Elsewhere keep the original corner position.
-  const isLanding =
-    (pathname?.replace(/^\/[a-z]{2}(?=\/|$)/i, "") || "/") === "/";
-  const triggerPosition = isLanding ? "bottom-24 right-6" : "bottom-6 right-6";
+  // Floating Meridix chat button occupies bottom-6 right-6 globally — stack above it.
+  const triggerPosition = "bottom-24 right-6";
 
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
