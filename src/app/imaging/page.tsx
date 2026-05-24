@@ -1409,6 +1409,687 @@ function ResultsPanel({
   );
 }
 
+// ── Scan Image tab (NEW — vision-based scan interpretation) ─────────────────
+
+type ScanDepth = "simple" | "medium" | "expert";
+type ScanTypeKey = "auto" | "xray" | "ct" | "mri" | "ultrasound" | "mammogram";
+type ScanUrgency = "routine" | "soon" | "urgent";
+type ScanErrorKind =
+  | "not_medical_image"
+  | "insufficient_quality"
+  | "file_too_large"
+  | "wrong_file_type"
+  | "generic";
+
+interface ScanResult {
+  scan_type: string;
+  body_region: string;
+  image_quality: string;
+  key_findings: string[];
+  normal_structures: string[];
+  areas_of_concern: string[];
+  plain_english_summary: string;
+  medium_summary: string;
+  expert_summary: string;
+  questions_to_ask_doctor: string[];
+  urgency_flag: ScanUrgency;
+  disclaimer: string;
+}
+
+const SCAN_TYPES: { key: ScanTypeKey; label: string }[] = [
+  { key: "auto", label: "Auto-detect" },
+  { key: "xray", label: "X-Ray" },
+  { key: "ct", label: "CT Scan" },
+  { key: "mri", label: "MRI" },
+  { key: "ultrasound", label: "Ultrasound" },
+  { key: "mammogram", label: "Mammogram" },
+];
+
+function ScanLoadingAnimation() {
+  const steps = [
+    "Reading your scan...",
+    "Identifying anatomy...",
+    "Analyzing visible findings...",
+    "Generating your interpretation...",
+  ];
+  const [activeStep, setActiveStep] = useState(0);
+  const [elapsedSec, setElapsedSec] = useState(0);
+
+  useEffect(() => {
+    const timers = STEP_DELAYS.slice(1).map((delay, i) =>
+      setTimeout(() => setActiveStep(i + 1), delay)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+  useEffect(() => {
+    const id = setInterval(() => setElapsedSec((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="py-10 px-4 flex flex-col items-center gap-8">
+      <div className="w-full max-w-xs space-y-4">
+        {steps.map((label, i) => {
+          if (i > activeStep) return null;
+          const done = i < activeStep;
+          return (
+            <div key={i} className="flex items-center gap-3">
+              <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
+                {done ? (
+                  <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg viewBox="0 0 12 12" fill="none" className="w-3 h-3">
+                      <path d="M2.5 6l2.5 2.5 4.5-5" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                ) : (
+                  <div className="w-5 h-5 rounded-full border-2 border-sky-500/25 border-t-sky-500 animate-spin" />
+                )}
+              </div>
+              <span className={`text-sm leading-snug ${done ? "text-ink-secondary" : "text-ink font-semibold"}`}>
+                {label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="w-full max-w-xs space-y-2.5 pt-1">
+        {[92, 78, 85].map((w, i) => (
+          <div key={i} className="h-2.5 rounded-full shimmer" style={{ width: `${w}%` }} />
+        ))}
+      </div>
+      <p className="text-xs text-ink-secondary font-medium">Analyzing your scan...</p>
+      {elapsedSec >= 8 && (
+        <p className="text-[11px] text-ink-tertiary -mt-6">{elapsedSec}s elapsed · still running</p>
+      )}
+      <p className="text-xs text-ink-tertiary text-center max-w-[280px] leading-relaxed">
+        Your image is never stored. Only the AI interpretation is processed.
+      </p>
+    </div>
+  );
+}
+
+function ScanErrorCard({
+  kind,
+  message,
+  onReset,
+}: {
+  kind: ScanErrorKind;
+  message: string;
+  onReset: () => void;
+}) {
+  const cfg = (() => {
+    switch (kind) {
+      case "not_medical_image":
+        return {
+          title: "That doesn't look like a medical scan",
+          icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+            </svg>
+          ),
+        };
+      case "insufficient_quality":
+        return {
+          title: "Image quality is too low",
+          icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          ),
+        };
+      case "file_too_large":
+        return {
+          title: "That image is too large",
+          icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+          ),
+        };
+      case "wrong_file_type":
+        return {
+          title: "Unsupported file type",
+          icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          ),
+        };
+      default:
+        return {
+          title: "Something went wrong",
+          icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+          ),
+        };
+    }
+  })();
+
+  return (
+    <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-6 flex flex-col items-center text-center gap-4">
+      <div className="w-14 h-14 rounded-full flex items-center justify-center bg-amber-100 dark:bg-amber-900/40 text-amber-600">
+        {cfg.icon}
+      </div>
+      <div className="space-y-1.5 max-w-sm">
+        <p className="text-base font-bold text-amber-900 dark:text-amber-200">{cfg.title}</p>
+        <p className="text-sm leading-relaxed text-amber-800 dark:text-amber-300">{message}</p>
+      </div>
+      <button
+        onClick={onReset}
+        className="mt-1 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+        </svg>
+        Try again
+      </button>
+    </div>
+  );
+}
+
+function ScanResultsPanel({
+  result,
+  depth,
+  setDepth,
+  previewUrl,
+  onReset,
+}: {
+  result: ScanResult;
+  depth: ScanDepth;
+  setDepth: (d: ScanDepth) => void;
+  previewUrl: string | null;
+  onReset: () => void;
+}) {
+  const [normalsOpen, setNormalsOpen] = useState(false);
+
+  const urgency = result.urgency_flag;
+  const URG_STYLE: Record<ScanUrgency, { dot: string; bg: string; border: string; text: string; label: string }> = {
+    routine: {
+      dot: "bg-emerald-500",
+      bg: "bg-emerald-50 dark:bg-emerald-900/20",
+      border: "border-emerald-200 dark:border-emerald-800",
+      text: "text-emerald-700 dark:text-emerald-400",
+      label: "Routine",
+    },
+    soon: {
+      dot: "bg-amber-500",
+      bg: "bg-amber-50 dark:bg-amber-900/20",
+      border: "border-amber-200 dark:border-amber-800",
+      text: "text-amber-700 dark:text-amber-400",
+      label: "Soon (within days)",
+    },
+    urgent: {
+      dot: "bg-red-500",
+      bg: "bg-red-50 dark:bg-red-900/20",
+      border: "border-red-200 dark:border-red-800",
+      text: "text-red-700 dark:text-red-400",
+      label: "Urgent (same day)",
+    },
+  };
+  const uc = URG_STYLE[urgency] ?? URG_STYLE.routine;
+
+  const summary =
+    depth === "simple"
+      ? result.plain_english_summary
+      : depth === "medium"
+      ? result.medium_summary
+      : result.expert_summary;
+
+  return (
+    <div className="animate-fade-in space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          {previewUrl && (
+            <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-surface-border bg-slate-900">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={previewUrl} alt="Scan preview" className="w-full h-full object-cover" />
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-ink truncate">Scan interpretation</p>
+            <p className="text-xs text-ink-tertiary">Analysis complete</p>
+          </div>
+        </div>
+        <button
+          onClick={onReset}
+          className="flex items-center gap-1.5 text-sm font-medium text-sky-700 dark:text-sky-400 border border-sky-300/40 bg-sky-50 dark:bg-sky-900/20 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-all px-3 py-1.5 rounded-lg flex-shrink-0"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+          </svg>
+          Analyze another scan
+        </button>
+      </div>
+
+      {/* Metadata pills */}
+      <div className="flex flex-wrap gap-2">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 text-xs font-semibold text-sky-700 dark:text-sky-400">
+          <span className="text-[10px] uppercase tracking-wider text-sky-500/70">Scan</span>
+          {result.scan_type}
+        </span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 text-xs font-semibold text-purple-700 dark:text-purple-400">
+          <span className="text-[10px] uppercase tracking-wider text-purple-500/70">Region</span>
+          {result.body_region}
+        </span>
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${uc.bg} ${uc.border} border text-xs font-semibold ${uc.text}`}>
+          <span className={`w-2 h-2 rounded-full ${uc.dot}`} />
+          {uc.label}
+        </span>
+      </div>
+
+      {result.image_quality && (
+        <p className="text-xs text-ink-tertiary px-0.5">Image quality: {result.image_quality}</p>
+      )}
+
+      {/* Key findings */}
+      {result.key_findings && result.key_findings.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+          <div className="px-5 py-3 border-b border-surface-border bg-surface-raised">
+            <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Key Findings</p>
+          </div>
+          <ul className="p-5 space-y-2.5">
+            {result.key_findings.map((f, i) => (
+              <li key={i} className="flex gap-3 text-sm text-ink-secondary leading-relaxed">
+                <span className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Areas of concern */}
+      {result.areas_of_concern && result.areas_of_concern.length > 0 ? (
+        <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-5">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-800/40 text-amber-600 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-amber-900 dark:text-amber-200 mb-2">Areas of concern</p>
+              <ul className="space-y-2">
+                {result.areas_of_concern.map((c, i) => (
+                  <li key={i} className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed flex gap-2">
+                    <span className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-4 flex items-center gap-3">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-emerald-600 flex-shrink-0">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">No areas of concern identified</p>
+        </div>
+      )}
+
+      {/* Normal structures (collapsible) */}
+      {result.normal_structures && result.normal_structures.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+          <button
+            onClick={() => setNormalsOpen((o) => !o)}
+            className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-surface-raised/60 transition-colors"
+          >
+            <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">
+              Structures within normal limits ({result.normal_structures.length})
+            </span>
+            <svg viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 text-ink-tertiary transition-transform ${normalsOpen ? "rotate-180" : ""}`}>
+              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+          {normalsOpen && (
+            <ul className="px-5 pb-5 pt-1 space-y-2 border-t border-surface-border">
+              {result.normal_structures.map((s, i) => (
+                <li key={i} className="flex gap-3 text-sm text-ink-secondary leading-relaxed">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {/* Summary with depth toggle */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+        <div className="border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised">
+          <div className="flex">
+            {(["simple", "medium", "expert"] as ScanDepth[]).map((tier) => {
+              const cfg = TIER_CONFIG[tier];
+              const isActive = tier === depth;
+              const tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
+              return (
+                <button
+                  key={tier}
+                  onClick={() => setDepth(tier)}
+                  className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                    isActive ? cfg.activeClass : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
+                  }`}
+                >
+                  {cfg.icon}
+                  {tierLabel}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="p-6">
+          {summary.split(/\n+/).filter(Boolean).map((para, i) => (
+            <p key={i} className="text-ink-secondary leading-relaxed text-sm sm:text-base mb-3 last:mb-0">{para}</p>
+          ))}
+        </div>
+      </div>
+
+      {/* Questions */}
+      {result.questions_to_ask_doctor && result.questions_to_ask_doctor.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+          <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400">
+                <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <p className="text-sm font-semibold text-ink">Questions to ask your doctor</p>
+          </div>
+          <ol className="p-5 space-y-3">
+            {result.questions_to_ask_doctor.map((q, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-400 text-xs font-bold flex items-center justify-center mt-0.5">
+                  {i + 1}
+                </span>
+                <p className="text-sm text-ink-secondary leading-relaxed flex-1">{q}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {/* Disclaimer */}
+      <p className="text-[11px] text-ink-tertiary text-center leading-relaxed px-4">
+        {result.disclaimer}
+      </p>
+    </div>
+  );
+}
+
+function ScanImageTab() {
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [depth, setDepth] = useState<ScanDepth>("simple");
+  const [scanType, setScanType] = useState<ScanTypeKey>("auto");
+  const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [result, setResult] = useState<ScanResult | null>(null);
+  const [errorKind, setErrorKind] = useState<ScanErrorKind | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [dragging, setDragging] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const ALLOWED = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const MAX_SIZE = 10 * 1024 * 1024;
+
+  const handlePick = (f: File) => {
+    if (f.size > MAX_SIZE) {
+      setErrorKind("file_too_large");
+      setErrorMsg(`Your image is ${(f.size / (1024 * 1024)).toFixed(1)} MB — please upload an image under 10 MB.`);
+      setState("error");
+      return;
+    }
+    if (!ALLOWED.includes(f.type)) {
+      setErrorKind("wrong_file_type");
+      setErrorMsg("Please upload a JPG, PNG, or WEBP image.");
+      setState("error");
+      return;
+    }
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setFile(f);
+    setPreviewUrl(URL.createObjectURL(f));
+    setState("idle");
+    setErrorKind(null);
+    setErrorMsg("");
+  };
+
+  const handleAnalyze = async () => {
+    if (!file) return;
+    track("scan_image_uploaded", { fileType: file.type, fileSize: file.size, scanType });
+    setState("loading");
+    try {
+      const fd = new FormData();
+      fd.append("image", file);
+      fd.append("depth", depth);
+      fd.append("scan_type", scanType);
+      const res = await fetch("/api/analyze-scan", { method: "POST", body: fd });
+      const json = await res.json();
+
+      if (!res.ok) {
+        const kind: ScanErrorKind =
+          json?.error === "file_too_large"
+            ? "file_too_large"
+            : json?.error === "wrong_file_type"
+            ? "wrong_file_type"
+            : "generic";
+        setErrorKind(kind);
+        setErrorMsg(json?.message ?? "Something went wrong. Please try again.");
+        setState("error");
+        return;
+      }
+
+      if (json?.error === "not_medical_image") {
+        setErrorKind("not_medical_image");
+        setErrorMsg(json.message ?? "This doesn't appear to be a medical scan.");
+        setState("error");
+        return;
+      }
+      if (json?.error === "insufficient_quality") {
+        setErrorKind("insufficient_quality");
+        setErrorMsg(json.message ?? "The image quality is insufficient for interpretation.");
+        setState("error");
+        return;
+      }
+
+      setResult(json.data as ScanResult);
+      setState("success");
+      track("scan_image_interpretation_complete");
+    } catch {
+      setErrorKind("generic");
+      setErrorMsg("Something went wrong. Please try again.");
+      setState("error");
+    }
+  };
+
+  const handleReset = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setFile(null);
+    setPreviewUrl(null);
+    setResult(null);
+    setState("idle");
+    setErrorKind(null);
+    setErrorMsg("");
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  if (state === "loading") return <ScanLoadingAnimation />;
+  if (state === "error" && errorKind) {
+    return <ScanErrorCard kind={errorKind} message={errorMsg} onReset={handleReset} />;
+  }
+  if (state === "success" && result) {
+    return (
+      <ScanResultsPanel
+        result={result}
+        depth={depth}
+        setDepth={setDepth}
+        previewUrl={previewUrl}
+        onReset={handleReset}
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-500 mt-px flex-shrink-0">
+          <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+        </svg>
+        <p className="text-xs text-sky-700 dark:text-sky-300 leading-relaxed">
+          Upload the actual scan image (X-ray, CT, MRI, ultrasound, mammogram). We&apos;ll interpret what&apos;s visible in the image itself.
+        </p>
+      </div>
+
+      {/* Upload area */}
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          const f = e.dataTransfer.files[0];
+          if (f) handlePick(f);
+        }}
+        onClick={() => !file && inputRef.current?.click()}
+        className={`relative border-2 border-dashed rounded-2xl transition-all duration-200 ${
+          file
+            ? "border-sky-400/40 bg-sky-50/60 dark:bg-sky-900/10 cursor-default"
+            : dragging
+            ? "border-sky-500 bg-sky-50 dark:bg-sky-900/20 scale-[1.01] cursor-pointer"
+            : "border-surface-border hover:border-sky-400/50 hover:bg-sky-50/30 dark:hover:bg-sky-900/10 cursor-pointer"
+        }`}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handlePick(f); }}
+        />
+        {file && previewUrl ? (
+          <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-full sm:w-32 h-32 rounded-xl overflow-hidden flex-shrink-0 border border-surface-border bg-slate-900">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={previewUrl} alt="Scan preview" className="w-full h-full object-contain" />
+            </div>
+            <div className="flex-1 min-w-0 w-full">
+              <p className="text-sm font-semibold text-ink truncate">{file.name}</p>
+              <p className="text-xs text-ink-tertiary mt-0.5">{formatSize(file.size)}</p>
+              <p className="text-xs text-sky-600 dark:text-sky-400 mt-1 font-medium">Ready to analyze</p>
+            </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); handleReset(); }}
+              className="text-ink-tertiary hover:text-ink-secondary p-2 rounded-lg hover:bg-surface-raised flex-shrink-0 self-end sm:self-auto"
+              aria-label="Remove image"
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <div className="p-12 flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-surface-raised border border-surface-border rounded-2xl flex items-center justify-center mb-5">
+              <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-ink-tertiary" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+            </div>
+            <p className="text-base font-semibold text-ink mb-1">Drop your scan image here</p>
+            <p className="text-sm text-ink-secondary mb-4">or click to browse files</p>
+            <div className="flex items-center gap-2 text-xs text-ink-tertiary">
+              {["JPG", "PNG", "WEBP"].map((f) => (
+                <span key={f} className="px-2 py-1 rounded-md bg-surface-raised border border-surface-border font-medium">{f}</span>
+              ))}
+              <span>· up to 10 MB</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Scan type pills */}
+      <div>
+        <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider mb-2.5 px-0.5">Scan type</p>
+        <div className="flex flex-wrap gap-2">
+          {SCAN_TYPES.map((s) => {
+            const active = s.key === scanType;
+            return (
+              <button
+                key={s.key}
+                onClick={() => setScanType(s.key)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 border ${
+                  active
+                    ? "bg-sky-600 border-sky-600 text-white shadow-sm shadow-sky-600/20"
+                    : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-sky-400/50 hover:text-sky-700 dark:hover:text-sky-400"
+                }`}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Depth selector */}
+      <div>
+        <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider mb-2.5 px-0.5">Explanation depth</p>
+        <div className="grid grid-cols-3 gap-2">
+          {(["simple", "medium", "expert"] as ScanDepth[]).map((d) => {
+            const labels: Record<ScanDepth, { label: string; sub: string }> = {
+              simple: { label: "Simple", sub: "Plain language" },
+              medium: { label: "Medium", sub: "Educated patient" },
+              expert: { label: "Expert", sub: "Clinical detail" },
+            };
+            const active = d === depth;
+            return (
+              <button
+                key={d}
+                onClick={() => setDepth(d)}
+                className={`flex flex-col items-center justify-center gap-0.5 px-2 py-3 rounded-xl border text-xs font-semibold transition-all duration-150 ${
+                  active
+                    ? "border-sky-500 bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400"
+                    : "border-surface-border bg-white dark:bg-slate-800 text-ink-secondary hover:border-sky-400/40 hover:text-sky-700"
+                }`}
+              >
+                <span>{labels[d].label}</span>
+                <span className="text-[10px] font-normal text-ink-tertiary">{labels[d].sub}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Analyze button */}
+      <button
+        onClick={handleAnalyze}
+        disabled={!file}
+        className="w-full py-4 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-sky-600/20 flex items-center justify-center gap-2"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+          <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+        </svg>
+        Analyze Scan
+      </button>
+
+      <p className="text-[11px] text-ink-tertiary text-center leading-relaxed">
+        Your image is processed for interpretation and never stored. This is an AI-generated educational interpretation, not a radiological diagnosis.
+      </p>
+    </div>
+  );
+}
+
 // ── Clerk auth bridge (mirrors the Lab Analyzer pattern) ────────────────────
 function ClerkAuthBridge({ onChange }: { onChange: (loaded: boolean, signedIn: boolean) => void }) {
   const { isLoaded, isSignedIn } = useUser();
@@ -1423,6 +2104,7 @@ export default function ImagingPage() {
   const t = useTranslations("Imaging");
   const { lang } = useLanguage();
 
+  const [mainTab, setMainTab] = useState<"report" | "scan">("report");
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   useToolContext(result ? JSON.stringify(result) : null);
@@ -1593,32 +2275,87 @@ export default function ImagingPage() {
 
         {/* Main card */}
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-ink/5 dark:shadow-black/30 border border-surface-border p-6 sm:p-8">
-          {state === "error" && errorCode ? (
-            <ErrorCard code={errorCode} fileSizeMB={fileSizeMB} onReset={handleReset} />
-          ) : state === "idle" ? (
-            <div className="space-y-4">
-              <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800">
-                <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-500 mt-px flex-shrink-0">
-                  <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                  <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                </svg>
-                <p className="text-xs text-sky-700 dark:text-sky-300 leading-relaxed">{t("modeHint")}</p>
-              </div>
-              <UploadZone onFileSelect={handleFileSelect} />
+          {/* Mode tabs — Report vs Scan Image */}
+          <div className="mb-6 -mx-2 sm:-mx-3">
+            <div role="tablist" aria-label="Imaging mode" className="flex gap-1 p-1 rounded-2xl bg-surface-raised border border-surface-border">
+              {([
+                {
+                  id: "report" as const,
+                  label: "Imaging Report",
+                  sub: "Written report",
+                  icon: (
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v2H7V5zm0 4h6v1H7V9zm0 3h6v1H7v-1z" clipRule="evenodd" />
+                    </svg>
+                  ),
+                },
+                {
+                  id: "scan" as const,
+                  label: "Scan Image",
+                  sub: "Actual scan",
+                  icon: (
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                    </svg>
+                  ),
+                },
+              ]).map((tab) => {
+                const active = mainTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setMainTab(tab.id)}
+                    className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 sm:py-3 rounded-xl text-sm font-semibold transition-all duration-150 ${
+                      active
+                        ? "bg-white dark:bg-slate-700 text-sky-700 dark:text-sky-400 shadow-sm border border-sky-200/60 dark:border-sky-800/60"
+                        : "text-ink-tertiary hover:text-ink-secondary"
+                    }`}
+                  >
+                    {tab.icon}
+                    <span className="flex flex-col items-start leading-tight">
+                      <span>{tab.label}</span>
+                      <span className={`text-[10px] font-normal ${active ? "text-sky-500/70 dark:text-sky-400/60" : "text-ink-tertiary/70"}`}>
+                        {tab.sub}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-          ) : state === "loading" ? (
-            <LoadingAnimation />
-          ) : result ? (
-            <ResultsPanel
-              result={result}
-              fileName={fileName}
-              onReset={handleReset}
-              activeTier={activeTier}
-              setActiveTier={setActiveTier}
-              savedAnalysisId={savedAnalysisId}
-              isSignedIn={isSignedIn}
-            />
-          ) : null}
+          </div>
+
+          {mainTab === "report" ? (
+            state === "error" && errorCode ? (
+              <ErrorCard code={errorCode} fileSizeMB={fileSizeMB} onReset={handleReset} />
+            ) : state === "idle" ? (
+              <div className="space-y-4">
+                <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-500 mt-px flex-shrink-0">
+                    <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-xs text-sky-700 dark:text-sky-300 leading-relaxed">{t("modeHint")}</p>
+                </div>
+                <UploadZone onFileSelect={handleFileSelect} />
+              </div>
+            ) : state === "loading" ? (
+              <LoadingAnimation />
+            ) : result ? (
+              <ResultsPanel
+                result={result}
+                fileName={fileName}
+                onReset={handleReset}
+                activeTier={activeTier}
+                setActiveTier={setActiveTier}
+                savedAnalysisId={savedAnalysisId}
+                isSignedIn={isSignedIn}
+              />
+            ) : null
+          ) : (
+            <ScanImageTab />
+          )}
         </div>
 
         {/* Saved confirmation (signed-in users) */}
