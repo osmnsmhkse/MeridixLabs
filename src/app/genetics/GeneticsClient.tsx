@@ -375,7 +375,7 @@ function LoadingAnimation() {
       <div className="w-12 h-12 rounded-full border-2 border-fuchsia-200 dark:border-fuchsia-900 border-t-fuchsia-500 animate-spin" />
       <p className="text-sm text-ink-secondary font-medium">Analyzing your genetic data…</p>
       <p className="text-xs text-ink-tertiary text-center max-w-xs">
-        We don't store your file — it's analyzed in memory and discarded once the response is built.
+        Your original file is analyzed in memory and discarded once the response is built. Only the AI interpretation is saved to your account.
       </p>
     </div>
   );
@@ -537,7 +537,7 @@ export default function GeneticsClient() {
             {[
               "Educational, not diagnostic",
               "Calibrated to clinical significance",
-              "Your file is never stored",
+              "Original file discarded after analysis",
             ].map((t) => (
               <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border text-xs text-ink-secondary font-medium shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />

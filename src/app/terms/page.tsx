@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     "The terms that govern your use of Meridix Labs — written in plain English.",
 };
 
-const LAST_UPDATED = "May 5, 2026";
+// TODO: set the real "Last updated" date when this revision is published.
+const LAST_UPDATED = "May 26, 2026";
+// TODO: confirm this is the correct legal/contact address.
 const CONTACT_EMAIL = "contact@meridixlabs.com";
 
 export default async function TermsPage() {
@@ -106,14 +108,16 @@ export default async function TermsPage() {
           {/* 4 */}
           <Section number="4" title={t("s4Title").replace(/^\d+\.\s*/, "")}>
             <p>
-              You can use most of the Service anonymously. If you create an account,
-              you are responsible for keeping your sign-in credentials safe and for any
-              activity under your account. Notify us immediately if you suspect
-              unauthorized access.
+              An account is required to use most of the Service end-to-end. You are
+              responsible for keeping your sign-in credentials safe and for any activity
+              under your account. Notify us immediately if you suspect unauthorized
+              access.
             </p>
             <p>
-              We use a third-party authentication provider (Clerk). When you sign up
-              you agree to their terms as well as ours. We never see your password.
+              {/* TODO: confirm which authentication provider is in use (Clerk vs Supabase Auth)
+                  and update the name below to match. */}
+              We use a third-party authentication provider. When you sign up you agree
+              to their terms as well as ours. We never see your password.
             </p>
           </Section>
 
@@ -155,11 +159,13 @@ export default async function TermsPage() {
           {/* 6 */}
           <Section number="6" title={t("s6Title").replace(/^\d+\.\s*/, "")}>
             <p>
-              You keep ownership of the lab reports you upload and the questions you
-              ask. By using the Service, you grant Meridix Labs a limited, worldwide,
-              royalty-free license to process your content solely for the purpose of
-              providing the Service to you (running the AI interpretation, storing
-              results in your account, generating chat replies, etc.).
+              You keep ownership of the lab reports you upload and the inputs and
+              questions you submit. By using the Service, you grant Meridix Labs a
+              limited, worldwide, royalty-free license to process your content solely
+              for the purpose of providing the Service to you — running the AI
+              interpretation, saving your analyses, sessions, chat messages, supplements,
+              goals, and trend data to your account so you can return to them later, and
+              generating outputs you request.
             </p>
             <p>
               We do not use your uploads or chat history to train AI models, and we do
@@ -217,6 +223,9 @@ export default async function TermsPage() {
           </Section>
 
           {/* 10 */}
+          {/* TODO (lawyer review): the limitation-of-liability cap (currently US$100),
+              the carve-outs, and the interaction with mandatory consumer-protection law
+              all need legal review before this Section can be considered final. */}
           <Section number="10" title={t("s10Title").replace(/^\d+\.\s*/, "")}>
             <p className="text-xs text-ink-tertiary leading-relaxed uppercase tracking-wide">
               To the maximum extent permitted by law, Meridix Labs and its affiliates
@@ -237,6 +246,7 @@ export default async function TermsPage() {
           </Section>
 
           {/* 11 */}
+          {/* TODO (lawyer review): indemnification scope and carve-outs need legal review. */}
           <Section number="11" title={t("s11Title").replace(/^\d+\.\s*/, "")}>
             <p>
               You agree to defend, indemnify, and hold harmless Meridix Labs from any
@@ -258,6 +268,9 @@ export default async function TermsPage() {
           </Section>
 
           {/* 13 */}
+          {/* TODO (lawyer review): governing law, forum-selection, and whether an
+              arbitration clause should be added all need legal review before this
+              Section can be considered final. */}
           <Section number="13" title={t("s13Title").replace(/^\d+\.\s*/, "")}>
             <p>
               Meridix Labs is operated by an individual founder based in the Republic

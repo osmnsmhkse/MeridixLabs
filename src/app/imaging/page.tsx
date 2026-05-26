@@ -1502,7 +1502,7 @@ function ScanLoadingAnimation() {
         <p className="text-[11px] text-ink-tertiary -mt-6">{elapsedSec}s elapsed · still running</p>
       )}
       <p className="text-xs text-ink-tertiary text-center max-w-[280px] leading-relaxed">
-        Your image is never stored. Only the AI interpretation is processed.
+        Your original image is discarded after analysis. Only the AI interpretation is saved to your account.
       </p>
     </div>
   );
@@ -2084,7 +2084,7 @@ function ScanImageTab() {
       </button>
 
       <p className="text-[11px] text-ink-tertiary text-center leading-relaxed">
-        Your image is processed for interpretation and never stored. This is an AI-generated educational interpretation, not a radiological diagnosis.
+        Your original image is discarded after analysis — only the AI interpretation is saved to your account. This is an AI-generated educational interpretation, not a radiological diagnosis.
       </p>
     </div>
   );

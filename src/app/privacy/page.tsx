@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     "How Meridix Labs collects, stores, and protects your health data — written in plain English.",
 };
 
-const LAST_UPDATED = "May 5, 2026";
+// TODO: set the real "Last updated" date when this revision is published.
+const LAST_UPDATED = "May 26, 2026";
+// TODO: confirm this is the correct privacy contact address.
 const CONTACT_EMAIL = "contact@meridixlabs.com";
 
 export default async function PrivacyPolicyPage() {
@@ -40,23 +42,30 @@ export default async function PrivacyPolicyPage() {
           </h2>
           <ul className="space-y-3 text-sm text-ink-secondary leading-relaxed">
             <Bullet>
-              We <strong className="text-ink">never store your raw uploaded files</strong> (PDFs,
-              photos, Apple Health exports). They&apos;re sent to our AI provider for processing
-              and discarded.
+              Meridix Labs <strong className="text-ink">requires an account</strong> to use most
+              tools end-to-end. We save your profile, lab analyses, diagnosis and symptom
+              sessions, chat messages, supplements, goals, and trend data to your account so you
+              can come back to them later.
             </Bullet>
             <Bullet>
-              We <strong className="text-ink">do store the AI&apos;s interpretation</strong> of your
-              report — the extracted lab values, flagged abnormalities, summary, and your chat
-              messages — so you can come back later. This is encrypted at rest and tied to your
-              account (or, if anonymous, to your browser).
+              {/* TODO: confirm — current copy assumes original uploaded files (PDFs / lab images) are
+                  discarded after the AI interpretation is generated and never written to a database
+                  or persistent disk. If we do retain originals, this bullet must be updated. */}
+              After your lab report is analyzed, we keep the <strong className="text-ink">structured
+              interpretation and extracted values</strong> on your account — not the original
+              PDF or image file, which is discarded after processing.
             </Bullet>
             <Bullet>
-              You can <strong className="text-ink">delete your data at any time</strong> from the
-              dashboard, or by emailing us.
+              Everything we store is <strong className="text-ink">encrypted at rest</strong> in our
+              database and only accessible to you when you sign in.
             </Bullet>
             <Bullet>
-              We <strong className="text-ink">never sell or share your health data</strong>. We
-              don&apos;t run ads on your data, and we don&apos;t use it to train AI models.
+              You can <strong className="text-ink">delete individual records or your entire
+              account</strong> at any time from the dashboard, or by emailing us.
+            </Bullet>
+            <Bullet>
+              We <strong className="text-ink">do not sell your data</strong> to third parties, we
+              don&apos;t run ads, and we don&apos;t use your health data to train AI models.
             </Bullet>
             <Bullet>
               Meridix Labs is an <strong className="text-ink">educational tool, not a medical
@@ -91,87 +100,99 @@ export default async function PrivacyPolicyPage() {
           {/* 2. What we collect */}
           <Section number="2" title={t("s2Title").replace(/^\d+\.\s*/, "")}>
             <h3 className="text-base font-bold text-ink mt-2 mb-2">
-              2.1 — When you upload a lab report (anonymous)
+              2.1 — Account information
             </h3>
             <p>
-              You can use the Lab Analyzer without creating an account. When you do, we
-              process the following on our servers:
+              You need an account to use most Meridix Labs tools end-to-end. When you
+              sign up we collect:
             </p>
             <ul className="space-y-2 mt-3 mb-4">
               <Item>
-                <strong>Your uploaded file</strong> (PDF, JPG, or PNG of a lab report) —
-                sent to our AI provider for analysis. We do <em>not</em> save the file
-                itself anywhere; it lives only in memory during the API call.
+                <strong>Account identifiers</strong> from our authentication provider:
+                email address, display name, and sign-in method. Your password is held
+                only by the auth provider — we never see it.
               </Item>
               <Item>
-                <strong>Optional patient context</strong> you type in (age, sex,
-                medications) — passed to the AI to tailor the interpretation.
-              </Item>
-              <Item>
-                <strong>The AI&apos;s interpretation</strong> (extracted lab values,
-                flags, summary, action plan) — saved <em>on your device</em> in your
-                browser&apos;s localStorage so you can refresh the page without losing
-                it. This snapshot expires after 30 days. Your chat messages with the AI
-                are saved the same way.
-              </Item>
-              <Item>
-                <strong>Anonymous usage metrics</strong> (whether you uploaded a report,
-                whether you completed an interpretation, your selected language) — no
-                personally identifying data.
-              </Item>
-            </ul>
-
-            <h3 className="text-base font-bold text-ink mt-6 mb-2">
-              2.2 — When you create an account
-            </h3>
-            <p>
-              If you sign up for an account, we additionally collect and store the
-              following on our servers:
-            </p>
-            <ul className="space-y-2 mt-3 mb-4">
-              <Item>
-                <strong>Account details</strong> from our authentication provider
-                (email, name, sign-in method).
-              </Item>
-              <Item>
-                <strong>Profile data you optionally provide:</strong> age, sex, weight,
+                <strong>Profile data you choose to provide:</strong> age, sex, weight,
                 height, ethnicity, medications, allergies, conditions, family history,
-                and lifestyle notes — to make interpretations more accurate.
-              </Item>
-              <Item>
-                <strong>Each lab analysis</strong> you create (the AI interpretation,
-                the structured lab values, abnormal flags, source filename, and date)
-                — but <em>not</em> the original uploaded file.
-              </Item>
-              <Item>
-                <strong>Chat messages</strong> exchanged with the AI about your reports.
-              </Item>
-              <Item>
-                <strong>Other tool usage</strong> tied to your account: symptom-checker
-                queries, diagnosis explainer queries, and (for the practice/learn tool)
-                XP and grades.
-              </Item>
-              <Item>
-                <strong>Health goals, interventions, and supplement stacks</strong> you
-                track in the dashboard.
+                and lifestyle notes. This is optional, but it makes interpretations more
+                accurate.
               </Item>
             </ul>
 
             <h3 className="text-base font-bold text-ink mt-6 mb-2">
-              2.3 — What we do NOT collect
+              2.2 — Health inputs and AI outputs you generate
+            </h3>
+            <p>
+              When you use the tools, we save the inputs you provide and the AI-generated
+              outputs to your account so you can return to them, track them over time,
+              and have continuity across tools:
+            </p>
+            <ul className="space-y-2 mt-3 mb-4">
+              <Item>
+                <strong>Lab analyses:</strong> the extracted lab values, abnormal flags,
+                AI interpretation, summary, source filename, and date. {/* TODO: confirm —
+                this assumes the original PDF/image file is discarded after analysis and
+                only the structured interpretation is persisted. Update if originals are
+                retained. */}<em>The original uploaded file (PDF or image) is not
+                retained</em> — it is processed in memory by the AI provider and
+                discarded once the structured interpretation has been generated.
+              </Item>
+              <Item>
+                <strong>Diagnosis explainer sessions</strong> — the condition you asked
+                about and the AI&apos;s explanation.
+              </Item>
+              <Item>
+                <strong>Symptom-checker sessions</strong> — symptoms you entered and the
+                AI&apos;s differential and follow-up suggestions.
+              </Item>
+              <Item>
+                <strong>Visit-prep sessions</strong> — the notes and questions you
+                generate for upcoming appointments.
+              </Item>
+              <Item>
+                <strong>Lab-chat messages</strong> — your follow-up conversations with
+                the AI about your reports.
+              </Item>
+              <Item>
+                <strong>Supplements, medications, health goals, and interventions</strong>{" "}
+                you track in your dashboard.
+              </Item>
+              <Item>
+                <strong>Trend data</strong> derived from your lab analyses over time, so
+                you can see how individual biomarkers have moved.
+              </Item>
+            </ul>
+
+            <h3 className="text-base font-bold text-ink mt-6 mb-2">
+              2.3 — Operational data
+            </h3>
+            <ul className="space-y-2 mt-3 mb-4">
+              <Item>
+                <strong>Anonymous usage metrics</strong> (which tools were used,
+                completion rates, selected language) — used in aggregate to improve the
+                product. Not tied to your identity.
+              </Item>
+              <Item>
+                <strong>Server logs</strong> (IP address, request timestamps) collected
+                by our hosting provider for operational and security purposes.
+              </Item>
+            </ul>
+
+            <h3 className="text-base font-bold text-ink mt-6 mb-2">
+              2.4 — What we do NOT collect
             </h3>
             <ul className="space-y-2 mt-3">
               <Item>The original PDF or image of your lab report after analysis.</Item>
-              <Item>The original Apple Health or wearable export after analysis.</Item>
               <Item>
-                Your password — authentication is handled by our identity provider (Clerk),
+                Your password — authentication is handled by our identity provider,
                 which never shares passwords with us.
               </Item>
               <Item>
                 Payment information — we don&apos;t currently charge for the service.
               </Item>
               <Item>
-                Any social media data, contact lists, browsing history, or location data.
+                Social media data, contact lists, browsing history, or location data.
               </Item>
             </ul>
           </Section>
@@ -181,26 +202,42 @@ export default async function PrivacyPolicyPage() {
             <p>We use the information we collect for these purposes only:</p>
             <ul className="space-y-2 mt-3">
               <Item>
-                <strong>Operating the service</strong> — running the AI interpretation,
-                showing your saved analyses, powering the chat panel, etc.
+                <strong>Providing the service</strong> — running the AI interpretation,
+                showing your saved analyses, powering the chat panel, and producing the
+                outputs you ask for.
+              </Item>
+              <Item>
+                <strong>Continuity across sessions</strong> — so you can come back to a
+                previous lab analysis, diagnosis explainer, or symptom-checker session
+                without re-entering everything.
+              </Item>
+              <Item>
+                <strong>Trend tracking</strong> — so we can show how your lab values
+                have moved over time across multiple uploads.
+              </Item>
+              <Item>
+                <strong>Personalization within the tools</strong> — using your profile
+                (age, sex, medications, conditions) to make AI interpretations more
+                relevant.
               </Item>
               <Item>
                 <strong>Improving the service</strong> — anonymous, aggregate usage
                 metrics help us decide what to build next.
               </Item>
               <Item>
-                <strong>Communicating with you</strong> — for transactional emails (e.g.,
-                a copy of your interpretation if you request one). We do not send
-                marketing emails without your explicit opt-in.
+                <strong>Communicating with you</strong> — transactional emails (account
+                verification, a copy of an interpretation if you request one). We do
+                not send marketing emails without your explicit opt-in.
               </Item>
               <Item>
                 <strong>Security</strong> — detecting abuse and protecting accounts.
               </Item>
             </ul>
             <p className="mt-4">
-              <strong className="text-ink">We do not</strong>: sell your data, share it
-              with advertisers, use it to train AI models, or hand it to third parties
-              except the operational sub-processors listed below in Section 5.
+              <strong className="text-ink">We do not</strong> sell your data, share it
+              with advertisers, use your health data to train AI models, or hand it to
+              third parties except the operational sub-processors listed below in
+              Section 5.
             </p>
           </Section>
 
@@ -208,28 +245,31 @@ export default async function PrivacyPolicyPage() {
           <Section number="4" title={t("s4Title").replace(/^\d+\.\s*/, "")}>
             <ul className="space-y-2 mt-3">
               <Item>
+                <strong>Where it&apos;s stored:</strong> Your account data, profile,
+                analyses, sessions, chat messages, supplements, goals, and trend data are
+                stored in our managed Postgres database (Supabase). The website itself is
+                hosted on Vercel.
+              </Item>
+              <Item>
                 <strong>Encryption in transit:</strong> All traffic between your browser
                 and our servers uses HTTPS/TLS.
               </Item>
               <Item>
                 <strong>Encryption at rest:</strong> Data stored in our database is
-                encrypted at rest by our database provider (Supabase, AES-256).
+                encrypted at rest by our database provider.
               </Item>
               <Item>
                 <strong>Access control:</strong> Database reads and writes go through
                 server-side API routes with row-level security enabled and
-                deny-by-default policies. The anonymous browser key cannot read or write
-                health data; only our authenticated server can.
+                deny-by-default policies. Only the signed-in user&apos;s own server
+                requests can read or write their records.
               </Item>
               <Item>
-                <strong>No long-term file storage:</strong> Your raw lab files are passed
-                to the AI provider in memory and not written to disk on our servers.
-              </Item>
-              <Item>
-                <strong>Anonymous data lives on your device:</strong> If you don&apos;t
-                create an account, your interpretation and chat history live only in your
-                browser&apos;s localStorage. We can&apos;t access it. Clearing your
-                browser data deletes it.
+                <strong>No original-file retention:</strong> {/* TODO: confirm this is
+                accurate — assumes raw uploads are processed in memory and never written
+                to persistent storage. */}Raw lab files (PDFs and images) are passed to
+                the AI provider in memory for analysis and are not written to disk on
+                our servers. Only the resulting structured interpretation is saved.
               </Item>
             </ul>
             <p className="mt-4 text-xs text-ink-tertiary leading-relaxed">
@@ -250,8 +290,8 @@ export default async function PrivacyPolicyPage() {
             <div className="mt-4 space-y-3">
               <Vendor
                 name="Anthropic (Claude AI)"
-                purpose="AI interpretation of your lab reports and chat replies."
-                what="Your uploaded file (in memory only), the chat messages you send, and the structured patient context you provide."
+                purpose="AI interpretation of your lab reports, diagnosis and symptom sessions, and chat replies."
+                what="Your uploaded file (in memory only, not stored), the chat messages and inputs you send, and the structured patient context you provide. Anthropic processes inputs to return outputs and does not use this data to train its models."
                 policy="https://www.anthropic.com/legal/privacy"
                 purposeLabel={t("s5VendorPurpose")}
                 sharesLabel={t("s5VendorShares")}
@@ -259,17 +299,19 @@ export default async function PrivacyPolicyPage() {
               />
               <Vendor
                 name="Supabase"
-                purpose="Database and storage for accounts, interpretations, and chat history."
-                what="The data described in Section 2.2 above."
+                purpose="Managed Postgres database that stores your account, profile, analyses, sessions, chat history, supplements, goals, and trend data — encrypted at rest."
+                what="All the data described in Sections 2.1 and 2.2 above."
                 policy="https://supabase.com/privacy"
                 purposeLabel={t("s5VendorPurpose")}
                 sharesLabel={t("s5VendorShares")}
                 policyLabel={t("privacyLink")}
               />
+              {/* TODO: confirm which authentication provider is in use (Clerk vs Supabase Auth)
+                  and align this entry — the codebase references both. */}
               <Vendor
                 name="Clerk"
                 purpose="User authentication and account management."
-                what="Your email, name, and authentication tokens."
+                what="Your email, display name, and authentication tokens."
                 policy="https://clerk.com/privacy"
                 purposeLabel={t("s5VendorPurpose")}
                 sharesLabel={t("s5VendorShares")}
@@ -286,8 +328,8 @@ export default async function PrivacyPolicyPage() {
               />
               <Vendor
                 name="Vercel"
-                purpose="Website hosting and serverless infrastructure."
-                what="Standard server logs (IP address, request timestamps) for operational and security purposes."
+                purpose="Website hosting and serverless infrastructure that runs Meridix Labs."
+                what="Standard server logs (IP address, request timestamps) for operational and security purposes. Application data is stored in Supabase, not on Vercel."
                 policy="https://vercel.com/legal/privacy-policy"
                 purposeLabel={t("s5VendorPurpose")}
                 sharesLabel={t("s5VendorShares")}
@@ -311,9 +353,10 @@ export default async function PrivacyPolicyPage() {
                 <strong>Authentication cookies</strong> set by Clerk to keep you signed in.
               </Item>
               <Item>
-                <strong>localStorage entries</strong> set by us to remember your last
-                anonymous interpretation, chat history, and preferences (e.g., language
-                choice, returning-visitor flag). These never leave your browser.
+                <strong>localStorage entries</strong> set by us to remember UI
+                preferences (e.g., language choice, returning-visitor flag, last-viewed
+                tool). These never leave your browser. Your medical data is stored
+                server-side on your account, not in localStorage.
               </Item>
             </ul>
             <p className="mt-4">
@@ -328,18 +371,22 @@ export default async function PrivacyPolicyPage() {
           <Section number="7" title={t("s7Title").replace(/^\d+\.\s*/, "")}>
             <ul className="space-y-2 mt-3">
               <Item>
-                <strong>Account data:</strong> Kept until you delete your account, or
-                until the account has been inactive for 24 months — whichever comes
-                first. After deletion, we delete all linked records (analyses, chat
-                history, profile, goals, etc.) within 30 days.
+                <strong>Account data and health records:</strong> Kept indefinitely while
+                your account is active, so your history and trend data remain available
+                to you. {/* TODO: confirm whether we want an automatic inactivity-deletion
+                    policy (e.g., 24-month inactivity sweep). Current behavior is to keep
+                    data until the user deletes it. */}You can delete individual records
+                or your entire account at any time; once you do, we delete all linked
+                records within 30 days.
               </Item>
               <Item>
-                <strong>Anonymous interpretations:</strong> Stored on your device for 30
-                days, then automatically expired.
+                <strong>Original lab files:</strong> {/* TODO: confirm — assumes
+                originals are not persisted. */}Not retained. Discarded as soon as the
+                AI interpretation has been generated.
               </Item>
               <Item>
-                <strong>Server logs:</strong> Standard operational logs (kept by Vercel)
-                are retained for up to 30 days.
+                <strong>Server logs:</strong> Standard operational logs (kept by our
+                hosting provider) are retained for up to 30 days.
               </Item>
               <Item>
                 <strong>Email records:</strong> When you ask us to email you a
@@ -360,17 +407,18 @@ export default async function PrivacyPolicyPage() {
             </p>
             <ul className="space-y-2 mt-3">
               <Item>
-                <strong>Access:</strong> View all your saved analyses and chat history
-                directly in your account dashboard.
+                <strong>Access:</strong> View all your saved analyses, sessions, and
+                chat history directly in your account dashboard.
               </Item>
               <Item>
                 <strong>Correction:</strong> Edit your profile information from the
                 dashboard at any time.
               </Item>
               <Item>
-                <strong>Deletion:</strong> Delete an individual analysis from the
-                dashboard. To delete your entire account and all linked data, email us at
-                the address above and we will action it within 30 days.
+                <strong>Deletion:</strong> Delete an individual record from the
+                dashboard, or delete your entire account and all linked data from your
+                account settings. If you can&apos;t find what you need, email us at the
+                address above and we will action it within 30 days.
               </Item>
               <Item>
                 <strong>Portability:</strong> Request a copy of your data in a
