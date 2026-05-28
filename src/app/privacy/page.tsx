@@ -8,9 +8,7 @@ export const metadata: Metadata = {
     "How Meridix Labs collects, stores, and protects your health data — written in plain English.",
 };
 
-// TODO: set the real "Last updated" date when this revision is published.
-const LAST_UPDATED = "May 26, 2026";
-// TODO: confirm this is the correct privacy contact address.
+const LAST_UPDATED = "May 28, 2026";
 const CONTACT_EMAIL = "contact@meridixlabs.com";
 
 export default async function PrivacyPolicyPage() {
@@ -48,9 +46,6 @@ export default async function PrivacyPolicyPage() {
               can come back to them later.
             </Bullet>
             <Bullet>
-              {/* TODO: confirm — current copy assumes original uploaded files (PDFs / lab images) are
-                  discarded after the AI interpretation is generated and never written to a database
-                  or persistent disk. If we do retain originals, this bullet must be updated. */}
               After your lab report is analyzed, we keep the <strong className="text-ink">structured
               interpretation and extracted values</strong> on your account — not the original
               PDF or image file, which is discarded after processing.
@@ -131,12 +126,10 @@ export default async function PrivacyPolicyPage() {
             <ul className="space-y-2 mt-3 mb-4">
               <Item>
                 <strong>Lab analyses:</strong> the extracted lab values, abnormal flags,
-                AI interpretation, summary, source filename, and date. {/* TODO: confirm —
-                this assumes the original PDF/image file is discarded after analysis and
-                only the structured interpretation is persisted. Update if originals are
-                retained. */}<em>The original uploaded file (PDF or image) is not
-                retained</em> — it is processed in memory by the AI provider and
-                discarded once the structured interpretation has been generated.
+                AI interpretation, summary, source filename, and date. <em>The original
+                uploaded file (PDF or image) is not retained</em> — it is processed in
+                memory by the AI provider and discarded once the structured
+                interpretation has been generated.
               </Item>
               <Item>
                 <strong>Diagnosis explainer sessions</strong> — the condition you asked
@@ -265,11 +258,10 @@ export default async function PrivacyPolicyPage() {
                 requests can read or write their records.
               </Item>
               <Item>
-                <strong>No original-file retention:</strong> {/* TODO: confirm this is
-                accurate — assumes raw uploads are processed in memory and never written
-                to persistent storage. */}Raw lab files (PDFs and images) are passed to
-                the AI provider in memory for analysis and are not written to disk on
-                our servers. Only the resulting structured interpretation is saved.
+                <strong>No original-file retention:</strong> Raw lab files (PDFs and
+                images) are passed to the AI provider in memory for analysis and are
+                not written to disk on our servers. Only the resulting structured
+                interpretation is saved.
               </Item>
             </ul>
             <p className="mt-4 text-xs text-ink-tertiary leading-relaxed">
@@ -306,8 +298,6 @@ export default async function PrivacyPolicyPage() {
                 sharesLabel={t("s5VendorShares")}
                 policyLabel={t("privacyLink")}
               />
-              {/* TODO: confirm which authentication provider is in use (Clerk vs Supabase Auth)
-                  and align this entry — the codebase references both. */}
               <Vendor
                 name="Clerk"
                 purpose="User authentication and account management."
@@ -371,18 +361,16 @@ export default async function PrivacyPolicyPage() {
           <Section number="7" title={t("s7Title").replace(/^\d+\.\s*/, "")}>
             <ul className="space-y-2 mt-3">
               <Item>
-                <strong>Account data and health records:</strong> Kept indefinitely while
-                your account is active, so your history and trend data remain available
-                to you. {/* TODO: confirm whether we want an automatic inactivity-deletion
-                    policy (e.g., 24-month inactivity sweep). Current behavior is to keep
-                    data until the user deletes it. */}You can delete individual records
-                or your entire account at any time; once you do, we delete all linked
-                records within 30 days.
+                <strong>Account data and health records:</strong> Kept indefinitely
+                while your account is active, so your history and trend data remain
+                available to you. We do not run an inactivity-based deletion sweep — your
+                data stays until you delete it. You can delete individual records or your
+                entire account at any time; once you do, we delete all linked records
+                within 30 days.
               </Item>
               <Item>
-                <strong>Original lab files:</strong> {/* TODO: confirm — assumes
-                originals are not persisted. */}Not retained. Discarded as soon as the
-                AI interpretation has been generated.
+                <strong>Original lab files:</strong> Not retained. Discarded as soon as
+                the AI interpretation has been generated.
               </Item>
               <Item>
                 <strong>Server logs:</strong> Standard operational logs (kept by our

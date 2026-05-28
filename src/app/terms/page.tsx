@@ -8,9 +8,7 @@ export const metadata: Metadata = {
     "The terms that govern your use of Meridix Labs — written in plain English.",
 };
 
-// TODO: set the real "Last updated" date when this revision is published.
-const LAST_UPDATED = "May 26, 2026";
-// TODO: confirm this is the correct legal/contact address.
+const LAST_UPDATED = "May 28, 2026";
 const CONTACT_EMAIL = "contact@meridixlabs.com";
 
 export default async function TermsPage() {
@@ -114,10 +112,8 @@ export default async function TermsPage() {
               access.
             </p>
             <p>
-              {/* TODO: confirm which authentication provider is in use (Clerk vs Supabase Auth)
-                  and update the name below to match. */}
-              We use a third-party authentication provider. When you sign up you agree
-              to their terms as well as ours. We never see your password.
+              We use Clerk as our third-party authentication provider. When you sign
+              up you agree to their terms as well as ours. We never see your password.
             </p>
           </Section>
 
