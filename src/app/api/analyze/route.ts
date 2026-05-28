@@ -1,9 +1,81 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { retrieveChunks, type RetrievedChunk } from "@/lib/retrieval";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+// ── RAG helpers ────────────────────────────────────────────────────
+// Build a retrieval query from patient context + a curated set of
+// common-abnormal topics. Since Claude reads the document and we don't
+// know which markers are abnormal up front, we cast a moderately wide
+// net so the knowledge base surfaces broadly useful reference chunks
+// for the lab/radiology categories patients most often encounter.
+const COMMON_LAB_TOPICS = [
+  "complete blood count interpretation",
+  "lipid panel cholesterol LDL HDL triglycerides",
+  "comprehensive metabolic panel kidney liver electrolytes",
+  "thyroid function TSH T3 T4 hypothyroidism hyperthyroidism",
+  "vitamin D deficiency",
+  "iron ferritin anemia",
+  "glucose HbA1c prediabetes diabetes",
+  "liver enzymes AST ALT",
+];
+
+const COMMON_RADIOLOGY_TOPICS = [
+  "pulmonary nodule Fleischner follow-up",
+  "incidental adrenal adenoma imaging",
+  "hepatic renal cyst Bosniak",
+  "degenerative changes spine",
+  "breast imaging BI-RADS",
+];
+
+function buildRetrievalQuery(
+  mode: string,
+  age: string | null,
+  sex: string | null,
+  medications: string | null
+): string {
+  const parts: string[] = [];
+  if (age) parts.push(`${age}-year-old`);
+  if (sex) parts.push(sex);
+  if (medications) parts.push(`taking ${medications}`);
+  const topics = mode === "radiology" ? COMMON_RADIOLOGY_TOPICS : COMMON_LAB_TOPICS;
+  parts.push(topics.join("; "));
+  return parts.join(" — ");
+}
+
+function formatReferenceMaterial(chunks: RetrievedChunk[]): {
+  block: string;
+  citations: Array<{ n: number; source_name: string; source_url: string; source_body: string }>;
+} {
+  if (chunks.length === 0) return { block: "", citations: [] };
+
+  const citations = chunks.map((c, i) => ({
+    n: i + 1,
+    source_name: c.source_name,
+    source_url: c.source_url,
+    source_body: c.source_body,
+  }));
+
+  const formatted = chunks
+    .map(
+      (c, i) =>
+        `[${i + 1}] ${c.source_name} — ${c.source_body}\nURL: ${c.source_url}\n${c.content}`
+    )
+    .join("\n\n---\n\n");
+
+  const block = `
+
+<reference_material>
+The following passages are excerpts from curated medical sources. Ground your interpretation in this material wherever it is clinically relevant. After any factual clinical claim that is supported by a passage, append a bracketed citation like [1] or [2, 3] using the numbers below. Do NOT cite a source if it does not actually support the claim. If no passage covers a claim, state it on its own (no citation) using standard medical knowledge.
+
+${formatted}
+</reference_material>`;
+
+  return { block, citations };
+}
 
 const LANGUAGE_NAMES: Record<string, string> = {
   en: "English",
@@ -320,9 +392,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const systemPrompt = mode === "radiology"
+    let systemPrompt = mode === "radiology"
       ? buildRadiologySystemPrompt(languageName, patientContext)
       : buildSystemPrompt(languageName, patientContext, hasHealthData);
+
+    // RAG — retrieve grounded reference material. Silent no-op if
+    // VOYAGE_API_KEY is unset or the knowledge_chunks table is empty.
+    let citations: Array<{ n: number; source_name: string; source_url: string; source_body: string }> = [];
+    try {
+      const retrievalQuery = buildRetrievalQuery(mode, patientAge, patientSex, patientMedications);
+      const chunks = await retrieveChunks(retrievalQuery, { k: 6 });
+      const { block, citations: cites } = formatReferenceMaterial(chunks);
+      systemPrompt += block;
+      citations = cites;
+    } catch (e) {
+      console.error("RAG retrieval failed (continuing without grounding):", e);
+    }
 
     const response = await client.messages.create({
       model: "claude-sonnet-4-0",
@@ -391,7 +476,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, data: parsed });
+    // Only return citations actually referenced by [n] markers in the
+    // model's output. Keeps the UI honest — no source listed unless the
+    // model actually used it.
+    const usedCitations = citations.filter((c) =>
+      new RegExp(`\\[(?:\\d+,\\s*)*${c.n}(?:\\s*,\\s*\\d+)*\\]`).test(JSON.stringify(parsed))
+    );
+
+    return NextResponse.json({ success: true, data: { ...parsed, citations: usedCitations } });
 
   } catch (error) {
     console.error("API route error:", error);
