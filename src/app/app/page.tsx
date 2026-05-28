@@ -98,6 +98,13 @@ interface AnalysisFlag {
 type OverallStatus = "normal" | "amber" | "red";
 type UrgencyLevel = "routine" | "soon" | "weeks";
 
+interface Citation {
+  n: number;
+  source_name: string;
+  source_url: string;
+  source_body: string;
+}
+
 interface AnalysisResult {
   simple: string;
   medium: string;
@@ -115,6 +122,7 @@ interface AnalysisResult {
   overall_status?: OverallStatus;
   summary_headline?: string;
   urgency?: UrgencyLevel;
+  citations?: Citation[];
 }
 
 // ── Anonymous-user analysis persistence (localStorage) ───────────────────────
@@ -816,6 +824,49 @@ function extractSpecialist(text: string): string {
   // Fallback: grab first word ending in common specialist suffixes
   const m = text.match(/\b([A-Z][a-z]+(?:ologist|iatrist|ician|surgeon|ist))\b/);
   return m ? m[1] : "specialist";
+}
+
+// ── Cited Sources Section ────────────────────────────────────────────────────
+// Lists the curated medical sources the AI grounded its answer in. The
+// numbered chips match the [n] markers Claude appends to clinical claims
+// in the result text.
+function SourcesSection({ citations }: { citations: Citation[] }) {
+  if (!citations || citations.length === 0) return null;
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+      <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
+        <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400">
+            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wider">Cited Sources</p>
+          <p className="text-[10px] text-ink-tertiary/70">Numbered references match [n] markers in the interpretation</p>
+        </div>
+      </div>
+      <ol className="p-5 space-y-2.5">
+        {citations.map((c) => (
+          <li key={c.n} className="flex items-start gap-3 text-sm">
+            <span className="flex-shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-md bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 text-xs font-semibold">
+              {c.n}
+            </span>
+            <div className="min-w-0">
+              <a
+                href={c.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-ink hover:text-brand underline decoration-ink-tertiary/30 underline-offset-2 hover:decoration-brand break-words"
+              >
+                {c.source_name}
+              </a>
+              <span className="text-ink-tertiary"> · {c.source_body}</span>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
 }
 
 // ── Supplements & Lifestyle Section ──────────────────────────────────────────
@@ -1938,7 +1989,7 @@ function ResultsPanel({
       <div className={`space-y-5 ${mobileTab === "results" ? "hidden xl:block" : ""}`}>
 
       {/* ─── SECTION 2: DEEPER ANALYSIS ──────────────────────────────────────── */}
-      {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights) && (
+      {(result.etiology || result.mechanism || result.diseases || result.specialist || result.medication_context || result.health_insights || (result.citations && result.citations.length > 0)) && (
         <div>
           <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
             {t("deeperAnalysis")}
@@ -1960,6 +2011,10 @@ function ResultsPanel({
                   <p className="text-sm text-ink-secondary leading-relaxed">{result.medication_context}</p>
                 </div>
               </div>
+            )}
+
+            {result.citations && result.citations.length > 0 && (
+              <SourcesSection citations={result.citations} />
             )}
 
             {result.health_insights && (
