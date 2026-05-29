@@ -42,7 +42,12 @@ const WORDS_PER_TOKEN = 1 / 1.3;
 const TARGET_WORDS = Math.round(TARGET_TOKENS * WORDS_PER_TOKEN);   // ~462
 const OVERLAP_WORDS = Math.round(OVERLAP_TOKENS * WORDS_PER_TOKEN); // ~62
 
-const BATCH_SIZE = 32;
+// Throttling tuned for Voyage's free tier (3 RPM, 10K TPM). Small batches
+// stay well under TPM; the inter-batch sleep keeps us under RPM. Override
+// both with env vars when on a paid tier:
+//   VOYAGE_BATCH_SIZE=32 VOYAGE_BATCH_DELAY_MS=0 npm run ingest:knowledge -- ./data/knowledge
+const BATCH_SIZE = Number(process.env.VOYAGE_BATCH_SIZE ?? 5);
+const BATCH_DELAY_MS = Number(process.env.VOYAGE_BATCH_DELAY_MS ?? 21_000);
 const TEXT_EXTS = new Set([".md", ".txt", ".text"]);
 
 interface Meta {
@@ -226,6 +231,12 @@ async function main() {
   const fresh = all.filter((c) => !existing.has(c.content_hash));
   console.log(`Embedding ${fresh.length} new chunks (${existing.size} already present).`);
 
+  const totalBatches = Math.ceil(fresh.length / BATCH_SIZE);
+  if (BATCH_DELAY_MS > 0 && totalBatches > 1) {
+    const eta = Math.ceil(((totalBatches - 1) * BATCH_DELAY_MS) / 1000);
+    console.log(`Throttling: ${BATCH_SIZE} chunks per batch, ${BATCH_DELAY_MS / 1000}s between batches (~${eta}s total).`);
+  }
+
   let inserted = 0;
   for (let i = 0; i < fresh.length; i += BATCH_SIZE) {
     const batch = fresh.slice(i, i + BATCH_SIZE);
@@ -239,6 +250,12 @@ async function main() {
 
     inserted += rows.length;
     console.log(`  ✓ upserted ${inserted}/${fresh.length}`);
+
+    // Sleep between batches to stay under Voyage's free-tier RPM cap.
+    // Skip the final sleep — no point waiting if there's no next batch.
+    if (BATCH_DELAY_MS > 0 && i + BATCH_SIZE < fresh.length) {
+      await new Promise((r) => setTimeout(r, BATCH_DELAY_MS));
+    }
   }
 
   console.log(`Done. ${inserted} new chunks ingested, ${existing.size} unchanged.`);

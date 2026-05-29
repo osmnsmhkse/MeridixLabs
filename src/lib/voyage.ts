@@ -29,30 +29,50 @@ export function isVoyageConfigured(): boolean {
   return Boolean(process.env.VOYAGE_API_KEY);
 }
 
+const MAX_RETRIES = 5;
+
 async function embedBatch(inputs: string[], inputType: InputType): Promise<number[][]> {
-  const res = await fetch(VOYAGE_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getKey()}`,
-    },
-    body: JSON.stringify({
-      input: inputs,
-      model: EMBEDDING_MODEL,
-      input_type: inputType,
-    }),
-  });
+  let attempt = 0;
+  while (true) {
+    const res = await fetch(VOYAGE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getKey()}`,
+      },
+      body: JSON.stringify({
+        input: inputs,
+        model: EMBEDDING_MODEL,
+        input_type: inputType,
+      }),
+    });
 
-  if (!res.ok) {
-    const detail = await res.text().catch(() => "");
-    throw new Error(`Voyage API ${res.status}: ${detail.slice(0, 300)}`);
+    // Retry on 429 (rate limit) and 5xx with exponential backoff.
+    // Respect Retry-After header when present.
+    if ((res.status === 429 || res.status >= 500) && attempt < MAX_RETRIES) {
+      const retryAfterHeader = res.headers.get("retry-after");
+      const retryAfterSec = retryAfterHeader ? parseFloat(retryAfterHeader) : NaN;
+      const backoffSec = Number.isFinite(retryAfterSec) && retryAfterSec > 0
+        ? retryAfterSec
+        : Math.min(60, 5 * Math.pow(2, attempt)); // 5,10,20,40,60s
+      // eslint-disable-next-line no-console
+      console.warn(`  ⚠ Voyage ${res.status} — retrying in ${backoffSec.toFixed(0)}s (attempt ${attempt + 1}/${MAX_RETRIES})`);
+      await new Promise((r) => setTimeout(r, backoffSec * 1000));
+      attempt += 1;
+      continue;
+    }
+
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      throw new Error(`Voyage API ${res.status}: ${detail.slice(0, 300)}`);
+    }
+
+    const json = (await res.json()) as VoyageResponse;
+    return json.data
+      .slice()
+      .sort((a, b) => a.index - b.index)
+      .map((d) => d.embedding);
   }
-
-  const json = (await res.json()) as VoyageResponse;
-  return json.data
-    .slice()
-    .sort((a, b) => a.index - b.index)
-    .map((d) => d.embedding);
 }
 
 export async function embedQuery(text: string): Promise<number[]> {
