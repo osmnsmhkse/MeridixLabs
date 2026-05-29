@@ -97,11 +97,9 @@ export default function ReportDetailPage() {
   const result = data.analysis;
   const flags = data.flags ?? result?.flags ?? [];
   const labs = data.labs_raw ?? [];
-  const score = data.health_score;
   const filename = data.source_filename ?? "Lab report";
   const date = formatDate(data.report_date ?? data.created_at);
 
-  const scoreColor = score == null ? "text-ink-tertiary" : score >= 80 ? "text-emerald-600" : score >= 60 ? "text-amber-600" : "text-red-600";
   const tierText = result?.[tier] ?? result?.simple ?? data.summary ?? null;
 
   const urgencyBadge =
@@ -131,12 +129,6 @@ export default function ReportDetailPage() {
             <div className="flex items-center gap-3">
               {urgencyBadge && (
                 <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${urgencyBadge.cx}`}>{urgencyBadge.label}</span>
-              )}
-              {score != null && (
-                <div className="flex flex-col items-center">
-                  <span className={`text-2xl font-extrabold ${scoreColor}`}>{score}</span>
-                  <span className="text-[10px] text-ink-tertiary font-semibold uppercase tracking-wide">/ 100</span>
-                </div>
               )}
             </div>
           </div>

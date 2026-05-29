@@ -97,7 +97,6 @@ export function normalizeAnalyses(analyses: Analysis[]): Map<string, NormalizedS
 
 export interface SystemBreakdown {
   system: BodySystem;
-  score: number;                // 0-100 health score for this system
   total: number;
   optimal: number;
   normal: number;
@@ -110,7 +109,7 @@ export function groupBySystem(map: Map<string, NormalizedSeries>): SystemBreakdo
   for (const s of map.values()) {
     const sys = s.def.system;
     if (!systems.has(sys)) {
-      systems.set(sys, { system: sys, score: 0, total: 0, optimal: 0, normal: 0, outOfRange: 0, series: [] });
+      systems.set(sys, { system: sys, total: 0, optimal: 0, normal: 0, outOfRange: 0, series: [] });
     }
     const b = systems.get(sys)!;
     b.series.push(s);
@@ -120,24 +119,10 @@ export function groupBySystem(map: Map<string, NormalizedSeries>): SystemBreakdo
     else b.outOfRange++;
   }
   for (const b of systems.values()) {
-    // Score: optimal = 100, normal = 75, out = 30
-    const pts = b.optimal * 100 + b.normal * 75 + b.outOfRange * 30;
-    b.score = b.total ? Math.round(pts / b.total) : 0;
     b.series.sort((a, b) => a.def.canonical.localeCompare(b.def.canonical));
   }
   const order: BodySystem[] = ["cardiovascular","metabolic","liver","kidney","thyroid","inflammation","hematology","nutrients","hormonal","other"];
   return order.map((o) => systems.get(o)).filter(Boolean) as SystemBreakdown[];
-}
-
-export function overallScore(systems: SystemBreakdown[]): number | null {
-  if (!systems.length) return null;
-  // Weight by number of markers in each system (more markers = more signal)
-  let total = 0, weight = 0;
-  for (const s of systems) {
-    total += s.score * s.total;
-    weight += s.total;
-  }
-  return weight ? Math.round(total / weight) : null;
 }
 
 export interface BiggestMover {

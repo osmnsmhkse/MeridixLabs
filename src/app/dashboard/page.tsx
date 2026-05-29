@@ -10,7 +10,6 @@ import {
   normalizeAnalyses,
   groupBySystem,
   biggestMovers,
-  overallScore,
   type Analysis,
   type NormalizedSeries,
   type SystemBreakdown,
@@ -117,40 +116,17 @@ function DashboardInner() {
     })();
   }, [isSignedIn, analyses.length]);
 
-  const { systems, movers, score, scoreStats, seriesMap, latest, totalFlags, risks, interactions, zoneStats, scoreDelta, scoreSeries } = useMemo(() => {
+  const { systems, movers, seriesMap, latest, totalFlags, risks, interactions, zoneStats, trackingStart } = useMemo(() => {
     const seriesMap = normalizeAnalyses(analyses);
     const systems = groupBySystem(seriesMap);
     const movers = biggestMovers(seriesMap, 3);
 
-    // Compute aggregate score: prefer normalized; fall back to AVERAGE across all stored health_scores
-    const validScores: number[] = analyses
-      .map((a) => a.health_score)
-      .filter((s): s is number => typeof s === "number");
-    const avgStored = validScores.length > 0
-      ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length)
+    // Earliest report date, for the "tracking since" metric
+    const trackingStart = analyses.length > 0
+      ? analyses
+          .map((a) => a.report_date ?? a.created_at)
+          .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0]
       : null;
-    const score = overallScore(systems) ?? avgStored;
-    const scoreStats = {
-      avg: avgStored,
-      min: validScores.length > 0 ? Math.min(...validScores) : null,
-      max: validScores.length > 0 ? Math.max(...validScores) : null,
-      latestStored: analyses[0]?.health_score ?? null,
-      reportsCount: analyses.length,
-    };
-
-    // Score over time, oldest → newest, for timeline chart
-    const scoreSeries = analyses
-      .filter((a) => typeof a.health_score === "number")
-      .slice()
-      .sort((a, b) => {
-        const ad = new Date(a.report_date ?? a.created_at).getTime();
-        const bd = new Date(b.report_date ?? b.created_at).getTime();
-        return ad - bd;
-      })
-      .map((a) => ({
-        date: a.report_date ?? a.created_at,
-        score: a.health_score as number,
-      }));
 
     const latest = analyses[0] ?? null;
     const totalFlags = analyses.reduce((acc, a) => acc + (a.flags?.length ?? 0), 0);
@@ -178,13 +154,7 @@ function DashboardInner() {
     }
     const zoneStats = { optimal: zoneOptimal, normal: zoneNormal, outOfRange: zoneOutOfRange, total: zoneTotal };
 
-    // Score trend vs previous report
-    const scoreDelta =
-      analyses.length >= 2 && analyses[0]?.health_score != null && analyses[1]?.health_score != null
-        ? analyses[0].health_score - analyses[1].health_score
-        : null;
-
-    return { systems, movers, score, scoreStats, seriesMap, latest, totalFlags, risks, interactions, zoneStats, scoreDelta, scoreSeries };
+    return { systems, movers, seriesMap, latest, totalFlags, risks, interactions, zoneStats, trackingStart };
   }, [analyses, profile]);
 
   if (!isLoaded || loading) {
@@ -246,66 +216,43 @@ function DashboardInner() {
           <EmptyState />
         ) : (
           <>
-            {/* ── ULTRA HERO: Score, Timeline, Donut, Body, Stats ── */}
+            {/* ── ULTRA HERO: Snapshot, Metrics, Donut, Body, Systems ── */}
             <div className="rounded-3xl border border-surface-border bg-gradient-to-br from-white via-white to-brand-blue/5 dark:from-slate-900 dark:via-slate-900 dark:to-brand-blue/10 overflow-hidden mb-6 shadow-sm">
 
-              {/* Top: gauge | timeline | donut */}
+              {/* Top: snapshot | metrics | donut */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-0">
 
-                {/* Score hero */}
-                <div className="md:col-span-4 p-6 border-b md:border-b-0 md:border-r border-surface-border flex flex-col">
-                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-1">{t("healthScore")}</p>
-                  <p className="text-[10px] text-ink-tertiary mb-4">Aggregated across all reports</p>
+                {/* Snapshot — zone & flags */}
+                <div className="md:col-span-5 p-6 border-b md:border-b-0 md:border-r border-surface-border flex flex-col">
+                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-1">Health Snapshot</p>
+                  <p className="text-[10px] text-ink-tertiary mb-4">Across all reports</p>
 
-                  <div className="flex items-center gap-5 flex-1">
-                    <BigGauge score={score} />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline gap-2 flex-wrap">
-                        <span className={`text-5xl font-black tabular-nums leading-none ${scoreColor(score ?? 0)}`}>{score ?? "—"}</span>
-                        <span className="text-sm font-bold text-ink-tertiary">/100</span>
-                      </div>
-                      <p className={`mt-1.5 text-base font-bold ${scoreColor(score ?? 0)}`}>
-                        {(score ?? 0) >= 85 ? "Excellent" : (score ?? 0) >= 70 ? "Good" : (score ?? 0) >= 55 ? "Fair" : "Needs attention"}
-                      </p>
-                      {scoreDelta != null && (
-                        <p className={`mt-1 text-xs font-bold inline-flex items-center gap-1 ${scoreDelta > 0 ? "text-emerald-600" : scoreDelta < 0 ? "text-red-600" : "text-ink-tertiary"}`}>
-                          {scoreDelta > 0 ? "▲" : scoreDelta < 0 ? "▼" : "="} {Math.abs(scoreDelta)} from previous
-                        </p>
-                      )}
-                    </div>
+                  <div className="grid grid-cols-3 gap-3 flex-1">
+                    <ZoneStat label="Optimal" value={zoneStats.optimal} color="emerald" />
+                    <ZoneStat label="In range" value={zoneStats.normal} color="amber" />
+                    <ZoneStat label="Out of range" value={zoneStats.outOfRange} color="red" />
                   </div>
 
-                  {scoreStats.avg != null && scoreStats.min != null && scoreStats.max != null && analyses.length >= 2 && (
-                    <div className="mt-5 grid grid-cols-3 gap-2 border-t border-surface-border pt-4">
-                      <div className="text-center">
-                        <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wide">Avg</p>
-                        <p className={`text-lg font-bold tabular-nums ${scoreColor(scoreStats.avg)}`}>{scoreStats.avg}</p>
-                      </div>
-                      <div className="text-center border-x border-surface-border">
-                        <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wide">Best</p>
-                        <p className="text-lg font-bold tabular-nums text-emerald-600">{scoreStats.max}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wide">Lowest</p>
-                        <p className="text-lg font-bold tabular-nums text-red-600">{scoreStats.min}</p>
-                      </div>
-                    </div>
-                  )}
+                  <div className="mt-5 flex items-center gap-2 border-t border-surface-border pt-4">
+                    <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg ${totalFlags > 0 ? "bg-red-100 text-red-600 dark:bg-red-900/30" : "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30"}`}>
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path d="M3 3a1 1 0 011-1h10a1 1 0 01.78 1.625L11.28 8l3.5 4.375A1 1 0 0114 14H5v4a1 1 0 11-2 0V3z" /></svg>
+                    </span>
+                    <p className="text-sm text-ink-secondary">
+                      <span className={`font-bold ${totalFlags > 0 ? "text-red-600" : "text-emerald-600"}`}>{totalFlags}</span> flagged marker{totalFlags === 1 ? "" : "s"} {totalFlags > 0 ? "to review" : "— all clear"}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Timeline chart */}
-                <div className="md:col-span-5 p-6 border-b md:border-b-0 md:border-r border-surface-border flex flex-col">
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest">Score Over Time</p>
-                    <span className="text-[10px] text-ink-tertiary">{scoreSeries.length} report{scoreSeries.length === 1 ? "" : "s"}</span>
-                  </div>
-                  <div className="flex-1 flex items-center">
-                    {scoreSeries.length >= 2 ? (
-                      <ScoreTimeline data={scoreSeries} />
-                    ) : (
-                      <div className="text-center w-full py-8">
-                        <p className="text-xs text-ink-tertiary">Upload at least 2 reports to see your trend.</p>
-                      </div>
+                {/* Key metrics */}
+                <div className="md:col-span-4 p-6 border-b md:border-b-0 md:border-r border-surface-border">
+                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">{t("keyMetrics")}</p>
+                  <div className="space-y-3">
+                    <MetricRow icon="markers" label="Markers" value={zoneStats.total > 0 ? String(zoneStats.total) : String(analyses.reduce((a, b) => a + ((b.labs_raw as unknown[] | null ?? []).length), 0))} />
+                    <MetricRow icon="reports" label="Reports" value={String(analyses.length)} />
+                    <MetricRow icon="flags" label="Total Flags" value={String(totalFlags)} valueClass={totalFlags > 0 ? "text-red-600" : "text-emerald-600"} />
+                    <MetricRow icon="latest" label="Latest" value={formatShortDate(latest?.report_date ?? latest?.created_at ?? "")} />
+                    {trackingStart && (
+                      <MetricRow icon="tracking" label="Tracking" value={`${formatShortDate(trackingStart)} →`} />
                     )}
                   </div>
                 </div>
@@ -323,7 +270,7 @@ function DashboardInner() {
                 </div>
               </div>
 
-              {/* Bottom: body diagram + system rankings + key metrics */}
+              {/* Bottom: body diagram + system breakdown */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-0 border-t border-surface-border">
 
                 {/* Body diagram */}
@@ -332,13 +279,16 @@ function DashboardInner() {
                   <BodyDiagram systems={systems} />
                 </div>
 
-                {/* System rankings */}
-                <div className="md:col-span-5 p-6 border-b md:border-b-0 md:border-r border-surface-border">
+                {/* System breakdown */}
+                <div className="md:col-span-8 p-6">
                   <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">System Health</p>
                   {systems.length > 0 ? (
                     <ul className="space-y-2.5">
-                      {systems.slice().sort((a, b) => a.score - b.score).slice(0, 6).map((s) => {
+                      {systems.slice().sort((a, b) => b.outOfRange - a.outOfRange || b.total - a.total).slice(0, 6).map((s) => {
                         const meta = BODY_SYSTEMS[s.system];
+                        const inRange = s.optimal + s.normal;
+                        const pct = s.total ? Math.round((inRange / s.total) * 100) : 0;
+                        const barColor = s.outOfRange === 0 ? "#10b981" : s.outOfRange / s.total >= 0.5 ? "#ef4444" : "#f59e0b";
                         return (
                           <li key={s.system} className="flex items-center gap-3">
                             <span className="text-base flex-shrink-0">{meta.emoji}</span>
@@ -346,37 +296,22 @@ function DashboardInner() {
                             <div className="flex-1 h-2 rounded-full overflow-hidden bg-surface-border">
                               <div
                                 className="h-full rounded-full transition-all duration-700"
-                                style={{
-                                  width: `${s.score}%`,
-                                  background: s.score >= 80 ? "#10b981" : s.score >= 60 ? "#f59e0b" : "#ef4444",
-                                }}
+                                style={{ width: `${pct}%`, background: barColor }}
                               />
                             </div>
-                            <span className={`text-xs font-bold tabular-nums w-8 text-right ${scoreColor(s.score)}`}>{s.score}</span>
+                            <span className={`text-xs font-semibold tabular-nums text-right whitespace-nowrap ${s.outOfRange > 0 ? "text-red-600" : "text-emerald-600"}`}>
+                              {s.outOfRange > 0 ? `${s.outOfRange} of ${s.total} out` : `${s.total} in range`}
+                            </span>
                           </li>
                         );
                       })}
                     </ul>
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-xs text-ink-tertiary">System scores require recognized biomarkers.</p>
+                      <p className="text-xs text-ink-tertiary">System breakdown requires recognized biomarkers.</p>
                       <p className="text-[10px] text-ink-tertiary mt-1">Try uploading reports in English for best results.</p>
                     </div>
                   )}
-                </div>
-
-                {/* Key metrics */}
-                <div className="md:col-span-3 p-6">
-                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">{t("keyMetrics")}</p>
-                  <div className="space-y-3">
-                    <MetricRow icon="markers" label="Markers" value={zoneStats.total > 0 ? String(zoneStats.total) : String(analyses.reduce((a, b) => a + ((b.labs_raw as unknown[] | null ?? []).length), 0))} />
-                    <MetricRow icon="reports" label="Reports" value={String(analyses.length)} />
-                    <MetricRow icon="flags" label="Total Flags" value={String(totalFlags)} valueClass={totalFlags > 0 ? "text-red-600" : "text-emerald-600"} />
-                    <MetricRow icon="latest" label="Latest" value={formatShortDate(latest?.report_date ?? latest?.created_at ?? "")} />
-                    {scoreSeries.length > 0 && (
-                      <MetricRow icon="tracking" label="Tracking" value={`${formatShortDate(scoreSeries[0].date)} →`} />
-                    )}
-                  </div>
                 </div>
               </div>
             </div>
@@ -483,109 +418,17 @@ function DashboardInner() {
   );
 }
 
-function BigGauge({ score }: { score: number | null }) {
-  const s = score ?? 0;
-  const radius = 56;
-  const circ = 2 * Math.PI * radius;
-  const offset = circ * (1 - s / 100);
-  const color = s >= 80 ? "#10b981" : s >= 60 ? "#f59e0b" : "#ef4444";
-  const trackColor = "rgba(148,163,184,0.18)";
-  const gradId = "gauge-grad-hero";
+function ZoneStat({ label, value, color }: { label: string; value: number; color: "emerald" | "amber" | "red" }) {
+  const tone = {
+    emerald: "border-emerald-500/30 bg-emerald-500/5 text-emerald-600",
+    amber: "border-amber-500/30 bg-amber-500/5 text-amber-600",
+    red: "border-red-500/30 bg-red-500/5 text-red-600",
+  }[color];
   return (
-    <div className="relative w-32 h-32 shrink-0">
-      <svg viewBox="0 0 128 128" className="w-full h-full -rotate-90">
-        <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={color} stopOpacity="0.7" />
-            <stop offset="100%" stopColor={color} stopOpacity="1" />
-          </linearGradient>
-        </defs>
-        <circle cx="64" cy="64" r={radius} fill="none" stroke={trackColor} strokeWidth="11" />
-        <circle
-          cx="64" cy="64" r={radius}
-          fill="none"
-          stroke={`url(#${gradId})`}
-          strokeWidth="11"
-          strokeLinecap="round"
-          strokeDasharray={circ}
-          strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 1100ms cubic-bezier(0.22, 1, 0.36, 1)" }}
-        />
-        {/* Tick marks at 25/50/75 */}
-        {[0.25, 0.5, 0.75].map((p) => {
-          const angle = p * 2 * Math.PI;
-          const x1 = 64 + Math.cos(angle) * (radius - 7);
-          const y1 = 64 + Math.sin(angle) * (radius - 7);
-          const x2 = 64 + Math.cos(angle) * (radius + 7);
-          const y2 = 64 + Math.sin(angle) * (radius + 7);
-          return <line key={p} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(148,163,184,0.5)" strokeWidth="1.5" />;
-        })}
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className="w-20 h-20 rounded-full flex items-center justify-center"
-          style={{ background: `radial-gradient(circle, ${color}25 0%, transparent 70%)` }}
-        >
-          <svg viewBox="0 0 24 24" fill="none" className="w-9 h-9" style={{ color }}>
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-      </div>
+    <div className={`rounded-xl border p-3 flex flex-col items-center justify-center text-center ${tone}`}>
+      <span className="text-3xl font-black tabular-nums leading-none">{value}</span>
+      <span className="mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-tertiary">{label}</span>
     </div>
-  );
-}
-
-function ScoreTimeline({ data }: { data: { date: string; score: number }[] }) {
-  const W = 320, H = 110, PAD_X = 14, PAD_Y_TOP = 12, PAD_Y_BOT = 22;
-  const innerW = W - PAD_X * 2;
-  const innerH = H - PAD_Y_TOP - PAD_Y_BOT;
-  const xs = data.map((_, i) => PAD_X + (i * innerW) / Math.max(1, data.length - 1));
-  const ys = data.map((d) => PAD_Y_TOP + innerH - (d.score / 100) * innerH);
-  const linePath = xs.map((x, i) => `${i === 0 ? "M" : "L"} ${x} ${ys[i]}`).join(" ");
-  const areaPath = `${linePath} L ${xs[xs.length - 1]} ${PAD_Y_TOP + innerH} L ${xs[0]} ${PAD_Y_TOP + innerH} Z`;
-  const lastIdx = data.length - 1;
-  const lastY = ys[lastIdx];
-  const lastScore = data[lastIdx].score;
-  const lastColor = lastScore >= 80 ? "#10b981" : lastScore >= 60 ? "#f59e0b" : "#ef4444";
-
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
-      <defs>
-        <linearGradient id="timeline-area" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="timeline-line" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#3b82f6" />
-          <stop offset="100%" stopColor="#6366f1" />
-        </linearGradient>
-      </defs>
-      {/* baseline grid lines at 50 and 80 */}
-      {[50, 80].map((g) => {
-        const y = PAD_Y_TOP + innerH - (g / 100) * innerH;
-        return (
-          <g key={g}>
-            <line x1={PAD_X} y1={y} x2={W - PAD_X} y2={y} stroke="rgba(148,163,184,0.18)" strokeDasharray="2,3" />
-            <text x={W - PAD_X + 2} y={y + 3} fontSize="8" fill="rgba(148,163,184,0.7)">{g}</text>
-          </g>
-        );
-      })}
-      {/* area + line */}
-      <path d={areaPath} fill="url(#timeline-area)" />
-      <path d={linePath} fill="none" stroke="url(#timeline-line)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      {/* dots */}
-      {xs.map((x, i) => (
-        <circle key={i} cx={x} cy={ys[i]} r={i === lastIdx ? 4 : 2.5} fill={i === lastIdx ? lastColor : "#ffffff"} stroke={i === lastIdx ? "#fff" : "#3b82f6"} strokeWidth="1.5" />
-      ))}
-      {/* last value pill */}
-      <g transform={`translate(${xs[lastIdx] - 18},${Math.max(0, lastY - 22)})`}>
-        <rect width="36" height="16" rx="8" fill={lastColor} />
-        <text x="18" y="11" fontSize="9" fontWeight="700" fill="#fff" textAnchor="middle">{lastScore}</text>
-      </g>
-      {/* x-axis date labels */}
-      <text x={PAD_X} y={H - 5} fontSize="9" fill="rgba(148,163,184,0.85)">{formatShortDate(data[0].date)}</text>
-      <text x={W - PAD_X} y={H - 5} fontSize="9" fill="rgba(148,163,184,0.85)" textAnchor="end">{formatShortDate(data[lastIdx].date)}</text>
-    </svg>
   );
 }
 
@@ -750,12 +593,12 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
   const thyroid = get("thyroid");
   const blood = get("hematology");
 
-  // Status → marker color
+  // Zone composition → marker color
   const colorFor = (s?: SystemBreakdown) => {
-    if (!s) return { primary: "#94a3b8", glow: "#cbd5e1", core: "#ffffff", active: false };
-    if (s.score >= 80) return { primary: "#10b981", glow: "#6ee7b7", core: "#ffffff", active: true };
-    if (s.score >= 60) return { primary: "#f59e0b", glow: "#fcd34d", core: "#ffffff", active: true };
-    return { primary: "#ef4444", glow: "#fca5a5", core: "#ffffff", active: true };
+    if (!s || s.total === 0) return { primary: "#94a3b8", glow: "#cbd5e1", core: "#ffffff", active: false };
+    if (s.outOfRange === 0) return { primary: "#10b981", glow: "#6ee7b7", core: "#ffffff", active: true };
+    if (s.outOfRange / s.total >= 0.5) return { primary: "#ef4444", glow: "#fca5a5", core: "#ffffff", active: true };
+    return { primary: "#f59e0b", glow: "#fcd34d", core: "#ffffff", active: true };
   };
 
   const cardC = colorFor(card);
@@ -857,7 +700,7 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
                 fill="white"
                 opacity={m.c.active ? 0.55 : 0.35}
               />
-              <title>{m.sys ? `${m.label} · ${m.sys.score}` : m.label}</title>
+              <title>{m.sys ? `${m.label} · ${m.sys.outOfRange > 0 ? `${m.sys.outOfRange} of ${m.sys.total} out of range` : `${m.sys.total} in range`}` : m.label}</title>
             </g>
           ))}
         </svg>
@@ -876,7 +719,7 @@ function BodyDiagram({ systems }: { systems: SystemBreakdown[] }) {
               }}
             />
             <span className="text-ink-secondary truncate">{m.label}</span>
-            {m.sys && <span className={`font-bold tabular-nums ${scoreColor(m.sys.score)} ml-auto`}>{m.sys.score}</span>}
+            {m.sys && m.sys.outOfRange > 0 && <span className="font-bold tabular-nums text-red-600 ml-auto">{m.sys.outOfRange}!</span>}
           </div>
         ))}
       </div>
@@ -1035,7 +878,11 @@ function SystemCard({ breakdown }: { breakdown: SystemBreakdown }) {
         <p className="text-sm font-bold text-ink flex items-center gap-2">
           <span aria-hidden>{meta.emoji}</span> {meta.label}
         </p>
-        <span className={`text-lg font-bold ${scoreColor(breakdown.score)}`}>{breakdown.score}</span>
+        {hasIssues ? (
+          <span className="text-xs font-bold text-red-600 whitespace-nowrap">{breakdown.outOfRange} out</span>
+        ) : (
+          <span className="text-xs font-bold text-emerald-600 whitespace-nowrap">In range</span>
+        )}
       </div>
       <div className="mt-3 flex items-center gap-1 h-1.5 rounded-full overflow-hidden bg-surface-border">
         {breakdown.optimal > 0 && <div className="h-full bg-emerald-500" style={{ flex: breakdown.optimal }} />}
@@ -1068,12 +915,6 @@ function zoneChipCx(z: NormalizedSeries["latestZone"]): string {
   if (z === "optimal") return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300";
   if (z === "normal") return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
   return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300";
-}
-
-function scoreColor(n: number): string {
-  if (n >= 80) return "text-emerald-600";
-  if (n >= 60) return "text-amber-600";
-  return "text-red-600";
 }
 
 function EmptyState() {
@@ -1279,10 +1120,6 @@ function ReportRow({ analysis, onDelete, onUpdate }: {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          {analysis.health_score != null && (
-            <span className={`text-sm font-bold tabular-nums ${scoreColor(analysis.health_score)}`}>{analysis.health_score}</span>
-          )}
-
           {/* Share */}
           <button
             onClick={createShare}

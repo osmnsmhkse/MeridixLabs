@@ -54,7 +54,6 @@ export async function POST() {
 
     const evidence = {
       reports_count: analyses.length,
-      latest_score: analyses[0]?.health_score,
       top_movers: movers.map((m) => ({
         marker: m.series.def.canonical,
         from: m.series.first.raw,
@@ -63,10 +62,10 @@ export async function POST() {
         meaning: m.meaning,
         latest_zone: m.series.latestZone,
       })),
-      worst_systems: systems.filter((s) => s.score < 75)
-        .sort((a, b) => a.score - b.score)
+      worst_systems: systems.filter((s) => s.outOfRange > 0)
+        .sort((a, b) => b.outOfRange - a.outOfRange)
         .slice(0, 3)
-        .map((s) => ({ system: s.system, score: s.score, out_of_range: s.outOfRange })),
+        .map((s) => ({ system: s.system, out_of_range: s.outOfRange, total: s.total })),
       med_interactions: interactions.slice(0, 5).map((i) => ({
         medication: i.med.display, marker: i.marker?.canonical, note: i.effect.note, severity: i.effect.severity,
       })),

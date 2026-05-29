@@ -53,7 +53,6 @@ export async function POST() {
       // Even with one report, generate a real summary from the flags
       const flagContext = {
         report_date: latest.report_date ?? latest.created_at,
-        health_score: latest.health_score,
         flags: allFlags.slice(0, 10),
         labs_total: (latest.labs_raw as unknown[])?.length ?? 0,
       };
@@ -78,10 +77,9 @@ export async function POST() {
         meaning: m.meaning,
         latest_zone: m.series.latestZone,
       })),
-      system_scores: systems.map((s) => ({ system: s.system, score: s.score, total: s.total })),
+      system_breakdown: systems.map((s) => ({ system: s.system, total: s.total, optimal: s.optimal, in_range: s.normal, out_of_range: s.outOfRange })),
       // Raw flags as fallback when biomarker normalization finds no matches
       recent_flags: allFlags.slice(0, 15),
-      health_scores: analyses.slice(0, 5).map((a) => ({ date: a.report_date ?? a.created_at, score: a.health_score })),
     };
 
     const resp = await client.messages.create({

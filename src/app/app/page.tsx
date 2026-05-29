@@ -2700,9 +2700,6 @@ export default function AppPage() {
             marker: l.marker, value: l.value, unit: l.unit, reference: l.reference,
             status: flagMarkers.has(l.marker) ? (l.status ?? "high") : "normal",
           }));
-          const flagsCount = json.data?.flags?.length ?? 0;
-          const healthScore = Math.max(20, 100 - flagsCount * 8);
-
           console.log("[meridix] calling /api/save-analysis…");
           const extractedDate = typeof json.data?.report_date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(json.data.report_date)
             ? json.data.report_date
@@ -2719,7 +2716,6 @@ export default function AppPage() {
               summary: json.data?.summary ?? json.data?.medium?.slice(0, 240) ?? null,
               patient_context: { age, sex, medications, language: lang },
               source_filename: file?.name ?? fileName ?? null,
-              health_score: healthScore,
               report_date: extractedDate,
             }),
           });
@@ -3154,21 +3150,6 @@ export default function AppPage() {
                             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                             {t("demoAnalyzedLab")}
                           </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <div className="text-right">
-                          <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("demoHealthScore")}</p>
-                          <p className="text-2xl font-black text-amber-600 leading-none tabular-nums">72</p>
-                        </div>
-                        <div className="relative w-12 h-12">
-                          <svg viewBox="0 0 48 48" className="w-12 h-12 -rotate-90">
-                            <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(148,163,184,0.18)" strokeWidth="4" />
-                            <circle cx="24" cy="24" r="20" fill="none" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" strokeDasharray={2 * Math.PI * 20} strokeDashoffset={2 * Math.PI * 20 * (1 - 72 / 100)} />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-[10px] font-bold text-amber-600">{t("demoFairScore")}</span>
-                          </div>
                         </div>
                       </div>
                     </div>

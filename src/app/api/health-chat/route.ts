@@ -35,7 +35,7 @@ Today's date: {today}.
 — BIOMARKER TRENDS (top movers since first report) —
 {movers}
 
-— BODY-SYSTEM SCORES —
+— BODY-SYSTEM BREAKDOWN —
 {systems}
 `;
 
@@ -64,7 +64,7 @@ function fmtLabs(analyses: Analysis[]): string {
   const out: string[] = [];
   for (const a of [...analyses].reverse()) {
     const date = a.report_date ?? a.created_at?.slice(0, 10);
-    out.push(`\n[${date}] ${a.source_filename ?? "report"} — score ${a.health_score ?? "?"}, ${a.flags?.length ?? 0} flags`);
+    out.push(`\n[${date}] ${a.source_filename ?? "report"} — ${a.flags?.length ?? 0} flags`);
     if (a.summary) out.push(`  Summary: ${a.summary}`);
     const labs = (a.labs_raw ?? []).slice(0, 30);
     for (const l of labs) {
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       : "Need at least 2 reports to see trends.";
 
     const systemsTxt = systems.length
-      ? systems.map((s) => `${s.system}: ${s.score}/100 (${s.optimal} optimal · ${s.normal} in-range · ${s.outOfRange} out)`).join("\n")
+      ? systems.map((s) => `${s.system}: ${s.optimal} optimal · ${s.normal} in-range · ${s.outOfRange} out of range (of ${s.total})`).join("\n")
       : "No biomarkers normalized yet.";
 
     const sys = SYSTEM_TEMPLATE

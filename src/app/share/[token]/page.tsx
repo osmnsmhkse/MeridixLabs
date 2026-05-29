@@ -97,15 +97,9 @@ export default function SharedReportPage({ params }: { params: Promise<{ token: 
           </button>
         </div>
 
-        {/* Score + summary */}
+        {/* Summary */}
         <div className="rounded-2xl border border-surface-border p-5 mb-5">
           <div className="flex items-start gap-5">
-            {analysis.health_score != null && (
-              <div className="text-center shrink-0">
-                <p className={`text-4xl font-bold ${scoreColor(analysis.health_score)}`}>{analysis.health_score}</p>
-                <p className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">/ 100</p>
-              </div>
-            )}
             <div className="min-w-0">
               <p className="text-xs font-semibold text-ink-tertiary uppercase tracking-wide">{t("summarySection")}</p>
               {analysis.summary ? (
@@ -193,11 +187,6 @@ function flagCx(status?: string): string {
   if (status === "high") return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300";
   if (status === "low")  return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
   return "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200";
-}
-function scoreColor(n: number): string {
-  if (n >= 80) return "text-emerald-600";
-  if (n >= 60) return "text-amber-600";
-  return "text-red-600";
 }
 function formatDate(iso: string): string {
   if (!iso) return "—";
