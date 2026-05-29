@@ -128,6 +128,24 @@ create table if not exists public.practice_sessions (
 create index if not exists practice_sessions_user_idx on public.practice_sessions(user_id, created_at desc);
 
 -- ─────────────────────────────────────────────────────────────────────
+-- feedback
+--   One row per "How are we doing?" widget submission. Not tied to a
+--   Clerk user — email is optional and self-reported.
+-- ─────────────────────────────────────────────────────────────────────
+create table if not exists public.feedback (
+  id          text primary key,
+  rating      integer not null check (rating between 1 and 5),
+  category    text,
+  message     text,
+  email       text,
+  page        text,
+  user_agent  text,
+  received_at timestamptz not null default now()
+);
+create index if not exists feedback_received_idx on public.feedback(received_at desc);
+create index if not exists feedback_rating_idx   on public.feedback(rating);
+
+-- ─────────────────────────────────────────────────────────────────────
 -- Row Level Security
 --   We authenticate via Clerk server-side and query through the
 --   service role key from Next.js server routes. RLS is enabled with
@@ -139,6 +157,7 @@ alter table public.lab_chat_messages  enable row level security;
 alter table public.symptom_sessions   enable row level security;
 alter table public.diagnosis_sessions enable row level security;
 alter table public.practice_sessions  enable row level security;
+alter table public.feedback            enable row level security;
 
 -- No policies means anon/authenticated (anon key) cannot read/write.
 -- Service role bypasses RLS by design.
