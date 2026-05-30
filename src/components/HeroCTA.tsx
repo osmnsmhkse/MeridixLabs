@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getAnonId } from "@/lib/track";
 
 // ── Variant config ────────────────────────────────────────────────────────────
 
@@ -31,7 +32,7 @@ function trackAB(variant: Variant, action: "shown" | "clicked"): void {
     fetch("/api/ab-track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ variant, action }),
+      body: JSON.stringify({ variant, action, anonId: getAnonId() }),
     }).catch(() => {/* silently ignore network errors */});
   } catch {
     // noop — tracking must never break the UI

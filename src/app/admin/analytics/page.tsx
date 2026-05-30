@@ -21,11 +21,14 @@ interface ABVariantStats {
 
 interface AnalyticsData {
   interpretations: { today: number; thisWeek: number; allTime: number };
+  uniqueVisitors: number;
+  signedInUsers: number;
   tierDistribution: Record<string, number>;
   topTier: string | null;
   langDistribution: Record<string, number>;
   topLanguage: string | null;
   topSpecialist: string | null;
+  toolUsage: Record<string, number>;
   dailySeries: { date: string; count: number }[];
   totals: {
     uploads: number;
@@ -33,6 +36,7 @@ interface AnalyticsData {
     shares: number;
     emails: number;
     specialistClicks: number;
+    chatMessages: number;
   };
   abTest: {
     variants: Record<string, ABVariantStats>;
@@ -50,6 +54,16 @@ const LANG_NAMES: Record<string, string> = {
   en: "English", es: "Spanish", tr: "Turkish", fr: "French", de: "German",
   ar: "Arabic", ja: "Japanese", pt: "Portuguese", it: "Italian", zh: "Chinese",
 };
+const TOOL_LABELS: Record<string, string> = {
+  "/app": "Lab Analyzer", "/imaging": "Imaging Explainer", "/symptom": "Symptom Checker",
+  "/diagnosed": "Diagnosis Explainer", "/medications": "Medication Companion",
+  "/visit": "Visit Companion", "/trends": "Trends", "/dashboard": "Dashboard",
+  "/genetics": "Genetics", "/pediatric": "Pediatric", "/womens-health": "Women's Health",
+  "/": "Home", "/learn": "Learn", "/blog": "Blog", "/profile": "Profile",
+};
+function toolLabel(path: string): string {
+  return TOOL_LABELS[path] ?? path;
+}
 
 function fmt(n: number): string {
   return n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
@@ -170,6 +184,11 @@ export default function AdminAnalyticsPage() {
     : [];
   const langMax = langEntries[0]?.[1] ?? 1;
 
+  const toolEntries = data
+    ? Object.entries(data.toolUsage).sort((a, b) => b[1] - a[1]).slice(0, 8)
+    : [];
+  const toolMax = toolEntries[0]?.[1] ?? 1;
+
   const chartData = data?.dailySeries.map((d) => ({
     ...d,
     label: shortDate(d.date),
@@ -239,6 +258,17 @@ export default function AdminAnalyticsPage() {
 
         {data && (
           <>
+            {/* ── Audience ──────────────────────────────────────────────── */}
+            <section>
+              <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Audience</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <StatCard label="Unique Visitors"  value={data.uniqueVisitors} color="blue"   sub="distinct browsers" />
+                <StatCard label="Signed-in Users"  value={data.signedInUsers}  color="violet" sub="active accounts" />
+                <StatCard label="Reports Uploaded" value={data.totals.uploads} color="amber"  sub={`${data.totals.demos} demos`} />
+                <StatCard label="Chat Messages"    value={data.totals.chatMessages} color="green" sub="follow-up questions" />
+              </div>
+            </section>
+
             {/* ── Interpretation stat cards ─────────────────────────────── */}
             <section>
               <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Interpretations</h2>
@@ -356,6 +386,27 @@ export default function AdminAnalyticsPage() {
                           label={LANG_NAMES[code] ?? code.toUpperCase()}
                           value={count}
                           max={langMax}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-600">No data yet.</p>
+                  )}
+                </div>
+
+                {/* Tool usage (page views) */}
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">
+                    Tool Usage
+                  </h3>
+                  {toolEntries.length > 0 ? (
+                    <div className="space-y-3">
+                      {toolEntries.map(([page, count]) => (
+                        <BarRow
+                          key={page}
+                          label={toolLabel(page)}
+                          value={count}
+                          max={toolMax}
                         />
                       ))}
                     </div>

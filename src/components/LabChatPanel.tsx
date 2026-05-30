@@ -22,6 +22,7 @@ import {
   type Msg,
 } from "@/components/ChatComponents";
 import { suggestFollowUpQuestions } from "@/lib/labQuestions";
+import { track } from "@/lib/track";
 import { useTranslations, useLocale } from "next-intl";
 
 type Tier = "simple" | "medium" | "expert";
@@ -193,6 +194,8 @@ export default function LabChatPanel({
     setError(null);
     setPending(true);
     setStreamingText("");
+
+    track("chat_message", { panel: "lab", tier });
 
     abortRef.current = new AbortController();
 

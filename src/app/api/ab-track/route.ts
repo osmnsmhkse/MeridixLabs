@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
+import { isAccountsEnabled, supabaseServer } from "@/lib/supabase";
 
-const DATA_FILE =
-  process.env.NODE_ENV === "production"
-    ? "/tmp/meridix-ab.json"
-    : path.join(process.cwd(), "data", "ab-test.json");
+// Local-dev fallback only. In production events go to Supabase.
+const DATA_FILE = path.join(process.cwd(), "data", "ab-test.json");
 
 const VARIANTS = new Set(["A", "B", "C"]);
 const ACTIONS  = new Set(["shown", "clicked"]);
@@ -14,23 +13,17 @@ interface ABEvent {
   variant: string;
   action: "shown" | "clicked";
   timestamp: string;
+  anonId?: string | null;
 }
 
-async function readEvents(): Promise<ABEvent[]> {
-  try {
-    const raw = await fs.readFile(DATA_FILE, "utf-8");
-    return JSON.parse(raw) as ABEvent[];
-  } catch {
-    return [];
-  }
-}
-
-async function appendEvent(entry: ABEvent): Promise<void> {
+async function appendEventToFile(entry: ABEvent): Promise<void> {
   const dir = path.dirname(DATA_FILE);
   try { await fs.mkdir(dir, { recursive: true }); } catch { /* already exists */ }
-  const events = await readEvents();
+  let events: ABEvent[] = [];
+  try {
+    events = JSON.parse(await fs.readFile(DATA_FILE, "utf-8")) as ABEvent[];
+  } catch { /* no file yet */ }
   events.push(entry);
-  // Cap at 200,000 entries
   const trimmed = events.length > 200_000 ? events.slice(-200_000) : events;
   await fs.writeFile(DATA_FILE, JSON.stringify(trimmed), "utf-8");
 }
@@ -38,7 +31,7 @@ async function appendEvent(entry: ABEvent): Promise<void> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as Record<string, unknown>;
-    const { variant, action } = body;
+    const { variant, action, anonId } = body;
 
     if (typeof variant !== "string" || !VARIANTS.has(variant)) {
       return NextResponse.json({ error: "Invalid variant." }, { status: 400 });
@@ -47,7 +40,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid action." }, { status: 400 });
     }
 
-    await appendEvent({ variant, action: action as "shown" | "clicked", timestamp: new Date().toISOString() });
+    const anon = typeof anonId === "string" ? anonId.slice(0, 64) : null;
+
+    if (isAccountsEnabled()) {
+      const { error } = await supabaseServer().from("ab_events").insert({
+        variant,
+        action,
+        anon_id: anon,
+      });
+      if (error) console.error("ab-track insert failed:", error);
+    } else {
+      await appendEventToFile({
+        variant,
+        action: action as "shown" | "clicked",
+        timestamp: new Date().toISOString(),
+        anonId: anon,
+      });
+    }
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("ab-track error:", err);

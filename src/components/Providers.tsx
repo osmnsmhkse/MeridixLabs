@@ -3,6 +3,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   // If Clerk isn't configured (local dev without keys), skip the provider
@@ -11,7 +12,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   const tree = (
     <ThemeProvider>
-      <LanguageProvider>{children}</LanguageProvider>
+      <LanguageProvider>
+        <AnalyticsTracker />
+        {children}
+      </LanguageProvider>
     </ThemeProvider>
   );
 
