@@ -9,6 +9,7 @@ import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
 import LabChatPanel from "@/components/LabChatPanel";
+import RelatedStudies from "@/components/RelatedStudies";
 import { useToolContext } from "@/components/ToolChatProvider";
 import { track } from "@/lib/track";
 
@@ -2036,6 +2037,16 @@ function ResultsPanel({
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ─── SECTION 2.4: RELATED STUDIES & ARTICLES ──────────────────────────── */}
+      {result.flags && result.flags.some((f) => f.status !== "normal") && (
+        <div>
+          <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3 px-0.5">
+            {t("relatedStudiesSection")}
+          </p>
+          <RelatedStudies flags={result.flags} lang={lang} tier={activeTier} />
         </div>
       )}
 
