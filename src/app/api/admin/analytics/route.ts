@@ -40,6 +40,7 @@ const VARIANT_TEXT: Record<string, string> = {
 // the local-dev file fallback below).
 interface Summary {
   interpretations: { today: number; thisWeek: number; allTime: number };
+  signups: { today: number; thisWeek: number; total: number };
   uniqueVisitors: number;
   signedInUsers: number;
   totals: {
@@ -86,6 +87,7 @@ function buildResponse(s: Summary) {
 
   return {
     interpretations: s.interpretations,
+    signups: s.signups,
     uniqueVisitors: s.uniqueVisitors,
     signedInUsers: s.signedInUsers,
     tierDistribution: s.tierDistribution,
@@ -162,6 +164,7 @@ async function summarizeFromFiles(): Promise<Summary> {
       thisWeek: interp.filter((e) => new Date(e.timestamp).getTime() >= weekMs).length,
       allTime:  interp.length,
     },
+    signups: { today: 0, thisWeek: 0, total: 0 }, // file fallback has no Clerk mirror
     uniqueVisitors: visitors.size,
     signedInUsers: 0, // file fallback has no Clerk ids
     totals: {

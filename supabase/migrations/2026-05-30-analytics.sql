@@ -34,9 +34,23 @@ create table if not exists public.ab_events (
 create index if not exists ab_events_created_idx on public.ab_events(created_at desc);
 create index if not exists ab_events_variant_idx on public.ab_events(variant);
 
+-- ── Registered users (mirrored from Clerk via webhook) ─────────────────────
+-- Lets the dashboard show total sign-ups, including dormant accounts that
+-- never fire an event. Populated by /api/webhooks/clerk on user.created and
+-- marked deleted on user.deleted.
+create table if not exists public.clerk_users (
+  id         text primary key,    -- Clerk user id
+  email      text,
+  created_at timestamptz not null default now(),
+  deleted_at timestamptz
+);
+
+create index if not exists clerk_users_created_idx on public.clerk_users(created_at desc);
+
 -- Service-role writes/reads only (RLS denies anon by default once enabled).
 alter table public.analytics_events enable row level security;
 alter table public.ab_events        enable row level security;
+alter table public.clerk_users      enable row level security;
 
 -- ── Dashboard aggregation ──────────────────────────────────────────────────
 -- Computes the entire admin dashboard payload in one round-trip. Pushing the
@@ -59,6 +73,11 @@ as $$
     ),
     'uniqueVisitors', (select count(distinct anon_id) from public.analytics_events where anon_id is not null),
     'signedInUsers',  (select count(distinct user_id) from public.analytics_events where user_id is not null),
+    'signups', jsonb_build_object(
+      'today',    (select count(*) from public.clerk_users, day0 where deleted_at is null and created_at >= day0.d),
+      'thisWeek', (select count(*) from public.clerk_users, day0 where deleted_at is null and created_at >= day0.d - interval '6 days'),
+      'total',    (select count(*) from public.clerk_users where deleted_at is null)
+    ),
     'totals', jsonb_build_object(
       'uploads',          (select count(*) from public.analytics_events where event in ('report_uploaded','imaging_report_uploaded','scan_image_uploaded')),
       'demos',            (select count(*) from public.analytics_events where event = 'demo_mode_used'),

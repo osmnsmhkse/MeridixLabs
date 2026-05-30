@@ -21,6 +21,7 @@ interface ABVariantStats {
 
 interface AnalyticsData {
   interpretations: { today: number; thisWeek: number; allTime: number };
+  signups: { today: number; thisWeek: number; total: number };
   uniqueVisitors: number;
   signedInUsers: number;
   tierDistribution: Record<string, number>;
@@ -263,9 +264,10 @@ export default function AdminAnalyticsPage() {
               <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Audience</h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <StatCard label="Unique Visitors"  value={data.uniqueVisitors} color="blue"   sub="distinct browsers" />
+                <StatCard label="Total Sign-ups"   value={data.signups.total}  color="green"
+                  sub={data.signups.thisWeek > 0 ? `+${data.signups.thisWeek} this week` : "all accounts"} />
                 <StatCard label="Signed-in Users"  value={data.signedInUsers}  color="violet" sub="active accounts" />
                 <StatCard label="Reports Uploaded" value={data.totals.uploads} color="amber"  sub={`${data.totals.demos} demos`} />
-                <StatCard label="Chat Messages"    value={data.totals.chatMessages} color="green" sub="follow-up questions" />
               </div>
             </section>
 
@@ -276,8 +278,8 @@ export default function AdminAnalyticsPage() {
                 <StatCard label="Today"     value={data.interpretations.today}     color="blue"   />
                 <StatCard label="This Week" value={data.interpretations.thisWeek}  color="green"  />
                 <StatCard label="All Time"  value={data.interpretations.allTime}   color="violet" />
-                <StatCard label="Uploads"   value={data.totals.uploads}            color="amber"
-                  sub={`${data.totals.demos} demos`}
+                <StatCard label="Chat Messages" value={data.totals.chatMessages}   color="amber"
+                  sub="follow-up questions"
                 />
               </div>
             </section>
