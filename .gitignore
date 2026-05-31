@@ -35,3 +35,6 @@ next-env.d.ts
 
 # local feedback log (dev only)
 feedback-log.json
+
+# claude worktrees (local only)
+.claude/worktrees/
