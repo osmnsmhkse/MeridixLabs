@@ -1,57 +1,19 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage, LANGUAGES, type LangCode } from "@/contexts/LanguageContext";
 
-// Translate icon — two speech bubbles ("A" / "文") on a blue squircle,
-// echoing the macOS Translate app glyph.
-function TranslateIcon({ className }: { className?: string }) {
-  const gradId = useId();
+// Script mark — the letters "A" / "文" set as two-tone text, evoking
+// translation between scripts without reproducing any app logo.
+function ScriptMark({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 44 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
+    <span
       aria-hidden="true"
+      className={`inline-flex items-center font-semibold leading-none tracking-tight select-none ${className ?? ""}`}
     >
-      <defs>
-        <linearGradient id={gradId} x1="22" y1="2" x2="22" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#86DCEF" />
-          <stop offset="0.55" stopColor="#57B7E8" />
-          <stop offset="1" stopColor="#3E9BDD" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="40" height="40" rx="12" fill={`url(#${gradId})`} />
-      {/* white bubble with serif "A" */}
-      <path d="M11.5 23.2 L11.5 28.6 L16.8 23.6 Z" fill="#ffffff" />
-      <rect x="6.5" y="8.8" width="19.5" height="15.4" rx="5" fill="#ffffff" />
-      <text
-        x="16.2"
-        y="20.4"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontWeight="700"
-        fontSize="13.5"
-        fill="#1a2a44"
-        textAnchor="middle"
-      >
-        A
-      </text>
-      {/* dark bubble with "文", overlapping in front */}
-      <path d="M25.8 33.6 L25.8 39 L31.2 34 Z" fill="#19222f" />
-      <rect x="19.5" y="19.4" width="18" height="15.2" rx="5" fill="#19222f" />
-      <text
-        x="28.5"
-        y="31"
-        fontFamily="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif"
-        fontWeight="600"
-        fontSize="11.5"
-        fill="#ffffff"
-        textAnchor="middle"
-      >
-        文
-      </text>
-    </svg>
+      <span>A</span>
+      <span className="text-brand-blue">文</span>
+    </span>
   );
 }
 
@@ -134,7 +96,7 @@ export default function LanguageSwitcher({ compact = false, inline = false }: Pr
           aria-expanded={open}
           className="w-full flex items-center gap-2 py-2.5 px-4 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors"
         >
-          <TranslateIcon className="w-5 h-5 flex-shrink-0" />
+          <ScriptMark className="text-[15px] flex-shrink-0" />
           <span className="flex-1 text-left">{currentNative}</span>
           <ChevronIcon open={open} />
         </button>
@@ -176,9 +138,9 @@ export default function LanguageSwitcher({ compact = false, inline = false }: Pr
         onClick={() => setOpen(!open)}
         aria-label="Switch language"
         aria-expanded={open}
-        className="flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-lg text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors text-xs font-semibold"
+        className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-ink-secondary hover:text-ink hover:bg-surface-raised transition-colors text-xs font-semibold"
       >
-        <TranslateIcon className="w-5 h-5 flex-shrink-0" />
+        <ScriptMark className="text-[15px] flex-shrink-0" />
         <span>{lang.toUpperCase()}</span>
         <ChevronIcon open={open} />
       </button>
