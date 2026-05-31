@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -40,7 +40,7 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Page-level h1 headings adopt the display face for a consistent, premium voice.
    Component-level headings opt in explicitly via `.font-display`. */
-h1 { font-family: "Fraunces", Georgia, "Times New Roman", serif; font-optical-sizing: auto; }
+h1 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "Helvetica Neue", Arial, sans-serif; }
 
 /* Respect users who prefer reduced motion — disable ambient animations */
 @media (prefers-reduced-motion: reduce) {
@@ -57,7 +57,7 @@ h1 { font-family: "Fraunces", Georgia, "Times New Roman", serif; font-optical-si
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Helvetica Neue", Arial, sans-serif;
   background-color: rgb(var(--color-surface));
   color: rgb(var(--color-ink));
   -webkit-font-smoothing: antialiased;
@@ -179,7 +179,7 @@ body {
      ═══════════════════════════════════════════════════════════ */
 
   /* Display typography — confident, oversized, tightly tracked */
-  .font-display { font-family: "Fraunces", Georgia, "Times New Roman", serif; font-optical-sizing: auto; }
+  .font-display { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "Helvetica Neue", Arial, sans-serif; }
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
 

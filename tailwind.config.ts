@@ -43,8 +43,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans:    ["Inter", "system-ui", "sans-serif"],
-        display: ["Fraunces", "Georgia", "Cambria", "serif"],
+        sans:    ["-apple-system", "BlinkMacSystemFont", '"SF Pro Text"', "Inter", '"Helvetica Neue"', "Arial", "sans-serif"],
+        display: ["-apple-system", "BlinkMacSystemFont", '"SF Pro Display"', "Inter", '"Helvetica Neue"', "Arial", "sans-serif"],
         mono:    ["JetBrains Mono", "monospace"],
       },
       animation: {
