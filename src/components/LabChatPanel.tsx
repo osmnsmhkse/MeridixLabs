@@ -321,7 +321,7 @@ export default function LabChatPanel({
       )}
 
       {/* ── Conversation area ── */}
-      <div ref={scrollerRef} className="max-h-[520px] overflow-y-auto px-5 py-5">
+      <div ref={scrollerRef} className="max-h-[70vh] min-h-[440px] overflow-y-auto px-5 py-5">
         {!conversationStarted ? (
           <EmptyState
             suggestions={suggestions}

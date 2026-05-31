@@ -157,7 +157,7 @@ export default function GeneticsChatPanel({
         )}
       </div>
 
-      <div ref={scrollerRef} className="max-h-[480px] overflow-y-auto px-5 py-5">
+      <div ref={scrollerRef} className="max-h-[70vh] min-h-[420px] overflow-y-auto px-5 py-5">
         {!conversationStarted ? (
           <div>
             <p className="text-sm text-ink-secondary leading-relaxed mb-4">

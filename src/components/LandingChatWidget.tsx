@@ -295,7 +295,7 @@ export default function LandingChatWidget() {
           <div
             className={[
               "relative w-full sm:w-[400px]",
-              "h-[88vh] sm:h-[600px] sm:max-h-[80vh]",
+              "h-[94vh] sm:h-[calc(100vh-3rem)] sm:max-h-[900px]",
               "sm:mb-6 sm:mr-6",
               "bg-surface text-ink",
               "border border-surface-border",
