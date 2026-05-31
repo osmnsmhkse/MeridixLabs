@@ -151,18 +151,32 @@ export default function AdminAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [needsAuth, setNeedsAuth] = useState(false);
+  const [password, setPassword]   = useState("");
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (pw?: string) => {
     setLoading(true);
     setError(null);
+    const token =
+      pw ??
+      (typeof window !== "undefined" ? sessionStorage.getItem("meridix_admin_pw") : null) ??
+      "";
     try {
-      const res = await fetch("/api/admin/analytics");
+      const res = await fetch("/api/admin/analytics", {
+        headers: token
+          ? { Authorization: "Basic " + btoa(unescape(encodeURIComponent(":" + token))) }
+          : {},
+      });
       if (res.status === 401 || res.status === 403) {
-        setError("Access denied. Check your password.");
+        // No/invalid password — show the password gate.
+        if (token && typeof window !== "undefined") sessionStorage.removeItem("meridix_admin_pw");
+        setError(token ? "Wrong password. Try again." : null);
+        setNeedsAuth(true);
         return;
       }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setData(await res.json());
+      setNeedsAuth(false);
       setLastRefresh(new Date());
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load analytics.");
@@ -170,6 +184,16 @@ export default function AdminAnalyticsPage() {
       setLoading(false);
     }
   }, []);
+
+  const submitPassword = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!password) return;
+      if (typeof window !== "undefined") sessionStorage.setItem("meridix_admin_pw", password);
+      load(password);
+    },
+    [password, load],
+  );
 
   useEffect(() => { load(); }, [load]);
 
@@ -220,7 +244,7 @@ export default function AdminAnalyticsPage() {
               </p>
             )}
             <button
-              onClick={load}
+              onClick={() => load()}
               disabled={loading}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-colors disabled:opacity-50"
             >
@@ -235,21 +259,49 @@ export default function AdminAnalyticsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-        {/* Error state */}
-        {error && (
+        {/* Password gate */}
+        {needsAuth && !data && (
+          <div className="max-w-sm mx-auto mt-16">
+            <form onSubmit={submitPassword} className="rounded-2xl border border-slate-800 bg-slate-900 p-6 space-y-4">
+              <div>
+                <p className="text-sm font-bold text-white">Admin access</p>
+                <p className="text-xs text-slate-400 mt-1">Enter the dashboard password to continue.</p>
+              </div>
+              <input
+                type="password"
+                autoFocus
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="w-full rounded-lg bg-slate-800 border border-slate-700 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {error && <p className="text-xs text-red-400">{error}</p>}
+              <button
+                type="submit"
+                disabled={loading || !password}
+                className="w-full rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-2 disabled:opacity-50"
+              >
+                {loading ? "Checking…" : "Unlock"}
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Error state (non-auth) */}
+        {error && !needsAuth && (
           <div className="flex items-start gap-3 p-4 rounded-xl bg-red-950/40 border border-red-800 text-red-300">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-400">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>
             <div>
               <p className="font-semibold text-sm">{error}</p>
-              <button onClick={load} className="text-xs underline mt-1 text-red-400 hover:text-red-300">Try again</button>
+              <button onClick={() => load()} className="text-xs underline mt-1 text-red-400 hover:text-red-300">Try again</button>
             </div>
           </div>
         )}
 
         {/* Loading skeleton */}
-        {loading && !data && (
+        {loading && !data && !needsAuth && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="rounded-2xl border border-slate-800 bg-slate-900 p-5 h-24 animate-pulse" />
