@@ -355,19 +355,27 @@ export default function SymptomPage() {
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
       {/* Hero */}
-      <section className="max-w-2xl mx-auto px-4 sm:px-6 pt-12 pb-8 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-violet-100 dark:bg-violet-900/30 rounded-full text-violet-700 dark:text-violet-400 text-xs font-semibold mb-6">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
-          </svg>
-          {t("badge")}
+      <section className="relative isolate overflow-hidden grain pt-12 pb-8 text-center">
+        <div className="aurora-field" aria-hidden="true">
+          <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "20%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(139,92,246,0.4), transparent 62%)" }} />
+          <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "18%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(74,133,239,0.3), transparent 64%)", animationDelay: "-7s" }} />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-bold text-ink tracking-tight mb-4">
-          {t("title")}
-        </h1>
-        <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto">
-          {t("subtitle")}
-        </p>
+        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+        <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-100/80 dark:bg-violet-900/30 border border-violet-200/70 dark:border-violet-800/50 backdrop-blur text-violet-700 dark:text-violet-300 mb-6">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-500 opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-500" />
+            </span>
+            <span className="kicker-mono">{t("badge")}</span>
+          </div>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-4">
+            {t("title")}
+          </h1>
+          <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
+            {t("subtitle")}
+          </p>
+        </div>
       </section>
 
       {/* Input card */}

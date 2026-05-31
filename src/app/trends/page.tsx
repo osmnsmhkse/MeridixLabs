@@ -171,7 +171,7 @@ function CustomTooltip({ active, payload }: any) {
   const d: ChartPoint = payload[0].payload;
   const abnormal = d.status !== "normal";
   return (
-    <div className="bg-white border border-surface-border rounded-xl shadow-xl p-3.5 min-w-[140px]">
+    <div className="bg-surface-raised border border-surface-border rounded-xl shadow-xl p-3.5 min-w-[140px]">
       <p className="text-xs text-ink-tertiary mb-1">{d.displayDate}</p>
       <p className={`text-lg font-extrabold ${abnormal ? "text-red-500" : "text-emerald-600"}`}>
         {d.value} <span className="text-sm font-normal text-ink-tertiary">{d.unit}</span>
@@ -251,7 +251,7 @@ function ReportSlotCard({
       className={`rounded-2xl border transition-all duration-200 ${
         isAnalyzed
           ? "border-emerald-200 bg-emerald-50/30"
-          : "border-surface-border bg-white"
+          : "border-surface-border bg-surface-raised"
       }`}
     >
       <div className="px-5 py-3.5 border-b border-surface-border/60 flex items-center justify-between">
@@ -338,7 +338,7 @@ function ReportSlotCard({
             value={slot.date}
             onChange={(e) => onDateChange(slot.id, e.target.value)}
             max={new Date().toISOString().split("T")[0]}
-            className="px-3 py-2 rounded-xl border border-surface-border text-sm text-ink bg-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all"
+            className="px-3 py-2 rounded-xl border border-surface-border text-sm text-ink bg-surface-raised focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all"
           />
         </div>
       </div>
@@ -366,7 +366,7 @@ function TrendIcon({ trend, size = "md" }: { trend: string; size?: "sm" | "md" }
     </svg>
   );
   return (
-    <svg viewBox="0 0 20 20" fill="currentColor" className={`${s} text-gray-400`}>
+    <svg viewBox="0 0 20 20" fill="currentColor" className={`${s} text-ink-tertiary`}>
       <path fillRule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
     </svg>
   );
@@ -636,12 +636,12 @@ export default function TrendsPage() {
   const hasResults = analyzedReports.length >= 2;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white">
+    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-[#0B1424] dark:to-[#070B16]">
       <div className={`mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 ${hasResults ? "max-w-7xl" : "max-w-3xl"}`}>
 
         {/* Header */}
         <div className="text-center mb-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-surface-raised border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
             {t("badge")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-3">
@@ -694,7 +694,7 @@ export default function TrendsPage() {
                 body: t("step3Desc"),
               },
             ].map((item) => (
-              <div key={item.step} className="bg-white rounded-2xl border border-surface-border px-5 py-4 flex gap-3">
+              <div key={item.step} className="bg-surface-raised rounded-2xl border border-surface-border px-5 py-4 flex gap-3">
                 <div className="w-8 h-8 rounded-lg bg-brand-blue-light flex items-center justify-center flex-shrink-0 mt-0.5">
                   {item.icon}
                 </div>
@@ -709,7 +709,7 @@ export default function TrendsPage() {
 
         {/* ── Setup / Upload phase ─────────────────────────────── */}
         {!hasResults && (
-          <div className="bg-white rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8 space-y-4">
+          <div className="bg-surface-raised rounded-3xl shadow-xl shadow-ink/5 border border-surface-border p-6 sm:p-8 space-y-4">
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-base font-bold text-ink">Add your lab reports</h2>
               <span className="text-xs text-ink-tertiary">{readySlots.length} / {slots.length} ready</span>
@@ -784,7 +784,7 @@ export default function TrendsPage() {
             {/* Main content — left 2 columns */}
             <div className="lg:col-span-2 space-y-6">
               {/* Reports summary bar */}
-              <div className="bg-white rounded-2xl border border-surface-border px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="bg-surface-raised rounded-2xl border border-surface-border px-5 py-4 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -810,7 +810,7 @@ export default function TrendsPage() {
 
               {/* Stats cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-white rounded-xl border border-surface-border px-4 py-3">
+                <div className="bg-surface-raised rounded-xl border border-surface-border px-4 py-3">
                   <p className="text-2xl font-extrabold text-ink">{stats.total}</p>
                   <p className="text-xs text-ink-tertiary mt-0.5">Markers Tracked</p>
                 </div>
@@ -829,7 +829,7 @@ export default function TrendsPage() {
               </div>
 
               {/* Tab navigation */}
-              <div className="bg-white rounded-2xl border border-surface-border overflow-hidden">
+              <div className="bg-surface-raised rounded-2xl border border-surface-border overflow-hidden">
                 <div className="flex border-b border-surface-border">
                   {([
                     { key: "overview", label: "All Markers", icon: "M4 5a2 2 0 012-2h4.586A2 2 0 0112 3.586L15.414 7A2 2 0 0116 8.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" },
@@ -887,7 +887,7 @@ export default function TrendsPage() {
                           className={`text-left rounded-xl border p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
                             selectedMarker === summary.marker
                               ? "border-brand-blue bg-brand-blue-light/20 shadow-sm"
-                              : "border-surface-border bg-white hover:border-brand-blue/30"
+                              : "border-surface-border bg-surface-raised hover:border-brand-blue/30"
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2 mb-2">
@@ -901,7 +901,7 @@ export default function TrendsPage() {
                                 summary.trend === "improving" ? "text-emerald-600" :
                                 summary.trend === "worsening" ? "text-red-600" :
                                 summary.trend === "fluctuating" ? "text-amber-600" :
-                                "text-gray-500"
+                                "text-ink-tertiary"
                               }`}>
                                 {summary.changePercent !== 0 && (
                                   <>{summary.changePercent > 0 ? "+" : ""}{summary.changePercent.toFixed(1)}%</>
@@ -958,7 +958,7 @@ export default function TrendsPage() {
                       <select
                         value={selectedMarker}
                         onChange={(e) => handleMarkerSelect(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-surface-border text-sm text-ink bg-white focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-xl border border-surface-border text-sm text-ink bg-surface-raised focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all appearance-none cursor-pointer"
                       >
                         <option value="">— Choose a marker —</option>
                         {allMarkers.map((m) => {
@@ -1158,7 +1158,7 @@ export default function TrendsPage() {
                               {entries.map((entry, i) => (
                                 <div
                                   key={i}
-                                  className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-white border border-surface-border/60"
+                                  className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-surface-raised border border-surface-border/60"
                                 >
                                   <div className="flex items-center gap-2 min-w-0">
                                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${

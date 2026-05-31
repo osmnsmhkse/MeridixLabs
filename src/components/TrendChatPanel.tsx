@@ -138,7 +138,7 @@ export default function TrendChatPanel({
   const conversationStarted = messages.length > 0;
 
   return (
-    <div className="rounded-2xl border border-surface-border bg-white overflow-hidden shadow-sm h-full flex flex-col">
+    <div className="rounded-2xl border border-surface-border bg-surface-raised overflow-hidden shadow-sm h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-surface-border/70 bg-gradient-to-r from-brand-blue/5 via-brand-indigo/3 to-transparent flex-shrink-0">
         <div className="flex items-center gap-3 min-w-0">
@@ -176,7 +176,7 @@ export default function TrendChatPanel({
                 <button
                   key={q}
                   onClick={() => send(q)}
-                  className="group text-left rounded-xl border border-surface-border bg-white hover:border-brand-blue/40 hover:bg-brand-blue-light/30 transition-all px-3.5 py-2.5"
+                  className="group text-left rounded-xl border border-surface-border bg-surface-raised hover:border-brand-blue/40 hover:bg-brand-blue-light/30 transition-all px-3.5 py-2.5"
                 >
                   <p className="text-[13px] text-ink-secondary group-hover:text-ink leading-snug">
                     {q}
@@ -210,7 +210,7 @@ export default function TrendChatPanel({
             e.preventDefault();
             send();
           }}
-          className={`relative rounded-2xl border bg-white transition-all shadow-sm ${
+          className={`relative rounded-2xl border bg-surface-raised transition-all shadow-sm ${
             hasInput || pending
               ? "border-brand-blue/50 shadow-brand-blue/5"
               : "border-surface-border"

@@ -1169,20 +1169,26 @@ export default function VisitPage() {
   const hasResult = stage === "result";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-slate-900 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-[#0B1424] dark:to-[#070B16]">
       {/* Hero */}
-      <section className="pt-32 pb-10 px-4 sm:px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-brand-indigo/20 text-brand-indigo text-sm font-medium mb-6 shadow-sm">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-indigo flex-shrink-0">
-              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-            </svg>
-            {t("badge")}
+      <section className="relative isolate overflow-hidden grain pt-32 pb-10 px-4 sm:px-6">
+        <div className="aurora-field" aria-hidden="true">
+          <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(99,102,241,0.36), transparent 62%)" }} />
+          <div className="aurora-blob animate-aurora" style={{ top: "-10%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(74,133,239,0.3), transparent 64%)", animationDelay: "-7s" }} />
+        </div>
+        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+        <div className="relative z-10 max-w-2xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-white/5 border border-brand-indigo/25 backdrop-blur text-brand-indigo mb-6 shadow-soft">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-indigo opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-indigo" />
+            </span>
+            <span className="kicker-mono text-brand-indigo">{t("badge")}</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight leading-tight mb-3">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold tracking-tightest leading-[1.03] mb-3">
             <span className="text-gradient-blue">{t("title")}</span>
           </h1>
-          <p className="text-lg text-ink-secondary leading-relaxed">{t("subtitle")}</p>
+          <p className="text-lg text-ink-secondary leading-relaxed text-pretty">{t("subtitle")}</p>
         </div>
       </section>
 

@@ -166,24 +166,27 @@ export default function MedicationsPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
       {/* ── Hero ────────────────────────────────────────────────────── */}
       {(showInput || stage === "loading") && (
-        <section className="max-w-2xl mx-auto px-4 sm:px-6 pt-12 pb-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-teal-100 dark:bg-teal-900/30 rounded-full text-teal-700 dark:text-teal-400 text-xs font-semibold mb-6">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path
-                fillRule="evenodd"
-                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {t("badge")}
+        <section className="relative isolate overflow-hidden grain pt-12 pb-8 text-center">
+          <div className="aurora-field" aria-hidden="true">
+            <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(20,184,166,0.34), transparent 62%)" }} />
+            <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(74,133,239,0.28), transparent 64%)", animationDelay: "-7s" }} />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-ink tracking-tight mb-4">
-            {t("title")}
-          </h1>
-          <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto">
-            {t("subtitle")}
-          </p>
+          <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+          <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-100/80 dark:bg-teal-900/30 border border-teal-200/70 dark:border-teal-800/50 backdrop-blur text-teal-700 dark:text-teal-300 mb-6">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 opacity-60" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-teal-500" />
+              </span>
+              <span className="kicker-mono">{t("badge")}</span>
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-4">
+              {t("title")}
+            </h1>
+            <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
+              {t("subtitle")}
+            </p>
+          </div>
         </section>
       )}
 

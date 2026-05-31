@@ -520,14 +520,18 @@ export default function GeneticsClient() {
   const showInput = stage === "idle" || stage === "error";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-fuchsia-50/60 to-white dark:from-slate-900 dark:to-slate-900 pt-24 pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-fuchsia-50/60 to-white dark:from-[#0B1424] dark:to-[#070B16] pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Hero ──────────────────────────────────────────────────── */}
         <div className="text-center mb-8">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-fuchsia-300/40 text-fuchsia-700 dark:text-fuchsia-400 text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-            Got DNA results?
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-fuchsia-100/80 dark:bg-fuchsia-900/25 border border-fuchsia-300/50 dark:border-fuchsia-800/50 backdrop-blur text-fuchsia-700 dark:text-fuchsia-300 mb-5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-500 opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-fuchsia-500" />
+            </span>
+            <span className="kicker-mono">Got DNA results?</span>
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
             Genetic Test Explainer
           </h1>
           <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">

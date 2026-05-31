@@ -1159,19 +1159,27 @@ export default function WomensHealthPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50/30 via-violet-50/20 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 pt-20 pb-24">
       {/* Hero */}
-      <section className="max-w-2xl mx-auto px-4 sm:px-6 pt-10 pb-6 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-5 bg-gradient-to-r from-rose-100 to-violet-100 dark:from-rose-900/30 dark:to-violet-900/30 text-violet-700 dark:text-violet-300 border border-violet-200/40 dark:border-violet-800/40">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-            <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
-          </svg>
-          {t("badge")}
+      <section className="relative isolate overflow-hidden grain pt-10 pb-6 text-center">
+        <div className="aurora-field" aria-hidden="true">
+          <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "20%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(244,63,94,0.3), transparent 62%)" }} />
+          <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "18%", width: "28vw", height: "28vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.3), transparent 64%)", animationDelay: "-7s" }} />
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-3 leading-tight">
-          {t("title")}
-        </h1>
-        <p className="text-base sm:text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto">
-          {t("subtitle")}
-        </p>
+        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+        <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-5 bg-gradient-to-r from-rose-100/80 to-violet-100/80 dark:from-rose-900/30 dark:to-violet-900/30 text-violet-700 dark:text-violet-300 border border-violet-200/50 dark:border-violet-800/40 backdrop-blur">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-500 opacity-60" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-500" />
+            </span>
+            <span className="kicker-mono">{t("badge")}</span>
+          </div>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
+            {t("title")}
+          </h1>
+          <p className="text-base sm:text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
+            {t("subtitle")}
+          </p>
+        </div>
       </section>
 
       {/* Mode picker — when no mode chosen */}
