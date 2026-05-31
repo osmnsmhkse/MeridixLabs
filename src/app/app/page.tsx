@@ -2828,10 +2828,11 @@ export default function AppPage() {
           {userData && userData.interpretationCount > 1 && state === "idle" ? (
             /* Returning user greeting */
             <>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-                {t("welcomeBack")}
+              <span className="chip text-brand-blue mx-auto mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
+                <span className="kicker-mono text-brand-blue">{t("welcomeBack")}</span>
               </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
+              <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
                 {t("welcomeReadyTitle")}{" "}
                 <span className="text-gradient-blue">{t("welcomeReadyHighlight")}</span>
               </h1>
@@ -2849,14 +2850,15 @@ export default function AppPage() {
           ) : (
             /* Default hero */
             <>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
-                {t("heroBadge")}
+              <span className="chip text-brand-blue mx-auto mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
+                <span className="kicker-mono text-brand-blue">{t("heroBadge")}</span>
               </span>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-snug">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">
                 {t("heroTitle")}{" "}
                 <span className="text-gradient-blue">{t("heroHighlight")}</span>
               </h1>
-              <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
+              <p className="mt-4 text-base sm:text-lg text-ink-secondary max-w-xl mx-auto leading-relaxed text-pretty">
                 {t("heroSubtitle")}
               </p>
             </>

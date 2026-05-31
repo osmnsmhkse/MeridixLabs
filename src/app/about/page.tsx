@@ -13,25 +13,30 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="gradient-hero pt-36 pb-20 relative overflow-hidden">
-        <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
+      <section className="gradient-hero grain pt-36 pb-20 relative overflow-hidden">
+        <div className="aurora-field" aria-hidden="true">
+          <div className="aurora-blob animate-aurora" style={{ top: "-10%", left: "15%", width: "36vw", height: "36vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.4), transparent 62%)" }} />
+          <div className="aurora-blob animate-aurora" style={{ top: "0%", right: "10%", width: "32vw", height: "32vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.34), transparent 64%)", animationDelay: "-7s" }} />
+        </div>
+        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <span className="inline-block px-4 py-2 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-sm font-semibold mb-6 shadow-sm">
-            {t("missionBadge")}
+          <span className="chip text-brand-blue mx-auto mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
+            <span className="kicker-mono text-brand-blue">{t("missionBadge")}</span>
           </span>
-          <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-6">
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-[4.4rem] font-bold text-ink tracking-tightest leading-[1.02] mb-6">
             {t("missionTitleLine1")}
             <br />
             <span className="text-gradient-blue">{t("missionTitleLine2")}</span>
           </h1>
-          <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed text-pretty">
             {t("missionBody1")}
           </p>
         </div>
       </section>
 
       {/* ─── MISSION ─────────────────────────────────────────── */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-surface">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -144,7 +149,7 @@ export default async function AboutPage() {
             ].map((v) => (
               <div
                 key={v.title}
-                className="p-6 rounded-2xl bg-white border border-surface-border card-hover"
+                className="p-6 rounded-2xl bento bento-hover"
               >
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${v.color}`}>
                   {v.icon}
@@ -160,7 +165,7 @@ export default async function AboutPage() {
       </section>
 
       {/* ─── HOW WE BUILT IT ──────────────────────────────────── */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-surface">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -214,7 +219,7 @@ export default async function AboutPage() {
                       <path d="M7 11V7a5 5 0 0110 0v4"/>
                     </svg>
                   ),
-                  color: "text-slate-600 bg-slate-100",
+                  color: "text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800",
                 },
                 {
                   label: t("specFormat"),

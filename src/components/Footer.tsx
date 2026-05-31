@@ -8,7 +8,8 @@ export default function Footer() {
   const t = useTranslations("Footer");
 
   return (
-    <footer className="bg-surface-raised border-t border-surface-border">
+    <footer className="relative bg-surface-raised border-t border-surface-border">
+      <div className="gradient-line absolute top-0 left-0 right-0" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
 

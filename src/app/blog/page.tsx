@@ -22,11 +22,11 @@ export default async function BlogIndexPage() {
   const posts = getAllPosts();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       {/* Hero */}
       <section className="gradient-hero pt-36 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-surface-raised border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
             {t("badge")}
           </span>
           <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-4">
@@ -52,7 +52,7 @@ export default async function BlogIndexPage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group flex flex-col rounded-2xl border border-surface-border bg-white hover:border-brand-blue/30 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-300 overflow-hidden"
+                  className="group flex flex-col rounded-2xl border border-surface-border bg-surface-raised hover:border-brand-blue/30 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-300 overflow-hidden"
                 >
                   {/* Coloured top accent */}
                   <div className="h-1.5 w-full bg-gradient-to-r from-brand-blue to-blue-400" />

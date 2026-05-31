@@ -115,7 +115,7 @@ function RelatedPosts({ currentSlug }: { currentSlug: string }) {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex flex-col p-4 rounded-xl border border-surface-border hover:border-brand-blue/30 hover:shadow-md hover:shadow-brand-blue/5 bg-white transition-all duration-200"
+            className="group flex flex-col p-4 rounded-xl border border-surface-border hover:border-brand-blue/30 hover:shadow-md hover:shadow-brand-blue/5 bg-surface-raised transition-all duration-200"
           >
             <span className="text-[10px] font-bold text-brand-blue uppercase tracking-widest mb-2">Health Education</span>
             <p className="text-sm font-semibold text-ink leading-snug mb-2 group-hover:text-brand-blue transition-colors line-clamp-2">
@@ -150,7 +150,7 @@ export default async function BlogPostPage({
   const secondHalf = post.content.slice(splitIdx);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       {/* Article header */}
       <section className="gradient-hero pt-36 pb-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -179,7 +179,7 @@ export default async function BlogPostPage({
               </svg>
               {readTime} min read
             </div>
-            <span className="px-2.5 py-1 rounded-full bg-white border border-brand-blue/20 text-brand-blue text-xs font-semibold">
+            <span className="px-2.5 py-1 rounded-full bg-surface-raised border border-brand-blue/20 text-brand-blue text-xs font-semibold">
               Health Education
             </span>
           </div>

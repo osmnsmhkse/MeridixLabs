@@ -14,12 +14,12 @@ const CONTACT_EMAIL = "contact@meridixlabs.com";
 export default async function TermsPage() {
   const t = await getTranslations("Terms");
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="gradient-hero pt-36 pb-14 relative overflow-hidden">
         <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white border border-brand-blue/30 text-brand-blue text-xs font-semibold mb-5 shadow-sm">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-surface-raised border border-brand-blue/30 text-brand-blue text-xs font-semibold mb-5 shadow-sm">
             {t("title")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight leading-tight mb-4">

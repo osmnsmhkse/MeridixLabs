@@ -49,77 +49,158 @@ export default function LandingPage() {
     <div className="min-h-screen">
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero">
-        {/* Mesh drift ambient */}
-        <div className="mesh-bg" />
-        {/* Masked grid */}
-        <div className="grid-mask" />
-
-        {/* Orbiting particles */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 pointer-events-none">
-          <div className="orbit-particle absolute">
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-blue/50" />
-          </div>
-          <div className="orbit-particle-sm absolute">
-            <div className="w-1 h-1 rounded-full bg-brand-indigo/60" />
-          </div>
+      <section className="relative isolate overflow-hidden gradient-hero grain pt-28 pb-16 lg:pt-32 lg:pb-24">
+        {/* Aurora ambient field */}
+        <div className="aurora-field" aria-hidden="true">
+          <div className="aurora-blob animate-aurora" style={{ top: "-8%", left: "8%", width: "44vw", height: "44vw", background: "radial-gradient(circle at 30% 30%, rgba(74,133,239,0.55), transparent 60%)" }} />
+          <div className="aurora-blob animate-aurora" style={{ top: "0%", right: "2%", width: "40vw", height: "40vw", background: "radial-gradient(circle at 60% 40%, rgba(99,102,241,0.5), transparent 62%)", animationDelay: "-6s" }} />
+          <div className="aurora-blob animate-aurora" style={{ bottom: "-12%", left: "32%", width: "38vw", height: "38vw", background: "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.32), transparent 64%)", animationDelay: "-11s" }} />
         </div>
+        {/* Refined dot grid */}
+        <div className="absolute inset-0 dot-grid opacity-70 pointer-events-none" aria-hidden="true" />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 text-center">
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white dark:bg-slate-900 border border-surface-border text-ink-secondary text-sm font-medium mb-8 reveal shadow-soft">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-50" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-blue" />
-            </span>
-            <span className="text-ink font-medium">{tHero("badge")}</span>
-            <span className="text-ink-tertiary kicker-mono">v2</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+            {/* ── Left: message ───────────────────────────── */}
+            <div className="lg:col-span-6 min-w-0 text-center lg:text-left">
+              <div className="chip text-ink-secondary mb-7 reveal">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-60" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-blue" />
+                </span>
+                <span className="text-ink uppercase tracking-[0.14em]">{tHero("badge")}</span>
+                <span className="text-ink-tertiary kicker-mono">v2</span>
+              </div>
+
+              <h1 className="font-display font-bold text-ink leading-[0.95] tracking-tightest mb-6 reveal reveal-delay-1 text-[3.25rem] sm:text-[4.25rem] lg:text-[4.6rem] xl:text-[5.4rem]">
+                {tHero("title")}{" "}
+                <span className="text-gradient-premium">{tHero("highlight")}</span>
+              </h1>
+
+              <p className="max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl text-ink-secondary leading-relaxed mb-9 reveal reveal-delay-2 text-pretty">
+                {tHero("subtitle")}
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 reveal reveal-delay-3">
+                <HeroCTA />
+                <a
+                  href="#how-it-works"
+                  className="btn-ghost inline-flex items-center gap-2 px-7 py-4 font-semibold rounded-full text-base"
+                >
+                  {tHero("seeHow")}
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Trust signals — refined inline icons */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2.5 mt-9 reveal reveal-delay-4">
+                {[
+                  { text: tHero("trustEncrypted"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425A12.11 12.11 0 0118 7c0 5.163-3.26 9.564-7.834 11.257a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.236 4.53-1.673-1.673a.75.75 0 10-1.06 1.06l2.3 2.3a.75.75 0 001.137-.089l3.746-5.246z" clipRule="evenodd" /></svg> },
+                  { text: tHero("trustSpeed"),     icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
+                  { text: tHero("trustAI"),        icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path d="M10 1.5a1 1 0 01.94.658l.95 2.6 2.6.95a1 1 0 010 1.88l-2.6.95-.95 2.6a1 1 0 01-1.88 0l-.95-2.6-2.6-.95a1 1 0 010-1.88l2.6-.95.95-2.6A1 1 0 0110 1.5zM4.5 12a.75.75 0 01.71.508l.46 1.322 1.322.46a.75.75 0 010 1.42l-1.322.46-.46 1.322a.75.75 0 01-1.42 0l-.46-1.322-1.322-.46a.75.75 0 010-1.42l1.322-.46.46-1.322A.75.75 0 014.5 12z" /></svg> },
+                  { text: tHero("trustFree"),      icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
+                ].map((s) => (
+                  <span key={s.text} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-secondary">
+                    <span className="text-brand-blue">{s.icon}</span>
+                    {s.text}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Right: live analysis preview ───────────── */}
+            <div className="lg:col-span-6 min-w-0 relative reveal reveal-delay-2">
+              {/* Floating accent badges */}
+              <div className="hidden sm:flex absolute -top-5 -left-3 z-20 items-center gap-2 px-3 py-2 rounded-2xl bento shadow-premium animate-float-slow">
+                <span className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" /></svg>
+                </span>
+                <div className="leading-tight pr-1">
+                  <p className="text-[10px] text-ink-tertiary kicker-mono">Reviewed</p>
+                  <p className="text-xs font-bold text-ink font-mono-data">14 markers</p>
+                </div>
+              </div>
+              <div className="hidden sm:flex absolute -bottom-5 -right-3 z-20 items-center gap-2 px-3 py-2 rounded-2xl bento shadow-premium animate-float-slower">
+                <span className="w-7 h-7 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
+                </span>
+                <div className="leading-tight pr-1">
+                  <p className="text-[10px] text-ink-tertiary kicker-mono">Analyzed in</p>
+                  <p className="text-xs font-bold text-ink font-mono-data">8.2s</p>
+                </div>
+              </div>
+
+              <div className="ring-gradient rounded-3xl bento shadow-bento">
+                {/* Window header */}
+                <div className="relative flex items-center justify-between px-5 py-4 border-b border-surface-border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-glow-blue">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="leading-tight">
+                      <p className="text-sm font-bold text-ink">Basic Metabolic Panel</p>
+                      <p className="text-[11px] text-ink-tertiary">Meridix · Lab Analyzer</p>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-brand-blue text-[11px] font-bold uppercase tracking-wider">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
+                    Live
+                  </span>
+                </div>
+
+                {/* Tier tabs */}
+                <div className="px-5 pt-4 flex gap-1.5">
+                  {(["Simple","Medium","Expert"] as DemoTier[]).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setDemoTier(t)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${t === demoTier ? "bg-brand-blue text-white shadow-glow-blue" : "text-ink-tertiary hover:text-ink-secondary bg-surface-raised"}`}
+                    >{t === "Simple" ? tTiers("simple") : t === "Medium" ? tTiers("medium") : tTiers("expert")}</button>
+                  ))}
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-3">
+                  <p className="text-sm text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].summary}</p>
+                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-800/50 overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400 rounded-l-xl" />
+                    <span className="text-sm font-semibold text-ink pl-2">Glucose</span>
+                    <div className="text-right">
+                      <span className="font-mono-data text-sm font-bold text-amber-600">112</span>
+                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
+                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 70–99</p>
+                    </div>
+                  </div>
+                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/15 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400 rounded-l-xl" />
+                    <span className="text-sm font-semibold text-ink pl-2">Creatinine</span>
+                    <div className="text-right">
+                      <span className="font-mono-data text-sm font-bold text-emerald-600">0.9</span>
+                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
+                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 0.7–1.2</p>
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-brand-blue/8 to-brand-indigo/8 border border-brand-blue/20">
+                    <p className="kicker-mono text-brand-blue-dark dark:text-brand-blue mb-1">{DEMO_TIERS[demoTier].specialist.label}</p>
+                    <p className="text-xs text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].specialist.body}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-extrabold text-ink leading-[0.97] tracking-tightest mb-6 reveal reveal-delay-1">
-            {tHero("title")}{" "}
-            <span className="text-gradient-blue">{tHero("highlight")}</span>
-          </h1>
-
-          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-ink-secondary leading-relaxed mb-10 reveal reveal-delay-2">
-            {tHero("subtitle")}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 reveal reveal-delay-3">
-            <HeroCTA />
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center gap-2 px-7 py-3.5 border border-surface-border hover:border-brand-blue/30 text-ink-secondary hover:text-ink font-medium rounded-2xl text-base transition-all duration-300 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm hover:shadow-soft"
-            >
-              {tHero("seeHow")}
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </a>
-          </div>
-
-          {/* Trust signals */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-8 reveal reveal-delay-4">
-            {[
-              { icon: "✓", text: tHero("trustEncrypted") },
-              { icon: "⚡", text: tHero("trustSpeed") },
-              { icon: "◎", text: tHero("trustAI") },
-              { icon: "✦", text: tHero("trustFree") },
-            ].map((s) => (
-              <span key={s.text} className="inline-flex items-center gap-1.5 text-xs text-ink-tertiary">
-                <span className="text-brand-blue">{s.icon}</span>
-                {s.text}
-              </span>
-            ))}
-          </div>
-
-          {/* 3-tool entry points */}
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto reveal reveal-delay-4">
+          {/* ── 3 entry paths ───────────────────────────── */}
+          <div className="mt-16 lg:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 reveal reveal-delay-3">
             {[
               {
                 href: "/symptom",
                 color: "text-emerald-600 dark:text-emerald-400",
-                border: "border-emerald-200/60 dark:border-emerald-800/40 hover:border-emerald-400/60",
                 iconBg: "bg-emerald-100 dark:bg-emerald-900/40",
                 icon: (
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -133,7 +214,6 @@ export default function LandingPage() {
               {
                 href: "/app",
                 color: "text-brand-blue",
-                border: "border-brand-blue/20 dark:border-brand-blue/30 hover:border-brand-blue/50",
                 iconBg: "bg-brand-blue/10",
                 icon: (
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -148,7 +228,6 @@ export default function LandingPage() {
               {
                 href: "/diagnosed",
                 color: "text-violet-600 dark:text-violet-400",
-                border: "border-violet-200/60 dark:border-violet-800/40 hover:border-violet-400/60",
                 iconBg: "bg-violet-100 dark:bg-violet-900/40",
                 icon: (
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -163,21 +242,21 @@ export default function LandingPage() {
               <a
                 key={item.href}
                 href={item.href}
-                className={`group flex flex-col gap-3 p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border ${item.border} transition-all duration-300 hover:shadow-lift hover:-translate-y-1`}
+                className="group bento bento-hover bento-spot flex flex-col gap-3 p-5"
               >
-                <div className="flex items-center justify-between">
-                  <span className={`kicker-mono ${item.color} opacity-60`}>{item.step}</span>
-                  <svg viewBox="0 0 20 20" fill="currentColor" className={`w-3.5 h-3.5 ${item.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                <div className="relative z-10 flex items-center justify-between">
+                  <span className={`kicker-mono ${item.color} opacity-70`}>{item.step}</span>
+                  <svg viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 ${item.color} opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300`}>
                     <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-8 h-8 rounded-lg ${item.iconBg} ${item.color} flex items-center justify-center flex-shrink-0`}>
+                <div className="relative z-10 flex items-center gap-2.5">
+                  <div className={`w-9 h-9 rounded-xl ${item.iconBg} ${item.color} flex items-center justify-center flex-shrink-0`}>
                     {item.icon}
                   </div>
-                  <p className={`text-sm font-semibold ${item.color}`}>{item.title}</p>
+                  <p className={`text-[15px] font-bold ${item.color}`}>{item.title}</p>
                 </div>
-                <p className="text-xs text-ink-tertiary leading-relaxed">{item.desc}</p>
+                <p className="relative z-10 text-[13px] text-ink-tertiary leading-relaxed">{item.desc}</p>
               </a>
             ))}
           </div>
@@ -192,12 +271,12 @@ export default function LandingPage() {
         <div className="absolute inset-0 grid-mask opacity-60" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 reveal">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full text-brand-blue shadow-soft">
+            <span className="chip text-brand-blue mx-auto">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
               <span className="kicker-mono text-brand-blue">{tHow("badge")}</span>
             </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">{tHow("title")}</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">{tHow("subtitle")}</p>
+            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">{tHow("title")}</h2>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto text-pretty">{tHow("subtitle")}</p>
           </div>
 
           {/* Steps with connecting line */}
@@ -227,17 +306,17 @@ export default function LandingPage() {
                   description: tHow("step3Desc"),
                 },
               ].map((item, i) => (
-                <div key={i} className={`reveal reveal-delay-${i + 1} group relative flex flex-col items-center text-center p-8 rounded-2xl border border-surface-border bg-white dark:bg-slate-900 hover:border-brand-blue/25 transition-all duration-300 shadow-soft hover:shadow-lift`}>
+                <div key={i} className={`reveal reveal-delay-${i + 1} group bento bento-hover bento-spot relative flex flex-col items-center text-center p-8`}>
                   {/* Step number badge — mono style */}
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-surface-border shadow-soft">
-                    <span className="step-badge text-brand-blue">{tHow("step")} {item.step}</span>
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-surface border border-surface-border shadow-soft z-10">
+                    <span className="step-badge text-gradient-premium">{tHow("step")} {item.step}</span>
                   </div>
                   {/* Icon with conic spin */}
-                  <div className="conic-icon w-14 h-14 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-surface-border rounded-2xl flex items-center justify-center text-brand-blue mb-6 mt-3 group-hover:border-brand-blue/30 transition-all duration-300">
+                  <div className="conic-icon relative z-10 w-14 h-14 bg-gradient-to-br from-surface-raised to-surface border border-surface-border rounded-2xl flex items-center justify-center text-brand-blue mb-6 mt-3 group-hover:border-brand-blue/30 transition-all duration-300">
                     {item.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-ink mb-3 tracking-tighter3">{item.title}</h3>
-                  <p className="text-ink-secondary text-sm leading-relaxed">{item.description}</p>
+                  <h3 className="relative z-10 font-display text-xl font-bold text-ink mb-3 tracking-tight">{item.title}</h3>
+                  <p className="relative z-10 text-ink-secondary text-sm leading-relaxed">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -250,12 +329,12 @@ export default function LandingPage() {
         <div className="absolute inset-0 grid-mask opacity-50" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 reveal">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full text-brand-blue shadow-soft">
+            <span className="chip text-brand-blue mx-auto">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" /></svg>
               <span className="kicker-mono text-brand-blue">{tTiers("badge")}</span>
             </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">{tTiers("title")}</h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto">{tTiers("subtitle")}</p>
+            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">{tTiers("title")}</h2>
+            <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto text-pretty">{tTiers("subtitle")}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -290,66 +369,65 @@ export default function LandingPage() {
                 highlight: tTiers("expertDesc"),
               },
             ].map((tier, i) => (
-              <div key={i} className={`reveal reveal-delay-${i + 1} group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tier.borderHover} hover:shadow-lift transition-all duration-300 shadow-soft`}>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="conic-icon w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 border border-surface-border flex items-center justify-center group-hover:border-current/20 transition-all duration-300">{tier.icon}</div>
+              <div key={i} className={`reveal reveal-delay-${i + 1} group bento bento-hover bento-spot p-6`}>
+                <div className="relative z-10 flex items-center justify-between mb-5">
+                  <div className="conic-icon w-10 h-10 rounded-xl bg-surface-raised border border-surface-border flex items-center justify-center group-hover:border-current/20 transition-all duration-300">{tier.icon}</div>
                   <span className={`kicker-mono px-2.5 py-1 rounded-full ${tier.badge}`}>{tier.audience}</span>
                 </div>
-                <h3 className="text-xl font-bold text-ink mb-3 tracking-tighter3">{tier.tier}</h3>
-                <p className="text-sm text-ink-secondary leading-relaxed mb-5 border-l-2 border-surface-border pl-4 italic">{tier.example}</p>
-                <div className="gradient-line mb-4" />
-                <p className="kicker-mono text-ink-tertiary">{tier.highlight}</p>
+                <h3 className="relative z-10 font-display text-xl font-bold text-ink mb-3 tracking-tight">{tier.tier}</h3>
+                <p className="relative z-10 text-sm text-ink-secondary leading-relaxed mb-5 border-l-2 border-surface-border pl-4 italic">{tier.example}</p>
+                <div className="relative z-10 gradient-line mb-4" />
+                <p className="relative z-10 kicker-mono text-ink-tertiary">{tier.highlight}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── PRODUCT SUITE ────────────────────────────────────── */}
-      <section className="relative py-28 bg-slate-50 dark:bg-slate-950 overflow-hidden">
-        <div className="absolute inset-0 grid-mask opacity-40" />
+      {/* ─── PRODUCT SUITE (bento) ────────────────────────────── */}
+      <section className="relative py-28 bg-surface overflow-hidden grain">
+        <div className="absolute inset-0 dot-grid opacity-40 pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14 reveal">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full shadow-soft">
+            <span className="chip text-brand-blue mx-auto">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
               <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
             </span>
-            <h2 className="mt-4 text-4xl sm:text-5xl font-extrabold text-ink tracking-tightest">
-              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}{tSuite("titleHighlight")}
+            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">
+              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}<span className="text-gradient-premium">{tSuite("titleHighlight")}</span>
             </h2>
-            <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto">
+            <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto text-pretty">
               {tSuite("subtitle")}
             </p>
           </div>
 
-          {/* Featured tool — Lab Analyzer */}
-          <div className="reveal mb-6">
+          {/* Featured tool — Lab Analyzer (large bento tile) */}
+          <div className="reveal mb-5">
             <Link
               href="/app"
-              className="group relative flex flex-col sm:flex-row items-start gap-8 p-8 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border border-glow hover:shadow-2xl hover:shadow-brand-blue/10 transition-all duration-500 overflow-hidden"
+              className="group bento ring-gradient bento-hover relative flex flex-col sm:flex-row items-start gap-8 p-8 sm:p-10 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/3 via-transparent to-brand-indigo/3 pointer-events-none" />
-              {/* Scan line effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/5 via-transparent to-brand-indigo/5 pointer-events-none" />
               <div className="absolute inset-0 scan-line pointer-events-none opacity-20" />
-              <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-lg shadow-brand-blue/30 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-brand-blue/40 transition-all duration-500">
+              <div className="relative z-10 flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-glow-blue group-hover:scale-110 transition-all duration-500">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8 text-white">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
                 </svg>
               </div>
-              <div className="flex-1 min-w-0 relative">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-brand-blue/10 to-brand-indigo/10 rounded-full text-[11px] font-bold text-brand-blue uppercase tracking-wider">
+              <div className="relative z-10 flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-brand-blue/12 to-brand-indigo/12 rounded-full text-[11px] font-bold text-brand-blue uppercase tracking-wider">
                     <span className="w-1 h-1 rounded-full bg-brand-blue animate-pulse" />
                     {tSuite("mostUsed")}
                   </span>
                 </div>
-                <h3 className="text-2xl font-extrabold text-ink mb-2">{tSuite("labTitle")}</h3>
+                <h3 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-2 tracking-tight">{tSuite("labTitle")}</h3>
                 <p className="text-ink-secondary leading-relaxed mb-4 max-w-xl">
                   {tSuite("labDesc")}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-5">
                   {tSuite("labTags").split(",").map((tag) => (
-                    <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-ink-secondary text-xs rounded-full border border-surface-border">{tag.trim()}</span>
+                    <span key={tag} className="px-2.5 py-1 bg-surface-raised text-ink-secondary text-xs rounded-full border border-surface-border">{tag.trim()}</span>
                   ))}
                 </div>
                 <span className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue group-hover:gap-3 transition-all duration-300">
@@ -474,15 +552,14 @@ export default function LandingPage() {
                 icon: <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-5 h-5 text-violet-600 dark:text-violet-400"><path strokeLinecap="round" strokeLinejoin="round" d="M10 3a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm0 7v6m-2.5-2.5h5" /></svg>,
               },
             ].map((tool, i) => (
-              <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${i + 1} group relative flex flex-col p-6 rounded-2xl bg-white dark:bg-slate-900 border border-surface-border ${tool.hoverBorder} hover:shadow-xl ${tool.hoverGlow} transition-all duration-500 overflow-hidden card-hover`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-current/5 to-transparent rounded-full -translate-y-10 translate-x-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className={`w-11 h-11 rounded-xl ${tool.iconBg} flex items-center justify-center mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-500`}>
+              <Link key={tool.href} href={tool.href} className={`reveal reveal-delay-${Math.min(i + 1, 5)} group bento bento-hover bento-spot flex flex-col p-6`}>
+                <div className={`relative z-10 w-11 h-11 rounded-xl ${tool.iconBg} flex items-center justify-center mb-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-500`}>
                   {tool.icon}
                 </div>
-                <p className={`text-[11px] font-bold ${tool.color} uppercase tracking-wider mb-1.5`}>{tool.label}</p>
-                <h3 className="text-lg font-bold text-ink mb-2">{tool.title}</h3>
-                <p className="text-sm text-ink-secondary leading-relaxed flex-1 mb-4">{tool.desc}</p>
-                <span className={`inline-flex items-center gap-1.5 text-sm font-bold ${tool.color} group-hover:gap-2.5 transition-all duration-300`}>
+                <p className={`relative z-10 text-[11px] font-bold ${tool.color} uppercase tracking-wider mb-1.5`}>{tool.label}</p>
+                <h3 className="relative z-10 font-display text-lg font-bold text-ink mb-2 tracking-tight">{tool.title}</h3>
+                <p className="relative z-10 text-sm text-ink-secondary leading-relaxed flex-1 mb-4">{tool.desc}</p>
+                <span className={`relative z-10 inline-flex items-center gap-1.5 text-sm font-bold ${tool.color} group-hover:gap-2.5 transition-all duration-300`}>
                   {tool.cta}
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300"><path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" /></svg>
                 </span>
@@ -505,8 +582,8 @@ export default function LandingPage() {
               { number: tStats("tiersCount"), label: tStats("tiersLabel"), color: "text-violet-500" },
               { number: tStats("toolsCount"), label: tStats("toolsLabel"), color: "text-amber-500" },
             ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center justify-center py-8 px-4 bg-white dark:bg-slate-900">
-                <span className={`text-3xl sm:text-4xl font-extrabold tracking-tightest ${stat.color}`}>{stat.number}</span>
+              <div key={i} className="flex flex-col items-center justify-center py-8 px-4 bg-surface">
+                <span className={`font-display text-3xl sm:text-[2.6rem] font-bold tracking-tightest ${stat.color}`}>{stat.number}</span>
                 <p className="mt-1.5 text-xs text-ink-tertiary">{stat.label}</p>
               </div>
             ))}
@@ -532,23 +609,25 @@ export default function LandingPage() {
 
           {/* Feedback cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 reveal reveal-delay-2">
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-brand-blue/20 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-500">
-              <p className="text-sm text-ink-secondary leading-relaxed mb-4">
+            <div className="bento bento-hover p-6">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-brand-blue/25 mb-3"><path d="M9.5 6C6.5 6 4 8.5 4 11.5V18h6v-6H7c0-1.7 1.1-3 2.5-3V6zm10 0c-3 0-5.5 2.5-5.5 5.5V18h6v-6h-3c0-1.7 1.1-3 2.5-3V6z"/></svg>
+              <p className="text-[15px] text-ink-secondary leading-relaxed mb-4">
                 &ldquo;{tTestimonials("quote1")}&rdquo;
               </p>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">S</span>
                 </div>
                 <span className="text-xs text-ink-tertiary">{tTestimonials("author1")}</span>
               </div>
             </div>
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-surface-border hover:border-violet-500/20 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-500">
-              <p className="text-sm text-ink-secondary leading-relaxed mb-4">
+            <div className="bento bento-hover p-6">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-violet-500/25 mb-3"><path d="M9.5 6C6.5 6 4 8.5 4 11.5V18h6v-6H7c0-1.7 1.1-3 2.5-3V6zm10 0c-3 0-5.5 2.5-5.5 5.5V18h6v-6h-3c0-1.7 1.1-3 2.5-3V6z"/></svg>
+              <p className="text-[15px] text-ink-secondary leading-relaxed mb-4">
                 &ldquo;{tTestimonials("quote2")}&rdquo;
               </p>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">M</span>
                 </div>
                 <span className="text-xs text-ink-tertiary">{tTestimonials("author2")}</span>
@@ -564,12 +643,12 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white dark:bg-slate-900 border border-surface-border rounded-full shadow-soft">
+              <span className="chip text-brand-blue">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                 <span className="kicker-mono text-brand-blue">{tFeatures("badge")}</span>
               </span>
-              <h2 className="mt-4 text-4xl font-extrabold text-ink tracking-tightest leading-tight">{tFeatures("title")}</h2>
-              <p className="mt-4 text-lg text-ink-secondary leading-relaxed">{tFeatures("subtitle")}</p>
+              <h2 className="mt-5 font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.05]">{tFeatures("title")}</h2>
+              <p className="mt-4 text-lg text-ink-secondary leading-relaxed text-pretty">{tFeatures("subtitle")}</p>
               <div className="mt-10 space-y-5">
                 {[
                   { title: tFeatures("flaggedTitle"), desc: tFeatures("flaggedDesc"), color: "text-red-500", bgColor: "bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-900", icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
@@ -589,8 +668,8 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="relative reveal reveal-delay-2">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/6 to-brand-indigo/4 rounded-3xl blur-2xl" />
-              <div className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl shadow-brand-blue/10 border border-surface-border overflow-hidden scan-line">
+              <div className="absolute -inset-6 bg-gradient-to-br from-brand-blue/15 via-brand-indigo/10 to-brand-cyan/10 rounded-[2.5rem] blur-3xl" />
+              <div className="relative bento ring-gradient overflow-hidden scan-line">
                 <div className="bg-surface-raised px-6 py-4 border-b border-surface-border flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-indigo rounded-lg flex items-center justify-center">
@@ -662,28 +741,35 @@ export default function LandingPage() {
       </section>
 
       {/* ─── FINAL CTA ────────────────────────────────────────── */}
-      <section className="relative py-16 px-4 bg-white dark:bg-slate-950 overflow-hidden">
-        <div className="max-w-5xl mx-auto reveal">
-          {/* Dark gradient card with internal grid */}
+      <section className="relative py-16 px-4 bg-surface overflow-hidden">
+        <div className="max-w-6xl mx-auto reveal">
+          {/* Cinematic dark card */}
           <div
-            className="relative overflow-hidden rounded-3xl px-8 py-20 text-center dark-grid-overlay"
+            className="relative isolate overflow-hidden rounded-[2rem] px-8 py-24 sm:py-28 text-center grain vignette dark-grid-overlay"
             style={{
-              background: "radial-gradient(60% 80% at 50% 0%, rgba(99,102,241,0.4) 0, transparent 70%), radial-gradient(60% 80% at 50% 100%, rgba(74,133,239,0.4) 0, transparent 70%), linear-gradient(180deg, #16195a, #0e1040)",
-              border: "1px solid rgba(99,102,241,0.25)"
+              background: "linear-gradient(180deg, #0B1224 0%, #0A0F20 50%, #070A16 100%)",
+              border: "1px solid rgba(99,130,255,0.22)"
             }}
           >
+            {/* Aurora glow */}
+            <div className="aurora-field" aria-hidden="true">
+              <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "12%", width: "40vw", height: "40vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.5), transparent 60%)" }} />
+              <div className="aurora-blob animate-aurora" style={{ bottom: "-25%", right: "8%", width: "36vw", height: "36vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.45), transparent 62%)", animationDelay: "-8s" }} />
+              <div className="aurora-blob animate-aurora" style={{ top: "20%", right: "30%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.3), transparent 64%)", animationDelay: "-13s" }} />
+            </div>
+
             <div className="relative z-10">
-              <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tightest mb-5 leading-[1.02]">
+              <h2 className="font-display text-[2.6rem] sm:text-6xl lg:text-[4.2rem] font-bold text-white tracking-tightest mb-5 leading-[0.98] text-balance">
                 {tCTA("title")}
               </h2>
-              <p className="text-lg mb-10" style={{ color: "rgba(200,205,255,0.75)" }}>
+              <p className="text-lg sm:text-xl mb-10 max-w-2xl mx-auto text-pretty" style={{ color: "rgba(200,210,245,0.78)" }}>
                 {tCTA("subtitle")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   href="/app"
-                  className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-2xl text-base font-semibold transition-all duration-300 hover:-translate-y-px"
-                  style={{ background: "linear-gradient(180deg, #fff, #e8eeff)", color: "#16195a", boxShadow: "0 10px 30px -10px rgba(255,255,255,0.3)" }}
+                  className="group inline-flex items-center gap-3 px-8 py-4 rounded-full text-base font-bold transition-all duration-300 hover:-translate-y-0.5"
+                  style={{ background: "linear-gradient(180deg, #fff, #e8eeff)", color: "#0B1224", boxShadow: "0 12px 36px -10px rgba(120,160,255,0.6)" }}
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                     <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -692,8 +778,8 @@ export default function LandingPage() {
                 </Link>
                 <a
                   href="#how-it-works"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-base font-medium transition-all duration-200"
-                  style={{ background: "transparent", color: "rgba(200,205,255,0.8)", border: "1px solid rgba(255,255,255,0.18)" }}
+                  className="inline-flex items-center gap-2 px-7 py-4 rounded-full text-base font-semibold transition-all duration-200 hover:bg-white/5"
+                  style={{ color: "rgba(210,218,250,0.85)", border: "1px solid rgba(255,255,255,0.2)" }}
                 >
                   {tCTA("seeHow")}
                 </a>

@@ -255,10 +255,10 @@ export default function Navigation() {
     {/* ── Floating pill nav ─────────────────────────────── */}
     <header className="fixed top-3 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
       <div
-        className={`pointer-events-auto flex items-center gap-2 pl-4 pr-2 py-2 rounded-full transition-all duration-300 border ${
+        className={`pointer-events-auto flex items-center gap-2 pl-4 pr-2 py-2 rounded-full transition-all duration-300 border ring-1 ring-white/40 dark:ring-white/5 ${
           scrolled
-            ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-lift border-surface-border"
-            : "bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-surface-border shadow-soft"
+            ? "bg-white/80 dark:bg-night-900/80 backdrop-blur-2xl backdrop-saturate-150 shadow-lift border-surface-border"
+            : "bg-white/65 dark:bg-night-900/60 backdrop-blur-xl backdrop-saturate-150 border-surface-border shadow-premium"
         }`}
         style={{ width: "min(1100px, calc(100% - 0px))" }}
       >
@@ -347,7 +347,7 @@ export default function Navigation() {
 
             <Link
               href="/app"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-full text-sm transition-all duration-200 shadow-sm hover:shadow-glow-blue hover:-translate-y-px"
+              className="btn-premium inline-flex items-center gap-2 px-4 py-2 font-semibold rounded-full text-sm"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                 <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
@@ -495,7 +495,7 @@ export default function Navigation() {
             <Link
               href="/app"
               onClick={() => setMobileOpen(false)}
-              className="block py-2.5 px-4 bg-gradient-to-b from-brand-blue to-brand-blue-hover text-white font-semibold rounded-xl text-sm text-center"
+              className="btn-premium block py-3 px-4 font-semibold rounded-full text-sm text-center"
             >
               {t("analyzeMy")}
             </Link>

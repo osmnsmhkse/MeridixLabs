@@ -86,7 +86,7 @@ export default function HeroCTA() {
   };
 
   const baseClass =
-    "inline-flex items-center gap-2 px-8 py-4 bg-brand-blue text-white font-bold rounded-xl text-base shadow-lg shadow-brand-blue/25";
+    "btn-premium inline-flex items-center gap-2 px-8 py-4 font-bold rounded-full text-base";
 
   // For non-English locales use the translated CTA; for English keep A/B variant text.
   const displayText =
@@ -109,7 +109,7 @@ export default function HeroCTA() {
   return (
     <button
       onClick={handleClick}
-      className={`${baseClass} hover:bg-brand-blue-hover transition-all duration-200 hover:shadow-xl hover:shadow-brand-blue/30 hover:-translate-y-0.5`}
+      className={baseClass}
     >
       <UploadIcon />
       {displayText}
