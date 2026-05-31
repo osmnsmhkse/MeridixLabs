@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
 import { useToolContext } from "@/components/ToolChatProvider";
@@ -1160,7 +1161,7 @@ export default function WomensHealthPage() {
     <div className="min-h-screen bg-gradient-to-b from-rose-50/30 via-violet-50/20 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 pt-20 pb-24">
       {/* Hero */}
       <section className="relative isolate overflow-hidden grain pt-10 pb-6 text-center">
-        <div className="aurora-field" aria-hidden="true">
+        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
           <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "20%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(244,63,94,0.3), transparent 62%)" }} />
           <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "18%", width: "28vw", height: "28vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.3), transparent 64%)", animationDelay: "-7s" }} />
         </div>
@@ -1174,7 +1175,7 @@ export default function WomensHealthPage() {
             <span className="kicker-mono">{t("badge")}</span>
           </div>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
-            {t("title")}
+            <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-base sm:text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
             {t("subtitle")}

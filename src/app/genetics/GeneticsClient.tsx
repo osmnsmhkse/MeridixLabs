@@ -7,6 +7,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToolContext } from "@/components/ToolChatProvider";
 
@@ -532,7 +533,7 @@ export default function GeneticsClient() {
             <span className="kicker-mono">Got DNA results?</span>
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
-            Genetic Test Explainer
+            <WordReveal text="Genetic Test Explainer" base={0.05} />
           </h1>
           <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
             Understand what your DNA results actually mean.

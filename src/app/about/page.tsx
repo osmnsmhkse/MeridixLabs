@@ -1,4 +1,5 @@
 import Link from "next/link";
+import WordReveal from "@/components/WordReveal";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -14,7 +15,7 @@ export default async function AboutPage() {
     <div className="min-h-screen">
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="gradient-hero grain pt-36 pb-20 relative overflow-hidden">
-        <div className="aurora-field" aria-hidden="true">
+        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
           <div className="aurora-blob animate-aurora" style={{ top: "-10%", left: "15%", width: "36vw", height: "36vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.4), transparent 62%)" }} />
           <div className="aurora-blob animate-aurora" style={{ top: "0%", right: "10%", width: "32vw", height: "32vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.34), transparent 64%)", animationDelay: "-7s" }} />
         </div>
@@ -25,9 +26,9 @@ export default async function AboutPage() {
             <span className="kicker-mono text-brand-blue">{t("missionBadge")}</span>
           </span>
           <h1 className="font-display text-5xl sm:text-6xl lg:text-[4.4rem] font-bold text-ink tracking-tightest leading-[1.02] mb-6">
-            {t("missionTitleLine1")}
+            <WordReveal text={t("missionTitleLine1")} base={0.05} />
             <br />
-            <span className="text-gradient-blue">{t("missionTitleLine2")}</span>
+            <WordReveal text={t("missionTitleLine2")} startIndex={t("missionTitleLine1").split(" ").length} base={0.05} wordClassName="text-gradient-blue" />
           </h1>
           <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed text-pretty">
             {t("missionBody1")}

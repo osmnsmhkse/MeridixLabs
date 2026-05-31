@@ -16,6 +16,7 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
+import WordReveal from "@/components/WordReveal";
 import { useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
@@ -2247,8 +2248,8 @@ export default function ImagingPage() {
             <span className="kicker-mono">{t("heroBadge")}</span>
           </span>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">
-            {t("heroTitle")}{" "}
-            <span className="bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-transparent">{t("heroHighlight")}</span>
+            <WordReveal text={t("heroTitle")} base={0.05} />{" "}
+            <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} wordClassName="bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-transparent" />
           </h1>
           <p className="mt-4 text-base sm:text-lg text-ink-secondary max-w-xl mx-auto leading-relaxed text-pretty">{t("heroSubtitle")}</p>
 

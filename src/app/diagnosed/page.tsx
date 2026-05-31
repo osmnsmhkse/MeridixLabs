@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
+import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
 import { useToolContext } from "@/components/ToolChatProvider";
@@ -460,7 +461,7 @@ export default function DiagnosedPage() {
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
       {(showInput || state === "loading") && (
         <section className="relative isolate overflow-hidden grain pt-32 pb-16 px-4 sm:px-6">
-          <div className="aurora-field" aria-hidden="true">
+          <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
             <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.4), transparent 62%)" }} />
             <div className="aurora-blob animate-aurora" style={{ top: "-10%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.34), transparent 64%)", animationDelay: "-7s" }} />
           </div>
@@ -475,7 +476,7 @@ export default function DiagnosedPage() {
             </div>
 
             <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold tracking-tightest leading-[1.03] mb-4">
-              <span className="text-gradient-blue">{t("title")}</span>
+              <WordReveal text={t("title")} base={0.05} wordClassName="text-gradient-blue" />
             </h1>
 
             <p className="text-lg text-ink-secondary leading-relaxed mb-10 max-w-xl mx-auto text-pretty">

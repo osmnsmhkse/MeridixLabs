@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
+import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
 import { useToolContext } from "@/components/ToolChatProvider";
@@ -439,7 +440,7 @@ export default function PediatricPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
       {/* Hero */}
       <section className="relative isolate overflow-hidden grain pt-10 pb-6 text-center">
-        <div className="aurora-field" aria-hidden="true">
+        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
           <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(244,63,94,0.3), transparent 62%)" }} />
           <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.26), transparent 64%)", animationDelay: "-7s" }} />
         </div>
@@ -453,7 +454,7 @@ export default function PediatricPage() {
             <span className="kicker-mono">{t("badge")}</span>
           </div>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
-            {t("title")}
+            <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
             {t("subtitle")}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import WordReveal from "@/components/WordReveal";
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 
@@ -130,15 +131,16 @@ export default function ForDoctorsPage() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/15 border border-brand-blue/30 text-brand-blue text-sm font-semibold mb-8">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-              </svg>
-              {t("badge")}
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/15 border border-brand-blue/30 backdrop-blur text-brand-blue mb-8">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-60" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-blue" />
+              </span>
+              <span className="kicker-mono">{t("badge")}</span>
             </span>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05] mb-6">
-              {t("heroTitle")}
+            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tightest leading-[1.03] mb-6">
+              <WordReveal text={t("heroTitle")} base={0.05} />
             </h1>
 
             <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
@@ -170,7 +172,7 @@ export default function ForDoctorsPage() {
               { stat: t("stat3Value"), label: t("stat3Label") },
             ].map(({ stat, label }) => (
               <div key={stat} className="bg-slate-900/80 px-8 py-7 text-center">
-                <p className="text-3xl font-extrabold text-white mb-1">{stat}</p>
+                <p data-countup className="font-display text-3xl font-bold text-white mb-1 tracking-tightest">{stat}</p>
                 <p className="text-sm text-slate-400 leading-snug">{label}</p>
               </div>
             ))}

@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import ScrollReveal from "@/components/ScrollReveal";
 import MotionEffects from "@/components/MotionEffects";
+import SmoothScroll from "@/components/SmoothScroll";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import LandingChatWidget from "@/components/LandingChatWidget";
 import { ToolChatProvider } from "@/components/ToolChatProvider";
@@ -93,6 +94,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Providers>
             <ScrollReveal />
+            <SmoothScroll />
             <MotionEffects />
             <Navigation />
             <ToolChatProvider>

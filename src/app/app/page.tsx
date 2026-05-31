@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
+import WordReveal from "@/components/WordReveal";
 import { useTranslations } from "next-intl";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
@@ -2833,8 +2834,8 @@ export default function AppPage() {
                 <span className="kicker-mono text-brand-blue">{t("welcomeBack")}</span>
               </span>
               <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
-                {t("welcomeReadyTitle")}{" "}
-                <span className="text-gradient-blue">{t("welcomeReadyHighlight")}</span>
+                <WordReveal text={t("welcomeReadyTitle")} base={0.05} />{" "}
+                <WordReveal text={t("welcomeReadyHighlight")} startIndex={t("welcomeReadyTitle").split(" ").length} base={0.05} wordClassName="text-gradient-blue" />
               </h1>
               <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
                 {daysSinceLastVisit >= 30
@@ -2855,8 +2856,8 @@ export default function AppPage() {
                 <span className="kicker-mono text-brand-blue">{t("heroBadge")}</span>
               </span>
               <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">
-                {t("heroTitle")}{" "}
-                <span className="text-gradient-blue">{t("heroHighlight")}</span>
+                <WordReveal text={t("heroTitle")} base={0.05} />{" "}
+                <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} wordClassName="text-gradient-blue" />
               </h1>
               <p className="mt-4 text-base sm:text-lg text-ink-secondary max-w-xl mx-auto leading-relaxed text-pretty">
                 {t("heroSubtitle")}
