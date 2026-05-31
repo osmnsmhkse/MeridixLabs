@@ -101,9 +101,10 @@ const config: Config = {
           "to": { transform: "rotate(360deg)" },
         },
         aurora: {
-          "0%":   { transform: "translate3d(-4%, -2%, 0) scale(1)",     opacity: "0.9" },
-          "50%":  { transform: "translate3d(3%, 2%, 0) scale(1.12)",    opacity: "1" },
-          "100%": { transform: "translate3d(-2%, 4%, 0) scale(1.05)",   opacity: "0.85" },
+          "0%":   { transform: "translate3d(-6%, -3%, 0) scale(1) rotate(0deg)",      opacity: "0.75" },
+          "33%":  { transform: "translate3d(5%, 2%, 0) scale(1.16) rotate(4deg)",     opacity: "1" },
+          "66%":  { transform: "translate3d(-3%, 6%, 0) scale(1.08) rotate(-3deg)",   opacity: "0.85" },
+          "100%": { transform: "translate3d(4%, -4%, 0) scale(1.13) rotate(2deg)",    opacity: "0.95" },
         },
         sheen: {
           "0%":   { transform: "translateX(-120%) skewX(-12deg)" },

@@ -37,10 +37,15 @@ h1 { font-family: "Space Grotesk", "Inter", system-ui, sans-serif; }
 
 /* Respect users who prefer reduced motion — disable ambient animations */
 @media (prefers-reduced-motion: reduce) {
-  .aurora-blob, .text-gradient-animate, .ring-gradient::before,
-  .orbit-particle, .orbit-particle-sm, .animated-grid, .mesh-bg, .scan-line::after {
+  .aurora-blob, .aurora-field, .text-gradient-animate, .ring-gradient::before,
+  .orbit-particle, .orbit-particle-sm, .animated-grid, .mesh-bg, .scan-line::after,
+  .word-reveal .w {
     animation: none !important;
   }
+  /* Show revealed/animated content immediately, no transform/blur */
+  .reveal { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
+  .word-reveal .w { opacity: 1 !important; transform: none !important; filter: none !important; }
+  [data-parallax] { transform: none !important; }
   html { scroll-behavior: auto; }
 }
 
@@ -255,12 +260,12 @@ body {
     border-color: rgba(99,130,255,0.5);
     box-shadow: 0 1px 0 0 rgba(255,255,255,0.06) inset, 0 0 0 1px rgba(99,130,255,0.18), 0 36px 80px -28px rgba(20,40,120,0.9);
   }
-  /* Spotlight that warms a bento on hover */
+  /* Spotlight that warms a bento on hover — follows the cursor */
   .bento-spot::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(60% 50% at 50% 0%, rgba(74,133,239,0.10), transparent 70%);
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(74,133,239,0.14), transparent 65%);
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
@@ -368,22 +373,75 @@ body {
 .dark ::-webkit-scrollbar-track { background: #1E293B; }
 .dark ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #4A85EF, #6366F1); }
 
-/* ── Scroll reveal animations ──────────────────────────── */
+/* ── Scroll reveal animations — cinematic blur + rise ──── */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(34px) scale(0.985);
+  filter: blur(8px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+  filter: blur(0);
 }
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-.reveal-delay-5 { transition-delay: 0.5s; }
+/* Directional + style variants (add alongside .reveal) */
+.reveal-left  { transform: translateX(-40px); }
+.reveal-right { transform: translateX(40px); }
+.reveal-scale { transform: scale(0.9); }
+.reveal-left.is-visible,
+.reveal-right.is-visible,
+.reveal-scale.is-visible { transform: none; }
+
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+.reveal-delay-6 { transition-delay: 0.48s; }
+.reveal-delay-7 { transition-delay: 0.56s; }
+.reveal-delay-8 { transition-delay: 0.64s; }
+
+/* ── Word-by-word headline reveal (flowing text) ───────── */
+.word-reveal { display: inline-block; }
+.word-reveal .w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em) rotate(2deg);
+  filter: blur(6px);
+  animation: wordRise 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 0.07s + var(--base, 0s));
+}
+@keyframes wordRise {
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* ── Scroll progress bar ───────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2.5px;
+  width: 0%;
+  z-index: 60;
+  background: linear-gradient(90deg, #4A85EF, #6366F1 40%, #22D3EE 70%, #8B5CF6);
+  background-size: 200% 100%;
+  box-shadow: 0 0 12px rgba(74,133,239,0.55);
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ── Fluid "alive" gradient — slow hue oscillation on aurora ── */
+@keyframes hueShift {
+  0%, 100% { filter: hue-rotate(-16deg) saturate(1); }
+  50%      { filter: hue-rotate(20deg) saturate(1.12); }
+}
+.aurora-field { animation: hueShift 26s ease-in-out infinite; }
+
+/* ── Parallax helper ───────────────────────────────────── */
+[data-parallax] { will-change: transform; }
 
 /* ── Animated grid background ─────────────────────────── */
 @keyframes gridMove {

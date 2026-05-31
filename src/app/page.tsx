@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import HeroCTA from "@/components/HeroCTA";
+import WordReveal from "@/components/WordReveal";
 
 type DemoTier = "Simple" | "Medium" | "Expert";
 
@@ -51,13 +52,13 @@ export default function LandingPage() {
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden gradient-hero grain pt-28 pb-16 lg:pt-32 lg:pb-24">
         {/* Aurora ambient field */}
-        <div className="aurora-field" aria-hidden="true">
+        <div className="aurora-field" aria-hidden="true" data-parallax="0.2">
           <div className="aurora-blob animate-aurora" style={{ top: "-8%", left: "8%", width: "44vw", height: "44vw", background: "radial-gradient(circle at 30% 30%, rgba(74,133,239,0.55), transparent 60%)" }} />
           <div className="aurora-blob animate-aurora" style={{ top: "0%", right: "2%", width: "40vw", height: "40vw", background: "radial-gradient(circle at 60% 40%, rgba(99,102,241,0.5), transparent 62%)", animationDelay: "-6s" }} />
           <div className="aurora-blob animate-aurora" style={{ bottom: "-12%", left: "32%", width: "38vw", height: "38vw", background: "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.32), transparent 64%)", animationDelay: "-11s" }} />
         </div>
         {/* Refined dot grid */}
-        <div className="absolute inset-0 dot-grid opacity-70 pointer-events-none" aria-hidden="true" />
+        <div className="absolute inset-0 dot-grid opacity-70 pointer-events-none" aria-hidden="true" data-parallax="0.06" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -73,9 +74,14 @@ export default function LandingPage() {
                 <span className="text-ink-tertiary kicker-mono">v2</span>
               </div>
 
-              <h1 className="font-display font-bold text-ink leading-[0.95] tracking-tightest mb-6 reveal reveal-delay-1 text-[3.25rem] sm:text-[4.25rem] lg:text-[4.6rem] xl:text-[5.4rem]">
-                {tHero("title")}{" "}
-                <span className="text-gradient-premium">{tHero("highlight")}</span>
+              <h1 className="font-display font-bold text-ink leading-[0.95] tracking-tightest mb-6 text-[3.25rem] sm:text-[4.25rem] lg:text-[4.6rem] xl:text-[5.4rem]">
+                <WordReveal text={tHero("title")} base={0.15} />{" "}
+                <WordReveal
+                  text={tHero("highlight")}
+                  startIndex={tHero("title").split(" ").length}
+                  base={0.15}
+                  wordClassName="text-gradient-premium"
+                />
               </h1>
 
               <p className="max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl text-ink-secondary leading-relaxed mb-9 reveal reveal-delay-2 text-pretty">
@@ -583,7 +589,7 @@ export default function LandingPage() {
               { number: tStats("toolsCount"), label: tStats("toolsLabel"), color: "text-amber-500" },
             ].map((stat, i) => (
               <div key={i} className="flex flex-col items-center justify-center py-8 px-4 bg-surface">
-                <span className={`font-display text-3xl sm:text-[2.6rem] font-bold tracking-tightest ${stat.color}`}>{stat.number}</span>
+                <span data-countup className={`font-display text-3xl sm:text-[2.6rem] font-bold tracking-tightest ${stat.color}`}>{stat.number}</span>
                 <p className="mt-1.5 text-xs text-ink-tertiary">{stat.label}</p>
               </div>
             ))}
@@ -752,7 +758,7 @@ export default function LandingPage() {
             }}
           >
             {/* Aurora glow */}
-            <div className="aurora-field" aria-hidden="true">
+            <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
               <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "12%", width: "40vw", height: "40vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.5), transparent 60%)" }} />
               <div className="aurora-blob animate-aurora" style={{ bottom: "-25%", right: "8%", width: "36vw", height: "36vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.45), transparent 62%)", animationDelay: "-8s" }} />
               <div className="aurora-blob animate-aurora" style={{ top: "20%", right: "30%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 50% 50%, rgba(34,211,238,0.3), transparent 64%)", animationDelay: "-13s" }} />
