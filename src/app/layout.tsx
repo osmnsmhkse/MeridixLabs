@@ -9,14 +9,29 @@ import LandingChatWidget from "@/components/LandingChatWidget";
 import { ToolChatProvider } from "@/components/ToolChatProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
+import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Meridix Labs — AI-Powered Medical Lab Analysis",
+  title: {
+    default: "Meridix Labs — AI-Powered Medical Lab Analysis",
+    template: "%s · Meridix Labs",
+  },
+  applicationName: "Meridix Labs",
   description:
     "Meridix Labs helps you understand your blood test results using AI. Analyze, track, and get insights from your lab results instantly.",
-  keywords: ["medical AI", "lab results", "blood test analysis", "Meridix Labs", "AI doctor", "blood test AI"],
+  keywords: ["Meridix Labs", "meridixlabs", "medical AI", "lab results", "blood test analysis", "AI doctor", "blood test AI"],
   authors: [{ name: "Meridix Labs", url: "https://www.meridixlabs.com" }],
+  creator: "Meridix Labs",
+  publisher: "Meridix Labs",
   metadataBase: new URL("https://www.meridixlabs.com"),
+  alternates: {
+    canonical: "/",
+  },
+  verification: {
+    // Paste the token from Google Search Console → Settings → Ownership
+    // verification → "HTML tag" into NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION.
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -58,6 +73,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        <StructuredData />
         <script dangerouslySetInnerHTML={{__html: `
           try {
             var t = localStorage.getItem('meridix-theme');
