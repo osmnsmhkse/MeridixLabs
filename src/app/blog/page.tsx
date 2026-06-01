@@ -24,7 +24,7 @@ export default async function BlogIndexPage() {
   return (
     <div className="min-h-screen bg-surface">
       {/* Hero */}
-      <section className="gradient-hero pt-36 pb-16">
+      <section className="gradient-hero -mt-16 pt-52 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="chip text-brand-blue mb-5">
             {t("badge")}

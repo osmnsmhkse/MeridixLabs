@@ -14,7 +14,7 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="gradient-hero grain pt-36 pb-20 relative overflow-hidden">
+      <section className="gradient-hero grain -mt-16 pt-52 pb-20 relative overflow-hidden">
         <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
           <div className="aurora-blob animate-aurora" style={{ top: "-10%", left: "15%", width: "36vw", height: "36vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.4), transparent 62%)" }} />
           <div className="aurora-blob animate-aurora" style={{ top: "0%", right: "10%", width: "32vw", height: "32vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.34), transparent 64%)", animationDelay: "-7s" }} />

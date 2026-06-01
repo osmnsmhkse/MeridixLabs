@@ -21,7 +21,7 @@ export default function LandingPage() {
     <div className="min-h-screen">
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative isolate overflow-hidden gradient-hero grain pt-28 pb-16 lg:pt-32 lg:pb-24">
+      <section className="relative isolate overflow-hidden gradient-hero grain -mt-16 pt-44 pb-16 lg:pt-48 lg:pb-24">
         {/* Aurora ambient field */}
         <div className="aurora-field" aria-hidden="true" data-parallax="0.2">
           <div className="aurora-blob animate-aurora" style={{ top: "-8%", left: "8%", width: "44vw", height: "44vw", background: "radial-gradient(circle at 30% 30%, rgba(74,133,239,0.55), transparent 60%)" }} />
@@ -174,43 +174,38 @@ export default function LandingPage() {
             <p className="mt-4 text-lg text-ink-secondary max-w-xl mx-auto text-pretty">{tHow("subtitle")}</p>
           </div>
 
-          {/* Steps with connecting line */}
+          {/* Steps */}
           <div className="relative">
-            {/* Dashed connecting line (desktop) */}
-            <div className="hidden md:block absolute top-[68px] left-[16.6%] right-[16.6%] h-px"
-              style={{ background: "repeating-linear-gradient(to right, rgba(74,133,239,0.25) 0 6px, transparent 6px 14px)" }} />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
                   step: "01",
-                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>,
+                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-[22px] h-[22px]"><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>,
                   title: tHow("step1Title"),
                   description: tHow("step1Desc"),
                 },
                 {
                   step: "02",
-                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" /></svg>,
+                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-[22px] h-[22px]"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" /></svg>,
                   title: tHow("step2Title"),
                   description: tHow("step2Desc"),
                 },
                 {
                   step: "03",
-                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>,
+                  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-[22px] h-[22px]"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>,
                   title: tHow("step3Title"),
                   description: tHow("step3Desc"),
                 },
               ].map((item, i) => (
-                <div key={i} className={`reveal reveal-delay-${i + 1} group bento bento-hover bento-spot relative flex flex-col items-center text-center p-8`}>
-                  {/* Step number badge — mono style */}
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-surface border border-surface-border shadow-soft z-10">
-                    <span className="step-badge text-gradient-premium">{tHow("step")} {item.step}</span>
+                <div key={i} className={`reveal reveal-delay-${i + 1} group bento bento-hover relative flex flex-col p-7`}>
+                  {/* Header: soft icon tile + editorial step number */}
+                  <div className="relative z-10 flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-blue/10 to-brand-indigo/10 border border-brand-blue/15 flex items-center justify-center text-brand-blue group-hover:from-brand-blue/[0.16] group-hover:to-brand-indigo/[0.16] group-hover:border-brand-blue/25 transition-all duration-300">
+                      {item.icon}
+                    </div>
+                    <span className="font-display text-3xl font-bold text-ink-tertiary/30 tabular-nums leading-none select-none">{item.step}</span>
                   </div>
-                  {/* Icon with conic spin */}
-                  <div className="conic-icon relative z-10 w-14 h-14 bg-gradient-to-br from-surface-raised to-surface border border-surface-border rounded-2xl flex items-center justify-center text-brand-blue mb-6 mt-3 group-hover:border-brand-blue/30 transition-all duration-300">
-                    {item.icon}
-                  </div>
-                  <h3 className="relative z-10 font-display text-xl font-bold text-ink mb-3 tracking-tight">{item.title}</h3>
+                  <h3 className="relative z-10 font-display text-lg font-bold text-ink mb-2 tracking-tight">{item.title}</h3>
                   <p className="relative z-10 text-ink-secondary text-sm leading-relaxed">{item.description}</p>
                 </div>
               ))}

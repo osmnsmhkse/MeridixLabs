@@ -16,7 +16,7 @@ export default async function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-surface">
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="gradient-hero pt-36 pb-14 relative overflow-hidden">
+      <section className="gradient-hero -mt-16 pt-52 pb-14 relative overflow-hidden">
         <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-surface-raised border border-brand-blue/30 text-brand-blue text-xs font-semibold mb-5 shadow-sm">
