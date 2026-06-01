@@ -22,7 +22,6 @@ export default async function AboutPage() {
         <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <span className="chip text-brand-blue mx-auto mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
             <span className="kicker-mono text-brand-blue">{t("missionBadge")}</span>
           </span>
           <h1 className="font-display text-5xl sm:text-6xl lg:text-[4.4rem] font-bold text-ink tracking-tightest leading-[1.02] mb-6">

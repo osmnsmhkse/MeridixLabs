@@ -641,7 +641,7 @@ export default function TrendsPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-surface-raised border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+          <span className="chip text-brand-blue mb-5">
             {t("badge")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-3">

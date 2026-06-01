@@ -46,7 +46,7 @@ h1 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "H
 @media (prefers-reduced-motion: reduce) {
   .aurora-blob, .aurora-field, .text-gradient-animate, .ring-gradient::before,
   .orbit-particle, .orbit-particle-sm, .animated-grid, .mesh-bg, .scan-line::after,
-  .word-reveal .w {
+  .word-reveal .w, .chip::after {
     animation: none !important;
   }
   /* Show revealed/animated content immediately, no transform/blur */
@@ -343,22 +343,41 @@ body {
     z-index: 2;
   }
 
-  /* Tiny eyebrow chip — replaces the cliché centered pill badge */
+  /* Editorial kicker — flat eyebrow led by a // mark and closed by a short
+     gradient rule. Our signature; deliberately not the generic glass pill.
+     Colour flows from the element's own text colour (currentColor), so each
+     page keeps its accent. */
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.34rem 0.75rem 0.34rem 0.6rem;
-    border-radius: 9999px;
-    border: 1px solid rgb(var(--color-surface-border));
-    background: rgba(255,255,255,0.75);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    gap: 0.55rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    border-radius: 0;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
   }
-  .dark .chip { background: rgba(255,255,255,0.04); }
+  .chip::before {
+    content: "//";
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-weight: 700;
+    font-size: 0.92em;
+    letter-spacing: -0.08em;
+    color: currentColor;
+  }
+  .chip::after {
+    content: "";
+    width: 1.85rem;
+    height: 1.5px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, currentColor, transparent);
+    opacity: 0.5;
+    animation: kickerShimmer 3.4s ease-in-out infinite;
+  }
 
   /* Soft radial vignette for cinematic dark panels */
   .vignette::after {
@@ -369,6 +388,12 @@ body {
     background: radial-gradient(120% 90% at 50% 0%, transparent 40%, rgba(0,0,0,0.35) 100%);
     z-index: 1;
   }
+}
+
+/* ── Editorial kicker shimmer — the gradient rule breathes ── */
+@keyframes kickerShimmer {
+  0%, 100% { opacity: 0.32; }
+  50%      { opacity: 0.65; }
 }
 
 /* ── Scrollbar ─────────────────────────────────────────── */

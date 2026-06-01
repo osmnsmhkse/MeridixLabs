@@ -1179,11 +1179,7 @@ export default function VisitPage() {
         </div>
         <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
         <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-white/5 border border-brand-indigo/25 backdrop-blur text-brand-indigo mb-6 shadow-soft">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-indigo opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-indigo" />
-            </span>
+          <div className="chip text-brand-indigo mb-6">
             <span className="kicker-mono text-brand-indigo">{t("badge")}</span>
           </div>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold tracking-tightest leading-[1.03] mb-3">

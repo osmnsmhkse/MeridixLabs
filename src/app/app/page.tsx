@@ -2830,7 +2830,6 @@ export default function AppPage() {
             /* Returning user greeting */
             <>
               <span className="chip text-brand-blue mx-auto mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
                 <span className="kicker-mono text-brand-blue">{t("welcomeBack")}</span>
               </span>
               <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
@@ -2852,7 +2851,6 @@ export default function AppPage() {
             /* Default hero */
             <>
               <span className="chip text-brand-blue mx-auto mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
                 <span className="kicker-mono text-brand-blue">{t("heroBadge")}</span>
               </span>
               <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">
@@ -3111,8 +3109,7 @@ export default function AppPage() {
           <div className="mt-12">
             {/* Section header */}
             <div className="text-center mb-6">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-[11px] font-bold text-brand-blue uppercase tracking-widest mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
+              <span className="chip text-brand-blue mb-3">
                 {t("demoLiveBadge")}
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-[1.1]">

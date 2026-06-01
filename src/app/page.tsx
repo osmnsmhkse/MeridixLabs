@@ -65,12 +65,8 @@ export default function LandingPage() {
 
             {/* ── Left: message ───────────────────────────── */}
             <div className="lg:col-span-6 min-w-0 text-center lg:text-left">
-              <div className="chip text-ink-secondary mb-7 reveal">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-60" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-blue" />
-                </span>
-                <span className="text-ink uppercase tracking-[0.14em]">{tHero("badge")}</span>
+              <div className="chip text-brand-blue mb-7 reveal">
+                <span className="text-ink tracking-[0.14em]">{tHero("badge")}</span>
                 <span className="text-ink-tertiary kicker-mono">v2</span>
               </div>
 
@@ -278,7 +274,6 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 reveal">
             <span className="chip text-brand-blue mx-auto">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
               <span className="kicker-mono text-brand-blue">{tHow("badge")}</span>
             </span>
             <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">{tHow("title")}</h2>
@@ -336,7 +331,6 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 reveal">
             <span className="chip text-brand-blue mx-auto">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" /></svg>
               <span className="kicker-mono text-brand-blue">{tTiers("badge")}</span>
             </span>
             <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">{tTiers("title")}</h2>
@@ -396,7 +390,6 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14 reveal">
             <span className="chip text-brand-blue mx-auto">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
               <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
             </span>
             <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">
@@ -650,7 +643,6 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
               <span className="chip text-brand-blue">
-                <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                 <span className="kicker-mono text-brand-blue">{tFeatures("badge")}</span>
               </span>
               <h2 className="mt-5 font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.05]">{tFeatures("title")}</h2>

@@ -525,11 +525,7 @@ export default function GeneticsClient() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Hero ──────────────────────────────────────────────────── */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-fuchsia-100/80 dark:bg-fuchsia-900/25 border border-fuchsia-300/50 dark:border-fuchsia-800/50 backdrop-blur text-fuchsia-700 dark:text-fuchsia-300 mb-5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fuchsia-500 opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-fuchsia-500" />
-            </span>
+          <span className="chip text-fuchsia-700 dark:text-fuchsia-300 mb-5">
             <span className="kicker-mono">Got DNA results?</span>
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
@@ -892,7 +888,7 @@ export default function GeneticsClient() {
         {/* ── Static FAQ section (SEO) ──────────────────────────────── */}
         <section className="mt-16">
           <div className="text-center mb-8">
-            <span className="inline-block px-3 py-1 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 text-fuchsia-700 dark:text-fuchsia-400 text-[11px] font-bold uppercase tracking-wider mb-3">
+            <span className="chip text-fuchsia-700 dark:text-fuchsia-400 mb-3">
               FAQ
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">

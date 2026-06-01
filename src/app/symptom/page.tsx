@@ -363,11 +363,7 @@ export default function SymptomPage() {
         </div>
         <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-100/80 dark:bg-violet-900/30 border border-violet-200/70 dark:border-violet-800/50 backdrop-blur text-violet-700 dark:text-violet-300 mb-6">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-500 opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-500" />
-            </span>
+          <div className="chip text-violet-700 dark:text-violet-300 mb-6">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-4">

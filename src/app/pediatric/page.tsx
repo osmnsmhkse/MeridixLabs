@@ -446,11 +446,7 @@ export default function PediatricPage() {
         </div>
         <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-100/80 dark:bg-rose-900/30 border border-rose-200/70 dark:border-rose-800/50 backdrop-blur text-rose-700 dark:text-rose-300 mb-5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500" />
-            </span>
+          <div className="chip text-rose-700 dark:text-rose-300 mb-5">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">

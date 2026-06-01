@@ -131,11 +131,7 @@ export default function ForDoctorsPage() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/15 border border-brand-blue/30 backdrop-blur text-brand-blue mb-8">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-blue opacity-60" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-blue" />
-              </span>
+            <span className="chip text-brand-blue mb-8">
               <span className="kicker-mono">{t("badge")}</span>
             </span>
 

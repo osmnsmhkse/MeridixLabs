@@ -26,7 +26,7 @@ export default async function BlogIndexPage() {
       {/* Hero */}
       <section className="gradient-hero pt-36 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-surface-raised border border-brand-blue/30 text-brand-blue text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+          <span className="chip text-brand-blue mb-5">
             {t("badge")}
           </span>
           <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-4">

@@ -2240,11 +2240,7 @@ export default function ImagingPage() {
       <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${result && state !== "loading" ? "max-w-3xl xl:max-w-6xl" : "max-w-3xl"}`}>
         {/* Page header */}
         <div className="text-center mb-8">
-          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100/80 dark:bg-sky-900/25 border border-sky-300/50 dark:border-sky-800/50 backdrop-blur text-sky-700 dark:text-sky-300 mb-5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-500 opacity-60" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-sky-500" />
-            </span>
+          <span className="chip text-sky-700 dark:text-sky-300 mb-5">
             <span className="kicker-mono">{t("heroBadge")}</span>
           </span>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">

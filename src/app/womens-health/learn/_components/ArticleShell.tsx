@@ -50,7 +50,7 @@ export function ArticleShell(props: ArticleShellProps) {
 
       {/* Hero */}
       <header className="max-w-3xl mx-auto px-4 sm:px-6 mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-5 bg-gradient-to-r from-rose-100 to-violet-100 dark:from-rose-900/30 dark:to-violet-900/30 text-violet-700 dark:text-violet-300 border border-violet-200/40 dark:border-violet-800/40">
+        <div className="chip text-violet-700 dark:text-violet-300 mb-5">
           {eyebrow}
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-tight mb-4">
