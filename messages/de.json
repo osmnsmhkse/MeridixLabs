@@ -38,8 +38,8 @@
   },
   "Hero": {
     "badge": "KI-gestützte medizinische Interpretation",
-    "title": "Ihre Gesundheit,",
-    "highlight": "endlich erklärt.",
+    "title": "Die Spitze der Medizin,",
+    "highlight": "in Ihren Händen.",
     "subtitle": "Von Symptomen über Diagnosen bis hin zu Laborbefunden — Meridix Labs ist die einzige Plattform, die Sie durch Ihre gesamte Gesundheitsreise in verständlicher Sprache begleitet. Kein Fachjargon. Keine Verwirrung. Kein Wartezimmer erforderlich.",
     "seeHow": "Sehen Sie, wie es funktioniert",
     "startHere": "Hier beginnen",
@@ -201,7 +201,8 @@
     "linkedin": "Verbinden auf LinkedIn",
     "email": "Senden Sie uns eine E-Mail",
     "rights": "Alle Rechte vorbehalten.",
-    "disclaimer": "Meridix Labs ist ein Bildungstool. Dies ist kein medizinischer Rat. Konsultieren Sie immer einen qualifizierten Arzt."
+    "disclaimer": "Meridix Labs ist ein Bildungstool. Dies ist kein medizinischer Rat. Konsultieren Sie immer einen qualifizierten Arzt.",
+    "peakLine": "Meridix — die Spitze der Medizin."
   },
   "Common": {
     "loading": "Wird geladen…",

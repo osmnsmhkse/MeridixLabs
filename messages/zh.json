@@ -38,8 +38,8 @@
   },
   "Hero": {
     "badge": "AI驱动的医学解读",
-    "title": "您的健康，",
-    "highlight": "终于得到解释。",
+    "title": "医学的巅峰，",
+    "highlight": "尽在你手中。",
     "subtitle": "从症状到诊断再到实验室结果——Meridix Labs是唯一一个以通俗语言引导您完成整个健康旅程的平台。无术语。无混乱。无需候诊室。",
     "seeHow": "了解工作原理",
     "startHere": "从这里开始",
@@ -201,7 +201,8 @@
     "linkedin": "在LinkedIn上连接",
     "email": "给我们发送电子邮件",
     "rights": "版权所有。",
-    "disclaimer": "Meridix Labs是一个教育工具。这不是医疗建议。请始终咨询合格的医生。"
+    "disclaimer": "Meridix Labs是一个教育工具。这不是医疗建议。请始终咨询合格的医生。",
+    "peakLine": "Meridix — 医学的巅峰。"
   },
   "Common": {
     "loading": "加载中…",

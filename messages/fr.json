@@ -38,8 +38,8 @@
   },
   "Hero": {
     "badge": "Interprétation médicale par IA",
-    "title": "Votre santé,",
-    "highlight": "enfin expliquée.",
+    "title": "Le sommet de la médecine,",
+    "highlight": "entre vos mains.",
     "subtitle": "Des symptômes aux diagnostics en passant par les résultats de labo — Meridix Labs est la seule plateforme qui vous guide à travers tout votre parcours de santé en langage clair. Sans jargon. Sans confusion. Sans salle d'attente.",
     "seeHow": "Voir comment ça marche",
     "startHere": "Commencer ici",
@@ -201,7 +201,8 @@
     "linkedin": "Connecter sur LinkedIn",
     "email": "Nous envoyer un e-mail",
     "rights": "Tous droits réservés.",
-    "disclaimer": "Meridix Labs est un outil éducatif. Ce n'est pas un avis médical. Consultez toujours un médecin qualifié."
+    "disclaimer": "Meridix Labs est un outil éducatif. Ce n'est pas un avis médical. Consultez toujours un médecin qualifié.",
+    "peakLine": "Meridix — le sommet de la médecine."
   },
   "Common": {
     "loading": "Chargement…",

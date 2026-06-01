@@ -38,8 +38,8 @@
   },
   "Hero": {
     "badge": "AI-powered medical interpretation",
-    "title": "Your lab report,",
-    "highlight": "read like a doctor would.",
+    "title": "The peak of medicine,",
+    "highlight": "in your hands.",
     "subtitle": "Upload any blood test. Meridix flags what's abnormal, explains it in plain English, and tells you exactly what to do next.",
     "seeHow": "See how it works",
     "startHere": "Start here",
@@ -201,7 +201,8 @@
     "linkedin": "Connect on LinkedIn",
     "email": "Send us an email",
     "rights": "All rights reserved.",
-    "disclaimer": "Meridix Labs is an educational tool. This is not medical advice. Always consult a qualified physician."
+    "disclaimer": "Meridix Labs is an educational tool. This is not medical advice. Always consult a qualified physician.",
+    "peakLine": "Meridix — the peak of medicine."
   },
   "Common": {
     "loading": "Loading…",

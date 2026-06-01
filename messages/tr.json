@@ -38,8 +38,8 @@
   },
   "Hero": {
     "badge": "Yapay zeka destekli tıbbi yorum",
-    "title": "Sağlığın,",
-    "highlight": "artık daha anlaşılır.",
+    "title": "Tıbbın zirvesi,",
+    "highlight": "elinizin altında.",
     "subtitle": "Belirtilerden tanılara, kan testlerinden sonuçlara — Meridix Labs, tüm sağlık yolculuğunu sade bir dille adım adım açıklayan tek platformdur. Jargon yok. Karmaşıklık yok. Randevu gerektirmiyor.",
     "seeHow": "Nasıl çalışır?",
     "startHere": "Buradan başla",
@@ -201,7 +201,8 @@
     "linkedin": "LinkedIn'de bağlan",
     "email": "Bize e-posta gönder",
     "rights": "Tüm hakları saklıdır.",
-    "disclaimer": "Meridix Labs bir eğitim aracıdır. Bu tıbbi tavsiye değildir. Her zaman bir doktora danış."
+    "disclaimer": "Meridix Labs bir eğitim aracıdır. Bu tıbbi tavsiye değildir. Her zaman bir doktora danış.",
+    "peakLine": "Meridix — tıbbın zirvesi."
   },
   "Common": {
     "loading": "Yükleniyor…",
