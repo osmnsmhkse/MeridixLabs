@@ -50,7 +50,11 @@
     "labCard": "Sonuçların mı var?",
     "symptomCard": "Kendini iyi hissetmiyor musun?",
     "diagnosisCard": "Yeni mi teşhis konuldu?",
-    "heroCta": "Sonuçlarımı Ücretsiz Analiz Et"
+    "heroCta": "Sonuçlarımı Ücretsiz Analiz Et",
+    "p1": "Raporunu yükle",
+    "p2": "Sade dilde açıklama",
+    "p3": "Neyin anormal olduğunu gör",
+    "p4": "Sonraki adımını öğren"
   },
   "HowItWorks": {
     "badge": "Basit süreç",

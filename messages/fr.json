@@ -50,7 +50,11 @@
     "labCard": "Des résultats reçus ?",
     "symptomCard": "Vous ne vous sentez pas bien ?",
     "diagnosisCard": "Venez d'être diagnostiqué ?",
-    "heroCta": "Analyser mes résultats gratuitement"
+    "heroCta": "Analyser mes résultats gratuitement",
+    "p1": "Téléversez votre rapport",
+    "p2": "Explication en langage clair",
+    "p3": "Voyez ce qui est anormal",
+    "p4": "Sachez quoi faire ensuite"
   },
   "HowItWorks": {
     "badge": "Processus simple",

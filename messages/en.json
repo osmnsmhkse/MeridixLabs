@@ -38,9 +38,9 @@
   },
   "Hero": {
     "badge": "AI-powered medical interpretation",
-    "title": "Your health,",
-    "highlight": "finally explained.",
-    "subtitle": "From symptoms to diagnoses to lab results — Meridix Labs is the only platform that walks you through your entire health journey in plain English. No jargon. No confusion. No waiting room required.",
+    "title": "Your lab report,",
+    "highlight": "read like a doctor would.",
+    "subtitle": "Upload any blood test. Meridix flags what's abnormal, explains it in plain English, and tells you exactly what to do next.",
     "seeHow": "See how it works",
     "startHere": "Start here",
     "trustEncrypted": "Encrypted & private",
@@ -50,7 +50,11 @@
     "labCard": "Got results?",
     "symptomCard": "Not feeling right?",
     "diagnosisCard": "Just diagnosed?",
-    "heroCta": "Analyze My Results — Free"
+    "heroCta": "Analyze My Results — Free",
+    "p1": "Upload your report",
+    "p2": "Plain-English explanation",
+    "p3": "See what's abnormal",
+    "p4": "Know your next step"
   },
   "HowItWorks": {
     "badge": "Simple process",

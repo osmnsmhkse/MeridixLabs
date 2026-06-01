@@ -50,7 +50,11 @@
     "labCard": "Ergebnisse erhalten?",
     "symptomCard": "Fühlen Sie sich nicht wohl?",
     "diagnosisCard": "Gerade diagnostiziert?",
-    "heroCta": "Ergebnisse kostenlos analysieren"
+    "heroCta": "Ergebnisse kostenlos analysieren",
+    "p1": "Befund hochladen",
+    "p2": "Erklärung in Klartext",
+    "p3": "Sehen, was auffällig ist",
+    "p4": "Nächsten Schritt kennen"
   },
   "HowItWorks": {
     "badge": "Einfacher Prozess",

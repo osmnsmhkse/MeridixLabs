@@ -50,7 +50,11 @@
     "labCard": "Hai i risultati?",
     "symptomCard": "Non ti senti bene?",
     "diagnosisCard": "Appena diagnosticato?",
-    "heroCta": "Analizza i miei risultati — Gratis"
+    "heroCta": "Analizza i miei risultati — Gratis",
+    "p1": "Carica il referto",
+    "p2": "Spiegazione in parole semplici",
+    "p3": "Scopri cosa è anomalo",
+    "p4": "Conosci il prossimo passo"
   },
   "HowItWorks": {
     "badge": "Processo semplice",

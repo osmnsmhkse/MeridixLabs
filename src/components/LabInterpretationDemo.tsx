@@ -1,0 +1,318 @@
+"use client";
+
+import React, { useState } from "react";
+
+/* ════════════════════════════════════════════════════════════════════════
+   Meridix — Lab Interpretation surface
+   ────────────────────────────────────────────────────────────────────────
+   The product, made visible. This is the signature Meridix asset: a real
+   report interpretation with our proprietary biomarker **range tracks**
+   (zone bands + a precise "you are here" caret, à la Apple Health / Levels),
+   plain-English annotations, risk context, and a clear next step.
+
+   It is intentionally recognisable without a logo — the heartbeat glyph,
+   the range track, and the "interpretation" annotation card form a system.
+   ════════════════════════════════════════════════════════════════════════ */
+
+type Tier = "Simple" | "Medium" | "Expert";
+type Tone = "good" | "warn" | "bad" | "neutral";
+type Status = "high" | "low" | "borderline" | "normal";
+
+type Marker = {
+  name: string;
+  value: string;
+  unit: string;
+  status: Status;
+  statusLabel: string;
+  pct: number; // marker position along the track, 0–100
+  zones: { w: number; tone: Tone }[];
+  ref: string;
+  flagged?: boolean;
+};
+
+// ── The panel: a realistic mixed-result lipid + metabolic snapshot ──────────
+const MARKERS: Marker[] = [
+  {
+    name: "LDL Cholesterol",
+    value: "168",
+    unit: "mg/dL",
+    status: "high",
+    statusLabel: "High",
+    pct: 71,
+    zones: [
+      { w: 33, tone: "good" },
+      { w: 33, tone: "warn" },
+      { w: 16, tone: "bad" },
+      { w: 18, tone: "bad" },
+    ],
+    ref: "Optimal < 100",
+    flagged: true,
+  },
+  {
+    name: "Triglycerides",
+    value: "182",
+    unit: "mg/dL",
+    status: "borderline",
+    statusLabel: "Borderline",
+    pct: 53,
+    zones: [
+      { w: 40, tone: "good" },
+      { w: 20, tone: "warn" },
+      { w: 40, tone: "bad" },
+    ],
+    ref: "Normal < 150",
+  },
+  {
+    name: "HDL Cholesterol",
+    value: "38",
+    unit: "mg/dL",
+    status: "low",
+    statusLabel: "Low",
+    pct: 26,
+    zones: [
+      { w: 29, tone: "warn" },
+      { w: 27, tone: "neutral" },
+      { w: 44, tone: "good" },
+    ],
+    ref: "Protective ≥ 60",
+  },
+  {
+    name: "Fasting Glucose",
+    value: "92",
+    unit: "mg/dL",
+    status: "normal",
+    statusLabel: "In range",
+    pct: 40,
+    zones: [
+      { w: 13, tone: "warn" },
+      { w: 36, tone: "good" },
+      { w: 32, tone: "warn" },
+      { w: 19, tone: "bad" },
+    ],
+    ref: "Normal 70–99",
+  },
+];
+
+// ── Tier-specific clinical narrative (focused on the flagged LDL) ───────────
+const NARRATIVE: Record<Tier, { summary: string; means: string; next: string }> = {
+  Simple: {
+    summary:
+      "We reviewed 8 markers. Most look healthy — but your LDL (“bad”) cholesterol is high and worth acting on.",
+    means:
+      "Your LDL cholesterol is above the recommended range. Elevated LDL contributes to plaque buildup inside arteries and increases long-term cardiovascular risk.",
+    next: "Discuss lifestyle modification and a lipid testing follow-up with your physician.",
+  },
+  Medium: {
+    summary:
+      "8 markers reviewed. LDL-C is elevated at 168 mg/dL alongside borderline triglycerides and low HDL — a pattern that raises cardiovascular risk.",
+    means:
+      "Your LDL cholesterol is above the recommended range. Elevated LDL drives plaque buildup inside the artery wall (atherosclerosis), which compounds over years and raises long-term cardiovascular risk.",
+    next: "Discuss lifestyle modification and a repeat fasting lipid panel in 8–12 weeks. Ask your physician about your 10-year ASCVD risk score.",
+  },
+  Expert: {
+    summary:
+      "Lipid panel: LDL-C 168 mg/dL (optimal <100), TG 182 mg/dL (borderline), HDL-C 38 mg/dL (low). Non-HDL-C elevated — calculate 10-yr ASCVD risk per ACC/AHA.",
+    means:
+      "LDL-C 168 mg/dL exceeds the optimal threshold (<100 mg/dL). Sustained elevation promotes atherosclerotic plaque formation and increases ASCVD risk; non-HDL-C is the stronger residual-risk marker here.",
+    next: "Initiate lifestyle modification and repeat a fasting lipid panel in 8–12 weeks. Stratify 10-yr ASCVD risk; consider a moderate-intensity statin if risk ≥ 7.5% per ACC/AHA guidance.",
+  },
+};
+
+// ── Tone → soft zone fill ───────────────────────────────────────────────────
+const ZONE: Record<Tone, string> = {
+  good: "bg-emerald-400/35 dark:bg-emerald-400/25",
+  warn: "bg-amber-400/40 dark:bg-amber-400/25",
+  bad: "bg-rose-400/40 dark:bg-rose-500/30",
+  neutral: "bg-slate-300/50 dark:bg-slate-500/25",
+};
+
+// ── Status → accent system ──────────────────────────────────────────────────
+const ACCENT: Record<Status, { spine: string; text: string; pill: string; caret: string }> = {
+  high: {
+    spine: "bg-rose-500",
+    text: "text-rose-600 dark:text-rose-400",
+    pill: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-900",
+    caret: "bg-rose-500",
+  },
+  low: {
+    spine: "bg-amber-500",
+    text: "text-amber-600 dark:text-amber-400",
+    pill: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-900",
+    caret: "bg-amber-500",
+  },
+  borderline: {
+    spine: "bg-amber-500",
+    text: "text-amber-600 dark:text-amber-400",
+    pill: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-900",
+    caret: "bg-amber-500",
+  },
+  normal: {
+    spine: "bg-emerald-500",
+    text: "text-emerald-600 dark:text-emerald-400",
+    pill: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-900",
+    caret: "bg-emerald-500",
+  },
+};
+
+// ── Signature heartbeat glyph — the Meridix mark, recognisable sans logo ────
+function PulseMark({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M2 13h3.2l1.7-5.4a.9.9 0 0 1 1.72.05L11 18l2-9.2a.9.9 0 0 1 1.73-.06L16.2 13H22"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// ── One biomarker, rendered as the signature range track ────────────────────
+function BiomarkerTrack({ m, dim }: { m: Marker; dim?: boolean }) {
+  const a = ACCENT[m.status];
+  return (
+    <div
+      className={`relative rounded-2xl border border-surface-border bg-surface px-4 py-3 transition-opacity duration-300 ${
+        dim ? "opacity-55" : ""
+      }`}
+    >
+      {/* status spine */}
+      <div className={`absolute left-0 top-2 bottom-2 w-1 rounded-full ${a.spine}`} />
+
+      <div className="flex items-center justify-between gap-3 pl-2">
+        <span className="text-[13px] font-semibold text-ink">{m.name}</span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono-data text-sm font-bold text-ink tabular-nums">{m.value}</span>
+          <span className="font-mono-data text-[11px] text-ink-tertiary">{m.unit}</span>
+          <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${a.pill}`}>
+            {m.statusLabel}
+          </span>
+        </div>
+      </div>
+
+      {/* range track with zone bands + you-are-here caret */}
+      <div className="relative mt-2.5 pl-2">
+        <div className="flex h-2 rounded-full overflow-hidden">
+          {m.zones.map((z, i) => (
+            <div key={i} className={ZONE[z.tone]} style={{ width: `${z.w}%` }} />
+          ))}
+        </div>
+        <div className="absolute top-1/2 -translate-y-1/2" style={{ left: `calc(${m.pct}% + 0.5rem)` }}>
+          <div className={`-translate-x-1/2 w-3 h-3 rounded-full ${a.caret} ring-2 ring-surface shadow-sm`} />
+        </div>
+      </div>
+
+      <p className="font-mono-data text-[10px] text-ink-tertiary mt-2 pl-2">ref · {m.ref}</p>
+    </div>
+  );
+}
+
+export default function LabInterpretationDemo() {
+  const [tier, setTier] = useState<Tier>("Simple");
+  const n = NARRATIVE[tier];
+
+  return (
+    <div className="relative">
+      <div className="ring-gradient rounded-3xl bento shadow-bento">
+        {/* Window header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-glow-blue text-white">
+              <PulseMark className="w-5 h-5" />
+            </div>
+            <div className="leading-tight">
+              <p className="text-sm font-bold text-ink">Lipid Panel — Cardiovascular</p>
+              <p className="text-[11px] text-ink-tertiary">Meridix · Report Interpretation</p>
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-glow" />
+            Analyzed
+            <span className="text-ink-tertiary font-mono-data font-semibold normal-case tracking-normal">· 6.4s</span>
+          </span>
+        </div>
+
+        {/* Uploaded source — step 1, made visible */}
+        <div className="flex items-center justify-between gap-3 px-5 py-2.5 bg-surface-raised border-b border-surface-border">
+          <span className="inline-flex items-center gap-2 text-[11px] text-ink-secondary min-w-0">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue flex-shrink-0">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+            </svg>
+            <span className="font-mono-data truncate">lipid-panel.pdf</span>
+            <span className="text-ink-tertiary">·</span>
+            <span className="text-ink-tertiary">8 markers detected</span>
+          </span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-ink-tertiary kicker-mono">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+            Encrypted
+          </span>
+        </div>
+
+        {/* Depth control — Simple / Medium / Expert */}
+        <div className="px-5 pt-4 flex items-center gap-2">
+          <span className="text-[10px] kicker-mono text-ink-tertiary mr-0.5">Reading level</span>
+          {(["Simple", "Medium", "Expert"] as Tier[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTier(t)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
+                t === tier
+                  ? "bg-brand-blue text-white shadow-glow-blue"
+                  : "text-ink-tertiary hover:text-ink-secondary bg-surface-raised"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+
+        {/* Body */}
+        <div className="p-5 space-y-3">
+          <p className="text-[13px] text-ink-secondary leading-relaxed">{n.summary}</p>
+
+          {/* Biomarker range tracks — the flagged ones first */}
+          <div className="space-y-2">
+            {MARKERS.map((m) => (
+              <BiomarkerTrack key={m.name} m={m} dim={m.status === "normal"} />
+            ))}
+          </div>
+
+          {/* Signature interpretation annotation — focused on the flag */}
+          <div className="relative rounded-2xl border border-brand-blue/25 bg-gradient-to-br from-brand-blue/[0.07] to-brand-indigo/[0.07] p-4 overflow-hidden">
+            <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-gradient-to-b from-brand-blue to-brand-indigo" />
+            <div className="flex items-center gap-2 mb-3 pl-2">
+              <span className="w-5 h-5 rounded-md bg-gradient-to-br from-brand-blue to-brand-indigo text-white flex items-center justify-center">
+                <PulseMark className="w-3 h-3" />
+              </span>
+              <span className="kicker-mono text-brand-blue-dark dark:text-brand-blue">Meridix interpretation</span>
+              <span className="ml-auto text-[10px] text-ink-tertiary font-mono-data">↳ LDL Cholesterol</span>
+            </div>
+
+            <div className="pl-2 space-y-3">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-1">What this means</p>
+                <p className="text-[13px] text-ink-secondary leading-relaxed">{n.means}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-1">Recommended next step</p>
+                <p className="text-[13px] text-ink-secondary leading-relaxed flex items-start gap-1.5">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue mt-0.5 flex-shrink-0"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  <span>{n.next}</span>
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary">Suggested specialist</span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-[11px] font-semibold">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" /></svg>
+                  Preventive Cardiology
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

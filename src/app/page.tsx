@@ -1,17 +1,12 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import HeroCTA from "@/components/HeroCTA";
 import WordReveal from "@/components/WordReveal";
-
-type DemoTier = "Simple" | "Medium" | "Expert";
+import LabInterpretationDemo from "@/components/LabInterpretationDemo";
 
 export default function LandingPage() {
-  const [demoTier, setDemoTier] = useState<DemoTier>("Simple");
-
   const tHero = useTranslations("Hero");
   const tHow = useTranslations("HowItWorks");
   const tTiers = useTranslations("Tiers");
@@ -21,30 +16,6 @@ export default function LandingPage() {
   const tCTA = useTranslations("CTA");
   const tDisclaimer = useTranslations("Disclaimer");
   const tTestimonials = useTranslations("Testimonials");
-
-  const DEMO_TIERS: Record<DemoTier, { summary: string; specialist: { label: string; body: React.ReactNode } }> = {
-    Simple: {
-      summary: tTiers("demoSimpleSummary"),
-      specialist: {
-        label: tTiers("demoSimpleSpecialistLabel"),
-        body: tTiers.rich("demoSimpleSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
-      },
-    },
-    Medium: {
-      summary: tTiers("demoMediumSummary"),
-      specialist: {
-        label: tTiers("demoMediumSpecialistLabel"),
-        body: tTiers.rich("demoMediumSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
-      },
-    },
-    Expert: {
-      summary: tTiers("demoExpertSummary"),
-      specialist: {
-        label: tTiers("demoExpertSpecialistLabel"),
-        body: tTiers.rich("demoExpertSpecialistBody", { b: (chunks) => <strong>{chunks}</strong> }),
-      },
-    },
-  };
 
   return (
     <div className="min-h-screen">
@@ -61,26 +32,25 @@ export default function LandingPage() {
         <div className="absolute inset-0 dot-grid opacity-70 pointer-events-none" aria-hidden="true" data-parallax="0.06" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center lg:items-start">
 
-            {/* ── Left: message ───────────────────────────── */}
-            <div className="lg:col-span-6 min-w-0 text-center lg:text-left">
-              <div className="chip text-brand-blue mb-7 reveal">
+            {/* ── Left: supporting message (lean) ─────────── */}
+            <div className="lg:col-span-5 min-w-0 text-center lg:text-left lg:pt-6">
+              <div className="chip text-brand-blue mb-6 reveal justify-center lg:justify-start">
                 <span className="text-ink tracking-[0.14em]">{tHero("badge")}</span>
-                <span className="text-ink-tertiary kicker-mono">v2</span>
               </div>
 
-              <h1 className="font-display font-bold text-ink leading-[0.95] tracking-tightest mb-6 text-[3.25rem] sm:text-[4.25rem] lg:text-[4.6rem] xl:text-[5.4rem]">
-                <WordReveal text={tHero("title")} base={0.15} />{" "}
+              <h1 className="font-display font-bold text-ink leading-[1.02] tracking-tightest mb-5 text-[2.5rem] sm:text-[3.15rem] lg:text-[3.1rem] xl:text-[3.6rem]">
+                <WordReveal text={tHero("title")} base={0.12} />{" "}
                 <WordReveal
                   text={tHero("highlight")}
                   startIndex={tHero("title").split(" ").length}
-                  base={0.15}
+                  base={0.12}
                   wordClassName="text-gradient-premium"
                 />
               </h1>
 
-              <p className="max-w-xl mx-auto lg:mx-0 text-lg sm:text-xl text-ink-secondary leading-relaxed mb-9 reveal reveal-delay-2 text-pretty">
+              <p className="max-w-md mx-auto lg:mx-0 text-base sm:text-lg text-ink-secondary leading-relaxed mb-7 reveal reveal-delay-2 text-pretty">
                 {tHero("subtitle")}
               </p>
 
@@ -97,103 +67,27 @@ export default function LandingPage() {
                 </a>
               </div>
 
-              {/* Trust signals — refined inline icons */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2.5 mt-9 reveal reveal-delay-4">
+              {/* The 4-second promise — what you walk away with */}
+              <div className="grid grid-cols-2 gap-2.5 mt-8 max-w-md mx-auto lg:mx-0 reveal reveal-delay-4">
                 {[
-                  { text: tHero("trustEncrypted"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425A12.11 12.11 0 0118 7c0 5.163-3.26 9.564-7.834 11.257a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.236 4.53-1.673-1.673a.75.75 0 10-1.06 1.06l2.3 2.3a.75.75 0 001.137-.089l3.746-5.246z" clipRule="evenodd" /></svg> },
-                  { text: tHero("trustSpeed"),     icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg> },
-                  { text: tHero("trustAI"),        icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path d="M10 1.5a1 1 0 01.94.658l.95 2.6 2.6.95a1 1 0 010 1.88l-2.6.95-.95 2.6a1 1 0 01-1.88 0l-.95-2.6-2.6-.95a1 1 0 010-1.88l2.6-.95.95-2.6A1 1 0 0110 1.5zM4.5 12a.75.75 0 01.71.508l.46 1.322 1.322.46a.75.75 0 010 1.42l-1.322.46-.46 1.322a.75.75 0 01-1.42 0l-.46-1.322-1.322-.46a.75.75 0 010-1.42l1.322-.46.46-1.322A.75.75 0 014.5 12z" /></svg> },
-                  { text: tHero("trustFree"),      icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
-                ].map((s) => (
-                  <span key={s.text} className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-secondary">
-                    <span className="text-brand-blue">{s.icon}</span>
-                    {s.text}
-                  </span>
+                  { text: tHero("p1"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zM4 15a1 1 0 011 1v1h10v-1a1 1 0 112 0v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1a1 1 0 011-1z" clipRule="evenodd" /></svg> },
+                  { text: tHero("p2"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" /></svg> },
+                  { text: tHero("p3"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
+                  { text: tHero("p4"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" /></svg> },
+                ].map((s, i) => (
+                  <div key={s.text} className="flex items-center gap-2.5 rounded-xl border border-surface-border bg-surface/70 px-3 py-2.5 text-left">
+                    <span className="w-7 h-7 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center flex-shrink-0">{s.icon}</span>
+                    <span className="text-[12.5px] font-semibold text-ink-secondary leading-tight">
+                      <span className="font-mono-data text-ink-tertiary mr-1">{i + 1}</span>{s.text}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* ── Right: live analysis preview ───────────── */}
-            <div className="lg:col-span-6 min-w-0 relative reveal reveal-delay-2">
-              {/* Floating accent badges */}
-              <div className="hidden sm:flex absolute -top-5 -left-3 z-20 items-center gap-2 px-3 py-2 rounded-2xl bento shadow-premium animate-float-slow">
-                <span className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" /></svg>
-                </span>
-                <div className="leading-tight pr-1">
-                  <p className="text-[10px] text-ink-tertiary kicker-mono">Reviewed</p>
-                  <p className="text-xs font-bold text-ink font-mono-data">14 markers</p>
-                </div>
-              </div>
-              <div className="hidden sm:flex absolute -bottom-5 -right-3 z-20 items-center gap-2 px-3 py-2 rounded-2xl bento shadow-premium animate-float-slower">
-                <span className="w-7 h-7 rounded-lg bg-brand-blue/10 text-brand-blue flex items-center justify-center">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
-                </span>
-                <div className="leading-tight pr-1">
-                  <p className="text-[10px] text-ink-tertiary kicker-mono">Analyzed in</p>
-                  <p className="text-xs font-bold text-ink font-mono-data">8.2s</p>
-                </div>
-              </div>
-
-              <div className="ring-gradient rounded-3xl bento shadow-bento">
-                {/* Window header */}
-                <div className="relative flex items-center justify-between px-5 py-4 border-b border-surface-border">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-glow-blue">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="leading-tight">
-                      <p className="text-sm font-bold text-ink">Basic Metabolic Panel</p>
-                      <p className="text-[11px] text-ink-tertiary">Meridix · Lab Analyzer</p>
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 text-brand-blue text-[11px] font-bold uppercase tracking-wider">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
-                    Live
-                  </span>
-                </div>
-
-                {/* Tier tabs */}
-                <div className="px-5 pt-4 flex gap-1.5">
-                  {(["Simple","Medium","Expert"] as DemoTier[]).map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setDemoTier(t)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${t === demoTier ? "bg-brand-blue text-white shadow-glow-blue" : "text-ink-tertiary hover:text-ink-secondary bg-surface-raised"}`}
-                    >{t === "Simple" ? tTiers("simple") : t === "Medium" ? tTiers("medium") : tTiers("expert")}</button>
-                  ))}
-                </div>
-
-                {/* Body */}
-                <div className="p-5 space-y-3">
-                  <p className="text-sm text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].summary}</p>
-                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/15 border border-amber-100 dark:border-amber-800/50 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400 rounded-l-xl" />
-                    <span className="text-sm font-semibold text-ink pl-2">Glucose</span>
-                    <div className="text-right">
-                      <span className="font-mono-data text-sm font-bold text-amber-600">112</span>
-                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
-                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 70–99</p>
-                    </div>
-                  </div>
-                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/15 border border-emerald-100 dark:border-emerald-800/50 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400 rounded-l-xl" />
-                    <span className="text-sm font-semibold text-ink pl-2">Creatinine</span>
-                    <div className="text-right">
-                      <span className="font-mono-data text-sm font-bold text-emerald-600">0.9</span>
-                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
-                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 0.7–1.2</p>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-brand-blue/8 to-brand-indigo/8 border border-brand-blue/20">
-                    <p className="kicker-mono text-brand-blue-dark dark:text-brand-blue mb-1">{DEMO_TIERS[demoTier].specialist.label}</p>
-                    <p className="text-xs text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].specialist.body}</p>
-                  </div>
-                </div>
-              </div>
+            {/* ── Right: the product, dominant ─────────────── */}
+            <div className="lg:col-span-7 min-w-0 reveal reveal-delay-2">
+              <LabInterpretationDemo />
             </div>
           </div>
 
@@ -667,59 +561,8 @@ export default function LandingPage() {
             </div>
             <div className="relative reveal reveal-delay-2">
               <div className="absolute -inset-6 bg-gradient-to-br from-brand-blue/15 via-brand-indigo/10 to-brand-cyan/10 rounded-[2.5rem] blur-3xl" />
-              <div className="relative bento ring-gradient overflow-hidden scan-line">
-                <div className="bg-surface-raised px-6 py-4 border-b border-surface-border flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-indigo rounded-lg flex items-center justify-center">
-                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <span className="text-ink font-semibold text-sm">Basic Metabolic Panel</span>
-                  </div>
-                  <span className="inline-flex items-center gap-1.5 text-brand-blue text-xs font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue pulse-glow" />
-                    Analyzed
-                  </span>
-                </div>
-                <div className="border-b border-surface-border px-6 pt-4 bg-white dark:bg-slate-800">
-                  <div className="flex gap-1">
-                    {(["Simple","Medium","Expert"] as DemoTier[]).map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setDemoTier(t)}
-                        className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors duration-200 ${t === demoTier ? "bg-brand-blue-light text-brand-blue-dark border-b-2 border-brand-blue" : "text-ink-tertiary hover:text-ink-secondary"}`}
-                      >{t === "Simple" ? tTiers("simple") : t === "Medium" ? tTiers("medium") : tTiers("expert")}</button>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-6 space-y-3">
-                  <p className="text-sm text-ink-secondary leading-relaxed">{DEMO_TIERS[demoTier].summary}</p>
-                  {/* Biomarker rows — left-border marker style */}
-                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-400 rounded-l-xl" />
-                    <div className="flex items-center gap-2 pl-2"><span className="text-sm font-semibold text-ink">Glucose</span></div>
-                    <div className="text-right">
-                      <span className="font-mono-data text-sm font-semibold text-amber-600">112</span>
-                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
-                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 70–99</p>
-                    </div>
-                  </div>
-                  <div className="relative flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400 rounded-l-xl" />
-                    <div className="flex items-center gap-2 pl-2"><span className="text-sm font-semibold text-ink">Creatinine</span></div>
-                    <div className="text-right">
-                      <span className="font-mono-data text-sm font-semibold text-emerald-600">0.9</span>
-                      <span className="font-mono-data text-xs text-ink-tertiary ml-1">mg/dL</span>
-                      <p className="font-mono-data text-[11px] text-ink-tertiary">ref 0.7–1.2</p>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-xl bg-gradient-to-r from-brand-blue/5 to-brand-indigo/5 border border-brand-blue/20">
-                    <p className="kicker-mono text-brand-blue-dark mb-1">{DEMO_TIERS[demoTier].specialist.label}</p>
-                    <p className="text-xs text-ink-secondary">{DEMO_TIERS[demoTier].specialist.body}</p>
-                  </div>
-                </div>
+              <div className="relative">
+                <LabInterpretationDemo />
               </div>
             </div>
           </div>
