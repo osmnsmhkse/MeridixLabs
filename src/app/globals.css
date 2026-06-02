@@ -44,7 +44,7 @@ h1 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "H
 
 /* Respect users who prefer reduced motion — disable ambient animations */
 @media (prefers-reduced-motion: reduce) {
-  .aurora-blob, .aurora-field, .text-gradient-animate, .ring-gradient::before,
+  .aurora-blob, .aurora-field, .ring-gradient::before,
   .orbit-particle, .orbit-particle-sm, .animated-grid, .mesh-bg, .scan-line::after,
   .word-reveal .w, .chip::after {
     animation: none !important;
@@ -90,15 +90,6 @@ body {
 
   .text-brand {
     color: #5B9CF8;
-  }
-
-  /* Text gradient — premium blue→indigo→violet sweep (shared hero highlight) */
-  .text-gradient-blue {
-    background: linear-gradient(108deg, #4A85EF 0%, #6366F1 46%, #8B5CF6 82%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
   }
 
   /* Card hover — smooth lift with blue glow */
@@ -182,25 +173,6 @@ body {
   .font-display { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "Helvetica Neue", Arial, sans-serif; }
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
-
-  /* Signature gradient text — richer blue→indigo→violet sweep */
-  .text-gradient-premium {
-    background: linear-gradient(108deg, #4A85EF 0%, #6366F1 42%, #8B5CF6 72%, #4A85EF 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-  .text-gradient-animate {
-    background: linear-gradient(108deg, #4A85EF 0%, #6366F1 35%, #22D3EE 55%, #8B5CF6 75%, #4A85EF 100%);
-    background-size: 220% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: shimmerX 6s linear infinite;
-  }
 
   /* Aurora — premium animated ambient glow (replaces flat mesh) */
   .aurora-field {

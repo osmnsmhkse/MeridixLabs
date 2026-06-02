@@ -205,7 +205,7 @@ function ModePickerCard({
         <h3 className="text-base font-extrabold text-ink leading-snug mb-2">{title}</h3>
         <p className="text-sm text-ink-secondary leading-relaxed">{desc}</p>
       </div>
-      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-violet-600 group-hover:gap-2.5 transition-all">
+      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 dark:text-violet-300 group-hover:gap-2.5 transition-all">
         <span>Choose this</span>
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-500 group-hover:translate-x-0.5 transition-transform">
           <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />

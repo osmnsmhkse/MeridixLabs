@@ -40,13 +40,13 @@ export default function LandingPage() {
                 <span className="text-ink tracking-[0.14em]">{tHero("badge")}</span>
               </div>
 
-              <h1 className="font-display font-bold text-ink leading-[1.02] tracking-tightest mb-5 text-[2.5rem] sm:text-[3.15rem] lg:text-[3.1rem] xl:text-[3.6rem]">
+              <h1 className="font-display font-bold text-ink/60 leading-[1.02] tracking-tightest mb-5 text-[2.5rem] sm:text-[3.15rem] lg:text-[3.1rem] xl:text-[3.6rem]">
                 <WordReveal text={tHero("title")} base={0.12} />{" "}
                 <WordReveal
                   text={tHero("highlight")}
                   startIndex={tHero("title").split(" ").length}
                   base={0.12}
-                  wordClassName="text-gradient-premium"
+                  wordClassName="text-ink"
                 />
               </h1>
 
@@ -204,7 +204,7 @@ export default function LandingPage() {
                 <div key={i} className={`reveal reveal-delay-${i + 1} group bento bento-hover bento-spot relative flex flex-col items-center text-center p-8`}>
                   {/* Step number badge — mono style */}
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-surface border border-surface-border shadow-soft z-10">
-                    <span className="step-badge text-gradient-premium">{tHow("step")} {item.step}</span>
+                    <span className="step-badge text-brand-blue">{tHow("step")} {item.step}</span>
                   </div>
                   {/* Icon with conic spin */}
                   <div className="conic-icon relative z-10 w-14 h-14 bg-gradient-to-br from-surface-raised to-surface border border-surface-border rounded-2xl flex items-center justify-center text-brand-blue mb-6 mt-3 group-hover:border-brand-blue/30 transition-all duration-300">
@@ -286,8 +286,8 @@ export default function LandingPage() {
             <span className="chip text-brand-blue mx-auto">
               <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
             </span>
-            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">
-              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}<span className="text-gradient-premium">{tSuite("titleHighlight")}</span>
+            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink/60 tracking-tightest leading-[1.02]">
+              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}<span className="text-ink">{tSuite("titleHighlight")}</span>
             </h2>
             <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto text-pretty">
               {tSuite("subtitle")}

@@ -645,7 +645,7 @@ export default function TrendsPage() {
             {t("badge")}
           </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-3">
-            <span className="text-gradient-blue">{t("title")}</span>
+            {t("title")}
           </h1>
           <p className="text-ink-secondary text-lg max-w-xl mx-auto leading-relaxed">
             {t("subtitle")}
