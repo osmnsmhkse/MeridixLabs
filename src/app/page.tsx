@@ -40,13 +40,13 @@ export default function LandingPage() {
                 <span className="text-ink tracking-[0.14em]">{tHero("badge")}</span>
               </div>
 
-              <h1 className="font-display font-bold text-ink leading-[1.02] tracking-tightest mb-5 text-[2.5rem] sm:text-[3.15rem] lg:text-[3.1rem] xl:text-[3.6rem]">
+              <h1 className="font-display font-bold text-ink/60 leading-[1.02] tracking-tightest mb-5 text-[2.5rem] sm:text-[3.15rem] lg:text-[3.1rem] xl:text-[3.6rem]">
                 <WordReveal text={tHero("title")} base={0.12} />{" "}
                 <WordReveal
                   text={tHero("highlight")}
                   startIndex={tHero("title").split(" ").length}
                   base={0.12}
-                  wordClassName="headline-serif"
+                  wordClassName="headline-accent"
                 />
               </h1>
 
@@ -286,8 +286,8 @@ export default function LandingPage() {
             <span className="chip text-brand-blue mx-auto">
               <span className="kicker-mono text-brand-blue">{tSuite("badge")}</span>
             </span>
-            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink tracking-tightest leading-[1.02]">
-              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}<span className="headline-serif">{tSuite("titleHighlight")}</span>
+            <h2 className="mt-5 font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-ink/60 tracking-tightest leading-[1.02]">
+              {tSuite("title") && <>{tSuite("title")}<br className="hidden sm:block" /> </>}<span className="headline-accent">{tSuite("titleHighlight")}</span>
             </h2>
             <p className="mt-4 text-lg text-ink-secondary max-w-2xl mx-auto text-pretty">
               {tSuite("subtitle")}
