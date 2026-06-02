@@ -570,9 +570,9 @@ export default function DiagnosedPage() {
           {/* Title */}
           <div className="text-center mb-8">
             <p className="text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-2">{t("yourExplanation")}</p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink/60 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
               {t("understanding")}{" "}
-              <span className="text-ink">{result.diagnosis}</span>
+              <span className="headline-serif font-bold">{result.diagnosis}</span>
             </h2>
           </div>
 

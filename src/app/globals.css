@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@1,6..72,400..700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -90,6 +91,20 @@ body {
 
   .text-brand {
     color: #5B9CF8;
+  }
+
+  /* Editorial serif emphasis — the payoff phrase set in an elegant italic
+     serif against the geometric sans. Our signature replacement for the
+     gradient-clip "highlight"; full-strength ink, the contrast lives in the
+     type, not the colour. Shared across the platform. */
+  .headline-serif {
+    font-family: "Newsreader", "Hoefler Text", "Iowan Old Style", Palatino, Georgia, serif;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: rgb(var(--color-ink));
+    -webkit-text-fill-color: rgb(var(--color-ink));
+    font-optical-sizing: auto;
   }
 
   /* Card hover — smooth lift with blue glow */

@@ -2243,9 +2243,9 @@ export default function ImagingPage() {
           <span className="chip text-sky-700 dark:text-sky-300 mb-5">
             <span className="kicker-mono">{t("heroBadge")}</span>
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink/60 tracking-tightest leading-[1.02]">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">
             <WordReveal text={t("heroTitle")} base={0.05} />{" "}
-            <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} wordClassName="text-ink" />
+            <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} wordClassName="headline-serif" />
           </h1>
           <p className="mt-4 text-base sm:text-lg text-ink-secondary max-w-xl mx-auto leading-relaxed text-pretty">{t("heroSubtitle")}</p>
 
