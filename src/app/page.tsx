@@ -67,29 +67,46 @@ export default function LandingPage() {
                 </a>
               </div>
 
-              {/* The 4-second promise — what you walk away with */}
-              <div className="grid grid-cols-2 gap-3 mt-8 max-w-md mx-auto lg:mx-0 reveal reveal-delay-4">
-                {[
-                  { text: tHero("p1"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-[18px] h-[18px]"><path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zM4 15a1 1 0 011 1v1h10v-1a1 1 0 112 0v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1a1 1 0 011-1z" clipRule="evenodd" /></svg> },
-                  { text: tHero("p2"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-[18px] h-[18px]"><path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" /></svg> },
-                  { text: tHero("p3"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-[18px] h-[18px]"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
-                  { text: tHero("p4"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-[18px] h-[18px]"><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" /></svg> },
-                ].map((s, i) => (
-                  <div
-                    key={s.text}
-                    className="group relative overflow-hidden rounded-2xl border border-surface-border bg-surface/70 px-4 py-3.5 text-left shadow-[0_1px_2px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-blue/40 hover:shadow-[0_16px_32px_-18px_rgba(74,133,239,0.5)]"
-                  >
-                    <span className="absolute right-3.5 top-3.5 font-mono-data text-[10px] tabular-nums tracking-wide text-ink-tertiary/60 transition-colors group-hover:text-brand-blue/80">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-blue/15 to-brand-blue/[0.04] text-brand-blue ring-1 ring-inset ring-brand-blue/15 shadow-[0_1px_2px_rgba(74,133,239,0.12)]">
-                      {s.icon}
-                    </span>
-                    <p className="mt-2.5 text-[12.5px] font-semibold leading-snug text-ink text-pretty">
-                      {s.text}
-                    </p>
-                  </div>
-                ))}
+              {/* The 4-second promise — the four-step flow, upload → answer */}
+              <div className="mt-8 max-w-md mx-auto lg:mx-0 reveal reveal-delay-4">
+                <div className="relative rounded-2xl border border-surface-border bg-surface/60 px-3 py-2 backdrop-blur-sm shadow-[0_1px_0_0_rgba(255,255,255,0.55)_inset,0_2px_6px_rgba(15,23,42,0.04),0_22px_44px_-30px_rgba(30,45,120,0.28)]">
+                  {[
+                    { text: tHero("p1"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="h-[17px] w-[17px]"><path fillRule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zM4 15a1 1 0 011 1v1h10v-1a1 1 0 112 0v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1a1 1 0 011-1z" clipRule="evenodd" /></svg> },
+                    { text: tHero("p2"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="h-[17px] w-[17px]"><path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" /></svg> },
+                    { text: tHero("p3"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="h-[17px] w-[17px]"><path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" /></svg> },
+                    { text: tHero("p4"), icon: <svg viewBox="0 0 20 20" fill="currentColor" className="h-[17px] w-[17px]"><path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" /></svg> },
+                  ].map((s, i, arr) => {
+                    const isLast = i === arr.length - 1;
+                    return (
+                      <div
+                        key={s.text}
+                        className="group relative flex items-center gap-3.5 rounded-xl px-2.5 py-2.5 transition-colors duration-300 hover:bg-brand-blue/[0.05]"
+                      >
+                        <span
+                          className={`relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full ring-1 ring-inset transition-all duration-300 ${
+                            isLast
+                              ? "bg-gradient-to-br from-[#5A91F2] to-brand-blue text-white ring-brand-blue/30 shadow-[0_6px_14px_-4px_rgba(74,133,239,0.55)]"
+                              : "bg-gradient-to-br from-brand-blue/15 to-brand-blue/[0.04] text-brand-blue ring-brand-blue/20 shadow-[0_1px_2px_rgba(74,133,239,0.12)] group-hover:ring-brand-blue/45 group-hover:shadow-[0_4px_12px_-2px_rgba(74,133,239,0.35)]"
+                          }`}
+                        >
+                          {s.icon}
+                          {!isLast && (
+                            <span
+                              aria-hidden="true"
+                              className="absolute left-1/2 top-full h-5 w-px -translate-x-1/2 bg-gradient-to-b from-brand-blue/35 to-brand-blue/[0.08]"
+                            />
+                          )}
+                        </span>
+                        <p className="text-[13px] font-semibold leading-snug text-ink text-pretty">
+                          {s.text}
+                        </p>
+                        <span className="ml-auto font-mono-data text-[11px] tabular-nums tracking-wide text-ink-tertiary/55 transition-colors group-hover:text-brand-blue/80">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
