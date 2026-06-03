@@ -641,10 +641,10 @@ export default function TrendsPage() {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <span className="chip text-brand-blue mb-5">
+          <span className="chip text-amber-700 dark:text-amber-300 mb-5">
             {t("badge")}
           </span>
-          <h1 className="text-4xl sm:text-5xl font-extrabold headline-accent tracking-tight mb-3">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-amber-600 dark:text-amber-400 tracking-tight mb-3">
             {t("title")}
           </h1>
           <p className="text-ink-secondary text-lg max-w-xl mx-auto leading-relaxed">
@@ -665,7 +665,7 @@ export default function TrendsPage() {
               {
                 step: "1",
                 icon: (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400">
                     <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>
                 ),
@@ -675,7 +675,7 @@ export default function TrendsPage() {
               {
                 step: "2",
                 icon: (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400">
                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                     <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                   </svg>
@@ -686,7 +686,7 @@ export default function TrendsPage() {
               {
                 step: "3",
                 icon: (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-amber-600 dark:text-amber-400">
                     <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
                   </svg>
                 ),
@@ -695,7 +695,7 @@ export default function TrendsPage() {
               },
             ].map((item) => (
               <div key={item.step} className="bg-surface-raised rounded-2xl border border-surface-border px-5 py-4 flex gap-3">
-                <div className="w-8 h-8 rounded-lg bg-brand-blue-light flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0 mt-0.5">
                   {item.icon}
                 </div>
                 <div>

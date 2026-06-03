@@ -528,7 +528,7 @@ export default function GeneticsClient() {
           <span className="chip text-fuchsia-700 dark:text-fuchsia-300 mb-5">
             <span className="kicker-mono">Got DNA results?</span>
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold headline-accent tracking-tightest leading-[1.03]">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-fuchsia-600 dark:text-fuchsia-400 tracking-tightest leading-[1.03]">
             <WordReveal text="Genetic Test Explainer" base={0.05} />
           </h1>
           <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">

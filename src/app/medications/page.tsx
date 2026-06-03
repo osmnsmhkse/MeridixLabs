@@ -177,7 +177,7 @@ export default function MedicationsPage() {
             <div className="chip text-teal-700 dark:text-teal-300 mb-6">
               <span className="kicker-mono">{t("badge")}</span>
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold headline-accent tracking-tightest leading-[1.03] mb-4">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-teal-600 dark:text-teal-400 tracking-tightest leading-[1.03] mb-4">
               <WordReveal text={t("title")} base={0.05} />
             </h1>
             <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">

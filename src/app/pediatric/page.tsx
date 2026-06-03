@@ -449,7 +449,7 @@ export default function PediatricPage() {
           <div className="chip text-rose-700 dark:text-rose-300 mb-5">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold headline-accent tracking-tightest leading-[1.03] mb-3">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-rose-600 dark:text-rose-400 tracking-tightest leading-[1.03] mb-3">
             <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
