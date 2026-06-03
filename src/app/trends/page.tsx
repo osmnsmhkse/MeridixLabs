@@ -644,7 +644,7 @@ export default function TrendsPage() {
           <span className="chip text-brand-blue mb-5">
             {t("badge")}
           </span>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-ink tracking-tight mb-3">
+          <h1 className="text-4xl sm:text-5xl font-extrabold headline-accent tracking-tight mb-3">
             {t("title")}
           </h1>
           <p className="text-ink-secondary text-lg max-w-xl mx-auto leading-relaxed">

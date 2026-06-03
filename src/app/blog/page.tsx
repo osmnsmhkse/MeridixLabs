@@ -29,7 +29,7 @@ export default async function BlogIndexPage() {
           <span className="chip text-brand-blue mb-5">
             {t("badge")}
           </span>
-          <h1 className="text-5xl sm:text-6xl font-extrabold text-ink tracking-tight leading-tight mb-4">
+          <h1 className="text-5xl sm:text-6xl font-extrabold headline-accent tracking-tight leading-tight mb-4">
             {t("title")}
           </h1>
           <p className="text-xl text-ink-secondary max-w-2xl mx-auto leading-relaxed">

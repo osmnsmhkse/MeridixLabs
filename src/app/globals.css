@@ -92,10 +92,9 @@ body {
     color: #5B9CF8;
   }
 
-  /* Signature headline emphasis — the Meridix identity. In a two-part headline
-     the lead-in rests in a soft slate (text-ink/60) while the payoff phrase
-     anchors in the brand blue. Replaces the gradient-clip "highlight"; the
-     identity is one confident colour, not a sweep. Shared platform-wide. */
+  /* Signature page-title colour — the Meridix identity. Page/hero titles are
+     set wholesale in the brand blue (single source of truth; retune here).
+     Replaces the gradient-clip "highlight" — one confident colour, no sweep. */
   .headline-accent {
     color: var(--brand-blue);
     -webkit-text-fill-color: var(--brand-blue);

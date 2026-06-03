@@ -471,7 +471,7 @@ export default function DiagnosedPage() {
               <span className="kicker-mono text-brand-blue">{t("badge")}</span>
             </div>
 
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-4">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold headline-accent tracking-tightest leading-[1.03] mb-4">
               <WordReveal text={t("title")} base={0.05} />
             </h1>
 
@@ -570,9 +570,9 @@ export default function DiagnosedPage() {
           {/* Title */}
           <div className="text-center mb-8">
             <p className="text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-2">{t("yourExplanation")}</p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink/60 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold headline-accent tracking-tight">
               {t("understanding")}{" "}
-              <span className="headline-accent">{result.diagnosis}</span>
+              <span>{result.diagnosis}</span>
             </h2>
           </div>
 

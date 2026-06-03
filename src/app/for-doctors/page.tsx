@@ -135,7 +135,7 @@ export default function ForDoctorsPage() {
               <span className="kicker-mono">{t("badge")}</span>
             </span>
 
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tightest leading-[1.03] mb-6">
+            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold headline-accent tracking-tightest leading-[1.03] mb-6">
               <WordReveal text={t("heroTitle")} base={0.05} />
             </h1>
 

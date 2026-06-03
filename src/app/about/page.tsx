@@ -24,7 +24,7 @@ export default async function AboutPage() {
           <span className="chip text-brand-blue mx-auto mb-6">
             <span className="kicker-mono text-brand-blue">{t("missionBadge")}</span>
           </span>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-[4.4rem] font-bold text-ink/60 tracking-tightest leading-[1.02] mb-6">
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-[4.4rem] font-bold headline-accent tracking-tightest leading-[1.02] mb-6">
             <WordReveal text={t("missionTitleLine1")} base={0.05} />
             <br />
             <WordReveal text={t("missionTitleLine2")} startIndex={t("missionTitleLine1").split(" ").length} base={0.05} wordClassName="headline-accent" />

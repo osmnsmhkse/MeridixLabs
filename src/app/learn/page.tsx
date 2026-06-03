@@ -328,7 +328,7 @@ export default function LearnPage() {
           <div className="chip text-violet-600 dark:text-violet-400 mb-5">
             Clinical Practice Mode
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold headline-accent tracking-tight">
             Practice Clinical Interpretation
           </h1>
           <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto">

@@ -1170,7 +1170,7 @@ export default function WomensHealthPage() {
           <div className="chip text-violet-700 dark:text-violet-300 mb-5">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold headline-accent tracking-tightest leading-[1.03] mb-3">
             <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-base sm:text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">

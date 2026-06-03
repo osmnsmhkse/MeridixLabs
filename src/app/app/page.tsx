@@ -2832,7 +2832,7 @@ export default function AppPage() {
               <span className="chip text-brand-blue mx-auto mb-5">
                 <span className="kicker-mono text-brand-blue">{t("welcomeBack")}</span>
               </span>
-              <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink/60 tracking-tightest leading-[1.03]">
+              <h1 className="font-display text-4xl sm:text-5xl font-bold headline-accent tracking-tightest leading-[1.03]">
                 <WordReveal text={t("welcomeReadyTitle")} base={0.05} />{" "}
                 <WordReveal text={t("welcomeReadyHighlight")} startIndex={t("welcomeReadyTitle").split(" ").length} base={0.05} wordClassName="headline-accent" />
               </h1>
@@ -2853,7 +2853,7 @@ export default function AppPage() {
               <span className="chip text-brand-blue mx-auto mb-5">
                 <span className="kicker-mono text-brand-blue">{t("heroBadge")}</span>
               </span>
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink/60 tracking-tightest leading-[1.02]">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold headline-accent tracking-tightest leading-[1.02]">
                 <WordReveal text={t("heroTitle")} base={0.05} />{" "}
                 <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} wordClassName="headline-accent" />
               </h1>

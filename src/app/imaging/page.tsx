@@ -2243,7 +2243,7 @@ export default function ImagingPage() {
           <span className="chip text-sky-700 dark:text-sky-300 mb-5">
             <span className="kicker-mono">{t("heroBadge")}</span>
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink/60 tracking-tightest leading-[1.02]">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold headline-accent tracking-tightest leading-[1.02]">
             <WordReveal text={t("heroTitle")} base={0.05} />{" "}
             <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} wordClassName="headline-accent" />
           </h1>
