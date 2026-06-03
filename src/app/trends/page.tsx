@@ -298,10 +298,10 @@ function ReportSlotCard({
           onClick={() => !slot.file && inputRef.current?.click()}
           className={`flex-1 rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer min-h-[72px] flex items-center justify-center px-4 py-3 ${
             dragging
-              ? "border-brand-blue bg-brand-blue-light"
+              ? "border-amber-600 bg-amber-50"
               : slot.file
               ? "border-emerald-300 bg-emerald-50 cursor-default"
-              : "border-surface-border hover:border-brand-blue/40 hover:bg-brand-blue-light/20"
+              : "border-surface-border hover:border-amber-600/40 hover:bg-amber-50/20"
           }`}
         >
           {slot.file ? (
@@ -324,7 +324,7 @@ function ReportSlotCard({
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-ink-tertiary mx-auto mb-1">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
-              <p className="text-xs text-ink-tertiary">Drop file or <span className="text-brand-blue font-medium">click</span></p>
+              <p className="text-xs text-ink-tertiary">Drop file or <span className="text-amber-600 font-medium">click</span></p>
             </div>
           )}
         </div>
@@ -338,7 +338,7 @@ function ReportSlotCard({
             value={slot.date}
             onChange={(e) => onDateChange(slot.id, e.target.value)}
             max={new Date().toISOString().split("T")[0]}
-            className="px-3 py-2 rounded-xl border border-surface-border text-sm text-ink bg-surface-raised focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all"
+            className="px-3 py-2 rounded-xl border border-surface-border text-sm text-ink bg-surface-raised focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/10 transition-all"
           />
         </div>
       </div>
@@ -636,7 +636,7 @@ export default function TrendsPage() {
   const hasResults = analyzedReports.length >= 2;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-[#0B1424] dark:to-[#070B16]">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white dark:from-[#0B1424] dark:to-[#070B16]">
       <div className={`mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 ${hasResults ? "max-w-7xl" : "max-w-3xl"}`}>
 
         {/* Header */}
@@ -730,7 +730,7 @@ export default function TrendsPage() {
 
             <button
               onClick={addSlot}
-              className="w-full py-2.5 rounded-xl border border-dashed border-surface-border hover:border-brand-blue/30 hover:bg-brand-blue-light/20 text-sm text-ink-tertiary hover:text-brand-blue transition-all duration-200 flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl border border-dashed border-surface-border hover:border-amber-600/30 hover:bg-amber-50/20 text-sm text-ink-tertiary hover:text-amber-600 transition-all duration-200 flex items-center justify-center gap-1.5"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
@@ -752,7 +752,7 @@ export default function TrendsPage() {
               disabled={!canAnalyze || analyzing}
               className={`w-full py-4 rounded-xl font-bold text-base transition-all duration-200 flex items-center justify-center gap-2 ${
                 canAnalyze && !analyzing
-                  ? "bg-brand-blue hover:bg-brand-blue-hover text-white shadow-lg shadow-brand-blue/20 hover:-translate-y-0.5"
+                  ? "bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-600/20 hover:-translate-y-0.5"
                   : "bg-surface-raised text-ink-tertiary cursor-not-allowed"
               }`}
             >
@@ -799,7 +799,7 @@ export default function TrendsPage() {
                 </div>
                 <button
                   onClick={resetAll}
-                  className="text-xs text-ink-tertiary hover:text-brand-blue transition-colors flex items-center gap-1"
+                  className="text-xs text-ink-tertiary hover:text-amber-600 transition-colors flex items-center gap-1"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                     <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z" clipRule="evenodd" />
@@ -841,7 +841,7 @@ export default function TrendsPage() {
                       onClick={() => setActiveTab(tab.key)}
                       className={`flex-1 py-3.5 text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
                         activeTab === tab.key
-                          ? "text-brand-blue border-b-2 border-brand-blue bg-brand-blue-light/30"
+                          ? "text-amber-600 border-b-2 border-amber-600 bg-amber-50/30"
                           : "text-ink-tertiary hover:text-ink hover:bg-surface-raised/50"
                       }`}
                     >
@@ -864,7 +864,7 @@ export default function TrendsPage() {
                           onClick={() => setFilterCategory(cat)}
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                             filterCategory === cat
-                              ? "bg-brand-blue text-white shadow-sm"
+                              ? "bg-amber-600 text-white shadow-sm"
                               : "bg-surface-raised text-ink-tertiary hover:text-ink hover:bg-surface-raised/80 border border-surface-border"
                           }`}
                         >
@@ -886,8 +886,8 @@ export default function TrendsPage() {
                           onClick={() => handleMarkerSelect(summary.marker)}
                           className={`text-left rounded-xl border p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
                             selectedMarker === summary.marker
-                              ? "border-brand-blue bg-brand-blue-light/20 shadow-sm"
-                              : "border-surface-border bg-surface-raised hover:border-brand-blue/30"
+                              ? "border-amber-600 bg-amber-50/20 shadow-sm"
+                              : "border-surface-border bg-surface-raised hover:border-amber-600/30"
                           }`}
                         >
                           <div className="flex items-start justify-between gap-2 mb-2">
@@ -958,7 +958,7 @@ export default function TrendsPage() {
                       <select
                         value={selectedMarker}
                         onChange={(e) => handleMarkerSelect(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-surface-border text-sm text-ink bg-surface-raised focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 rounded-xl border border-surface-border text-sm text-ink bg-surface-raised focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/10 transition-all appearance-none cursor-pointer"
                       >
                         <option value="">— Choose a marker —</option>
                         {allMarkers.map((m) => {
@@ -1045,7 +1045,7 @@ export default function TrendsPage() {
                               <Line
                                 type="monotone"
                                 dataKey="value"
-                                stroke="#4A85EF"
+                                stroke="#F59E0B"
                                 strokeWidth={2.5}
                                 dot={<CustomDot />}
                                 activeDot={false}
@@ -1060,7 +1060,7 @@ export default function TrendsPage() {
                     {selectedMarker && chartData.length >= 2 && (
                       <div className="rounded-xl border border-surface-border overflow-hidden">
                         <div className="px-5 py-3 border-b border-surface-border bg-surface-raised flex items-center gap-2">
-                          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
+                          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-600">
                             <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
                           </svg>
                           <span className="text-xs font-bold text-ink-tertiary uppercase tracking-wider">AI Trend Summary</span>
@@ -1068,7 +1068,7 @@ export default function TrendsPage() {
                         <div className="p-5">
                           {summaryLoading ? (
                             <div className="flex items-center gap-3 text-sm text-ink-tertiary">
-                              <div className="w-4 h-4 border-2 border-brand-blue/30 border-t-brand-blue rounded-full animate-spin flex-shrink-0" />
+                              <div className="w-4 h-4 border-2 border-amber-600/30 border-t-amber-600 rounded-full animate-spin flex-shrink-0" />
                               Generating trend analysis…
                             </div>
                           ) : trendSummary ? (
@@ -1150,7 +1150,7 @@ export default function TrendsPage() {
                       ).map(([date, entries]) => (
                         <div key={date} className="relative pl-12 pb-6 last:pb-0">
                           {/* Date dot */}
-                          <div className="absolute left-[10px] top-1 w-4 h-4 rounded-full bg-brand-blue border-4 border-white shadow-sm" />
+                          <div className="absolute left-[10px] top-1 w-4 h-4 rounded-full bg-amber-600 border-4 border-white shadow-sm" />
 
                           <div className="bg-surface-raised/50 rounded-xl border border-surface-border p-4">
                             <p className="text-sm font-bold text-ink mb-3">{fmt(date)}</p>
@@ -1216,7 +1216,7 @@ export default function TrendsPage() {
         <div className="mt-10 text-center">
           <Link
             href="/app"
-            className="text-sm text-ink-tertiary hover:text-brand-blue transition-colors inline-flex items-center gap-1.5"
+            className="text-sm text-ink-tertiary hover:text-amber-600 transition-colors inline-flex items-center gap-1.5"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
               <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />

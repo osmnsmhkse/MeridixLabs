@@ -126,7 +126,7 @@ function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) 
   return (
     <button
       onClick={copy}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-xs font-semibold text-ink-secondary hover:text-ink hover:border-brand-blue/40 hover:bg-brand-blue-light transition-all duration-150"
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-xs font-semibold text-ink-secondary hover:text-ink hover:border-violet-600/40 hover:bg-violet-50 transition-all duration-150"
     >
       {copied ? (
         <>
@@ -188,10 +188,10 @@ function WhatThisIsSection({ text }: { text: string }) {
   const t = useTranslations("Diagnosed");
   return (
     <SectionCard
-      accent="border-l-brand-blue"
+      accent="border-l-violet-600"
       label={t("sectionWhatIsIt")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-600">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
         </svg>
       }
@@ -314,7 +314,7 @@ function QuestionsSection({ questions }: { questions: string[] }) {
 function ExplainingToOthersSection({ templates }: { templates: { label: string; template: string }[] }) {
   const t = useTranslations("Diagnosed");
   const ACCENT_COLORS = [
-    "bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900",
+    "bg-violet-50 dark:bg-violet-950/30 border-violet-100 dark:border-violet-900",
     "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900",
     "bg-slate-50 dark:bg-slate-800/60 border-slate-100 dark:border-slate-700",
   ];
@@ -360,9 +360,9 @@ function LoadingState({ diagnosis }: { diagnosis: string }) {
     <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
       {/* Slow pulse ring */}
       <div className="relative mb-8">
-        <div className="w-16 h-16 rounded-full border-2 border-brand-blue/20 animate-ping absolute inset-0" style={{ animationDuration: "2s" }} />
-        <div className="w-16 h-16 rounded-full border-2 border-brand-blue/30 flex items-center justify-center relative">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7 text-brand-blue">
+        <div className="w-16 h-16 rounded-full border-2 border-violet-600/20 animate-ping absolute inset-0" style={{ animationDuration: "2s" }} />
+        <div className="w-16 h-16 rounded-full border-2 border-violet-600/30 flex items-center justify-center relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7 text-violet-600">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
           </svg>
         </div>
@@ -456,13 +456,13 @@ export default function DiagnosedPage() {
   const showInput = state === "idle" || state === "error";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-[#0B1424] dark:to-[#070B16]">
+    <div className="min-h-screen bg-gradient-to-b from-violet-50 to-white dark:from-[#0B1424] dark:to-[#070B16]">
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
       {(showInput || state === "loading") && (
         <section className="relative isolate overflow-hidden grain pt-32 pb-16 px-4 sm:px-6">
           <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
-            <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(74,133,239,0.4), transparent 62%)" }} />
+            <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(168,85,247,0.4), transparent 62%)" }} />
             <div className="aurora-blob animate-aurora" style={{ top: "-10%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.34), transparent 64%)", animationDelay: "-7s" }} />
           </div>
           <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
@@ -511,7 +511,7 @@ export default function DiagnosedPage() {
                 onKeyDown={(e) => e.key === "Enter" && submit(input)}
                 placeholder={t("placeholder")}
                 autoFocus
-                className="w-full px-5 py-4 rounded-2xl border border-surface-border dark:border-slate-700 bg-surface-raised dark:bg-slate-900 text-ink text-base placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all"
+                className="w-full px-5 py-4 rounded-2xl border border-surface-border dark:border-slate-700 bg-surface-raised dark:bg-slate-900 text-ink text-base placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-violet-600/30 focus:border-violet-600 transition-all"
               />
 
               {/* Example chips */}
@@ -522,7 +522,7 @@ export default function DiagnosedPage() {
                     <button
                       key={chip}
                       onClick={() => handleChip(chip)}
-                      className="px-3 py-1.5 rounded-full border border-surface-border dark:border-slate-700 text-xs font-medium text-ink-secondary hover:border-brand-blue/50 hover:text-brand-blue hover:bg-brand-blue-light dark:hover:bg-brand-blue/10 transition-all duration-150"
+                      className="px-3 py-1.5 rounded-full border border-surface-border dark:border-slate-700 text-xs font-medium text-ink-secondary hover:border-violet-600/50 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-600/10 transition-all duration-150"
                     >
                       {chip}
                     </button>
@@ -534,7 +534,7 @@ export default function DiagnosedPage() {
               <button
                 onClick={() => submit(input)}
                 disabled={!input.trim()}
-                className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-md shadow-brand-blue/20 hover:shadow-lg hover:shadow-brand-blue/25 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-md shadow-violet-600/20 hover:shadow-lg hover:shadow-violet-600/25 flex items-center justify-center gap-2"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                   <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
@@ -626,7 +626,7 @@ export default function DiagnosedPage() {
           <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <button
               onClick={handleReset}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-surface-border hover:border-brand-blue/40 hover:bg-brand-blue-light text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-surface-border hover:border-violet-600/40 hover:bg-violet-50 text-ink-secondary hover:text-violet-600 text-sm font-semibold transition-all duration-200"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
