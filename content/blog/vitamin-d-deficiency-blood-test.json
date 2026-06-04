@@ -3,6 +3,31 @@
   "slug": "vitamin-d-deficiency-blood-test",
   "date": "2026-04-08",
   "excerpt": "Vitamin D deficiency is one of the most common findings in modern lab work — yet the reference ranges on your report are deeply misleading. A level of 21 ng/mL is technically 'normal' on most lab reports, but emerging research suggests optimal health starts at 40 ng/mL or higher. Here's what the numbers mean, why deficiency is so widespread, and what you can actually do about it.",
+  "description": "Your vitamin D test (25-OH) explained — why 'normal' isn't the same as optimal, what each level means, and how much D3 it takes to get there.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["iron-deficiency-ferritin-explained", "thyroid-function-tests-explained", "complete-blood-count-guide", "hba1c-blood-sugar-explained"],
+  "keyTakeaways": [
+    "The standard test is 25-hydroxyvitamin D (25-OH) — the storage form that best reflects your overall vitamin D status.",
+    "Below 20 ng/mL is deficient; 20–30 is insufficient; many researchers aim for 30–50 ng/mL as the target.",
+    "Deficiency is widespread because of indoor lifestyles, latitude, sunscreen, age, body fat and skin pigmentation.",
+    "Vitamin D3 raises blood levels more effectively than D2, and absorbs best taken with a fat-containing meal.",
+    "Doses vary with how low you start; always retest about 3 months after a change to confirm you've reached the target."
+  ],
+  "faq": [
+    { "q": "Which vitamin D test should I get?", "a": "The standard test is 25-hydroxyvitamin D (25-OH D, or calcidiol). It's the storage form with a half-life of weeks, so it reflects your stores. The active form (1,25-dihydroxyvitamin D) is tightly regulated and can look normal even when stores are low, so it isn't used for routine screening." },
+    { "q": "My level is 'normal' but on the low side — should I act?", "a": "Many labs stop flagging at 20 ng/mL, but levels of 20–30 are widely considered insufficient. If you're in that band — especially with fatigue, frequent infections or low sun exposure — it's reasonable to discuss supplementation and aim higher with your doctor." },
+    { "q": "How much vitamin D should I take?", "a": "It depends where you start. General maintenance is often 1,000–2,000 IU/day of D3; confirmed deficiency may need 4,000–5,000 IU/day, and severe deficiency sometimes prescription dosing under supervision. Doses should be guided by a follow-up test, not guessed at." },
+    { "q": "Can I get enough vitamin D from the sun?", "a": "Potentially — about 20 minutes of midday sun on bare arms and legs can generate thousands of IU in fair skin, and the skin won't overproduce to toxic levels. But latitude, season, skin tone, age and skin-cancer risk make sunlight an unreliable sole source for many people." },
+    { "q": "Can you take too much vitamin D?", "a": "Yes, but it's rare and almost always from high-dose supplements, not sun or food. It generally takes sustained intake well above 10,000 IU/day for months. Retesting after a dose change is the simplest way to stay in a safe, effective range." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Vitamin D Test", "url": "https://medlineplus.gov/lab-tests/vitamin-d-test/" },
+    { "source": "MedlinePlus (NIH)", "label": "Vitamin D Deficiency", "url": "https://medlineplus.gov/vitaminddeficiency.html" },
+    { "source": "NIH Office of Dietary Supplements", "label": "Vitamin D — Consumer Fact Sheet", "url": "https://ods.od.nih.gov/factsheets/VitaminD-Consumer/" },
+    { "source": "NHS", "label": "Vitamin D", "url": "https://www.nhs.uk/conditions/vitamins-and-minerals/vitamin-d/" }
+  ],
   "content": [
     {
       "type": "p",
@@ -15,6 +40,18 @@
     {
       "type": "p",
       "text": "When you get a 'Vitamin D' blood test, you're almost certainly measuring 25-hydroxyvitamin D (also written 25(OH)D or calcidiol). This is the storage form of vitamin D — the liver converts it from cholesterol and sun-derived D3 before the kidneys activate it further. It has a half-life of about 2–3 weeks, making it the best marker of your overall vitamin D status."
+    },
+    {
+      "type": "figure",
+      "variant": "flow",
+      "title": "From sunlight to active vitamin D",
+      "nodes": [
+        { "label": "Skin + sunlight", "sub": "makes vitamin D3" },
+        { "label": "Liver", "sub": "→ 25-OH D (what's measured)" },
+        { "label": "Kidney", "sub": "→ active 1,25-D" },
+        { "label": "Cells", "sub": "calcium, immunity, muscle" }
+      ],
+      "caption": "The blood test measures the storage form (25-OH D) made by the liver — it reflects your stores far better than the tightly-regulated active form."
     },
     {
       "type": "p",
@@ -39,8 +76,32 @@
       ]
     },
     {
+      "type": "rangeBar",
+      "title": "25-OH vitamin D status",
+      "unit": "ng/mL",
+      "min": 0,
+      "max": 60,
+      "zones": [
+        { "label": "Deficient", "from": 0, "to": 20, "tone": "danger" },
+        { "label": "Insufficient", "from": 20, "to": 30, "tone": "caution" },
+        { "label": "Adequate to optimal", "from": 30, "to": 50, "tone": "normal" }
+      ],
+      "caption": "Multiply by 2.5 for nmol/L. Many labs stop flagging at 20 ng/mL, but 20–30 is widely considered insufficient; above ~100 ng/mL is the potential toxicity range."
+    },
+    {
       "type": "callout",
       "text": "Your lab report may show a level of 22 ng/mL as 'normal' with no flag. But most vitamin D researchers and functional medicine doctors consider anything below 30 ng/mL worth addressing — and aim for 40–60 ng/mL as the sweet spot."
+    },
+    {
+      "type": "decisionTree",
+      "title": "What your vitamin D level means — and the usual next step",
+      "branches": [
+        { "if": "Below 12 ng/mL", "then": "Severe deficiency — doctors often use high-dose repletion, then maintenance", "tone": "danger" },
+        { "if": "12–20 ng/mL", "then": "Deficient — supplementation (often 4,000–5,000 IU/day) and a recheck in ~3 months", "tone": "caution" },
+        { "if": "20–29 ng/mL", "then": "Insufficient by many researchers' standards — modest supplementation often recommended", "tone": "info" },
+        { "if": "30–50 ng/mL", "then": "Adequate to optimal — maintain with 1,000–2,000 IU/day if needed", "tone": "normal" },
+        { "if": "Above ~100 ng/mL", "then": "Potential toxicity range — usually from high-dose supplements; review with your doctor", "tone": "danger" }
+      ]
     },
     {
       "type": "h2",
@@ -98,6 +159,17 @@
     {
       "type": "p",
       "text": "Vitamin D3 (cholecalciferol) is more effective at raising blood levels than D2 (ergocalciferol). Taking it with your largest meal of the day — especially one containing fat — significantly improves absorption. Vitamin K2 (MK-7 form) is often recommended alongside D3, as it helps direct calcium to bones rather than soft tissues."
+    },
+    {
+      "type": "comparison",
+      "title": "Vitamin D3 vs D2",
+      "columns": ["D3 (cholecalciferol)", "D2 (ergocalciferol)"],
+      "rows": [
+        { "label": "Source", "a": "Sunlight, animal foods, most supplements", "b": "Plants and fungi; some prescriptions" },
+        { "label": "Raises 25-OH level", "a": "More effectively", "b": "Less effectively" },
+        { "label": "Best taken", "a": "With a fat-containing meal", "b": "With food" }
+      ],
+      "caption": "For most people, D3 is the more reliable choice for raising and maintaining blood levels."
     },
     {
       "type": "callout",

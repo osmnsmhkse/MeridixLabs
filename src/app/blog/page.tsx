@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Blog — Meridix Labs",
   description:
     "Plain-English guides to understanding your lab results. Learn what blood tests, lipid panels, and CBCs actually mean for your health.",
+  alternates: { canonical: "/blog" },
   openGraph: {
     title: "Meridix Labs Blog",
     description:

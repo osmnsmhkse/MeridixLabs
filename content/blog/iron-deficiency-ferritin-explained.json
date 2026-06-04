@@ -3,6 +3,31 @@
   "slug": "iron-deficiency-ferritin-explained",
   "date": "2026-03-31",
   "excerpt": "Ferritin is the most sensitive marker for iron deficiency — yet the lower end of most lab reference ranges is set so low that millions of people are told their iron is 'normal' while experiencing classic deficiency symptoms like fatigue, hair loss, and brain fog. Here's how to read an iron panel properly.",
+  "description": "Ferritin is the earliest sign of iron deficiency — but 'normal' ranges miss many symptomatic people. How to read ferritin, TSAT and the full iron panel.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["complete-blood-count-guide", "thyroid-function-tests-explained", "vitamin-d-deficiency-blood-test", "liver-function-tests-alt-ast-explained"],
+  "keyTakeaways": [
+    "Ferritin reflects your iron stores and is the first marker to fall — long before hemoglobin drops.",
+    "A ferritin near the bottom of the 'normal' range can still cause fatigue, hair shedding and restless legs.",
+    "Ferritin rises with inflammation, so a 'normal' value can mask deficiency — transferrin saturation under 20% helps unmask it.",
+    "Iron deficiency progresses in stages: store depletion, then iron-deficient red-cell production, then anemia.",
+    "Replenishing stores takes 3–6 months; taking iron every other day, with vitamin C and away from coffee, absorbs better."
+  ],
+  "faq": [
+    { "q": "My ferritin is 'normal' but I'm exhausted — could it still be iron?", "a": "Possibly. Many lab ranges start at 12 ng/mL, yet fatigue, hair shedding, brain fog and restless legs often appear when ferritin is below about 30–50. If you have those symptoms with a low-normal ferritin, it's worth discussing iron with your doctor rather than dismissing the number as 'fine'." },
+    { "q": "What's the difference between ferritin and serum iron?", "a": "Ferritin reflects your stored iron, while serum iron is the amount circulating right now. Serum iron swings through the day and with sleep and inflammation, so it's unreliable alone — ferritin and transferrin saturation give a steadier picture." },
+    { "q": "Why would my doctor check transferrin saturation?", "a": "Because ferritin can be falsely raised by inflammation or infection, a transferrin saturation (TSAT) below 20% can reveal iron deficiency that a 'normal' ferritin would otherwise hide. It's especially useful when you have a chronic inflammatory condition." },
+    { "q": "What's the best way to take iron supplements?", "a": "Take iron on an empty stomach with a source of vitamin C, and keep it at least two hours away from coffee, tea, calcium and antacids, which block absorption. Taking it every other day rather than daily often improves absorption and reduces side effects." },
+    { "q": "How long until my iron levels recover?", "a": "Even with consistent treatment, fully restoring depleted stores usually takes 3–6 months. Hair regrowth lags further behind — often 6–12 months after ferritin is back up — so persistence matters." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Ferritin Blood Test", "url": "https://medlineplus.gov/lab-tests/ferritin-blood-test/" },
+    { "source": "MedlinePlus (NIH)", "label": "Iron-Deficiency Anemia", "url": "https://medlineplus.gov/irondeficiencyanemia.html" },
+    { "source": "World Health Organization", "label": "Serum ferritin concentrations for assessing iron status", "url": "https://www.who.int/publications/i/item/9789240000124" },
+    { "source": "NHLBI (NIH)", "label": "Iron-Deficiency Anemia", "url": "https://www.nhlbi.nih.gov/health/anemia/iron-deficiency-anemia" }
+  ],
   "content": [
     {
       "type": "p",
@@ -37,6 +62,20 @@
         "70–150 ng/mL: Good functional range for most people",
         "Above 300 ng/mL (women) / 400 ng/mL (men): Elevated — rule out inflammation or hemochromatosis"
       ]
+    },
+    {
+      "type": "rangeBar",
+      "title": "Ferritin — functional bands",
+      "unit": "ng/mL",
+      "min": 0,
+      "max": 150,
+      "zones": [
+        { "label": "Deficient", "from": 0, "to": 12, "tone": "danger" },
+        { "label": "Low-normal (often symptomatic)", "from": 12, "to": 30, "tone": "caution" },
+        { "label": "Marginal", "from": 30, "to": 70, "tone": "info" },
+        { "label": "Good functional range", "from": 70, "to": 150, "tone": "normal" }
+      ],
+      "caption": "Most labs flag deficiency only below 12 ng/mL, but symptoms frequently persist until ferritin is comfortably above 30–50. Above 300 (women) / 400 (men) is elevated and needs its own work-up."
     },
     {
       "type": "callout",
@@ -75,6 +114,17 @@
       "text": "Iron deficiency doesn't go straight to anemia. There's a progression:"
     },
     {
+      "type": "figure",
+      "variant": "flow",
+      "title": "How iron deficiency progresses",
+      "nodes": [
+        { "label": "Iron depletion", "sub": "ferritin falls, hemoglobin still normal" },
+        { "label": "Iron-deficient red-cell production", "sub": "TSAT <20%, marrow short on iron" },
+        { "label": "Iron-deficiency anemia", "sub": "hemoglobin drops, red cells small & pale" }
+      ],
+      "caption": "Symptoms can begin at the very first stage — which is why ferritin, not just hemoglobin, is worth checking when you feel run down."
+    },
+    {
       "type": "ul",
       "items": [
         "Stage 1 — Iron depletion: Ferritin falls below 30 ng/mL. Serum iron, TIBC, hemoglobin, and CBC all still normal. Symptoms possible: fatigue, hair loss, reduced exercise tolerance.",
@@ -96,6 +146,17 @@
         "Cold hands and feet despite normal thyroid",
         "Brittle nails, especially with koilonychia (spoon-shaped nails)",
         "Pica — craving non-food substances like ice (pagophagia), dirt, or chalk"
+      ]
+    },
+    {
+      "type": "decisionTree",
+      "title": "Tired with a 'normal' ferritin? How to read it",
+      "branches": [
+        { "if": "Ferritin under 30 with fatigue, hair shedding or restless legs", "then": "Often symptomatic iron deficiency even when labelled 'normal' — discuss replacement", "tone": "caution" },
+        { "if": "Ferritin normal but you have inflammation or a recent infection", "then": "Ferritin can be falsely reassuring — check transferrin saturation (under 20% is telling)", "tone": "info" },
+        { "if": "Low ferritin plus low hemoglobin and small red cells", "then": "Iron-deficiency anemia — your doctor will treat it and look for the source", "tone": "caution" },
+        { "if": "Heavy periods, GI symptoms, or blood in the stool", "then": "Find and address the cause of blood loss, not just the low iron", "tone": "danger" },
+        { "if": "Ferritin above 300 (women) / 400 (men)", "then": "Not deficiency — work up inflammation, fatty liver, or hemochromatosis", "tone": "caution" }
       ]
     },
     {
@@ -136,6 +197,16 @@
     {
       "type": "p",
       "text": "Elevated ferritin (above 300 ng/mL in women, 400 ng/mL in men) is not simply the opposite of deficiency. The most common causes are inflammation, fatty liver disease, alcohol use, and metabolic syndrome. But persistently elevated ferritin — especially above 1,000 ng/mL — needs to be evaluated for hereditary hemochromatosis, a common genetic condition (affecting 1 in 200 people of Northern European descent) where the body absorbs too much iron, which can damage the liver, heart, and pancreas if untreated."
+    },
+    {
+      "type": "comparison",
+      "title": "Low vs high ferritin — not opposite ends of one scale",
+      "columns": ["Low ferritin", "High ferritin"],
+      "rows": [
+        { "label": "Indicates", "a": "Depleted iron stores", "b": "Often inflammation or iron overload — not deficiency" },
+        { "label": "Common causes", "a": "Blood loss, low intake, malabsorption, pregnancy", "b": "Infection or inflammation, fatty liver, alcohol, hemochromatosis" },
+        { "label": "The catch", "a": "Can look 'normal' when inflammation masks it — check TSAT", "b": "Above ~1,000 ng/mL: evaluate for hereditary hemochromatosis" }
+      ]
     }
   ]
 }

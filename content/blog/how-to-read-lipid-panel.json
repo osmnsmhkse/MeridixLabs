@@ -3,6 +3,31 @@
   "slug": "how-to-read-lipid-panel",
   "date": "2026-03-22",
   "excerpt": "Your lipid panel results arrive and you're staring at four numbers — Total Cholesterol, LDL, HDL, and Triglycerides — with no clear idea which direction is good and which is bad. It doesn't help that two of them are labelled 'bad cholesterol' and 'good cholesterol' without any explanation of why. In this guide we break down every component of the standard lipid panel in plain English: what each marker measures, what optimal levels look like, and what your results are actually telling you about your cardiovascular health.",
+  "description": "LDL, HDL, triglycerides and total cholesterol explained — what's optimal, why the ratios matter more than any single number, and how to improve them.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["apob-vs-ldl-modern-cardiovascular-risk", "hba1c-blood-sugar-explained", "high-glucose-blood-test", "liver-function-tests-alt-ast-explained"],
+  "keyTakeaways": [
+    "LDL ('bad') delivers cholesterol to artery walls; HDL ('good') carries it back to the liver — you want LDL lower and HDL higher.",
+    "Total cholesterol alone is a weak predictor; the LDL:HDL or total:HDL ratio and your overall risk matter more.",
+    "Optimal LDL is below 100 mg/dL — and below 70 if you have diabetes or established heart disease.",
+    "Triglycerides respond fast to diet — cutting refined carbs, sugar and alcohol can lower them within weeks.",
+    "A lipid panel is a trend, not a verdict; one number out of range is rarely the whole story."
+  ],
+  "faq": [
+    { "q": "Do I need to fast before a lipid panel?", "a": "For the standard panel, yes — 9 to 12 hours of fasting gives an accurate triglyceride reading. Non-fasting panels are increasingly used for screening because LDL and HDL change little with food, but fasting remains the standard when triglycerides matter." },
+    { "q": "Which cholesterol number matters most?", "a": "LDL is the main treatment target, but your overall cardiovascular risk and the total:HDL ratio matter more than any single value. A particle-based marker called ApoB is an even better measure of risk for some people — worth discussing if your numbers are borderline." },
+    { "q": "Is a high HDL always good?", "a": "Higher HDL is generally associated with lower risk, and exercise reliably raises it. But very high HDL doesn't keep adding protection, and HDL should be read alongside LDL and triglycerides rather than in isolation." },
+    { "q": "How quickly can I improve my cholesterol?", "a": "Triglycerides can fall within a few weeks of cutting sugar and alcohol and moving more. LDL shifts more slowly with diet alone; when lifestyle isn't enough, statins are highly effective and well studied." },
+    { "q": "What is a healthy LDL level?", "a": "Below 100 mg/dL is optimal for most adults. If you have diabetes, established heart disease, or several risk factors, your doctor may aim for below 70 mg/dL based on your calculated risk." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Cholesterol Levels: What You Need to Know", "url": "https://medlineplus.gov/cholesterollevelswhatyouneedtoknow.html" },
+    { "source": "NHLBI (NIH)", "label": "Blood Cholesterol", "url": "https://www.nhlbi.nih.gov/health/blood-cholesterol" },
+    { "source": "American Heart Association", "label": "About Cholesterol", "url": "https://www.heart.org/en/health-topics/cholesterol" },
+    { "source": "MedlinePlus (NIH)", "label": "Triglycerides", "url": "https://medlineplus.gov/triglycerides.html" }
+  ],
   "content": [
     {
       "type": "p",
@@ -43,6 +68,19 @@
       ]
     },
     {
+      "type": "rangeBar",
+      "title": "LDL cholesterol",
+      "unit": "mg/dL",
+      "min": 40,
+      "max": 220,
+      "zones": [
+        { "label": "Optimal", "from": 40, "to": 100, "tone": "normal" },
+        { "label": "Above optimal / borderline", "from": 100, "to": 160, "tone": "caution" },
+        { "label": "High", "from": 160, "to": 220, "tone": "danger" }
+      ],
+      "caption": "For LDL, lower is better. If you have diabetes or established heart disease, your target may be below 70 mg/dL."
+    },
+    {
       "type": "p",
       "text": "If you have diabetes, heart disease, or multiple cardiovascular risk factors, your doctor may target an LDL below 70 mg/dL — a stricter threshold based on your overall risk profile."
     },
@@ -63,8 +101,32 @@
       ]
     },
     {
+      "type": "rangeBar",
+      "title": "HDL cholesterol — higher is better",
+      "unit": "mg/dL",
+      "min": 20,
+      "max": 100,
+      "zones": [
+        { "label": "Low (risk factor)", "from": 20, "to": 40, "tone": "danger" },
+        { "label": "Acceptable", "from": 40, "to": 60, "tone": "caution" },
+        { "label": "Protective", "from": 60, "to": 100, "tone": "normal" }
+      ],
+      "caption": "Unlike LDL, higher HDL is better — note the colours run the opposite way. Low thresholds differ by sex: under 40 mg/dL in men, under 50 in women."
+    },
+    {
       "type": "p",
       "text": "Low HDL is an independent cardiovascular risk factor. Regular aerobic exercise is one of the few lifestyle interventions shown to reliably raise HDL levels."
+    },
+    {
+      "type": "comparison",
+      "title": "LDL vs HDL — same cargo, opposite jobs",
+      "columns": ["LDL — 'bad'", "HDL — 'good'"],
+      "rows": [
+        { "label": "Full name", "a": "Low-density lipoprotein", "b": "High-density lipoprotein" },
+        { "label": "Role", "a": "Delivers cholesterol to tissues", "b": "Carries excess cholesterol back to the liver" },
+        { "label": "Effect on arteries", "a": "Deposits cholesterol — builds plaque", "b": "Helps clear cholesterol away" },
+        { "label": "You want it", "a": "Lower", "b": "Higher" }
+      ]
     },
     {
       "type": "h2",
@@ -82,6 +144,19 @@
         "High: 200–499 mg/dL",
         "Very high: 500 mg/dL and above (risk of pancreatitis)"
       ]
+    },
+    {
+      "type": "rangeBar",
+      "title": "Triglycerides",
+      "unit": "mg/dL",
+      "min": 50,
+      "max": 500,
+      "zones": [
+        { "label": "Normal", "from": 50, "to": 150, "tone": "normal" },
+        { "label": "Borderline high", "from": 150, "to": 200, "tone": "caution" },
+        { "label": "High", "from": 200, "to": 500, "tone": "danger" }
+      ],
+      "caption": "Above 500 mg/dL raises the risk of pancreatitis. Triglycerides are the most diet-responsive lipid — sugar and alcohol drive them up fast."
     },
     {
       "type": "p",

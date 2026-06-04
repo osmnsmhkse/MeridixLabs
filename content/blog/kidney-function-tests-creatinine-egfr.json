@@ -3,6 +3,31 @@
   "slug": "kidney-function-tests-creatinine-egfr",
   "date": "2026-04-06",
   "excerpt": "Your kidneys filter about 200 liters of blood every day, and a basic metabolic panel gives you a window into how well they're doing it. Creatinine, eGFR, BUN — these values appear on almost every routine blood test, yet most patients have no idea what they mean or when to worry. This guide breaks it all down.",
+  "description": "Creatinine, eGFR and BUN explained — why eGFR beats raw creatinine, what the CKD stages mean, and when a low result is just a temporary dip.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["hba1c-blood-sugar-explained", "high-glucose-blood-test", "complete-blood-count-guide", "how-to-read-lipid-panel"],
+  "keyTakeaways": [
+    "Creatinine is biased by muscle mass, so it's rarely read alone — eGFR adjusts for age and sex and is the better measure.",
+    "eGFR maps to the five stages of chronic kidney disease, from 90+ (normal) down to under 15 (failure).",
+    "One low eGFR isn't CKD — the reduction has to persist beyond 3 months; dehydration, illness and NSAIDs cause temporary dips.",
+    "Albumin in the urine (uACR) can flag kidney damage before eGFR even drops.",
+    "Diabetes and high blood pressure cause about 75% of CKD — controlling both is the most powerful protection."
+  ],
+  "faq": [
+    { "q": "Is a single low eGFR something to worry about?", "a": "Usually not on its own. Kidney function fluctuates, and a temporary dip during dehydration, illness, or after NSAIDs is common. Chronic kidney disease is only diagnosed when reduced function persists for more than 3 months, so doctors look at the trend across repeat tests." },
+    { "q": "Why is my creatinine high if I feel fine?", "a": "Creatinine rises with muscle mass, dehydration and a high-protein or creatine-supplemented diet — not only with kidney problems. A muscular person can run a 'high' creatinine with perfectly normal kidneys. That's why eGFR, and sometimes a cystatin C test, give a clearer picture." },
+    { "q": "What is a normal eGFR?", "a": "An eGFR of 90 mL/min/1.73m² or above is considered normal kidney function. eGFR naturally declines a little with age, so a value in the 60s in an older adult without other signs of damage isn't necessarily disease." },
+    { "q": "Can kidney function improve?", "a": "Temporary dips from dehydration, infection or medications often recover fully. Established chronic kidney disease usually can't be reversed, but its progression can be markedly slowed by controlling blood pressure and blood sugar and avoiding kidney stressors." },
+    { "q": "How can I protect my kidneys?", "a": "Keep blood pressure and blood sugar well controlled, stay hydrated, limit regular NSAID use (ibuprofen, naproxen), don't smoke, and — if you have risk factors — get an annual blood panel with a urine albumin check to catch problems early." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Creatinine Test", "url": "https://medlineplus.gov/lab-tests/creatinine-test/" },
+    { "source": "MedlinePlus (NIH)", "label": "Glomerular Filtration Rate (GFR) Test", "url": "https://medlineplus.gov/lab-tests/glomerular-filtration-rate-gfr/" },
+    { "source": "NIDDK (NIH)", "label": "Chronic Kidney Disease (CKD)", "url": "https://www.niddk.nih.gov/health-information/kidney-disease/chronic-kidney-disease-ckd" },
+    { "source": "KDIGO", "label": "Clinical Practice Guideline for the Evaluation and Management of CKD", "url": "https://kdigo.org/guidelines/ckd-evaluation-and-management/" }
+  ],
   "content": [
     {
       "type": "p",
@@ -30,6 +55,17 @@
       "text": "This is creatinine's limitation: it's biased by muscle mass. A sedentary 80-year-old woman with creatinine of 1.0 mg/dL might actually have much worse kidney function than a 30-year-old male athlete with creatinine of 1.4 mg/dL. This is why creatinine is almost never interpreted alone."
     },
     {
+      "type": "comparison",
+      "title": "Creatinine vs eGFR",
+      "columns": ["Creatinine", "eGFR"],
+      "rows": [
+        { "label": "What it is", "a": "A muscle waste product the kidneys filter", "b": "An estimate of filtering rate from creatinine plus age and sex" },
+        { "label": "Swayed by muscle mass?", "a": "Yes — biased by how muscular you are", "b": "Adjusts for it, so it's more comparable" },
+        { "label": "Direction", "a": "Higher usually means filtering less", "b": "Lower means filtering less" },
+        { "label": "Best used to", "a": "Feed the eGFR calculation", "b": "Stage kidney function and track trends" }
+      ]
+    },
+    {
       "type": "h2",
       "text": "eGFR: The Better Measure of Kidney Function"
     },
@@ -53,8 +89,34 @@
       ]
     },
     {
+      "type": "rangeBar",
+      "title": "eGFR and the stages of chronic kidney disease",
+      "unit": "mL/min/1.73m²",
+      "min": 0,
+      "max": 120,
+      "zones": [
+        { "label": "Failure (G5)", "from": 0, "to": 15, "tone": "danger" },
+        { "label": "Severe (G4)", "from": 15, "to": 30, "tone": "danger" },
+        { "label": "Moderate (G3)", "from": 30, "to": 60, "tone": "caution" },
+        { "label": "Mild (G2)", "from": 60, "to": 90, "tone": "info" },
+        { "label": "Normal (G1)", "from": 90, "to": 120, "tone": "normal" }
+      ],
+      "caption": "Higher is better for eGFR. A reduced value must persist beyond 3 months — alongside other signs — to be called chronic kidney disease."
+    },
+    {
       "type": "callout",
       "text": "A single low eGFR reading is not a diagnosis. Kidney function naturally varies, and a temporary dip during dehydration, illness, or after taking NSAIDs is common. CKD is only diagnosed when reduced function persists for more than 3 months."
+    },
+    {
+      "type": "decisionTree",
+      "title": "A low eGFR or high creatinine — worry or watch?",
+      "branches": [
+        { "if": "One low eGFR after illness, dehydration, or NSAIDs", "then": "Often a temporary dip — recheck once you've recovered", "tone": "normal" },
+        { "if": "eGFR in the 45–75 range, or very high or low muscle mass", "then": "Ask about a cystatin C test for a more accurate estimate", "tone": "info" },
+        { "if": "Reduced eGFR persisting beyond 3 months", "then": "This is how CKD is diagnosed — your doctor will stage and monitor it", "tone": "caution" },
+        { "if": "Albumin in the urine (raised uACR)", "then": "An early sign of damage worth addressing, even with a normal eGFR", "tone": "caution" },
+        { "if": "eGFR under 30, or falling quickly", "then": "Referral to a kidney specialist (nephrology) is usually recommended", "tone": "danger" }
+      ]
     },
     {
       "type": "h2",

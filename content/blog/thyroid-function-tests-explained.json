@@ -3,6 +3,31 @@
   "slug": "thyroid-function-tests-explained",
   "date": "2026-04-10",
   "excerpt": "Thyroid tests are among the most frequently misread lab results. A TSH of 5.2 can mean very different things depending on your age, symptoms, and whether you're already on medication. This guide explains how TSH, Free T4, Free T3, and antibody tests work together — and what it actually means when one of them is flagged.",
+  "description": "TSH, Free T4, Free T3 and thyroid antibodies explained — why TSH moves opposite to your thyroid, and how to read the patterns together.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["iron-deficiency-ferritin-explained", "vitamin-d-deficiency-blood-test", "complete-blood-count-guide", "hba1c-blood-sugar-explained"],
+  "keyTakeaways": [
+    "TSH moves opposite to your thyroid: a high TSH means an underactive gland, a low TSH means an overactive one.",
+    "TSH is the most sensitive screen, but it's read alongside Free T4 (and sometimes Free T3) to tell the full story.",
+    "Most hypothyroidism is Hashimoto's and most hyperthyroidism is Graves' — both autoimmune, confirmed with antibody tests.",
+    "Subclinical patterns (abnormal TSH but normal Free T4) are common and are often just monitored.",
+    "Biotin supplements and time of day can skew results — a fasting morning draw, off biotin for a few days, is most reliable."
+  ],
+  "faq": [
+    { "q": "Why does a high TSH mean an underactive thyroid?", "a": "TSH is the pituitary's signal telling the thyroid to work. When the thyroid is sluggish, the pituitary shouts louder, so TSH rises. When the thyroid is overactive, the pituitary backs off and TSH falls. That's why TSH moves in the opposite direction to thyroid hormone." },
+    { "q": "What is subclinical hypothyroidism?", "a": "A mildly raised TSH (roughly 4–10) with a still-normal Free T4. The thyroid is compensating but may be starting to struggle. It's common, often causes few or no symptoms, and is frequently rechecked rather than immediately treated — decisions depend on the level, symptoms and antibodies." },
+    { "q": "Do I need Free T3 tested?", "a": "Usually TSH and Free T4 are enough. Free T3 is most useful when you have thyroid-type symptoms but normal TSH and T4, or when there's a suspected problem converting T4 to the active T3 — for example, some people who remain symptomatic on levothyroxine." },
+    { "q": "Can supplements affect my thyroid test?", "a": "Yes — biotin (often taken for hair and nails) can interfere with thyroid assays and cause falsely high or low results. If possible, stop biotin for about 3 days before testing, and mention any supplements to your doctor." },
+    { "q": "My labs are 'normal' but I still feel hypothyroid — what next?", "a": "Ask about checking Free T3 and thyroid antibodies, repeating the test in a few months, and reviewing other causes of the same symptoms (iron, vitamin D, sleep). If it persists, a referral to an endocrinologist can help fine-tune things." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Thyroid Tests", "url": "https://medlineplus.gov/lab-tests/thyroid-tests/" },
+    { "source": "MedlinePlus (NIH)", "label": "TSH (Thyroid-Stimulating Hormone) Test", "url": "https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/" },
+    { "source": "American Thyroid Association", "label": "Thyroid Function Tests", "url": "https://www.thyroid.org/thyroid-function-tests/" },
+    { "source": "NIDDK (NIH)", "label": "Hypothyroidism (Underactive Thyroid)", "url": "https://www.niddk.nih.gov/health-information/endocrine-diseases/hypothyroidism" }
+  ],
   "content": [
     {
       "type": "p",
@@ -21,6 +46,18 @@
       "text": "This feedback loop means the relationship between TSH and thyroid hormones is inverse: when T4 and T3 are low, the pituitary pumps out more TSH to compensate. When they're high, TSH is suppressed. This is why TSH is usually the first test ordered — it's the most sensitive signal of overall thyroid function."
     },
     {
+      "type": "figure",
+      "variant": "flow",
+      "title": "The thyroid axis (chain of command)",
+      "nodes": [
+        { "label": "Hypothalamus", "sub": "releases TRH" },
+        { "label": "Pituitary", "sub": "releases TSH" },
+        { "label": "Thyroid", "sub": "makes T4 and T3" },
+        { "label": "Body's cells", "sub": "T3 drives metabolism" }
+      ],
+      "caption": "A feedback loop runs back up the chain: when thyroid hormone is low the pituitary raises TSH, and when it's high TSH drops — so TSH moves opposite to your thyroid."
+    },
+    {
       "type": "h2",
       "text": "TSH: The Master Signal"
     },
@@ -35,6 +72,19 @@
         "Low TSH (below 0.4): The pituitary has reduced its signal, usually because the thyroid is producing too much hormone on its own. This points to hyperthyroidism.",
         "Mildly elevated TSH (4.0–10.0) with normal T4: Often called 'subclinical hypothyroidism' — the thyroid is compensating but may be struggling."
       ]
+    },
+    {
+      "type": "rangeBar",
+      "title": "TSH — and why both directions matter",
+      "unit": "mIU/L",
+      "min": 0,
+      "max": 10,
+      "zones": [
+        { "label": "Low → overactive (hyper)", "from": 0, "to": 0.4, "tone": "caution" },
+        { "label": "Normal", "from": 0.4, "to": 4, "tone": "normal" },
+        { "label": "High → underactive (hypo)", "from": 4, "to": 10, "tone": "caution" }
+      ],
+      "caption": "Remember the inversion: low TSH points to an overactive thyroid, high TSH to an underactive one. Always interpret TSH together with Free T4."
     },
     {
       "type": "callout",
@@ -81,21 +131,33 @@
       ]
     },
     {
+      "type": "comparison",
+      "title": "Hypothyroidism vs hyperthyroidism",
+      "columns": ["Hypothyroidism (underactive)", "Hyperthyroidism (overactive)"],
+      "rows": [
+        { "label": "TSH", "a": "High", "b": "Low" },
+        { "label": "Free T4", "a": "Low or normal", "b": "High or normal" },
+        { "label": "Most common cause", "a": "Hashimoto's (autoimmune)", "b": "Graves' disease (autoimmune)" },
+        { "label": "Typical symptoms", "a": "Fatigue, weight gain, feeling cold, constipation", "b": "Anxiety, weight loss, palpitations, heat intolerance" }
+      ]
+    },
+    {
       "type": "h2",
       "text": "How to Read Your Results Together"
     },
     {
       "type": "p",
-      "text": "Individual values tell an incomplete story. Here's how common patterns translate:"
+      "text": "Individual values tell an incomplete story. Here's how the common TSH-and-Free-T4 patterns translate:"
     },
     {
-      "type": "ul",
-      "items": [
-        "High TSH + Low Free T4 = Overt hypothyroidism. You're not producing enough thyroid hormone.",
-        "High TSH + Normal Free T4 = Subclinical hypothyroidism. Thyroid is compensating but borderline.",
-        "Low TSH + High Free T4 = Overt hyperthyroidism. Too much thyroid hormone.",
-        "Low TSH + Normal Free T4 = Subclinical hyperthyroidism. Could be early Graves' or excess medication.",
-        "Normal TSH + Symptoms = Consider Free T3, antibodies, or a repeat test in 3–6 months."
+      "type": "decisionTree",
+      "title": "Matching the pattern to the picture",
+      "branches": [
+        { "if": "High TSH + low Free T4", "then": "Overt hypothyroidism — too little thyroid hormone; usually treated", "tone": "caution" },
+        { "if": "High TSH + normal Free T4", "then": "Subclinical hypothyroidism — borderline; often rechecked, sometimes treated", "tone": "info" },
+        { "if": "Low TSH + high Free T4", "then": "Overt hyperthyroidism — too much hormone; needs evaluation", "tone": "danger" },
+        { "if": "Low TSH + normal Free T4", "then": "Subclinical hyperthyroidism — could be early Graves' or excess medication", "tone": "caution" },
+        { "if": "Normal TSH but ongoing symptoms", "then": "Consider Free T3, antibodies, or a repeat test in 3–6 months", "tone": "normal" }
       ]
     },
     {

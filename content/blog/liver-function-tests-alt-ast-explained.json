@@ -3,6 +3,31 @@
   "slug": "liver-function-tests-alt-ast-explained",
   "date": "2026-04-02",
   "excerpt": "A slightly elevated ALT is one of the most common incidental findings in routine blood work — and one of the most anxiety-inducing. Is it serious? Does it mean liver disease? Most of the time, the answer is nuanced. This guide explains each liver enzyme, what it measures, and when elevated values are actually worth worrying about.",
+  "description": "What ALT, AST, ALP, GGT and bilirubin mean in plain English — what the AST:ALT ratio reveals, and when a mildly elevated liver enzyme actually matters.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["high-glucose-blood-test", "hba1c-blood-sugar-explained", "how-to-read-lipid-panel", "iron-deficiency-ferritin-explained"],
+  "keyTakeaways": [
+    "ALT is the most liver-specific enzyme; AST also leaks from muscle, heart and red cells, so it's less specific.",
+    "The pattern matters more than any single value — the AST:ALT ratio helps point to the cause.",
+    "Non-alcoholic fatty liver disease is the most common reason for mildly raised enzymes, and it's often reversible with 7–10% weight loss.",
+    "Isolated high ALP points to the bile ducts or bone rather than liver-cell damage; GGT helps tell them apart.",
+    "Albumin and bilirubin reflect how well the liver is working, not just whether its cells are irritated."
+  ],
+  "faq": [
+    { "q": "Should I worry about a mildly elevated ALT?", "a": "A mild elevation (under three times the upper limit) with no symptoms is common and usually reflects fatty liver, alcohol or a medication rather than serious liver disease. Doctors typically recheck it in a few months and look for reversible causes. Seek prompt evaluation if you also have jaundice, dark urine, or pain in the right upper abdomen." },
+    { "q": "What does it mean if my AST is higher than my ALT?", "a": "An AST:ALT ratio above 2 is a classic pattern of alcohol-related liver disease. AST raised with a normal ALT can also come from muscle injury, a heart problem, or red-cell breakdown — not the liver at all." },
+    { "q": "Can medications raise liver enzymes?", "a": "Yes. Statins, some antibiotics (especially amoxicillin-clavulanate), NSAIDs, antifungals and antiepileptics are common causes. Tell your doctor about any new medication or supplement before assuming there is underlying liver disease." },
+    { "q": "What is the most common cause of high liver enzymes?", "a": "Non-alcoholic fatty liver disease (NAFLD), which affects roughly a quarter of adults worldwide. It is strongly linked to weight, type 2 diabetes and metabolic syndrome, and early-stage NAFLD usually improves with lifestyle change alone." },
+    { "q": "What is Gilbert's syndrome?", "a": "A common, harmless genetic variant affecting about 5% of people that causes mildly raised unconjugated bilirubin, especially when fasting or unwell. It needs no treatment but often causes alarm on routine blood work." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Liver Function Tests", "url": "https://medlineplus.gov/lab-tests/liver-function-tests/" },
+    { "source": "NICE", "label": "Non-alcoholic fatty liver disease (NAFLD): assessment and management (NG49)", "url": "https://www.nice.org.uk/guidance/ng49" },
+    { "source": "NIDDK (NIH)", "label": "Nonalcoholic Fatty Liver Disease (NAFLD) & NASH", "url": "https://www.niddk.nih.gov/health-information/liver-disease/nafld-nash" },
+    { "source": "MedlinePlus (NIH)", "label": "Bilirubin Blood Test", "url": "https://medlineplus.gov/lab-tests/bilirubin-blood-test/" }
+  ],
   "content": [
     {
       "type": "p",
@@ -26,6 +51,19 @@
       ]
     },
     {
+      "type": "rangeBar",
+      "title": "ALT — reading the degree of elevation",
+      "unit": "× upper limit of normal",
+      "min": 0,
+      "max": 10,
+      "zones": [
+        { "label": "Normal", "from": 0, "to": 1, "tone": "normal" },
+        { "label": "Mild (1–3×)", "from": 1, "to": 3, "tone": "caution" },
+        { "label": "Moderate–marked (>3×)", "from": 3, "to": 10, "tone": "danger" }
+      ],
+      "caption": "Shown as multiples of the upper limit of normal, because lab reference ranges differ. Most incidental elevations land in the mild band; values above ~10× suggest acute liver injury."
+    },
+    {
       "type": "h2",
       "text": "AST: The Less Specific Partner"
     },
@@ -40,6 +78,18 @@
         "AST:ALT ratio > 2:1: Classic pattern of alcoholic liver disease — alcohol depletes pyridoxal phosphate (vitamin B6), which disproportionately reduces ALT production",
         "AST elevated but ALT normal: Consider heart attack, rhabdomyolysis (muscle breakdown), or hemolysis — not necessarily a liver problem at all"
       ]
+    },
+    {
+      "type": "comparison",
+      "title": "ALT vs AST at a glance",
+      "columns": ["ALT", "AST"],
+      "rows": [
+        { "label": "Mainly found in", "a": "Liver cells", "b": "Liver — plus heart and skeletal muscle, kidney, red cells" },
+        { "label": "Liver-specific?", "a": "Yes — the most specific routine marker", "b": "No — can rise from muscle or red-cell breakdown" },
+        { "label": "When ALT > AST", "a": "Fatty liver, viral hepatitis, most drug effects", "b": "—" },
+        { "label": "When AST:ALT > 2:1", "a": "—", "b": "Classic for alcohol-related liver disease" }
+      ],
+      "caption": "The two enzymes are most informative together — it's the ratio and the trend, not either number alone, that points to a cause."
     },
     {
       "type": "callout",
@@ -83,6 +133,19 @@
       "text": "Bilirubin is produced when red blood cells are broken down and their hemoglobin is metabolized. The liver processes it and excretes it into bile. Jaundice (yellow skin and eyes) occurs when bilirubin builds up in the blood. There are two types measured:"
     },
     {
+      "type": "figure",
+      "variant": "flow",
+      "title": "Where bilirubin comes from",
+      "nodes": [
+        { "label": "Old red blood cells", "sub": "broken down" },
+        { "label": "Unconjugated bilirubin", "sub": "indirect — rises with hemolysis" },
+        { "label": "Liver", "sub": "conjugates it" },
+        { "label": "Conjugated bilirubin", "sub": "direct — rises with blockage" },
+        { "label": "Bile → gut", "sub": "excreted" }
+      ],
+      "caption": "A blockage downstream of the liver raises direct (conjugated) bilirubin; faster red-cell breakdown upstream raises indirect (unconjugated) bilirubin."
+    },
+    {
       "type": "ul",
       "items": [
         "Direct (conjugated) bilirubin: Processed by the liver. Elevated in liver disease and bile duct obstruction.",
@@ -124,13 +187,14 @@
       "text": "When to Worry and When to Watch"
     },
     {
-      "type": "ul",
-      "items": [
-        "ALT/AST mildly elevated (< 3× normal), no symptoms, no alcohol: Likely NAFLD or medication — repeat in 3–6 months, pursue weight loss if applicable",
-        "Any elevation with jaundice, right upper quadrant pain, or dark urine: Needs prompt evaluation — could be gallstones, hepatitis, or biliary obstruction",
-        "ALT/AST > 10× normal: Acute liver injury — evaluate urgently",
-        "Progressively rising enzymes over months: Requires workup for chronic hepatitis B or C, autoimmune hepatitis, or hemochromatosis",
-        "Elevated ALP with normal ALT/AST: Rule out bile duct disease and bone disease before assuming it's liver-related"
+      "type": "decisionTree",
+      "title": "Worry or watch? A quick guide to elevated liver enzymes",
+      "branches": [
+        { "if": "ALT/AST mildly up (under 3×), no symptoms, no alcohol", "then": "Likely fatty liver or a medication — recheck in 3–6 months and pursue weight loss if relevant", "tone": "normal" },
+        { "if": "Any elevation with jaundice, dark urine, or right-upper-abdomen pain", "then": "Needs prompt evaluation — could be gallstones, hepatitis, or a blocked bile duct", "tone": "danger" },
+        { "if": "ALT or AST above 10× the upper limit", "then": "Suggests acute liver injury — seek urgent assessment", "tone": "danger" },
+        { "if": "Enzymes climbing steadily over months", "then": "Work up chronic hepatitis B/C, autoimmune hepatitis, or hemochromatosis", "tone": "caution" },
+        { "if": "High ALP but normal ALT/AST", "then": "Points to the bile ducts or bone rather than liver cells — check GGT to localise it", "tone": "info" }
       ]
     }
   ]

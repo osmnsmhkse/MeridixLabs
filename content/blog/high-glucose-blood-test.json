@@ -3,6 +3,31 @@
   "slug": "high-glucose-blood-test",
   "date": "2026-03-15",
   "excerpt": "You got your blood test back and one number is flagged in red: glucose. Maybe it says 108, or 115, or even 130 mg/dL. The reference range says 70–99 and yours is above it. Before you spiral into worst-case scenarios, take a breath. A single elevated glucose reading tells a story — but it's rarely the whole story. In this guide, we'll walk through exactly what blood glucose is, why it gets measured, what different levels actually mean, and what your next steps should be. Understanding your numbers is the first step to taking control of your health.",
+  "description": "Fasting glucose flagged high? What 100–125 (pre-diabetes) and 126+ really mean, why it can read falsely high, and the next steps that actually matter.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["hba1c-blood-sugar-explained", "how-to-read-lipid-panel", "kidney-function-tests-creatinine-egfr", "wearables-and-bloodwork-cgm-hrv"],
+  "keyTakeaways": [
+    "Normal fasting glucose is 70–99 mg/dL; 100–125 is pre-diabetes and 126+ (confirmed) is diabetes.",
+    "A single high reading is a data point, not a diagnosis — it usually needs a repeat or an HbA1c to confirm.",
+    "Poor sleep, stress, illness, recent food or some medications can all push a fasting glucose up temporarily.",
+    "Pre-diabetes is largely reversible — losing 5–7% of body weight cuts the risk of progression by over half.",
+    "High glucose is usually silent, which is exactly why screening catches it early, when it's most treatable."
+  ],
+  "faq": [
+    { "q": "Does one high glucose reading mean I have diabetes?", "a": "No. Diabetes is diagnosed from two separate fasting readings of 126 mg/dL or higher, or a confirmatory HbA1c — not a single number. One elevated result is a prompt to repeat the test and look at the bigger picture, not a diagnosis." },
+    { "q": "What can falsely raise a fasting glucose?", "a": "Not fasting the full 8 hours, acute stress, a recent illness or infection, a poor night's sleep, vigorous exercise just before the draw, and medications such as corticosteroids can all push the number up temporarily. Re-test under proper conditions before drawing conclusions." },
+    { "q": "What's the difference between pre-diabetes and diabetes?", "a": "Pre-diabetes (fasting glucose 100–125 mg/dL) means glucose regulation is becoming less efficient but hasn't crossed the diabetes threshold. Diabetes is fasting glucose of 126 mg/dL or higher, confirmed. Pre-diabetes is the window where lifestyle change is most effective." },
+    { "q": "Can I lower my blood sugar naturally?", "a": "Often, yes — especially in the pre-diabetes range. Losing 5–7% of body weight, reducing refined carbohydrates and sugar, and getting regular activity can bring a borderline fasting glucose back toward normal, sometimes within weeks." },
+    { "q": "Should I see a specialist?", "a": "Most elevated glucose is managed by your primary-care doctor. Consider an endocrinologist if your readings stay above 125 mg/dL despite lifestyle change, if the diagnosis is unclear, or if you need help building a management plan." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Blood Glucose Test", "url": "https://medlineplus.gov/lab-tests/blood-glucose-test/" },
+    { "source": "MedlinePlus (NIH)", "label": "Prediabetes", "url": "https://medlineplus.gov/prediabetes.html" },
+    { "source": "American Diabetes Association", "label": "Diagnosis & diagnostic criteria", "url": "https://diabetes.org/about-diabetes/diagnosis" },
+    { "source": "NIDDK (NIH)", "label": "Preventing Type 2 Diabetes", "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-type-2-diabetes" }
+  ],
   "content": [
     {
       "type": "p",
@@ -15,6 +40,18 @@
     {
       "type": "p",
       "text": "Glucose is your body's primary fuel source. Every cell — from your brain to your muscles — runs on it. When you eat carbohydrates, your digestive system breaks them down into glucose, which enters your bloodstream. Your pancreas then releases insulin, a hormone that acts like a key unlocking your cells so glucose can enter and be used for energy."
+    },
+    {
+      "type": "figure",
+      "variant": "flow",
+      "title": "How a carbohydrate becomes energy",
+      "nodes": [
+        { "label": "Eat carbohydrates", "sub": "broken down to glucose" },
+        { "label": "Glucose enters blood", "sub": "blood sugar rises" },
+        { "label": "Pancreas releases insulin", "sub": "the 'key'" },
+        { "label": "Glucose enters cells", "sub": "used for energy" }
+      ],
+      "caption": "When cells stop responding to insulin (insulin resistance) or the pancreas can't keep up, glucose stays in the blood and the reading climbs."
     },
     {
       "type": "p",
@@ -32,6 +69,20 @@
         "Diabetes: 126 mg/dL or higher on two separate tests",
         "Hypoglycemia (low blood sugar): below 70 mg/dL"
       ]
+    },
+    {
+      "type": "rangeBar",
+      "title": "Fasting blood glucose",
+      "unit": "mg/dL",
+      "min": 60,
+      "max": 160,
+      "zones": [
+        { "label": "Low (hypoglycemia)", "from": 60, "to": 70, "tone": "low" },
+        { "label": "Normal", "from": 70, "to": 100, "tone": "normal" },
+        { "label": "Pre-diabetes", "from": 100, "to": 126, "tone": "caution" },
+        { "label": "Diabetes range", "from": 126, "to": 160, "tone": "danger" }
+      ],
+      "caption": "A value in the diabetes range needs a second test or an HbA1c to confirm. A single reading is a signal, not a diagnosis."
     },
     {
       "type": "p",
@@ -95,6 +146,16 @@
         "Review your lifestyle: Diet high in refined carbs, sedentary behaviour, and excess weight are the biggest modifiable risk factors",
         "Consider seeing an Endocrinologist if your reading is consistently above 125 mg/dL",
         "Don't panic: A single elevated reading is a data point, not a sentence"
+      ]
+    },
+    {
+      "type": "decisionTree",
+      "title": "Your fasting glucose came back high — what now?",
+      "branches": [
+        { "if": "Could you have skipped the 8h fast, been ill or stressed, or slept badly?", "then": "Common false elevators — repeat the test under proper conditions first", "tone": "info" },
+        { "if": "Reading is 100–125 with no symptoms", "then": "Pre-diabetes — largely reversible; recheck and start lifestyle changes", "tone": "caution" },
+        { "if": "Reading is 126+ on a single test", "then": "Not yet a diagnosis — your doctor confirms with a repeat or an HbA1c", "tone": "caution" },
+        { "if": "126+ confirmed, or thirst, frequent urination or weight loss", "then": "Diabetes work-up — see your doctor promptly", "tone": "danger" }
       ]
     },
     {

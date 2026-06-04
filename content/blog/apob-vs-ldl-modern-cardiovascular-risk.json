@@ -3,6 +3,31 @@
   "slug": "apob-vs-ldl-modern-cardiovascular-risk",
   "date": "2026-04-20",
   "excerpt": "If you've had a recent physical, your doctor may have started ordering ApoB alongside or instead of LDL cholesterol. The reason is straightforward: ApoB measures the actual number of harmful particles in your blood, and over the last five years it's quietly become the better cardiovascular risk marker. Here's what changed, what your numbers mean, and how AI tools fit into the new picture.",
+  "description": "Why ApoB is overtaking LDL as the better cholesterol marker — what it counts, when the two disagree, and where Lp(a) fits in.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["how-to-read-lipid-panel", "hba1c-blood-sugar-explained", "high-glucose-blood-test", "ai-reading-lab-results-2026"],
+  "keyTakeaways": [
+    "ApoB counts the actual number of artery-clogging particles; LDL only estimates the cholesterol inside them.",
+    "Every atherogenic particle (LDL, VLDL, IDL, Lp(a)) carries exactly one ApoB, so ApoB is a direct particle count.",
+    "LDL and ApoB disagree in 20–30% of people — often those with diabetes, high triglycerides or metabolic syndrome — and ApoB is the better signal.",
+    "Lp(a) is largely genetic, raises risk independently, and only needs to be measured once in your life.",
+    "ApoB under 80 mg/dL is desirable for most adults; under 65 if you have diabetes or established heart disease."
+  ],
+  "faq": [
+    { "q": "Should I ask for an ApoB test?", "a": "If your last panel only showed LDL, ApoB is worth requesting — especially if you have diabetes, high triglycerides, a strong family history, or a borderline lipid panel. It's widely covered by insurance and gives a more direct read on your particle-driven risk." },
+    { "q": "What's a good ApoB level?", "a": "Under 80 mg/dL is desirable for most adults. If you have diabetes or established cardiovascular disease, the target tightens to under 65 mg/dL. Values above 100 mg/dL are high and usually prompt a treatment discussion." },
+    { "q": "What's the difference between ApoB and LDL?", "a": "LDL cholesterol estimates the cargo — how much cholesterol your LDL particles carry. ApoB counts the vehicles — the number of particles. Because atherosclerosis is driven by particles lodging in artery walls, the count often predicts risk better than the cargo." },
+    { "q": "What is Lp(a) and should I test it?", "a": "Lipoprotein(a) is an LDL-like particle whose level is almost entirely genetic. About 1 in 5 people have an elevated level that independently raises heart and aortic-valve risk. It's worth measuring once — it doesn't change, so it never needs repeating." },
+    { "q": "Can I lower ApoB with lifestyle?", "a": "Yes — the same levers that lower LDL (reducing saturated fat, losing excess weight, exercising) lower ApoB, and statins and related medications lower it substantially. Lp(a), by contrast, barely budges with lifestyle, so the focus there is controlling everything around it." }
+  ],
+  "references": [
+    { "source": "European Society of Cardiology / EAS", "label": "2019 Guidelines for the Management of Dyslipidaemias", "url": "https://www.escardio.org/Guidelines/Clinical-Practice-Guidelines/Dyslipidaemias-Management-of" },
+    { "source": "MedlinePlus (NIH)", "label": "Lipoprotein (a) Blood Test", "url": "https://medlineplus.gov/lab-tests/lipoprotein-a-blood-test/" },
+    { "source": "American Heart Association", "label": "About Cholesterol", "url": "https://www.heart.org/en/health-topics/cholesterol" },
+    { "source": "MedlinePlus (NIH)", "label": "Cholesterol Levels: What You Need to Know", "url": "https://medlineplus.gov/cholesterollevelswhatyouneedtoknow.html" }
+  ],
   "content": [
     { "type": "p", "text": "For most of the last 40 years, cardiovascular risk got a one-word summary: cholesterol. Specifically, LDL cholesterol — the \"bad\" kind. If your LDL was high, your doctor talked about diet, exercise, and statins. If it was low, you were broadly fine." },
     { "type": "p", "text": "That story is still mostly right, but the standard test has gotten better. Apolipoprotein B (ApoB) is now considered by most lipid specialists to be a more accurate predictor of cardiovascular events than LDL cholesterol alone. The European Society of Cardiology recommended ApoB testing in their 2019 dyslipidemia guidelines, and US guidance has been steadily catching up." },
@@ -14,8 +39,20 @@
 
     { "type": "h2", "text": "What ApoB measures and why it's different" },
     { "type": "p", "text": "Every atherogenic particle — LDL, VLDL, IDL, Lp(a), and remnants — carries exactly one ApoB molecule. So the ApoB level in your blood is essentially a direct count of the dangerous particles circulating through your arteries." },
+    { "type": "figure", "variant": "flow", "title": "Why ApoB counts particles, not cargo", "nodes": [
+      { "label": "Atherogenic particles", "sub": "LDL, VLDL, IDL, Lp(a)" },
+      { "label": "One ApoB each", "sub": "a single tag per particle" },
+      { "label": "ApoB level", "sub": "= total particle count" },
+      { "label": "Artery wall", "sub": "particles lodge & inflame" }
+    ], "caption": "Two people with the same LDL cholesterol can carry very different particle counts — ApoB captures that difference directly." },
     { "type": "p", "text": "When LDL cholesterol and ApoB agree, you don't gain much from measuring both. But when they disagree — which happens in 20–30% of people, especially those with metabolic syndrome, diabetes, or high triglycerides — ApoB is the more reliable signal." },
     { "type": "callout", "text": "Discordance between LDL and ApoB is most common in people who otherwise look 'metabolically borderline' on paper. If your LDL is okay but your triglycerides and waist circumference are creeping up, ApoB will often show a higher risk than your lipid panel suggests." },
+    { "type": "comparison", "title": "LDL cholesterol vs ApoB", "columns": ["LDL cholesterol", "ApoB"], "rows": [
+      { "label": "What it measures", "a": "Cholesterol carried inside LDL particles (the cargo)", "b": "The number of atherogenic particles (the vehicles)" },
+      { "label": "How you get it", "a": "Usually calculated from other values", "b": "Measured directly" },
+      { "label": "More reliable when", "a": "LDL and ApoB agree", "b": "They disagree — diabetes, high triglycerides, metabolic syndrome" },
+      { "label": "In one line", "a": "A good approximation", "b": "Closer to the biology of atherosclerosis" }
+    ] },
 
     { "type": "h3", "text": "Reference ranges in 2026" },
     { "type": "p", "text": "Standard cut-points have tightened over the past few years. As of current consensus:" },
@@ -26,12 +63,24 @@
       "ApoB > 100 mg/dL — high; usually triggers a discussion about pharmacological therapy.",
       "ApoB > 130 mg/dL — markedly elevated; reflects substantial atherogenic burden."
     ] },
+    { "type": "rangeBar", "title": "ApoB", "unit": "mg/dL", "min": 40, "max": 140, "zones": [
+      { "label": "Desirable", "from": 40, "to": 80, "tone": "normal" },
+      { "label": "Borderline", "from": 80, "to": 100, "tone": "caution" },
+      { "label": "High", "from": 100, "to": 140, "tone": "danger" }
+    ], "caption": "Lower is better. Aim under 80 mg/dL for most adults, or under 65 with diabetes or heart disease; above 130 reflects a markedly elevated particle burden." },
     { "type": "p", "text": "For comparison, an ApoB of 100 mg/dL roughly corresponds to an LDL of 130 mg/dL in most people — but that conversion isn't reliable enough to use as a substitute for measuring ApoB directly." },
 
     { "type": "h2", "text": "Lipoprotein(a): the genetic wildcard" },
     { "type": "p", "text": "While we're updating the cholesterol conversation, the other marker worth knowing about is Lipoprotein(a) — Lp(a). It's an LDL-like particle with an extra protein attached, and your level is almost entirely genetic. Diet and exercise barely move it." },
     { "type": "p", "text": "Roughly 20% of the population has elevated Lp(a) (above 50 mg/dL or about 125 nmol/L), and they don't know it because Lp(a) wasn't routinely tested until recently. Elevated Lp(a) independently raises cardiovascular and aortic stenosis risk regardless of LDL or ApoB. The good news: it only needs to be measured once in your life, because it doesn't change. The bad news: there's no approved drug to lower it yet, though several promising candidates are in late-stage trials as of early 2026." },
     { "type": "p", "text": "If Lp(a) is elevated, the practical move is to be more aggressive on the things you can control — ApoB, blood pressure, smoking, weight." },
+    { "type": "decisionTree", "title": "Making sense of a modern lipid panel", "branches": [
+      { "if": "Your panel shows ApoB and LDL, and they agree", "then": "Either is fine — focus on the result and your overall risk", "tone": "normal" },
+      { "if": "LDL looks okay but triglycerides or waistline are creeping up", "then": "Ask for ApoB — it often reveals higher risk than LDL suggests", "tone": "caution" },
+      { "if": "ApoB is above 100 mg/dL", "then": "A high particle burden — usually prompts a treatment discussion with your doctor", "tone": "caution" },
+      { "if": "You've never had Lp(a) measured", "then": "Worth a one-time test — it's largely genetic and never needs repeating", "tone": "info" },
+      { "if": "Your Lp(a) is elevated", "then": "Be aggressive on what you can control: ApoB, blood pressure, smoking, weight", "tone": "caution" }
+    ], "caption": "When the markers disagree, that disagreement is the useful information — it's exactly where the older LDL number was least reliable." },
 
     { "type": "h2", "text": "How AI tools handle this updated picture" },
     { "type": "p", "text": "The challenge with the modern cardiovascular panel is that it's no longer a single number — you might have LDL, ApoB, Lp(a), non-HDL cholesterol, ApoA1, and triglycerides all on the same report, and figuring out which one to focus on isn't obvious." },
