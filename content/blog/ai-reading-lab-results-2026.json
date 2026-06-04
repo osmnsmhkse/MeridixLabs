@@ -3,6 +3,30 @@
   "slug": "ai-reading-lab-results-2026",
   "date": "2026-04-30",
   "excerpt": "AI-assisted lab interpretation went from research demo to mainstream consumer tool in less than three years. Here's a practical look at what large multimodal models can and can't do when they read your blood work — written for people who want to use these tools without being bamboozled by the marketing.",
+  "description": "What AI can and can't do when it reads your blood work in 2026 — its real strengths, where it still trips up, and how to use these tools responsibly.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["wearables-and-bloodwork-cgm-hrv", "apob-vs-ldl-modern-cardiovascular-risk", "complete-blood-count-guide", "how-to-read-lipid-panel"],
+  "keyTakeaways": [
+    "Modern multimodal models read a lab PDF as a whole and reason over it, rather than matching a hard-coded template.",
+    "AI is genuinely good at cross-marker pattern reading, translating jargon, and handling reports in many languages.",
+    "It still struggles with lab-specific reference ranges, trends from a single snapshot, rare assays, and overstepping into diagnosis.",
+    "Consumer lab tools are educational — they don't diagnose or prescribe, and that boundary is the point.",
+    "Use AI to walk into your appointment informed, cross-check flagged values, and trust trends over single readings."
+  ],
+  "faq": [
+    { "q": "Can AI diagnose me from my lab report?", "a": "No. AI can tell you that a value is out of range and explain what that typically means, but it can't examine you, take a history, or order follow-up tests. The leap from 'this is out of range' to a diagnosis and treatment plan belongs to a clinician who knows your full picture." },
+    { "q": "How accurate is AI at reading lab PDFs?", "a": "Modern multimodal models are very good at extracting values and explaining them, even from non-standard layouts or other languages. The weak points are reference ranges — which vary by lab, sex and age — and rare assays, where models can occasionally invent context. Cross-check anything borderline against the range your lab printed." },
+    { "q": "Will AI replace my doctor?", "a": "No — and good tools don't try to. The value is in understanding your own data so you can ask better questions, not in skipping the appointment. Clinical decisions still belong with a clinician." },
+    { "q": "Is it safe to upload my lab report?", "a": "It depends on the tool. Read the privacy policy and prefer tools that don't store your file. Avoid sharing identifying details you don't want retained, and be cautious with any service that's vague about what happens to your data." },
+    { "q": "What is AI actually good at here?", "a": "Holding a whole panel in context to spot cross-marker patterns, rephrasing jargon at whatever reading level you want, and translating reports across languages — all in seconds, for free, without a portal login." }
+  ],
+  "references": [
+    { "source": "U.S. FDA", "label": "Artificial Intelligence and Machine Learning (AI/ML)-Enabled Medical Devices", "url": "https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-aiml-enabled-medical-devices" },
+    { "source": "U.S. FDA", "label": "Clinical Decision Support Software — Guidance", "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/clinical-decision-support-software" },
+    { "source": "World Health Organization", "label": "Ethics and governance of artificial intelligence for health", "url": "https://www.who.int/publications/i/item/9789240029200" }
+  ],
   "content": [
     { "type": "p", "text": "If you've uploaded a lab PDF to a website lately and gotten back a friendly explanation in seconds, there's a good chance a large multimodal AI model wrote that response. The technology powering tools like Meridix Labs has changed quickly — and a lot of the hype, fear, and confusion around \"medical AI\" comes from people not knowing what's actually happening under the hood." },
     { "type": "p", "text": "This article walks through what AI is genuinely good at when it comes to reading lab reports, where it still trips up, and how to use it responsibly. No jargon, no scare stories." },
@@ -10,6 +34,12 @@
     { "type": "h2", "text": "From OCR to multimodal models: what changed" },
     { "type": "p", "text": "Until about 2023, getting a computer to read a scanned lab PDF was a slog. You'd run optical character recognition (OCR), regex out the test names, look up reference ranges in a dictionary, and pray the lab used a consistent layout. Anything outside the template — a Turkish report, a handwritten note, a non-standard marker name — broke the pipeline." },
     { "type": "p", "text": "What changed is that modern foundation models (the same family of systems behind Claude, GPT-4, and Gemini) can ingest a PDF or image directly and reason about it. The model sees the document the way you do — as a whole — and can identify a glucose value, parse a reference range, and flag it as out of bounds in one pass. It's not pattern-matching against a hard-coded template; it's reading." },
+    { "type": "figure", "variant": "flow", "title": "How a modern model reads your report", "nodes": [
+      { "label": "Upload PDF or photo", "sub": "any layout or language" },
+      { "label": "Model reads it whole", "sub": "no fixed template" },
+      { "label": "Identifies markers & ranges", "sub": "in one pass" },
+      { "label": "Flags & explains", "sub": "plain English" }
+    ], "caption": "The old pipeline — OCR, regex, template lookup — broke on anything non-standard. Reasoning over the whole document is what made consumer tools viable." },
     { "type": "callout", "text": "This is the single biggest reason consumer lab interpretation tools became viable in 2024–2026. The hard part used to be extracting data. Now the hard part is explaining it well." },
 
     { "type": "h2", "text": "What AI does well" },
@@ -29,18 +59,24 @@
     { "type": "p", "text": "If you upload a panel that includes a rare or specialized assay, AI models can occasionally invent reference ranges or make up clinical context. This is the same hallucination problem you've heard about. The mitigation is structural: ground the model in a curated biomarker catalog and refuse to interpret markers it doesn't recognize, rather than letting it freelance." },
     { "type": "h3", "text": "4. Diagnosis vs. interpretation" },
     { "type": "p", "text": "AI can tell you that your TSH is high and explain what high TSH typically means. It cannot examine you, take a history, palpate your thyroid, or order a follow-up FT4. The leap from \"this lab value is out of range\" to \"you have hypothyroidism and here's your treatment plan\" is a doctor's job, not an AI's. Tools that pretend otherwise are crossing a regulatory and ethical line." },
+    { "type": "comparison", "title": "What AI does well vs still struggles with", "columns": ["Does well", "Still struggles with"], "rows": [
+      { "label": "Pattern reading", "a": "Cross-marker reasoning across a whole panel", "b": "Lab-, sex- and age-specific reference ranges" },
+      { "label": "Communication", "a": "Translating jargon, switching reading level", "b": "Trends over time from a single snapshot" },
+      { "label": "Coverage", "a": "Reading reports in many languages", "b": "Rare assays — risk of invented context" },
+      { "label": "Boundary", "a": "Explaining what a value typically means", "b": "Diagnosing or prescribing — that's a doctor's job" }
+    ] },
 
     { "type": "h2", "text": "The 2026 regulatory landscape" },
     { "type": "p", "text": "The FDA and equivalent bodies in the EU and UK have accelerated their AI/ML medical device pipelines. Hundreds of AI tools are now cleared for specific clinical uses — radiology triage, retinal screening, ECG analysis, sepsis prediction. But almost all of them are clinical-decision tools used by clinicians, not consumer apps used by patients." },
     { "type": "p", "text": "Consumer-facing lab interpretation tools generally operate in an \"educational use only\" zone. They don't diagnose, don't prescribe, and don't replace your physician. That's the right framing — not because of liability theater, but because patients genuinely benefit from understanding their own data, while clinical decisions still belong with a clinician who knows their full history." },
 
     { "type": "h2", "text": "Practical guidance for using AI lab tools" },
-    { "type": "ul", "items": [
-      "Use AI to understand, not to decide. The goal is to walk into your next appointment informed, not to skip the appointment.",
-      "Cross-check unusual values. If the AI flags something as concerning, look up the actual reference range your lab printed and confirm. If the AI says everything's fine but a value is on the edge of the range, ask your doctor about it.",
-      "Trust trends more than absolute values. One slightly elevated reading is usually less informative than the same marker drifting upward across three reports.",
-      "Don't share PDFs that include personally identifiable information you don't want stored. Read each tool's privacy policy. Tools that don't store the file (this one included) are safer than tools that do.",
-      "Be skeptical of tools that promise diagnoses, treatment plans, or supplement protocols without a clinician in the loop. Education is fine; prescribing is not."
+    { "type": "decisionTree", "title": "Using an AI lab tool well", "branches": [
+      { "if": "The AI flags something as concerning", "then": "Cross-check the reference range your lab actually printed, then ask your doctor", "tone": "caution" },
+      { "if": "The AI says everything's fine but a value sits on the edge", "then": "Raise it at your next appointment anyway", "tone": "info" },
+      { "if": "You're looking at a single report", "then": "Trust trends across several reports more than any one reading", "tone": "normal" },
+      { "if": "A tool promises a diagnosis, treatment plan or supplement protocol", "then": "Be skeptical — education is fine, prescribing without a clinician isn't", "tone": "danger" },
+      { "if": "Your PDF holds identifying details you'd rather not store", "then": "Check the privacy policy; prefer tools that don't keep the file", "tone": "caution" }
     ] },
 
     { "type": "h2", "text": "Where this is going" },

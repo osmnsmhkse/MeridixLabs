@@ -3,6 +3,31 @@
   "slug": "complete-blood-count-guide",
   "date": "2026-04-01",
   "excerpt": "The Complete Blood Count is one of the most frequently ordered lab tests in medicine — and one of the most misunderstood by patients. Your CBC report might contain a dozen or more values, each with its own abbreviation and reference range, and very little explanation of what any of it means. In this guide, we break down every component of the CBC: what red blood cells, white blood cells, and platelets actually do, what it means when they're high or low, and why your doctor ordered this test in the first place.",
+  "description": "Every CBC value in plain English — red cells and hemoglobin, the white-cell differential, platelets and RDW — and which patterns actually matter.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["iron-deficiency-ferritin-explained", "kidney-function-tests-creatinine-egfr", "thyroid-function-tests-explained", "liver-function-tests-alt-ast-explained"],
+  "keyTakeaways": [
+    "A CBC measures three cell lines: red cells (oxygen), white cells (immunity) and platelets (clotting).",
+    "Hemoglobin is the most clinically important red-cell marker — it's what defines anemia.",
+    "MCV tells you the size of your red cells and helps identify the type of anemia.",
+    "The white-cell differential breaks the count down by cell type and hints at the nature of an infection or immune response.",
+    "No single CBC value should be read in isolation — the pattern, and your symptoms, are everything."
+  ],
+  "faq": [
+    { "q": "What does it mean if one CBC value is slightly out of range?", "a": "Reference ranges are set so that about 1 in 20 healthy people fall just outside them. A single mildly abnormal value, with no symptoms, is usually repeated rather than acted on immediately. What matters is whether the pattern across several values — and your symptoms — point to something." },
+    { "q": "What is the difference between anemia types on a CBC?", "a": "The MCV (red-cell size) is the key clue. A low MCV (microcytic) anemia is most often iron deficiency; a high MCV (macrocytic) anemia points to B12 or folate deficiency, alcohol or thyroid issues. Ferritin and B12/folate tests usually come next." },
+    { "q": "Does a high white blood cell count mean I have an infection?", "a": "Often, yes — a raised white-cell count usually means your immune system is responding to something, most commonly an infection or physical stress. Very high counts can occasionally signal a blood disorder and warrant further testing." },
+    { "q": "What does a high RDW mean?", "a": "RDW measures how much your red cells vary in size. A high RDW is an early clue to nutritional deficiencies (iron, B12 or folate) and can appear before other values become clearly abnormal." },
+    { "q": "Should I be worried about low platelets?", "a": "Mildly low platelets are common and often due to a recent viral illness or a medication. Significant drops can cause easy bruising or bleeding and should be evaluated. Your doctor will look at the trend and whether other counts are affected." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Complete Blood Count (CBC)", "url": "https://medlineplus.gov/lab-tests/complete-blood-count-cbc/" },
+    { "source": "MedlinePlus (NIH)", "label": "Hemoglobin Test", "url": "https://medlineplus.gov/lab-tests/hemoglobin-test/" },
+    { "source": "NHLBI (NIH)", "label": "Anemia", "url": "https://www.nhlbi.nih.gov/health/anemia" },
+    { "source": "MedlinePlus (NIH)", "label": "Blood Differential Test", "url": "https://medlineplus.gov/lab-tests/blood-differential/" }
+  ],
   "content": [
     {
       "type": "p",
@@ -38,12 +63,37 @@
       ]
     },
     {
+      "type": "rangeBar",
+      "title": "Hemoglobin (adult men)",
+      "unit": "g/dL",
+      "min": 6,
+      "max": 20,
+      "zones": [
+        { "label": "Anemia", "from": 6, "to": 13.5, "tone": "low" },
+        { "label": "Normal", "from": 13.5, "to": 17.5, "tone": "normal" },
+        { "label": "High", "from": 17.5, "to": 20, "tone": "caution" }
+      ],
+      "caption": "Reference for adult men; women run roughly 12.0–15.5 g/dL. A hemoglobin below the normal range is what defines anemia."
+    },
+    {
       "type": "h3",
       "text": "What Low Hemoglobin Means"
     },
     {
       "type": "p",
       "text": "Anemia — low hemoglobin — is one of the most common findings on a CBC. Symptoms include fatigue, shortness of breath, dizziness, and pale skin. But anemia is a symptom, not a diagnosis. The pattern of other CBC values (especially MCV and RDW) helps determine the cause: iron deficiency, chronic disease, vitamin deficiency, or something else entirely."
+    },
+    {
+      "type": "comparison",
+      "title": "What red-cell size (MCV) suggests",
+      "columns": ["Low MCV (microcytic)", "High MCV (macrocytic)"],
+      "rows": [
+        { "label": "Red cells are", "a": "Smaller than normal", "b": "Larger than normal" },
+        { "label": "Most common cause", "a": "Iron deficiency", "b": "B12 or folate deficiency" },
+        { "label": "Also seen in", "a": "Thalassemia, chronic disease", "b": "Alcohol use, hypothyroidism, some medications" },
+        { "label": "Helpful next test", "a": "Ferritin", "b": "B12 and folate levels" }
+      ],
+      "caption": "MCV narrows a vague 'anemia' result down to a likely cause, which decides what to test next."
     },
     {
       "type": "h2",
@@ -104,17 +154,14 @@
       "text": "Most minor CBC abnormalities — slightly low hemoglobin, mildly elevated WBC — are common and often benign. Significant concern arises when multiple values are simultaneously abnormal, when values are far outside the reference range, or when the pattern suggests something systemic. Your doctor interprets your CBC in the context of your symptoms, medical history, and other tests ordered at the same time."
     },
     {
-      "type": "h2",
-      "text": "Key Takeaways"
-    },
-    {
-      "type": "ul",
-      "items": [
-        "CBC measures red cells (oxygen), white cells (immunity), and platelets (clotting)",
-        "Hemoglobin is the most clinically important red cell marker — it defines anemia",
-        "MCV tells you the size of your red cells and helps identify the type of anemia",
-        "WBC differential breaks down immune cell types and helps identify the nature of any infection or immune response",
-        "No single CBC value should be interpreted in isolation — context is everything"
+      "type": "decisionTree",
+      "title": "When does a CBC result need attention?",
+      "branches": [
+        { "if": "One value slightly outside range and you feel well", "then": "Often benign — usually just repeated to confirm whether it's a real trend", "tone": "normal" },
+        { "if": "Low hemoglobin with fatigue or breathlessness", "then": "Anemia work-up — MCV, ferritin and B12/folate help find the cause", "tone": "caution" },
+        { "if": "Low platelets with easy bruising or bleeding", "then": "Get assessed — could be immune, viral, or medication-related", "tone": "caution" },
+        { "if": "Very high white-cell count, or very low counts", "then": "Needs prompt evaluation to rule out a blood disorder", "tone": "danger" },
+        { "if": "Several cell lines abnormal at once", "then": "More likely something systemic — discuss with your doctor", "tone": "caution" }
       ]
     }
   ]

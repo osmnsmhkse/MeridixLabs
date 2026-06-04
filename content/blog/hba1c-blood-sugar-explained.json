@@ -3,6 +3,31 @@
   "slug": "hba1c-blood-sugar-explained",
   "date": "2026-04-04",
   "excerpt": "HbA1c is the single most important number for understanding your long-term blood sugar control — yet most people don't know what it measures or how it differs from a fasting glucose test. This guide explains the full picture: HbA1c, fasting glucose, the oral glucose tolerance test, and what it means when you're told you're 'borderline.'",
+  "description": "HbA1c, fasting glucose and the OGTT explained — what pre-diabetes really means, the numbers behind each test, and why pre-diabetes is often reversible.",
+  "author": { "name": "Meridix Labs Editorial Team", "role": "Health education" },
+  "reviewer": { "name": "TODO: assign reviewing clinician", "credential": "MD" },
+  "lastReviewed": "2026-06-04",
+  "related": ["high-glucose-blood-test", "how-to-read-lipid-panel", "apob-vs-ldl-modern-cardiovascular-risk", "wearables-and-bloodwork-cgm-hrv"],
+  "keyTakeaways": [
+    "HbA1c reflects your average blood sugar over about 3 months — you can't fast your way to a good result.",
+    "Pre-diabetes (HbA1c 5.7–6.4%) is a reversible warning, not a mild form of diabetes.",
+    "Fasting glucose is a single snapshot, easily swayed by last night's meal, sleep and morning stress — repeat a borderline reading.",
+    "Intensive lifestyle change cut progression from pre-diabetes to diabetes by 58% in the Diabetes Prevention Program trial.",
+    "Anemia and some hemoglobin variants distort HbA1c, so it isn't reliable for everyone."
+  ],
+  "faq": [
+    { "q": "What's the difference between HbA1c and a fasting glucose test?", "a": "Fasting glucose is a single snapshot of your blood sugar after at least 8 hours without food. HbA1c reflects your average blood sugar over roughly the past 3 months by measuring how much glucose has stuck to your red blood cells. HbA1c is harder to game and better for tracking control over time." },
+    { "q": "Do I need to fast before an HbA1c test?", "a": "No. Because HbA1c is a 3-month average, eating beforehand doesn't change the result — you can have it drawn at any time of day. Fasting only matters for a fasting glucose test." },
+    { "q": "Is pre-diabetes reversible?", "a": "For many people, yes. Pre-diabetes is one of the few clearly reversible metabolic states. Losing 5–7% of body weight and doing about 150 minutes of activity a week substantially lowers the chance of progressing to type 2 diabetes, and many people bring an HbA1c back under 5.7%." },
+    { "q": "Can anything make my HbA1c inaccurate?", "a": "Yes. Iron deficiency can push it falsely high, while conditions that shorten red-cell lifespan (hemolytic anemia, recent transfusion, some hemoglobin variants such as sickle cell trait) can make it falsely low. In those cases a fasting glucose or oral glucose tolerance test may be used instead." },
+    { "q": "What HbA1c level is considered diabetes?", "a": "An HbA1c of 6.5% or above meets the threshold for diabetes, but unless you have clear symptoms it needs to be confirmed with a second test on a different day. 5.7–6.4% is pre-diabetes, and below 5.7% is normal." }
+  ],
+  "references": [
+    { "source": "MedlinePlus (NIH)", "label": "Hemoglobin A1C (HbA1c) Test", "url": "https://medlineplus.gov/lab-tests/hemoglobin-a1c-hba1c-test/" },
+    { "source": "American Diabetes Association", "label": "Diagnosis & diagnostic criteria", "url": "https://diabetes.org/about-diabetes/diagnosis" },
+    { "source": "NIDDK (NIH)", "label": "Preventing Type 2 Diabetes", "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-type-2-diabetes" },
+    { "source": "MedlinePlus (NIH)", "label": "Blood Glucose Test", "url": "https://medlineplus.gov/lab-tests/blood-glucose-test/" }
+  ],
   "content": [
     {
       "type": "p",
@@ -17,6 +42,18 @@
       "text": "HbA1c (glycated hemoglobin, also written A1C) measures the percentage of hemoglobin molecules in your red blood cells that have glucose attached to them. Since red blood cells live about 90–120 days, HbA1c reflects your average blood sugar over roughly the past 3 months — not just what you ate before the test."
     },
     {
+      "type": "figure",
+      "variant": "flow",
+      "title": "Why HbA1c reflects three months",
+      "nodes": [
+        { "label": "Glucose in blood", "sub": "circulates" },
+        { "label": "Sticks to hemoglobin", "sub": "glycation" },
+        { "label": "Red cells live ~3 months", "sub": "90–120 days" },
+        { "label": "% glycated = HbA1c", "sub": "your 3-month average" }
+      ],
+      "caption": "Because the sugar stays attached for the red cell's whole lifespan, HbA1c can't be reset by fasting on the morning of your test."
+    },
+    {
       "type": "p",
       "text": "This makes it far more meaningful than a single fasting glucose for diagnosing and managing diabetes. You can't fast your way to a good HbA1c the way you can temporarily suppress a fasting glucose reading."
     },
@@ -28,6 +65,19 @@
         "6.5% and above: Diabetes (requires confirmation with a second test on a different day, unless symptoms are present)",
         "Target for managed diabetes: Below 7.0% (or 8.0% for elderly patients with limited life expectancy)"
       ]
+    },
+    {
+      "type": "rangeBar",
+      "title": "HbA1c — diagnostic ranges",
+      "unit": "%",
+      "min": 4,
+      "max": 10,
+      "zones": [
+        { "label": "Normal", "from": 4, "to": 5.7, "tone": "normal" },
+        { "label": "Pre-diabetes", "from": 5.7, "to": 6.5, "tone": "caution" },
+        { "label": "Diabetes", "from": 6.5, "to": 10, "tone": "danger" }
+      ],
+      "caption": "Pre-diabetes runs 5.7–6.4%; 6.5% and above meets the threshold for diabetes (confirmed with a repeat test unless symptoms are present)."
     },
     {
       "type": "callout",
@@ -47,6 +97,18 @@
         "Below 100 mg/dL (5.6 mmol/L): Normal",
         "100–125 mg/dL (5.6–6.9 mmol/L): Impaired Fasting Glucose — pre-diabetes",
         "126 mg/dL (7.0 mmol/L) or above: Diabetes (must be confirmed)"
+      ]
+    },
+    {
+      "type": "comparison",
+      "title": "Fasting glucose vs HbA1c",
+      "columns": ["Fasting glucose", "HbA1c"],
+      "rows": [
+        { "label": "What it measures", "a": "Blood sugar right now, after an 8h fast", "b": "Average blood sugar over ~3 months" },
+        { "label": "Fasting needed?", "a": "Yes — 8+ hours", "b": "No" },
+        { "label": "Pre-diabetes range", "a": "100–125 mg/dL", "b": "5.7–6.4%" },
+        { "label": "Diabetes cut-off", "a": "≥126 mg/dL", "b": "≥6.5%" },
+        { "label": "Main limitation", "a": "Swayed by last night's meal, sleep and stress", "b": "Distorted by anemia and some hemoglobin variants" }
       ]
     },
     {
@@ -115,6 +177,16 @@
         "Falsely LOW: Hemolytic anemia, recent blood transfusion, iron deficiency (paradoxically), and some hemoglobin variants (like HbS in sickle cell trait) — red cells turn over faster so less glycation accumulates",
         "Falsely HIGH: Iron deficiency anemia (red cells live longer, accumulating more glycation), vitamin B12 deficiency, chronic kidney disease",
         "Hemoglobin variants: People with sickle cell disease, HbC, or other hemoglobinopathies may need fasting glucose or OGTT instead of HbA1c"
+      ]
+    },
+    {
+      "type": "decisionTree",
+      "title": "What to do with a borderline result",
+      "branches": [
+        { "if": "A single fasting glucose of 100–125 and you're otherwise well", "then": "Repeat before drawing conclusions — sleep, stress and last night's meal all sway it", "tone": "caution" },
+        { "if": "HbA1c lands at 5.7–6.4%", "then": "Pre-diabetes — a reversible warning; focus on weight, diet and activity", "tone": "caution" },
+        { "if": "HbA1c ≥6.5% or fasting ≥126, confirmed on a second test", "then": "Diabetes — your doctor will start a management plan", "tone": "danger" },
+        { "if": "You have anemia or a known hemoglobin variant", "then": "HbA1c may be unreliable — a fasting glucose or OGTT may be used instead", "tone": "info" }
       ]
     },
     {
