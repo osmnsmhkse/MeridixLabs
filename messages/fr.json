@@ -616,6 +616,11 @@
     "evidencePreliminary": "Préliminaire"
   },
   "Profile": {
+    "dangerZone": "Zone sensible",
+    "deleteAccountDesc": "Supprimez définitivement votre compte et toutes les données associées : profil, analyses, conversations, objectifs et compléments. Cette action est irréversible.",
+    "deleteAccountBtn": "Supprimer mon compte",
+    "deleteConfirm": "Cela supprime définitivement votre compte et toutes vos données. Action irréversible. Continuer ?",
+    "deleting": "Suppression…",
     "authDisabledTitle": "Les comptes ne sont pas activés",
     "authDisabledBody": "Le système de comptes arrive bientôt. Chaque outil Meridix Labs fonctionne sans inscription.",
     "goHome": "Aller à l'accueil",

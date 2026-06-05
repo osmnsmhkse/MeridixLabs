@@ -616,6 +616,11 @@
     "evidencePreliminary": "初步"
   },
   "Profile": {
+    "dangerZone": "危险区域",
+    "deleteAccountDesc": "永久删除您的账户及所有相关数据——个人资料、化验分析、对话、目标和补充剂。此操作无法撤销。",
+    "deleteAccountBtn": "删除我的账户",
+    "deleteConfirm": "这将永久删除您的账户和所有数据，且无法撤销。是否继续？",
+    "deleting": "正在删除…",
     "authDisabledTitle": "账户未启用",
     "authDisabledBody": "账户系统即将推出。每个Meridix Labs工具无需注册即可使用。",
     "goHome": "回到主页",

@@ -616,6 +616,11 @@
     "evidencePreliminary": "Vorläufig"
   },
   "Profile": {
+    "dangerZone": "Gefahrenzone",
+    "deleteAccountDesc": "Löschen Sie Ihr Konto und alle zugehörigen Daten dauerhaft – Profil, Laboranalysen, Chats, Ziele und Nahrungsergänzungsmittel. Dies kann nicht rückgängig gemacht werden.",
+    "deleteAccountBtn": "Mein Konto löschen",
+    "deleteConfirm": "Dadurch werden Ihr Konto und alle Ihre Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden. Fortfahren?",
+    "deleting": "Wird gelöscht…",
     "authDisabledTitle": "Konten sind nicht aktiviert",
     "authDisabledBody": "Das Kontosystem kommt bald. Jedes Meridix Labs Tool funktioniert ohne Anmeldung.",
     "goHome": "Zur Startseite",

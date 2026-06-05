@@ -4,18 +4,10 @@
 // GET    /api/share?token=...   → public read of a shared analysis (no auth)
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase";
 import { randomBytes } from "crypto";
-
-function describeError(err: unknown): string {
-  if (err instanceof Error) return err.message;
-  if (err && typeof err === "object") {
-    const e = err as { message?: string; code?: string; details?: string; hint?: string };
-    return [e.message, e.code && `code=${e.code}`, e.details, e.hint].filter(Boolean).join(" | ") || JSON.stringify(err);
-  }
-  return String(err);
-}
 
 function genToken(): string {
   return randomBytes(18).toString("base64url");
@@ -48,8 +40,7 @@ export async function POST(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ share: data });
   } catch (err) {
-    console.error("share POST error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("share", err);
   }
 }
 
@@ -88,8 +79,7 @@ export async function GET(request: NextRequest) {
       expiresAt: share.expires_at,
     });
   } catch (err) {
-    console.error("share GET error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("share", err);
   }
 }
 
@@ -106,6 +96,6 @@ export async function DELETE(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("share", err);
   }
 }

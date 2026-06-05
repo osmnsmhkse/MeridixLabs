@@ -5,6 +5,7 @@
 // for natural-language phrasing.
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
@@ -109,10 +110,6 @@ Return ONLY the JSON array, nothing else. No code fence.`,
 
     return NextResponse.json({ insights });
   } catch (err) {
-    console.error("insights-feed error:", err);
-    return NextResponse.json({
-      error: "Something went wrong.",
-      detail: err instanceof Error ? err.message : String(err),
-    }, { status: 500 });
+    return errorResponse("insights-feed", err);
   }
 }

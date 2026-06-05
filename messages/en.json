@@ -616,6 +616,11 @@
     "evidencePreliminary": "Preliminary"
   },
   "Profile": {
+    "dangerZone": "Danger zone",
+    "deleteAccountDesc": "Permanently delete your account and all associated data — your profile, lab analyses, chats, goals, and supplements. This cannot be undone.",
+    "deleteAccountBtn": "Delete my account",
+    "deleteConfirm": "This permanently deletes your account and all your data. This cannot be undone. Continue?",
+    "deleting": "Deleting…",
     "authDisabledTitle": "Accounts aren't enabled",
     "authDisabledBody": "The account system is coming soon. Every Meridix Labs tool works without signing up.",
     "goHome": "Go home",

@@ -4,6 +4,7 @@
 // localStorage and never call this route.
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase";
 
@@ -44,10 +45,6 @@ export async function GET(request: NextRequest) {
       messages: (data ?? []).map((m) => ({ role: m.role, content: m.content })),
     });
   } catch (err) {
-    console.error("[lab-chat-history] error:", err);
-    return NextResponse.json(
-      { error: "Something went wrong.", detail: err instanceof Error ? err.message : String(err) },
-      { status: 500 },
-    );
+    return errorResponse("lab-chat-history", err);
   }
 }

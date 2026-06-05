@@ -4,6 +4,7 @@
 // DELETE /api/supplements?id=...   → remove
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase";
 import { ensureProfileForCurrentUser } from "@/lib/userProfile";
@@ -11,15 +12,6 @@ import { findSupplement, suggestSupplements } from "@/lib/supplements";
 import { normalizeAnalyses, type Analysis } from "@/lib/dashboardData";
 
 interface ProfileShape { medications?: string | null; conditions?: string | null; }
-
-function describeError(err: unknown): string {
-  if (err instanceof Error) return err.message;
-  if (err && typeof err === "object") {
-    const e = err as { message?: string; code?: string; details?: string; hint?: string };
-    return [e.message, e.code && `code=${e.code}`, e.details, e.hint].filter(Boolean).join(" | ") || JSON.stringify(err);
-  }
-  return String(err);
-}
 
 export async function GET() {
   try {
@@ -62,8 +54,7 @@ export async function GET() {
       suggestions: filteredSuggestions.slice(0, 8),
     });
   } catch (err) {
-    console.error("supplements GET error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("supplements", err);
   }
 }
 
@@ -93,8 +84,7 @@ export async function POST(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ supplement: data });
   } catch (err) {
-    console.error("supplements POST error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("supplements", err);
   }
 }
 
@@ -119,7 +109,7 @@ export async function PATCH(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ supplement: data });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("supplements", err);
   }
 }
 
@@ -135,6 +125,6 @@ export async function DELETE(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("supplements", err);
   }
 }

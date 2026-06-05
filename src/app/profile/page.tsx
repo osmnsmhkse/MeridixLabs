@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const AUTH_ENABLED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -55,6 +55,7 @@ export default function ProfilePage() {
 function ProfileInner() {
   const t = useTranslations("Profile");
   const { isLoaded, isSignedIn } = useUser();
+  const { signOut } = useClerk();
   const router = useRouter();
   const searchParams = useSearchParams();
   const welcome = searchParams.get("welcome") === "1";
@@ -65,6 +66,7 @@ function ProfileInner() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [depth, setDepth] = useState<Depth>("minimal");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) router.replace("/sign-in");
@@ -112,6 +114,24 @@ function ProfileInner() {
       setError(e instanceof Error ? e.message : "Something went wrong.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function deleteAccount() {
+    if (!window.confirm(t("deleteConfirm"))) return;
+    setDeleting(true);
+    setError(null);
+    try {
+      const r = await fetch("/api/account", { method: "DELETE" });
+      if (!r.ok) {
+        const j = await r.json().catch(() => ({}));
+        throw new Error(j.error || "Failed to delete account");
+      }
+      // Sign out and return home; the account and all data are now gone.
+      await signOut({ redirectUrl: "/" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong.");
+      setDeleting(false);
     }
   }
 
@@ -324,6 +344,20 @@ function ProfileInner() {
         <p className="mt-4 text-xs text-ink-tertiary">
           {t("privacyNote")}
         </p>
+
+        {/* Danger zone — self-serve account + data deletion (GDPR/KVKK erasure) */}
+        <div className="mt-10 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-950/20 p-5">
+          <h2 className="text-sm font-bold text-red-700 dark:text-red-400">{t("dangerZone")}</h2>
+          <p className="mt-1.5 text-xs text-ink-secondary leading-relaxed">{t("deleteAccountDesc")}</p>
+          <button
+            type="button"
+            onClick={deleteAccount}
+            disabled={deleting}
+            className="mt-4 inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 disabled:opacity-60 rounded-lg transition"
+          >
+            {deleting ? t("deleting") : t("deleteAccountBtn")}
+          </button>
+        </div>
       </div>
     </div>
   );

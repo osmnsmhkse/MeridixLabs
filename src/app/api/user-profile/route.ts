@@ -2,6 +2,7 @@
 // All requests require a signed-in Clerk user.
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase";
 import { ensureProfileForCurrentUser } from "@/lib/userProfile";
@@ -12,12 +13,7 @@ export async function GET() {
     if (!profile) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     return NextResponse.json({ profile });
   } catch (err) {
-    console.error("user-profile GET error:", err);
-    return NextResponse.json({
-      error: "Something went wrong.",
-      detail: err instanceof Error ? err.message : String(err),
-      stack: err instanceof Error ? err.stack?.split("\n").slice(0, 5).join("\n") : undefined,
-    }, { status: 500 });
+    return errorResponse("user-profile", err);
   }
 }
 
@@ -55,7 +51,6 @@ export async function PATCH(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ profile: data });
   } catch (err) {
-    console.error("user-profile PATCH error:", err);
-    return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
+    return errorResponse("user-profile", err);
   }
 }

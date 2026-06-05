@@ -107,11 +107,20 @@ export async function POST(request: NextRequest) {
       );
       if (error) console.error("[clerk-webhook] upsert failed:", error);
     } else if (evt.type === "user.deleted") {
-      const { error } = await supabase
-        .from("clerk_users")
-        .update({ deleted_at: new Date().toISOString() })
-        .eq("id", id);
-      if (error) console.error("[clerk-webhook] soft-delete failed:", error);
+      // Erase the user's data (GDPR/KVKK right to erasure). Deleting the
+      // profile row cascades to all linked health tables. We keep the
+      // clerk_users row (for the signups metric) but scrub its email and
+      // stamp deleted_at. Also drop analytics rows that carry the user id.
+      const [profileRes, mirrorRes] = await Promise.all([
+        supabase.from("users_profile").delete().eq("user_id", id),
+        supabase
+          .from("clerk_users")
+          .update({ deleted_at: new Date().toISOString(), email: null })
+          .eq("id", id),
+      ]);
+      if (profileRes.error) console.error("[clerk-webhook] profile erase failed:", profileRes.error);
+      if (mirrorRes.error) console.error("[clerk-webhook] mirror scrub failed:", mirrorRes.error);
+      await supabase.from("analytics_events").delete().eq("user_id", id);
     }
     // Other event types are acknowledged and ignored.
   } catch (err) {

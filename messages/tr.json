@@ -616,6 +616,11 @@
     "evidencePreliminary": "Ön araştırma"
   },
   "Profile": {
+    "dangerZone": "Tehlikeli alan",
+    "deleteAccountDesc": "Hesabınızı ve ilişkili tüm verileri — profiliniz, tahlil analizleri, sohbetler, hedefler ve takviyeler — kalıcı olarak silin. Bu işlem geri alınamaz.",
+    "deleteAccountBtn": "Hesabımı sil",
+    "deleteConfirm": "Bu işlem hesabınızı ve tüm verilerinizi kalıcı olarak siler. Geri alınamaz. Devam edilsin mi?",
+    "deleting": "Siliniyor…",
     "authDisabledTitle": "Hesaplar etkin değil",
     "authDisabledBody": "Hesap sistemi yakında geliyor. Her Meridix Labs aracı kayıt olmadan çalışır.",
     "goHome": "Ana sayfaya git",

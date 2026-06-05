@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAccountsEnabled, supabaseServer } from "@/lib/supabase";
+import { isAdminAuthorized } from "@/lib/adminAuth";
+import { rateLimit } from "@/lib/ratelimit";
 
 interface FeedbackRow {
   id: string;
@@ -12,16 +14,12 @@ interface FeedbackRow {
   received_at: string;
 }
 
-function isAuthorized(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  if (!authHeader?.startsWith("Basic ")) return false;
-  const decoded = Buffer.from(authHeader.slice(6), "base64").toString("utf-8");
-  const password = decoded.slice(decoded.indexOf(":") + 1);
-  return Boolean(process.env.ADMIN_PASSWORD) && password === process.env.ADMIN_PASSWORD;
-}
-
 export async function GET(request: NextRequest) {
-  if (!isAuthorized(request)) {
+  // Throttle brute-force attempts on the shared admin password.
+  const _rl = await rateLimit(request, "auth");
+  if (_rl) return _rl;
+
+  if (!isAdminAuthorized(request)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

@@ -616,6 +616,11 @@
     "evidencePreliminary": "Preliminar"
   },
   "Profile": {
+    "dangerZone": "Zona de peligro",
+    "deleteAccountDesc": "Elimina permanentemente tu cuenta y todos los datos asociados: tu perfil, análisis de laboratorio, chats, objetivos y suplementos. Esta acción no se puede deshacer.",
+    "deleteAccountBtn": "Eliminar mi cuenta",
+    "deleteConfirm": "Esto eliminará permanentemente tu cuenta y todos tus datos. No se puede deshacer. ¿Continuar?",
+    "deleting": "Eliminando…",
     "authDisabledTitle": "Las cuentas no están habilitadas",
     "authDisabledBody": "El sistema de cuentas estará disponible próximamente. Todas las herramientas de Meridix Labs funcionan sin necesidad de registrarse.",
     "goHome": "Ir al inicio",
