@@ -273,4 +273,51 @@ No GitHub Actions / pre-commit secret scanner. Add a `gitleaks` step on push so 
 
 **No secret rotation is required** — the git history, client bundle, and `NEXT_PUBLIC_` surface are all clean.
 
-**END OF PHASE 1. No code was changed.** Awaiting explicit **"go ahead with Phase 2"** before implementing any fix.
+**END OF PHASE 1. No code was changed.**
+
+---
+---
+
+# PHASE 2 — Remediation status (implemented 2026-06-05)
+
+Branch `security-hardening`. Build passes (`next build` ✓, TypeScript strict ✓);
+runtime-verified that headers/CSP/nonce land and the app boots. Rate limiting is
+**fail-open** until you provision Upstash, so nothing breaks before then.
+
+### ✅ Implemented
+
+| Audit item | What shipped |
+|---|---|
+| §2 Headers | Static headers in `next.config.ts` (nosniff, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy, HSTS preload). **Report-Only** nonce CSP in `src/middleware.ts` (`src/lib/csp.ts`) → `/api/csp-report`. |
+| §3 Rate limiting | `src/lib/ratelimit.ts` (Upstash, fail-open). Guards on all 30 Anthropic routes + `send-email` (email tier) + `feedback`/`track`/`ab-track` (write tier) + admin (auth tier). Per-user keying on the auth'd AI routes. |
+| §3 Input caps | `src/lib/inputLimits.ts`; `chat` now caps messages count/length + `toolContext` (was uncapped); `symptom` context fields capped. |
+| §3/§4 send-email | zod schema (shape + length caps) + `escapeHtml()` on every interpolated field (was HTML/link-injectable). |
+| §4 XSS hardening | `src/lib/jsonld.ts` escapes `<` in all JSON-LD; CSP nonce threaded to root-layout inline scripts. (No AI-HTML sink exists — confirmed.) |
+| §5 Error leakage | `src/lib/apiError.ts` → generic prod errors, detail only in dev, always logs. Removed all `detail`/`stack` leaks. |
+| §5 Admin auth | `src/lib/adminAuth.ts` constant-time compare + rate limit on both admin routes. |
+| §4 RLS | `supabase/migrations/2026-06-05-security-baseline.sql` (idempotent re-assert + documents the deny-by-default invariant). **Not applied — run it yourself.** |
+| §6 Account deletion | `DELETE /api/account` (erases `users_profile` → cascade, scrubs analytics + mirror, deletes Clerk user); `user.deleted` webhook now erases data; "Danger zone" UI on /profile (i18n in all 9 locales). |
+| §6 Stale copy | Fixed `Symptom.reassurance` + `WomensHealth.loadingPrivacy` "we don't store" claims across 9 locales; TODO in privacy §2.2 re: unused session tables. |
+| §7 security.txt / CI | `public/.well-known/security.txt` + `.github/workflows/secret-scan.yml` (gitleaks). |
+
+### 🚫 Intentionally NOT done this pass (flagged for you)
+- **§7.1 Clerk + Next.js upgrades (HIGH advisories).** Framework version bumps on a live medical app can break auth/rendering and were **not** in the Phase-2 task list. Do these as a separate, individually-tested change. Upgrade Next.js **before** flipping CSP to nonce-enforce (the nonce-XSS advisory is in the current range).
+- **zod everywhere.** Added to the highest-risk public route (`send-email`); other routes rely on input caps + rate limits. Extend route-by-route.
+- **§6.4 symptom/diagnosis session persistence.** Left a visible TODO instead of guessing — wire persistence or soften copy (product+legal decision).
+
+### 🔧 Manual steps you own
+1. **Provision Upstash** and set `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` in Vercel (until then, limiting is OFF/fail-open).
+2. **Run** `supabase/migrations/2026-06-05-security-baseline.sql` on the remote DB.
+3. **Configure the Clerk webhook** to send `user.deleted` (so deletions erase data) and ensure `CLERK_SECRET_KEY` is set (needed by `/api/account` to delete the Clerk user).
+4. **Rotate `ADMIN_PASSWORD`** to a long random value.
+5. **Legal review** of the privacy/terms wording + resolve the §2.2 TODO.
+
+### CSP enforce-mode checklist (before flipping Report-Only → enforce)
+1. Provision Upstash + deploy; let real traffic run for a few days.
+2. Watch `[csp-report]` logs. Expect entries for the page-level JSON-LD on **/genetics** and **/blog/\*** (not yet nonced) — nonce or hash those before enforcing.
+3. Confirm **no** legit violations for Clerk (`*.clerk.accounts.dev`, `clerk.meridixlabs.com`, Turnstile), Supabase, Google Fonts, or first-party scripts. Add any missing origin to `src/lib/csp.ts`.
+4. Verify sign-in/sign-up, the dashboard, and every AI tool work with the policy attached (Report-Only won't have blocked them, so read the reports, not the UI).
+5. **Upgrade Next.js past the CSP-nonce-XSS advisory first.**
+6. Flip `CSP_HEADER` in `src/middleware.ts` from `content-security-policy-report-only` to `content-security-policy`. Redeploy and smoke-test immediately.
+
+**No secret rotation required** — git history, client bundle, and `NEXT_PUBLIC_` surface are all clean.
