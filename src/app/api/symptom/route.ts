@@ -135,6 +135,11 @@ export async function POST(request: NextRequest) {
 
     const symptomClean = typeof symptom === "string" ? symptom.trim().slice(0, 400) : "";
     const historyClean = typeof history === "string" ? history.trim().slice(0, 500) : "";
+    // Bound the small context fields too (cheap, prevents prompt-stuffing).
+    const ageClean = typeof age === "string" ? age.trim().slice(0, 16) : "";
+    const sexClean = typeof sex === "string" ? sex.trim().slice(0, 16) : "";
+    const durationClean = typeof duration === "string" ? duration.trim().slice(0, 60) : "";
+    const languageClean = typeof language === "string" ? language.trim().slice(0, 8) : "en";
 
     let imageBlock:
       | { type: "image"; source: { type: "base64"; media_type: "image/jpeg" | "image/png" | "image/webp" | "image/gif"; data: string } }
@@ -184,11 +189,11 @@ export async function POST(request: NextRequest) {
       max_tokens: 3000,
       system: buildSystemPrompt(
         symptomClean,
-        age,
-        sex,
-        duration,
+        ageClean,
+        sexClean,
+        durationClean,
         historyClean,
-        language
+        languageClean
       ),
       messages: [{ role: "user", content: userContent }],
     });

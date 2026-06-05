@@ -1,30 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { rateLimit } from "@/lib/ratelimit";
+import { escapeHtml } from "@/lib/escapeHtml";
+import { MAX_FREETEXT_CHARS } from "@/lib/inputLimits";
 import { Resend } from "resend";
 import Anthropic from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-interface FlagItem {
-  marker: string;
-  value: string;
-  unit: string;
-  reference: string;
-  status: "high" | "low" | "normal";
-}
+// This endpoint is public and the body is interpolated into an email we send
+// from our own domain — so every field is untrusted. zod bounds the shape and
+// sizes; escapeHtml() (in buildHtml) neutralizes any HTML/link injection.
+const flagSchema = z.object({
+  marker: z.string().max(120),
+  value: z.string().max(60),
+  unit: z.string().max(40),
+  reference: z.string().max(120),
+  status: z.enum(["high", "low", "normal"]),
+});
 
-interface SendEmailBody {
-  email: string;
-  mode: "lab" | "radiology";
-  lang?: string;
-  overall_status?: "normal" | "amber" | "red";
-  summary_headline?: string;
-  urgency?: "routine" | "soon" | "weeks";
-  simple: string;
-  specialist?: string;
-  action?: string;
-  flags?: FlagItem[];
-}
+const sendEmailSchema = z.object({
+  email: z.string().max(254).regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address."),
+  mode: z.enum(["lab", "radiology"]).default("lab"),
+  lang: z.string().max(8).optional(),
+  overall_status: z.enum(["normal", "amber", "red"]).optional(),
+  summary_headline: z.string().max(500).optional(),
+  urgency: z.enum(["routine", "soon", "weeks"]).optional(),
+  simple: z.string().min(1).max(MAX_FREETEXT_CHARS),
+  specialist: z.string().max(500).optional(),
+  action: z.string().max(1000).optional(),
+  flags: z.array(flagSchema).max(80).optional(),
+});
+
+type FlagItem = z.infer<typeof flagSchema>;
+type SendEmailBody = z.infer<typeof sendEmailSchema>;
 
 async function generateQuestions(body: SendEmailBody): Promise<string[]> {
   const { mode, flags = [], specialist, action, simple, lang = "en" } = body;
@@ -101,15 +110,15 @@ function buildHtml(body: SendEmailBody, questions: string[], date: string): stri
       const arrow = f.status === "high" ? "↑" : "↓";
       const color = f.status === "high" ? "#dc2626" : "#2563eb";
       return `<tr>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#374151;font-weight:600;">${f.marker}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:${color};font-weight:700;">${arrow} ${f.value} ${f.unit}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#6b7280;">ref: ${f.reference}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#374151;font-weight:600;">${escapeHtml(f.marker)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:${color};font-weight:700;">${arrow} ${escapeHtml(f.value)} ${escapeHtml(f.unit)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#6b7280;">ref: ${escapeHtml(f.reference)}</td>
       </tr>`;
     })
     .join("");
 
   const questionItems = questions.length > 0
-    ? questions.map((q, i) => `<li style="margin:0 0 10px;font-size:14px;color:#374151;line-height:1.6;">${i + 1}. ${q}</li>`).join("")
+    ? questions.map((q, i) => `<li style="margin:0 0 10px;font-size:14px;color:#374151;line-height:1.6;">${i + 1}. ${escapeHtml(q)}</li>`).join("")
     : `<li style="color:#6b7280;font-size:14px;">Visit meridixlabs.com to generate your personalized questions.</li>`;
 
   const urgencyText = urgencyLabel(urgency);
@@ -134,7 +143,7 @@ function buildHtml(body: SendEmailBody, questions: string[], date: string): stri
           <div style="background:${statusBg(overall_status)};border:1.5px solid ${statusColor(overall_status)}30;border-radius:12px;padding:16px 20px;">
             <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:${statusColor(overall_status)};">Overall Assessment</p>
             <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:${statusColor(overall_status)};">${statusLabel(overall_status)}</p>
-            ${summary_headline ? `<p style="margin:0 0 ${urgencyText ? "10px" : "0"};font-size:14px;color:#374151;line-height:1.6;">${summary_headline}</p>` : ""}
+            ${summary_headline ? `<p style="margin:0 0 ${urgencyText ? "10px" : "0"};font-size:14px;color:#374151;line-height:1.6;">${escapeHtml(summary_headline)}</p>` : ""}
             ${urgencyText ? `<p style="margin:0;font-size:13px;font-weight:600;color:${statusColor(overall_status)};">⏱ ${urgencyText}</p>` : ""}
           </div>
         </td></tr>` : ""}
@@ -157,7 +166,7 @@ function buildHtml(body: SendEmailBody, questions: string[], date: string): stri
         <tr><td style="padding:24px 32px 0;">
           <p style="margin:0 0 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;">Plain-Language Explanation</p>
           <div style="background:#f8fafc;border-radius:10px;padding:16px 20px;">
-            <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">${simple.replace(/\n/g, "<br>")}</p>
+            <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">${escapeHtml(simple).replace(/\n/g, "<br>")}</p>
           </div>
         </td></tr>
 
@@ -166,7 +175,7 @@ function buildHtml(body: SendEmailBody, questions: string[], date: string): stri
         <tr><td style="padding:20px 32px 0;">
           <p style="margin:0 0 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a3b8;">Specialist Recommendation</p>
           <div style="background:#eff6ff;border-radius:10px;padding:16px 20px;border-left:3px solid #3b82f6;">
-            <p style="margin:0;font-size:14px;color:#1e40af;line-height:1.6;">${specialist}</p>
+            <p style="margin:0;font-size:14px;color:#1e40af;line-height:1.6;">${escapeHtml(specialist)}</p>
           </div>
         </td></tr>` : ""}
 
@@ -202,18 +211,12 @@ export async function POST(request: NextRequest) {
   const _rl = await rateLimit(request, "email");
   if (_rl) return _rl;
   try {
-    const body: SendEmailBody = await request.json();
-    const { email, simple } = body;
-
-    if (!email || !simple) {
-      return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+    const parsed = sendEmailSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
-    }
+    const body = parsed.data;
+    const { email } = body;
 
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json({ error: "Email service not configured." }, { status: 503 });
