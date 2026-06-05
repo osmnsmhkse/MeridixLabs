@@ -1,0 +1,7 @@
+# Meridix Labs — security contact (RFC 9116)
+# If you believe you've found a security or privacy issue, please tell us.
+Contact: mailto:contact@meridixlabs.com
+Expires: 2027-06-05T00:00:00.000Z
+Preferred-Languages: en, tr
+Canonical: https://www.meridixlabs.com/.well-known/security.txt
+Policy: https://www.meridixlabs.com/privacy
