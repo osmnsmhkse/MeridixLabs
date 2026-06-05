@@ -1,5 +1,6 @@
 import { SITE_URL } from "@/lib/site";
 import { metaDescription, type BlogPost } from "@/lib/blog";
+import { jsonLdString } from "@/lib/jsonld";
 
 const isPlaceholder = (v?: string) => !v || /todo|pending|\[.*\]/i.test(v);
 
@@ -78,8 +79,8 @@ export default function BlogJsonLd({ post }: { post: BlogPost }) {
   return (
     <script
       type="application/ld+json"
-      // Serialised JSON-LD; no user-controlled input is interpolated.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
+      // jsonLdString() escapes `<` so author-supplied FAQ text can't break out.
+      dangerouslySetInnerHTML={{ __html: jsonLdString(json) }}
     />
   );
 }

@@ -11,6 +11,7 @@ import LandingChatWidget from "@/components/LandingChatWidget";
 import { ToolChatProvider } from "@/components/ToolChatProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import StructuredData from "@/components/StructuredData";
 
 export const metadata: Metadata = {
@@ -71,12 +72,14 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  // Per-request CSP nonce set by middleware (src/middleware.ts).
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <StructuredData />
-        <script dangerouslySetInnerHTML={{__html: `
+        <StructuredData nonce={nonce} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{__html: `
           try {
             var t = localStorage.getItem('meridix-theme');
             var p = window.matchMedia('(prefers-color-scheme: dark)').matches;
