@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 import type { PracticeCase, KeyFinding, EvaluationResult } from "@/types/learn";
 
@@ -9,6 +10,8 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 export type { KeyFinding, EvaluationResult };
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const {
       practiceCase,

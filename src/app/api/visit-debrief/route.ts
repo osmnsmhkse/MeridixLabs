@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -95,6 +96,8 @@ const ALLOWED_FILE_TYPES = [
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const formData = await request.formData();
     const notes = ((formData.get("notes") as string) || "").trim();

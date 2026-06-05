@@ -2,7 +2,8 @@
 // Generates a short AI "what changed since last report" banner for the dashboard.
 // Cached per-user in dashboard_insights so we don't re-bill every visit.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { supabaseServer } from "@/lib/supabase";
@@ -10,10 +11,13 @@ import { normalizeAnalyses, groupBySystem, biggestMovers, Analysis } from "@/lib
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const _rl = await rateLimit(request, "ai", { userId: user.id });
+    if (_rl) return _rl;
 
     const sb = supabaseServer();
     const { data: rows, error } = await sb

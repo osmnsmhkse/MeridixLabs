@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { Resend } from "resend";
 import Anthropic from "@anthropic-ai/sdk";
 
@@ -198,6 +199,8 @@ function buildHtml(body: SendEmailBody, questions: string[], date: string): stri
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "email");
+  if (_rl) return _rl;
   try {
     const body: SendEmailBody = await request.json();
     const { email, simple } = body;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -11,6 +12,8 @@ export interface TrialCategory {
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const { flags } = await request.json() as {
       flags: Array<{ marker: string; value: string; unit: string; reference: string; status: string }>;

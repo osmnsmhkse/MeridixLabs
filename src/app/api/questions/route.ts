@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({
@@ -23,6 +24,8 @@ interface QuestionsRequest {
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const body: QuestionsRequest = await request.json();
     const { mode, flags, specialist, action, simple, language = "en" } = body;

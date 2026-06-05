@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 import { retrieveChunks, type RetrievedChunk } from "@/lib/retrieval";
 
@@ -292,6 +293,8 @@ eGFR: >60 mL/min/1.73m²
 `.trim();
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const formData = await request.formData();
     const isSample = formData.get("sample") === "true";

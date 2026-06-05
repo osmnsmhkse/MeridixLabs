@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { Resend } from "resend";
 import { isAccountsEnabled, supabaseServer } from "@/lib/supabase";
 
@@ -81,6 +82,8 @@ function buildThankYouHtml(stars: string, category: string, message: string): st
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "write");
+  if (_rl) return _rl;
   let body: FeedbackPayload;
   try {
     body = (await request.json()) as FeedbackPayload;

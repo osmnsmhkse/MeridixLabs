@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 import {
   VARIANT_CATALOG,
@@ -146,6 +147,8 @@ const MAX_RAW_DNA_SIZE = 60 * 1024 * 1024;
 const MAX_REPORT_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const formData = await request.formData();
     const mode = (formData.get("mode") as string) || "paste";

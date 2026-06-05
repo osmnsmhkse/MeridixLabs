@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({
@@ -58,6 +59,8 @@ const SCAN_TYPE_LABEL: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
+  const _rl = await rateLimit(req, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const form = await req.formData();
     const file = form.get("image");

@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -78,6 +79,8 @@ RULES:
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai");
+  if (_rl) return _rl;
   let body: {
     messages?: ChatMsg[];
     inputSummary?: string;

@@ -7,6 +7,7 @@
 // through to Claude untouched (used for attachment uploads from the chat UI).
 
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { supabaseServer } from "@/lib/supabase";
@@ -76,6 +77,8 @@ function fmtLabs(analyses: Analysis[]): string {
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai");
+  if (_rl) return _rl;
   try {
     const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

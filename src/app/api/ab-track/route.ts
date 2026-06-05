@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { promises as fs } from "fs";
 import path from "path";
 import { isAccountsEnabled, supabaseServer } from "@/lib/supabase";
@@ -29,6 +30,8 @@ async function appendEventToFile(entry: ABEvent): Promise<void> {
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "write");
+  if (_rl) return _rl;
   try {
     const body = await request.json() as Record<string, unknown>;
     const { variant, action, anonId } = body;
