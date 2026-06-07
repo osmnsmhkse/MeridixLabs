@@ -1286,6 +1286,8 @@
     "prepResultsPlaceholder": "ör. Geçen ay TSH 6.2, açlık kan şekeri 108 — ya da önemli değerleri buraya yapıştırın",
     "prepHistoryLabel": "İlgili sağlık geçmişi veya ilaçlar (isteğe bağlı)",
     "prepHistoryPlaceholder": "ör. Tip 2 diyabet, Metformin 500mg kullanıyorum. Ailede tiroid hastalığı öyküsü var.",
+    "prepOtherLabel": "Eklemek istediğin başka bir şey var mı? (isteğe bağlı)",
+    "prepOtherPlaceholder": "ör. Bu konuyu açmaya çekiniyorum, nazikçe dile getirmeme yardım et. Ya da: sadece 10 dakikam var, en önemli sorulara odaklan.",
     "prepSubmit": "Ziyaretimi Hazırla",
     "prepLoading": "Ziyaret hazırlık paketiniz oluşturuluyor…",
     "prepRequired": "Lütfen ziyaretinizin nedenini açıklayın.",

@@ -1268,6 +1268,8 @@
     "prepResultsPlaceholder": "e.g. TSH was 6.2 last month, fasting glucose 108, or just paste key values here",
     "prepHistoryLabel": "Relevant health history or medications (optional)",
     "prepHistoryPlaceholder": "e.g. Type 2 diabetes, on Metformin 500mg. Family history of thyroid disease.",
+    "prepOtherLabel": "Anything else you'd like us to know? (optional)",
+    "prepOtherPlaceholder": "e.g. I'm anxious about bringing this up, so help me raise it gently. Or: I only have 10 minutes — focus on the most important questions.",
     "prepSubmit": "Prepare My Visit",
     "prepLoading": "Preparing your visit kit…",
     "prepRequired": "Please describe the reason for your visit.",

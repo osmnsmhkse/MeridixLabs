@@ -1286,6 +1286,8 @@
     "prepResultsPlaceholder": "例如：上个月 TSH 6.2，空腹血糖 108——或把关键数值粘贴到这里",
     "prepHistoryLabel": "相关病史或正在服用的药物（可选）",
     "prepHistoryPlaceholder": "例如：2 型糖尿病，服用二甲双胍 500mg。家族中有甲状腺疾病史。",
+    "prepOtherLabel": "还有什么想告诉我们的吗？（选填）",
+    "prepOtherPlaceholder": "例如：我不好意思开口谈这件事，请帮我委婉地表达。或者：我只有 10 分钟，请聚焦最重要的问题。",
     "prepSubmit": "准备我的就诊",
     "prepLoading": "正在为你准备就诊清单……",
     "prepRequired": "请描述本次就诊的原因。",

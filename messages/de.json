@@ -1286,6 +1286,8 @@
     "prepResultsPlaceholder": "z. B. TSH letzten Monat 6,2, Nüchternblutzucker 108 — oder fügen Sie zentrale Werte hier ein",
     "prepHistoryLabel": "Relevante Vorerkrankungen oder Medikamente (optional)",
     "prepHistoryPlaceholder": "z. B. Typ-2-Diabetes, Metformin 500 mg. Familienanamnese: Schilddrüsenerkrankung.",
+    "prepOtherLabel": "Möchten Sie uns noch etwas mitteilen? (optional)",
+    "prepOtherPlaceholder": "z. B. Mir ist es unangenehm, das anzusprechen — helfen Sie mir, es einfühlsam zu formulieren. Oder: Ich habe nur 10 Minuten, konzentrieren Sie sich auf die wichtigsten Fragen.",
     "prepSubmit": "Meinen Besuch vorbereiten",
     "prepLoading": "Ihr Besuchs-Kit wird vorbereitet…",
     "prepRequired": "Bitte beschreiben Sie den Grund für Ihren Besuch.",

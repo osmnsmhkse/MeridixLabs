@@ -1286,6 +1286,8 @@
     "prepResultsPlaceholder": "ej. TSH 6,2 el mes pasado, glucosa en ayunas 108 — o pega aquí los valores clave",
     "prepHistoryLabel": "Antecedentes médicos relevantes o medicación (opcional)",
     "prepHistoryPlaceholder": "ej. Diabetes tipo 2, tomo Metformina 500mg. Antecedentes familiares de enfermedad tiroidea.",
+    "prepOtherLabel": "¿Algo más que quieras contarnos? (opcional)",
+    "prepOtherPlaceholder": "p. ej. Me da vergüenza mencionar esto, ayúdame a plantearlo con tacto. O: solo tengo 10 minutos, céntrate en las preguntas más importantes.",
     "prepSubmit": "Preparar mi consulta",
     "prepLoading": "Preparando tu kit de consulta…",
     "prepRequired": "Describe el motivo de tu consulta.",

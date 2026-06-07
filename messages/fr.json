@@ -1286,6 +1286,8 @@
     "prepResultsPlaceholder": "ex. TSH 6,2 le mois dernier, glycémie à jeun 108 — ou collez les valeurs clés ici",
     "prepHistoryLabel": "Antécédents médicaux ou traitements pertinents (optionnel)",
     "prepHistoryPlaceholder": "ex. Diabète de type 2 sous Metformine 500 mg. Antécédents familiaux de maladie thyroïdienne.",
+    "prepOtherLabel": "Autre chose que vous aimeriez nous dire ? (facultatif)",
+    "prepOtherPlaceholder": "ex. J'ai du mal à aborder ce sujet, aidez-moi à le formuler avec tact. Ou : je n'ai que 10 minutes, concentrez-vous sur les questions essentielles.",
     "prepSubmit": "Préparer ma consultation",
     "prepLoading": "Préparation de votre kit de consultation…",
     "prepRequired": "Décrivez la raison de votre consultation.",

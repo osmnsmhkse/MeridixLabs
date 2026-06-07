@@ -1026,6 +1026,7 @@ export default function VisitPage() {
   const [prepConcern, setPrepConcern] = useState("");
   const [prepResults, setPrepResults] = useState("");
   const [prepHistory, setPrepHistory] = useState("");
+  const [prepOther, setPrepOther] = useState("");
   const [prepResult, setPrepResult] = useState<PrepResult | null>(null);
   const [prepRawText, setPrepRawText] = useState("");
   const [prepInputSummary, setPrepInputSummary] = useState("");
@@ -1057,6 +1058,7 @@ export default function VisitPage() {
     setPrepConcern("");
     setPrepResults("");
     setPrepHistory("");
+    setPrepOther("");
     setPrepResult(null);
     setDebriefNotes("");
     setDebriefFile(null);
@@ -1083,6 +1085,7 @@ export default function VisitPage() {
           concern,
           recentResults: prepResults,
           healthContext: prepHistory,
+          other: prepOther,
           tier,
           language: lang,
         }),
@@ -1099,6 +1102,7 @@ export default function VisitPage() {
         `Main concern: ${concern}`,
         prepResults.trim() && `Recent results: ${prepResults.trim()}`,
         prepHistory.trim() && `Health context: ${prepHistory.trim()}`,
+        prepOther.trim() && `Other notes / requests: ${prepOther.trim()}`,
       ]
         .filter(Boolean)
         .join("\n");
@@ -1109,7 +1113,7 @@ export default function VisitPage() {
       setErrorMsg(t("errorGeneric"));
       setStage("error");
     }
-  }, [prepConcern, prepResults, prepHistory, tier, lang, t]);
+  }, [prepConcern, prepResults, prepHistory, prepOther, tier, lang, t]);
 
   const submitDebrief = useCallback(async () => {
     const notes = debriefNotes.trim();
@@ -1249,6 +1253,19 @@ export default function VisitPage() {
                       onChange={(e) => setPrepHistory(e.target.value)}
                       rows={2}
                       placeholder={t("prepHistoryPlaceholder")}
+                      className="w-full px-4 py-3 rounded-2xl border border-surface-border dark:border-slate-700 bg-surface-raised dark:bg-slate-900 text-ink text-sm placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all resize-none"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="prep-other" className="block text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-2">
+                      {t("prepOtherLabel")}
+                    </label>
+                    <textarea
+                      id="prep-other"
+                      value={prepOther}
+                      onChange={(e) => setPrepOther(e.target.value)}
+                      rows={2}
+                      placeholder={t("prepOtherPlaceholder")}
                       className="w-full px-4 py-3 rounded-2xl border border-surface-border dark:border-slate-700 bg-surface-raised dark:bg-slate-900 text-ink text-sm placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all resize-none"
                     />
                   </div>

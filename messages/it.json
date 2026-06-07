@@ -1286,6 +1286,8 @@
     "prepResultsPlaceholder": "es. TSH 6,2 il mese scorso, glicemia a digiuno 108 — oppure incolla qui i valori principali",
     "prepHistoryLabel": "Storia clinica rilevante o farmaci (facoltativo)",
     "prepHistoryPlaceholder": "es. Diabete tipo 2, in terapia con Metformina 500 mg. Familiarità per malattie tiroidee.",
+    "prepOtherLabel": "C'è altro che vorresti dirci? (facoltativo)",
+    "prepOtherPlaceholder": "es. Mi imbarazza affrontare questo argomento, aiutami a esprimerlo con delicatezza. Oppure: ho solo 10 minuti, concentrati sulle domande più importanti.",
     "prepSubmit": "Preparare la mia visita",
     "prepLoading": "Preparazione del tuo kit visita in corso…",
     "prepRequired": "Descrivi il motivo della visita.",
