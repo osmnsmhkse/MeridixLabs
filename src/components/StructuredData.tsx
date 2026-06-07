@@ -1,4 +1,5 @@
 import { SITE, SITE_URL, socialLinks } from "@/lib/site";
+import { jsonLdString } from "@/lib/jsonld";
 
 /**
  * Site-wide JSON-LD structured data.
@@ -10,7 +11,7 @@ import { SITE, SITE_URL, socialLinks } from "@/lib/site";
  * autocorrect — it tells Google that "Meridix Labs" / "meridixlabs" is a real
  * entity tied to this domain and these profiles.
  */
-export default function StructuredData() {
+export default function StructuredData({ nonce }: { nonce?: string }) {
   const graph = {
     "@context": "https://schema.org",
     "@graph": [
@@ -52,8 +53,9 @@ export default function StructuredData() {
   return (
     <script
       type="application/ld+json"
-      // JSON.stringify output is safe to inline; no user input is interpolated.
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(graph) }}
+      nonce={nonce}
+      // jsonLdString() escapes `<` so the payload can't break out of the tag.
+      dangerouslySetInnerHTML={{ __html: jsonLdString(graph) }}
     />
   );
 }

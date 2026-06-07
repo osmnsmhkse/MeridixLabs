@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 import { searchArticles, type PubMedArticle, type ArticleType } from "@/lib/pubmed";
 import { resolveSearchTerms, type Direction } from "@/lib/markerSearchTerms";
@@ -163,6 +164,8 @@ async function processMarker(marker: string, direction: Direction, lang: string)
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const { flags, lang } = (await request.json()) as { flags?: Flag[]; lang?: string };
     const language = (lang && LANGUAGE_NAMES[lang]) ? lang : "en";

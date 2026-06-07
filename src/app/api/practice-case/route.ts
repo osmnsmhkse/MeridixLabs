@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 import type { LabValue, PracticeCase } from "@/types/learn";
 
@@ -25,6 +26,8 @@ const SPECIALTY_GUIDANCE: Record<string, string> = {
 };
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const { difficulty = "beginner", specialty = "mixed" } = await request.json();
 

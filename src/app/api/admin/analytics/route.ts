@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { isAccountsEnabled, supabaseServer } from "@/lib/supabase";
+import { isAdminAuthorized } from "@/lib/adminAuth";
+import { rateLimit } from "@/lib/ratelimit";
 
 // Local-dev fallback files (production reads from Supabase).
 const DATA_FILE    = path.join(process.cwd(), "data", "events.json");
@@ -187,15 +189,12 @@ async function summarizeFromFiles(): Promise<Summary> {
 }
 
 export async function GET(request: NextRequest) {
-  // Re-check auth inside the route handler for defence-in-depth
-  const authHeader = request.headers.get("authorization");
-  if (authHeader?.startsWith("Basic ")) {
-    const decoded = Buffer.from(authHeader.slice(6), "base64").toString("utf-8");
-    const password = decoded.slice(decoded.indexOf(":") + 1);
-    if (!process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-  } else {
+  // Throttle brute-force attempts on the shared admin password.
+  const _rl = await rateLimit(request, "auth");
+  if (_rl) return _rl;
+
+  // Constant-time admin password check (defence-in-depth: the page also gates).
+  if (!isAdminAuthorized(request)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

@@ -4,7 +4,9 @@
 // (med→lab interactions, big movers, risk-tier changes) with a Claude pass
 // for natural-language phrasing.
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
+import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { supabaseServer } from "@/lib/supabase";
@@ -21,10 +23,13 @@ interface ProfileRow {
   medications?: string | null;
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const _rl = await rateLimit(request, "ai", { userId: user.id });
+    if (_rl) return _rl;
 
     const sb = supabaseServer();
     const [{ data: profile }, { data: rows }] = await Promise.all([
@@ -105,10 +110,6 @@ Return ONLY the JSON array, nothing else. No code fence.`,
 
     return NextResponse.json({ insights });
   } catch (err) {
-    console.error("insights-feed error:", err);
-    return NextResponse.json({
-      error: "Something went wrong.",
-      detail: err instanceof Error ? err.message : String(err),
-    }, { status: 500 });
+    return errorResponse("insights-feed", err);
   }
 }

@@ -15,6 +15,7 @@
 // stream completes.
 
 import { NextRequest } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { supabaseServer } from "@/lib/supabase";
@@ -173,6 +174,8 @@ function lastUserText(messages: ChatMsg[]): string {
 
 // ── Route handler ──────────────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai");
+  if (_rl) return _rl;
   let body: {
     messages?: ChatMsg[];
     analysisContext?: AnalysisContext;

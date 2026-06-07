@@ -11,8 +11,15 @@
 // response.body.getReader() and appends chunks to the assistant bubble.
 
 import { NextRequest } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 import { GLOBAL_SYSTEM_PROMPT, TOOL_CHAT_REGISTRY } from "@/lib/toolChatConfig";
+import {
+  MAX_MESSAGE_CHARS,
+  MAX_MESSAGES,
+  MAX_TOOL_CONTEXT_CHARS,
+  capText,
+} from "@/lib/inputLimits";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -51,10 +58,15 @@ Today's date: ${today}.${contextBlock}`;
 function sanitizeMessages(messages: ChatMsg[]): Anthropic.MessageParam[] {
   return messages
     .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string" && m.content.trim().length > 0)
-    .map((m) => ({ role: m.role, content: m.content }));
+    // Cap conversation length (keep the most recent turns) and per-turn size
+    // so a single request can't balloon the token bill.
+    .slice(-MAX_MESSAGES)
+    .map((m) => ({ role: m.role, content: capText(m.content, MAX_MESSAGE_CHARS) }));
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai");
+  if (_rl) return _rl;
   let body: ChatRequestBody;
   try {
     body = await request.json();
@@ -66,8 +78,10 @@ export async function POST(request: NextRequest) {
   }
 
   const messages = Array.isArray(body.messages) ? sanitizeMessages(body.messages) : [];
-  const toolName = typeof body.toolName === "string" && body.toolName.trim() ? body.toolName.trim() : "Meridix";
-  const toolContext = typeof body.toolContext === "string" && body.toolContext.trim() ? body.toolContext : null;
+  const toolName = typeof body.toolName === "string" && body.toolName.trim() ? body.toolName.trim().slice(0, 80) : "Meridix";
+  const toolContext = typeof body.toolContext === "string" && body.toolContext.trim()
+    ? capText(body.toolContext, MAX_TOOL_CONTEXT_CHARS)
+    : null;
 
   if (!messages.length) {
     return new Response(JSON.stringify({ error: "No messages." }), {

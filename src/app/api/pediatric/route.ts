@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -202,6 +203,8 @@ One short, sincere paragraph (2–4 sentences). Always include this closing mess
 const VALID_TIERS = new Set(["simple", "medium", "expert"]);
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   try {
     const body = (await request.json()) as {
       ageMonths?: number | null;

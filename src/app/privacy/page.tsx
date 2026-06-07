@@ -131,6 +131,17 @@ export default async function PrivacyPolicyPage() {
                 memory by the AI provider and discarded once the structured
                 interpretation has been generated.
               </Item>
+              {/*
+                TODO(legal/eng): This policy states Symptom-checker and Diagnosis-explainer
+                sessions are saved, and the in-tool reassurance copy for Diagnosed/Medications/
+                Pediatric says "Saved privately to your account." But as of this audit NO API
+                route writes to the symptom_sessions / diagnosis_sessions / practice_sessions
+                tables (the /api/symptom, /api/diagnosed, /api/womens-health routes are
+                stateless and never call Supabase). Decide one of:
+                  (a) wire the persistence so the copy + policy become true, OR
+                  (b) soften this policy section and the sibling tool copy to match reality.
+                This is a human/product+legal decision — do not silently flip it either way.
+              */}
               <Item>
                 <strong>Diagnosis explainer sessions</strong> — the condition you asked
                 about and the AI&apos;s explanation.

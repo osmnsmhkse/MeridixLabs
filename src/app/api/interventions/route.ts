@@ -4,20 +4,12 @@
 // DELETE /api/interventions?id=...   → delete
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase";
 import { ensureProfileForCurrentUser } from "@/lib/userProfile";
 
 const KINDS = new Set(["diet","exercise","supplement","medication","lifestyle","other"]);
-
-function describeError(err: unknown): string {
-  if (err instanceof Error) return err.message;
-  if (err && typeof err === "object") {
-    const e = err as { message?: string; code?: string; details?: string; hint?: string };
-    return [e.message, e.code && `code=${e.code}`, e.details, e.hint].filter(Boolean).join(" | ") || JSON.stringify(err);
-  }
-  return String(err);
-}
 
 export async function GET() {
   try {
@@ -30,7 +22,7 @@ export async function GET() {
     if (error) throw error;
     return NextResponse.json({ interventions: data ?? [] });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("interventions", err);
   }
 }
 
@@ -58,7 +50,7 @@ export async function POST(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ intervention: data });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("interventions", err);
   }
 }
 
@@ -83,7 +75,7 @@ export async function PATCH(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ intervention: data });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("interventions", err);
   }
 }
 
@@ -99,6 +91,6 @@ export async function DELETE(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err) {
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("interventions", err);
   }
 }

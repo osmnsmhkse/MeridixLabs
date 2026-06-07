@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -291,6 +292,8 @@ function validateFile(file: File): { ok: true } | { ok: false; error: string } {
 
 // ── Route ────────────────────────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai-heavy");
+  if (_rl) return _rl;
   const url = new URL(request.url);
   const mode = (url.searchParams.get("mode") ?? "").toLowerCase() as Mode;
   if (mode !== "a" && mode !== "b" && mode !== "c") {

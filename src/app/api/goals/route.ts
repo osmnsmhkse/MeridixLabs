@@ -4,6 +4,7 @@
 // DELETE /api/goals?id=...   → delete
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
 import { currentUser } from "@clerk/nextjs/server";
 import { supabaseServer } from "@/lib/supabase";
 import { ensureProfileForCurrentUser } from "@/lib/userProfile";
@@ -14,16 +15,6 @@ const ALLOWED_PATCH = new Set([
   "marker_slug","marker_label","direction","target_value","target_unit",
   "target_date","status","baseline_value","baseline_date","notes","achieved_at",
 ]);
-
-function describeError(err: unknown): string {
-  if (err instanceof Error) return err.message;
-  if (err && typeof err === "object") {
-    const e = err as { message?: string; code?: string; details?: string; hint?: string };
-    const parts = [e.message, e.code && `code=${e.code}`, e.details, e.hint].filter(Boolean);
-    return parts.join(" | ") || JSON.stringify(err);
-  }
-  return String(err);
-}
 
 export async function GET() {
   try {
@@ -73,8 +64,7 @@ export async function GET() {
 
     return NextResponse.json({ goals, interventions: interventions ?? [] });
   } catch (err) {
-    console.error("goals GET error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("goals", err);
   }
 }
 
@@ -127,8 +117,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ goal: data });
   } catch (err) {
-    console.error("goals POST error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("goals", err);
   }
 }
 
@@ -161,8 +150,7 @@ export async function PATCH(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ goal: data });
   } catch (err) {
-    console.error("goals PATCH error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("goals", err);
   }
 }
 
@@ -180,7 +168,6 @@ export async function DELETE(request: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("goals DELETE error:", err);
-    return NextResponse.json({ error: "Something went wrong.", detail: describeError(err) }, { status: 500 });
+    return errorResponse("goals", err);
   }
 }

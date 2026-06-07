@@ -4,6 +4,7 @@
 // signed-in user's history for that biomarker.
 
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { supabaseServer } from "@/lib/supabase";
@@ -13,6 +14,8 @@ import { normalizeAnalyses, Analysis } from "@/lib/dashboardData";
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai");
+  if (_rl) return _rl;
   try {
     const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

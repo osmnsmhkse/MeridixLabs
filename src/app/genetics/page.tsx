@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import GeneticsClient from "./GeneticsClient";
+import { jsonLdString } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "Genetic Test Explainer — What Does My DNA Result Mean? | Meridix Labs",
@@ -97,7 +98,7 @@ export default function GeneticsPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(FAQ_JSONLD) }}
       />
       <GeneticsClient />
     </>

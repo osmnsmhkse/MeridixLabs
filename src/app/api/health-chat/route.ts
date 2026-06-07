@@ -7,6 +7,8 @@
 // through to Claude untouched (used for attachment uploads from the chat UI).
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/apiError";
+import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { supabaseServer } from "@/lib/supabase";
@@ -76,6 +78,8 @@ function fmtLabs(analyses: Analysis[]): string {
 }
 
 export async function POST(request: NextRequest) {
+  const _rl = await rateLimit(request, "ai");
+  if (_rl) return _rl;
   try {
     const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -147,10 +151,6 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (err) {
-    console.error("health-chat error:", err);
-    return NextResponse.json({
-      error: "Something went wrong.",
-      detail: err instanceof Error ? err.message : String(err),
-    }, { status: 500 });
+    return errorResponse("health-chat", err);
   }
 }
