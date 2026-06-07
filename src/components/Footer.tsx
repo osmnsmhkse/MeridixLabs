@@ -127,7 +127,7 @@ export default function Footer() {
       {/* Brand signature */}
       <div className="border-t border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-9 text-center">
-          <p className="font-display text-2xl sm:text-3xl font-bold tracking-tightest text-ink">
+          <p className="font-display text-2xl sm:text-3xl font-bold tracking-tightest text-brand-blue">
             {t("peakLine")}
           </p>
         </div>
