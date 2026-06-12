@@ -76,15 +76,15 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* The product, centered */}
-          <div className="mt-16 lg:mt-20 max-w-3xl mx-auto reveal reveal-delay-2">
+          {/* The product, centered — performs its own entrance */}
+          <div className="mt-16 lg:mt-20 max-w-3xl mx-auto">
             <LabInterpretationDemo />
           </div>
 
-          {/* The 4-step promise — quiet spec strip */}
-          <div className="mt-16 lg:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-y-8 reveal reveal-delay-3">
+          {/* The 4-step promise — quiet spec strip, rules draw in */}
+          <div className="mt-16 lg:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-y-8">
             {[tHero("p1"), tHero("p2"), tHero("p3"), tHero("p4")].map((step, i) => (
-              <div key={step} className="border-l border-ink/15 dark:border-white/15 pl-5 pr-6">
+              <div key={step} className={`reveal reveal-delay-${i + 1} rule-draw-v pl-5 pr-6`}>
                 <p className="kicker-mono text-ink-tertiary mb-2 tabular-nums">{String(i + 1).padStart(2, "0")}</p>
                 <p className="text-sm font-medium text-ink leading-snug text-pretty">{step}</p>
               </div>
@@ -105,7 +105,7 @@ export default function LandingPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group block py-12 md:py-16 px-0 md:px-10 ${i === 0 ? "md:pl-0" : ""} ${i === 2 ? "md:pr-0" : ""} border-t md:border-t-0 border-surface-border first:border-t-0 transition-colors`}
+                className={`group block reveal reveal-delay-${i + 1} py-12 md:py-16 px-0 md:px-10 ${i === 0 ? "md:pl-0" : ""} ${i === 2 ? "md:pr-0" : ""} border-t md:border-t-0 border-surface-border first:border-t-0 transition-colors`}
               >
                 <p className="kicker-mono text-ink-tertiary mb-6">{item.step}</p>
                 <div className="flex items-baseline justify-between gap-4">
@@ -144,7 +144,7 @@ export default function LandingPage() {
               { step: "02", title: tHow("step2Title"), description: tHow("step2Desc") },
               { step: "03", title: tHow("step3Title"), description: tHow("step3Desc") },
             ].map((item, i) => (
-              <div key={item.step} className={`reveal reveal-delay-${i + 1} border-t border-ink/20 dark:border-white/20 pt-8`}>
+              <div key={item.step} className={`reveal reveal-delay-${i + 1} rule-draw pt-8`} style={{ ["--rule-opacity" as string]: 0.3 }}>
                 <p className="numeral text-[2.75rem] text-ink-tertiary/70">{item.step}</p>
                 <h3 className="mt-6 font-display text-xl sm:text-2xl text-ink leading-snug">{item.title}</h3>
                 <p className="mt-3 text-sm text-ink-secondary leading-relaxed text-pretty">{item.description}</p>
@@ -171,7 +171,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="border-t border-surface-border">
+          <div className="reveal rule-draw" style={{ ["--rule-opacity" as string]: 0.16 }}>
             {TOOLS.map((tool, i) => (
               <Link
                 key={tool.href}
@@ -202,14 +202,14 @@ export default function LandingPage() {
       {/* ─── STATS ────────────────────────────────────────────── */}
       <section className="relative bg-paper">
         <div className="max-w-[1440px] mx-auto px-5 lg:px-10 py-20 lg:py-28">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12 reveal">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12">
             {[
               { number: tStats("reportsCount"), label: tStats("reportsLabel") },
               { number: tStats("speedCount"),   label: tStats("speedLabel") },
               { number: tStats("tiersCount"),   label: tStats("tiersLabel") },
               { number: tStats("toolsCount"),   label: tStats("toolsLabel") },
-            ].map((stat) => (
-              <div key={stat.label} className="border-l border-ink/15 dark:border-white/15 pl-6 pr-4">
+            ].map((stat, i) => (
+              <div key={stat.label} className={`reveal reveal-delay-${i + 1} rule-draw-v pl-6 pr-4`}>
                 <span data-countup className="numeral block text-[2.9rem] sm:text-[3.6rem] text-ink">
                   {stat.number}
                 </span>
@@ -282,7 +282,7 @@ export default function LandingPage() {
                   { title: tFeatures("privacyTitle"),    desc: tFeatures("privacyDesc") },
                   { title: tFeatures("speedTitle"),      desc: tFeatures("speedDesc") },
                 ].map((feat, i) => (
-                  <div key={feat.title} className={`reveal reveal-delay-${Math.min(i + 1, 5)} grid grid-cols-[3rem_1fr] gap-4 py-5 border-t border-ink/15 dark:border-white/15`}>
+                  <div key={feat.title} className={`reveal reveal-delay-${Math.min(i + 1, 5)} rule-draw grid grid-cols-[3rem_1fr] gap-4 py-5`}>
                     <span className="kicker-mono text-ink-tertiary tabular-nums pt-0.5">{String(i + 1).padStart(2, "0")}</span>
                     <div>
                       <h4 className="text-[15px] font-medium text-ink">{feat.title}</h4>
@@ -292,7 +292,7 @@ export default function LandingPage() {
                 ))}
               </div>
             </div>
-            <div className="reveal reveal-delay-2 lg:sticky lg:top-24">
+            <div className="lg:sticky lg:top-24">
               <LabInterpretationDemo />
             </div>
           </div>
@@ -307,7 +307,7 @@ export default function LandingPage() {
               { quote: tTestimonials("quote1"), author: tTestimonials("author1") },
               { quote: tTestimonials("quote2"), author: tTestimonials("author2") },
             ].map((item, i) => (
-              <figure key={item.author} className={`reveal reveal-delay-${i + 1} border-t border-ink/20 dark:border-white/20 pt-8`}>
+              <figure key={item.author} className={`reveal reveal-delay-${i + 1} rule-draw pt-8`} style={{ ["--rule-opacity" as string]: 0.3 }}>
                 <blockquote className="font-display text-xl sm:text-2xl text-ink leading-snug text-pretty">
                   &ldquo;{item.quote}&rdquo;
                 </blockquote>

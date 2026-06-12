@@ -64,12 +64,16 @@ h1 {
   letter-spacing: -0.03em;
 }
 
-/* Respect users who prefer reduced motion — disable ambient animations */
+/* Respect users who prefer reduced motion — show final states immediately */
 @media (prefers-reduced-motion: reduce) {
-  .word-reveal .w { animation: none !important; }
+  .word-reveal .w { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
   .reveal { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
-  .word-reveal .w { opacity: 1 !important; transform: none !important; filter: none !important; }
   [data-parallax] { transform: none !important; }
+  .rule-draw::before, .rule-draw-v::before { transform: none !important; transition: none !important; }
+  .demo-stage, .demo-zone, .demo-caret, .demo-pill, .demo-verdict {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .dot-breathe, .status-in, .nav-enter { animation: none !important; }
   html { scroll-behavior: auto; }
 }
 
@@ -301,18 +305,122 @@ body {
 .reveal-delay-7 { transition-delay: 0.49s; }
 .reveal-delay-8 { transition-delay: 0.56s; }
 
-/* ── Word-by-word headline reveal — clean rise ─────────── */
-.word-reveal { display: inline-block; }
+/* ── Word-by-word headline reveal — masked line rise ─────
+   Each word sits inside an overflow-hidden slot and rises out
+   of it. The mask is padded below the baseline so descenders
+   are never clipped at display line-heights (~0.98). */
+.word-reveal { display: inline; }
+.word-reveal .wm {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
 .word-reveal .w {
   display: inline-block;
   opacity: 0;
-  transform: translateY(0.45em);
-  animation: wordRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: calc(var(--i, 0) * 0.06s + var(--base, 0s));
+  transform: translateY(112%);
+  animation: wordRise 1.05s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 0.055s + var(--base, 0s));
 }
 @keyframes wordRise {
   to { opacity: 1; transform: none; }
 }
+
+/* ── Hairline draw — structure that assembles ────────────
+   Replaces a static border with a rule that draws itself in
+   when the element's `.reveal` becomes `.is-visible`. Color
+   flows from currentColor so it adapts to ink/dark contexts.
+   Horizontal: `.rule-draw` (top edge). Vertical: `.rule-draw-v`
+   (left edge). Tune with --rule-opacity. */
+.rule-draw, .rule-draw-v { position: relative; }
+.rule-draw::before,
+.rule-draw-v::before {
+  content: "";
+  position: absolute;
+  background: currentColor;
+  opacity: var(--rule-opacity, 0.22);
+  pointer-events: none;
+}
+.rule-draw::before {
+  top: 0; left: 0; right: 0; height: 1px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+.rule-draw-v::before {
+  top: 0; bottom: 0; left: 0; width: 1px;
+  transform: scaleY(0);
+  transform-origin: center top;
+  transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+.rule-draw.is-visible::before  { transform: scaleX(1); }
+.rule-draw-v.is-visible::before { transform: scaleY(1); }
+
+/* ── Demo choreography — the analysis performs itself ────
+   Driven by `.is-live` set on the LabInterpretationDemo root
+   when it enters the viewport. Transform/opacity only. */
+.demo-stage {
+  opacity: 0;
+  transform: perspective(1100px) rotateX(4deg) translateY(26px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.demo-stage.is-live { opacity: 1; transform: none; }
+
+.demo-zone {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--zd, 0s);
+}
+.is-live .demo-zone { transform: scaleX(1); }
+
+.demo-caret {
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--zd, 0s);
+}
+.is-live .demo-caret { opacity: 1; transform: none; }
+
+.demo-pill {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  transition-delay: var(--zd, 0s);
+}
+.is-live .demo-pill { opacity: 1; }
+
+.demo-verdict {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--zd, 1.3s);
+}
+.is-live .demo-verdict { opacity: 1; transform: none; }
+
+/* Status dot while analyzing — quiet breathing, no glow */
+@keyframes dotBreathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+.dot-breathe { animation: dotBreathe 1.1s ease-in-out infinite; }
+
+/* Status text swap */
+@keyframes statusIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+.status-in { animation: statusIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ── Nav entrance — one quiet slide on load ────────────── */
+@keyframes navIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: none; }
+}
+.nav-enter { animation: navIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
 
 /* ── Scroll progress — single hairline ─────────────────── */
 .scroll-progress {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 /* ════════════════════════════════════════════════════════════════════════
    Meridix — Lab Interpretation surface
@@ -10,8 +10,10 @@ import React, { useState } from "react";
    (zone bands + a precise "you are here" caret, à la Apple Health / Levels),
    plain-English annotations, risk context, and a clear next step.
 
-   It is intentionally recognisable without a logo — the heartbeat glyph,
-   the range track, and the "interpretation" annotation card form a system.
+   When the surface scrolls into view it *performs the analysis*: the
+   stage settles in, zone bands grow, carets land, values count up, and
+   the verdict card arrives once the status flips to "Analyzed". All
+   transform/opacity, all gated behind prefers-reduced-motion.
    ════════════════════════════════════════════════════════════════════════ */
 
 type Tier = "Simple" | "Medium" | "Expert";
@@ -154,6 +156,9 @@ const ACCENT: Record<Status, { spine: string; text: string; pill: string; caret:
   },
 };
 
+// Per-row stagger (s) — rows analyze one after another
+const ROW_DELAY = 0.16;
+
 // ── Signature heartbeat glyph — the Meridix mark, recognisable sans logo ────
 function PulseMark({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -169,9 +174,55 @@ function PulseMark({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
+// ── Count-up value — renders final number on the server, rolls when live ───
+function RollingValue({
+  value,
+  live,
+  reduce,
+  delayMs,
+}: {
+  value: string;
+  live: boolean;
+  reduce: boolean;
+  delayMs: number;
+}) {
+  const target = parseInt(value, 10);
+  const [display, setDisplay] = useState(value);
+
+  useEffect(() => {
+    if (!live || reduce || !isFinite(target)) return;
+    let raf = 0;
+    const dur = 900;
+    const t0 = performance.now() + delayMs;
+    const step = (now: number) => {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      const eased = 1 - Math.pow(1 - p, 3);
+      setDisplay(String(Math.round(target * eased)));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [live, reduce, target, delayMs]);
+
+  return <>{display}</>;
+}
+
 // ── One biomarker, rendered as the signature range track ────────────────────
-function BiomarkerTrack({ m, dim }: { m: Marker; dim?: boolean }) {
+function BiomarkerTrack({
+  m,
+  row,
+  live,
+  reduce,
+  dim,
+}: {
+  m: Marker;
+  row: number;
+  live: boolean;
+  reduce: boolean;
+  dim?: boolean;
+}) {
   const a = ACCENT[m.status];
+  const base = row * ROW_DELAY;
   return (
     <div
       className={`relative rounded-2xl border border-surface-border bg-surface px-4 py-3 transition-opacity duration-300 ${
@@ -184,9 +235,14 @@ function BiomarkerTrack({ m, dim }: { m: Marker; dim?: boolean }) {
       <div className="flex items-center justify-between gap-3 pl-2">
         <span className="text-[13px] font-semibold text-ink">{m.name}</span>
         <div className="flex items-center gap-2">
-          <span className="font-mono-data text-sm font-bold text-ink tabular-nums">{m.value}</span>
+          <span className="font-mono-data text-sm font-bold text-ink tabular-nums">
+            <RollingValue value={m.value} live={live} reduce={reduce} delayMs={base * 1000} />
+          </span>
           <span className="font-mono-data text-[11px] text-ink-tertiary">{m.unit}</span>
-          <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${a.pill}`}>
+          <span
+            className={`demo-pill text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${a.pill}`}
+            style={{ ["--zd" as string]: `${base + 0.65}s` }}
+          >
             {m.statusLabel}
           </span>
         </div>
@@ -196,11 +252,20 @@ function BiomarkerTrack({ m, dim }: { m: Marker; dim?: boolean }) {
       <div className="relative mt-2.5 pl-2">
         <div className="flex h-2 rounded-full overflow-hidden">
           {m.zones.map((z, i) => (
-            <div key={i} className={ZONE[z.tone]} style={{ width: `${z.w}%` }} />
+            <div
+              key={i}
+              className={`demo-zone ${ZONE[z.tone]}`}
+              style={{ width: `${z.w}%`, ["--zd" as string]: `${base + i * 0.07}s` }}
+            />
           ))}
         </div>
-        <div className="absolute top-1/2 -translate-y-1/2" style={{ left: `calc(${m.pct}% + 0.5rem)` }}>
-          <div className={`-translate-x-1/2 w-3 h-3 rounded-full ${a.caret} ring-2 ring-surface shadow-sm`} />
+        <div
+          className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ left: `calc(${m.pct}% + 0.5rem)` }}
+        >
+          <div className="demo-caret" style={{ ["--zd" as string]: `${base + 0.55}s` }}>
+            <div className={`w-3 h-3 rounded-full ${a.caret} ring-2 ring-surface shadow-sm`} />
+          </div>
         </div>
       </div>
 
@@ -211,10 +276,45 @@ function BiomarkerTrack({ m, dim }: { m: Marker; dim?: boolean }) {
 
 export default function LabInterpretationDemo() {
   const [tier, setTier] = useState<Tier>("Simple");
+  const [live, setLive] = useState(false);
+  const [analyzed, setAnalyzed] = useState(false);
+  const [reduce, setReduce] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const n = NARRATIVE[tier];
 
+  // The performance begins when the surface enters the viewport
+  useEffect(() => {
+    const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setReduce(prefersReduce);
+    if (prefersReduce) {
+      setLive(true);
+      setAnalyzed(true);
+      return;
+    }
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setLive(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Status flips once the rows have finished landing
+  useEffect(() => {
+    if (!live || reduce) return;
+    const t = setTimeout(() => setAnalyzed(true), 1700);
+    return () => clearTimeout(t);
+  }, [live, reduce]);
+
   return (
-    <div className="relative">
+    <div ref={rootRef} className={`demo-stage relative ${live ? "is-live" : ""}`}>
       <div className="bento">
         {/* Window header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
@@ -227,10 +327,20 @@ export default function LabInterpretationDemo() {
               <p className="text-[11px] text-ink-tertiary">Meridix · Report Interpretation</p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-glow" />
-            Analyzed
-            <span className="text-ink-tertiary font-mono-data font-semibold normal-case tracking-normal">· 6.4s</span>
+          <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider">
+            {analyzed ? (
+              <span className="status-in inline-flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                Analyzed
+                <span className="text-ink-tertiary font-mono-data font-semibold normal-case tracking-normal">· 6.4s</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dot-breathe" />
+                Analyzing
+                <span className="text-ink-tertiary font-mono-data font-semibold normal-case tracking-normal">…</span>
+              </span>
+            )}
           </span>
         </div>
 
@@ -274,13 +384,20 @@ export default function LabInterpretationDemo() {
 
           {/* Biomarker range tracks — the flagged ones first */}
           <div className="space-y-2">
-            {MARKERS.map((m) => (
-              <BiomarkerTrack key={m.name} m={m} dim={m.status === "normal"} />
+            {MARKERS.map((m, i) => (
+              <BiomarkerTrack
+                key={m.name}
+                m={m}
+                row={i}
+                live={live}
+                reduce={reduce}
+                dim={m.status === "normal"}
+              />
             ))}
           </div>
 
           {/* Signature interpretation annotation — focused on the flag */}
-          <div className="relative rounded-xl border border-brand-blue/25 bg-brand-blue/[0.06] p-4 overflow-hidden">
+          <div className="demo-verdict relative rounded-xl border border-brand-blue/25 bg-brand-blue/[0.06] p-4 overflow-hidden">
             <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-brand-blue" />
             <div className="flex items-center gap-2 mb-3 pl-2">
               <span className="w-5 h-5 rounded-md bg-brand-blue text-white flex items-center justify-center">
