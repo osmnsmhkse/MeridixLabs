@@ -22,14 +22,22 @@ const config: Config = {
           cyan:         "#22D3EE",
           sky:          "#38BDF8",
         },
-        /* Cinematic near-black scale for premium dark sections */
+        /* Near-black scale for dark sections */
         night: {
-          DEFAULT: "#070B16",
-          950:     "#05080F",
-          900:     "#080D1A",
-          800:     "#0C1322",
-          700:     "#111A2E",
-          600:     "#1A2540",
+          DEFAULT: "#0A0C10",
+          950:     "#06080B",
+          900:     "#0A0C10",
+          800:     "#12151B",
+          700:     "#1A1E26",
+          600:     "#232831",
+        },
+        /* Editorial paper tints (dark-aware section bgs use the
+           .bg-paper/.bg-duck/.bg-navy utilities in globals.css) */
+        paper: {
+          beige: "#F1F0EB",
+          duck:  "#F1F5F8",
+          sky:   "#D9E8FA",
+          navy:  "#232B38",
         },
         ink: {
           DEFAULT:   "rgb(var(--color-ink) / <alpha-value>)",
@@ -43,9 +51,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans:    ["-apple-system", "BlinkMacSystemFont", '"SF Pro Text"', "Inter", '"Helvetica Neue"', "Arial", "sans-serif"],
-        display: ["-apple-system", "BlinkMacSystemFont", '"SF Pro Display"', "Inter", '"Helvetica Neue"', "Arial", "sans-serif"],
+        sans:    ["Inter", "-apple-system", "BlinkMacSystemFont", '"Helvetica Neue"', "Arial", "sans-serif"],
+        display: ['"Geist"', "-apple-system", "BlinkMacSystemFont", "Inter", '"Helvetica Neue"', "Arial", "sans-serif"],
         mono:    ["JetBrains Mono", "monospace"],
+      },
+      fontWeight: {
+        thin2: "250",
       },
       animation: {
         "fade-in":       "fadeIn 0.5s ease-in-out",
@@ -124,19 +135,21 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(135deg, #4A85EF 0%, #6366F1 100%)",
-        "gradient-brand-soft": "linear-gradient(135deg, rgba(74,133,239,0.1) 0%, rgba(99,102,241,0.1) 100%)",
+        /* Legacy names kept — flattened to the single brand color */
+        "gradient-brand": "linear-gradient(135deg, #4A85EF 0%, #4A85EF 100%)",
+        "gradient-brand-soft": "linear-gradient(135deg, rgba(74,133,239,0.08) 0%, rgba(74,133,239,0.08) 100%)",
       },
       boxShadow: {
-        "glow-blue":   "0 0 20px rgba(74, 133, 239, 0.35), 0 4px 14px rgba(74, 133, 239, 0.2)",
-        "glow-indigo": "0 0 24px rgba(99, 102, 241, 0.3), 0 4px 14px rgba(99, 102, 241, 0.15)",
-        "card-hover":  "0 0 0 1px rgba(74,133,239,0.07), 0 8px 24px -4px rgba(74,133,239,0.18), 0 20px 48px rgba(99,102,241,0.08)",
-        "soft":        "0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -8px rgba(15,23,42,0.08)",
-        "lift":        "0 2px 4px rgba(15,23,42,0.05), 0 24px 48px -16px rgba(15,23,42,0.14)",
-        "float":       "0 40px 80px -24px rgba(40,60,160,0.22)",
-        "premium":     "0 1px 0 0 rgba(255,255,255,0.6) inset, 0 1px 2px rgba(15,23,42,0.06), 0 12px 32px -10px rgba(30,45,120,0.18)",
-        "bento":       "0 1px 0 0 rgba(255,255,255,0.5) inset, 0 2px 6px rgba(15,23,42,0.05), 0 30px 60px -28px rgba(30,45,120,0.30)",
-        "glow-lg":     "0 0 0 1px rgba(74,133,239,0.12), 0 0 40px rgba(74,133,239,0.30), 0 18px 50px -18px rgba(74,133,239,0.45)",
+        /* Editorial system: shadows are whispers, glows are gone */
+        "glow-blue":   "none",
+        "glow-indigo": "none",
+        "card-hover":  "none",
+        "soft":        "0 1px 2px rgba(27,30,36,0.04)",
+        "lift":        "0 12px 32px -16px rgba(27,30,36,0.14)",
+        "float":       "0 24px 56px -28px rgba(27,30,36,0.18)",
+        "premium":     "0 1px 2px rgba(27,30,36,0.05)",
+        "bento":       "none",
+        "glow-lg":     "none",
       },
       letterSpacing: {
         "tightest": "-0.04em",

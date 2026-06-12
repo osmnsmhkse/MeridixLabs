@@ -43,7 +43,7 @@ function trackAB(variant: Variant, action: "shown" | "clicked"): void {
 
 function UploadIcon() {
   return (
-    <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 flex-shrink-0">
+    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
       <path
         fillRule="evenodd"
         d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
@@ -86,7 +86,7 @@ export default function HeroCTA() {
   };
 
   const baseClass =
-    "btn-premium inline-flex items-center gap-2 px-8 py-4 font-bold rounded-full text-base";
+    "btn-premium inline-flex items-center gap-2.5 px-7 py-3.5 font-medium text-[15px]";
 
   // For non-English locales use the translated CTA; for English keep A/B variant text.
   const displayText =

@@ -215,11 +215,11 @@ export default function LabInterpretationDemo() {
 
   return (
     <div className="relative">
-      <div className="ring-gradient rounded-3xl bento shadow-bento">
+      <div className="bento">
         {/* Window header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center shadow-glow-blue text-white">
+            <div className="w-9 h-9 rounded-lg bg-brand-blue flex items-center justify-center text-white">
               <PulseMark className="w-5 h-5" />
             </div>
             <div className="leading-tight">
@@ -257,9 +257,9 @@ export default function LabInterpretationDemo() {
             <button
               key={t}
               onClick={() => setTier(t)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-all duration-200 ${
                 t === tier
-                  ? "bg-brand-blue text-white shadow-glow-blue"
+                  ? "bg-ink text-surface"
                   : "text-ink-tertiary hover:text-ink-secondary bg-surface-raised"
               }`}
             >
@@ -280,10 +280,10 @@ export default function LabInterpretationDemo() {
           </div>
 
           {/* Signature interpretation annotation — focused on the flag */}
-          <div className="relative rounded-2xl border border-brand-blue/25 bg-gradient-to-br from-brand-blue/[0.07] to-brand-indigo/[0.07] p-4 overflow-hidden">
-            <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-gradient-to-b from-brand-blue to-brand-indigo" />
+          <div className="relative rounded-xl border border-brand-blue/25 bg-brand-blue/[0.06] p-4 overflow-hidden">
+            <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-brand-blue" />
             <div className="flex items-center gap-2 mb-3 pl-2">
-              <span className="w-5 h-5 rounded-md bg-gradient-to-br from-brand-blue to-brand-indigo text-white flex items-center justify-center">
+              <span className="w-5 h-5 rounded-md bg-brand-blue text-white flex items-center justify-center">
                 <PulseMark className="w-3 h-3" />
               </span>
               <span className="kicker-mono text-brand-blue-dark dark:text-brand-blue">Meridix interpretation</span>
