@@ -74,6 +74,9 @@ h1 {
     opacity: 1 !important; transform: none !important; transition: none !important;
   }
   .dot-breathe, .status-in, .nav-enter { animation: none !important; }
+  .scan-slice { animation: none !important; }
+  .scan-turn { animation: none !important; }
+  .scan-enter { animation: none !important; opacity: 1 !important; transform: none !important; }
   html { scroll-behavior: auto; }
 }
 
@@ -421,6 +424,49 @@ body {
   to   { opacity: 1; transform: none; }
 }
 .nav-enter { animation: navIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
+
+/* ── The Scan — living sculpture (ScanSculpture.tsx) ─────
+   A slow wave travels through the slice stack: each slice
+   sways with a phase offset (negative delay by index). */
+@keyframes sliceSway {
+  0%   { transform: translateX(-2.4%) rotate(-1deg); }
+  100% { transform: translateX(2.4%) rotate(1deg); }
+}
+.scan-slice {
+  animation: sliceSway 13s ease-in-out infinite alternate;
+  animation-delay: var(--sd, 0s);
+  will-change: transform;
+}
+
+/* Melt the stack into the page at its edges */
+.scan-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 26%, #000 88%, transparent 100%),
+                      linear-gradient(to bottom, transparent 1%, #000 14%, #000 86%, transparent 99%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 26%, #000 88%, transparent 100%),
+              linear-gradient(to bottom, transparent 1%, #000 14%, #000 86%, transparent 99%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* Sculpture entrance — drifts up once after load */
+@keyframes scanIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+.scan-enter { animation: scanIn 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both; }
+
+/* The whole stack turns slowly in 3D — a volume being read from every
+   angle. Perspective baked into the transform so the flat slice-plane
+   foreshortens as it rotates. */
+@keyframes scanTurn {
+  0%   { transform: perspective(1500px) rotateY(-11deg) rotateX(1.5deg); }
+  100% { transform: perspective(1500px) rotateY(11deg) rotateX(-1.5deg); }
+}
+.scan-turn {
+  animation: scanTurn 16s ease-in-out infinite alternate;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
 
 /* ── Scroll progress — single hairline ─────────────────── */
 .scroll-progress {

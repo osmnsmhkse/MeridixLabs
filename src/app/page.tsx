@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import HeroCTA from "@/components/HeroCTA";
 import WordReveal from "@/components/WordReveal";
 import LabInterpretationDemo from "@/components/LabInterpretationDemo";
+import ScanSculpture from "@/components/ScanSculpture";
 
 /* Editorial arrow — quiet, consistent */
 function Arrow({ className = "w-4 h-4" }: { className?: string }) {
@@ -44,14 +45,17 @@ export default function LandingPage() {
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="relative -mt-16 gradient-hero overflow-hidden">
-        <div className="max-w-[1440px] mx-auto px-5 lg:px-10 pt-36 lg:pt-44 pb-16 lg:pb-24">
+        <div className="relative max-w-[1440px] mx-auto px-5 lg:px-10 pt-36 lg:pt-44 pb-16 lg:pb-24">
 
-          <div className="chip text-ink-secondary reveal">
+          {/* The Scan — living sculpture behind the headline */}
+          <ScanSculpture className="scan-enter hidden lg:block absolute right-2 xl:right-10 top-10 w-[min(40vw,560px)] h-[520px] z-0" />
+
+          <div className="relative z-10 chip text-ink-secondary reveal">
             {tHero("badge")}
           </div>
 
           {/* Giant editorial headline */}
-          <h1 className="mt-8 font-display text-ink leading-[0.98] tracking-tightest text-[clamp(2.9rem,8.4vw,8rem)] max-w-[18ch]">
+          <h1 className="relative z-10 mt-8 font-display text-ink leading-[0.98] tracking-tightest text-[clamp(2.9rem,8.4vw,8rem)] max-w-[18ch]">
             <WordReveal text={tHero("title")} base={0.1} />{" "}
             <WordReveal
               text={tHero("highlight")}
@@ -61,7 +65,7 @@ export default function LandingPage() {
           </h1>
 
           {/* Sub-row: copy left, actions right */}
-          <div className="mt-12 lg:mt-16 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 reveal reveal-delay-3">
+          <div className="relative z-10 mt-12 lg:mt-16 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 reveal reveal-delay-3">
             <p className="max-w-md text-base sm:text-lg text-ink-secondary leading-relaxed text-pretty">
               {tHero("subtitle")}
             </p>
