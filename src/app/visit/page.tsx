@@ -284,7 +284,7 @@ function SectionCard({
 }) {
   const wrapper = emphasize
     ? `rounded-2xl bg-white dark:bg-slate-800 border-2 shadow-lg overflow-hidden ${accent}`
-    : `rounded-2xl bg-white dark:bg-slate-800 border border-surface-border shadow-sm overflow-hidden border-l-4 ${accent}`;
+    : `rounded-2xl bg-white dark:bg-slate-800 border border-surface-border shadow-sm overflow-hidden ${accent}`;
   return (
     <div className={wrapper}>
       <div className="px-6 pt-5 pb-1 flex items-start gap-2.5">
@@ -310,9 +310,9 @@ function TopQuestionsSection({ items }: { items: { question: string; why: string
   return (
     <div className="rounded-2xl bg-white dark:bg-slate-800 border-2 border-brand-blue/30 shadow-lg shadow-brand-blue/5 overflow-hidden">
       {/* Prominent header with subtle gradient — this is the hero section */}
-      <div className="px-6 pt-5 pb-4 bg-gradient-to-r from-brand-blue/5 via-brand-indigo/3 to-transparent border-b border-brand-blue/10">
+      <div className="px-6 pt-5 pb-4 bg-brand-blue/5 border-b border-brand-blue/10">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
             </svg>
@@ -371,11 +371,11 @@ function TestsSection({ items }: { items: { test: string; why: string }[] }) {
   if (items.length === 0) return null;
   return (
     <SectionCard
-      accent="border-l-sky-400"
+      accent=""
       label={t("sectionTests")}
       sublabel={t("sectionTestsDesc")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-sky-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
           <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
         </svg>
@@ -384,8 +384,8 @@ function TestsSection({ items }: { items: { test: string; why: string }[] }) {
       <ul className="space-y-3">
         {items.map((it, i) => (
           <li key={i} className="flex items-start gap-3">
-            <span className="mt-0.5 w-6 h-6 rounded-lg bg-sky-50 dark:bg-sky-900/30 border border-sky-100 dark:border-sky-800/60 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-sky-500">
+            <span className="mt-0.5 w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-brand-blue">
                 <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
               </svg>
             </span>
@@ -405,18 +405,18 @@ function ConditionsSection({ items }: { items: { condition: string; why: string 
   if (items.length === 0) return null;
   return (
     <SectionCard
-      accent="border-l-violet-400"
+      accent=""
       label={t("sectionConditions")}
       sublabel={t("sectionConditionsDesc")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
         </svg>
       }
     >
       <ul className="space-y-3">
         {items.map((it, i) => (
-          <li key={i} className="rounded-xl border border-violet-100 dark:border-violet-900/40 bg-violet-50/50 dark:bg-violet-950/20 px-4 py-3">
+          <li key={i} className="rounded-xl border border-surface-border bg-surface-raised px-4 py-3">
             <p className="text-sm font-semibold text-ink leading-snug">{it.condition}</p>
             {it.why && <p className="mt-1 text-xs text-ink-secondary leading-relaxed">{it.why}</p>}
           </li>
@@ -447,7 +447,7 @@ function CommunicateSection({
 
   return (
     <SectionCard
-      accent="border-l-slate-300 dark:border-l-slate-600"
+      accent=""
       label={t("sectionCommunicate")}
       sublabel={t("sectionCommunicateDesc")}
       icon={
@@ -479,11 +479,11 @@ function WhatToBringSection({ items }: { items: string[] }) {
   if (items.length === 0) return null;
   return (
     <SectionCard
-      accent="border-l-emerald-400"
+      accent=""
       label={t("sectionWhatToBring")}
       sublabel={t("sectionWhatToBringDesc")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
         </svg>
       }
@@ -495,8 +495,8 @@ function WhatToBringSection({ items }: { items: string[] }) {
               onClick={() => toggle(i)}
               className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-all duration-150 ${
                 checked[i]
-                  ? "bg-emerald-500 border-emerald-500"
-                  : "border-surface-border dark:border-slate-600 hover:border-emerald-400"
+                  ? "bg-brand-blue border-brand-blue"
+                  : "border-surface-border dark:border-slate-600 hover:border-brand-blue"
               }`}
               aria-label={`Check item ${i + 1}`}
             >
@@ -523,7 +523,7 @@ function WhatWasDiscussedSection({ text }: { text: string }) {
   if (!text) return null;
   return (
     <SectionCard
-      accent="border-l-brand-blue"
+      accent=""
       label={t("sectionDiscussed")}
       sublabel={t("sectionDiscussedDesc")}
       icon={
@@ -542,11 +542,11 @@ function PrescribedSection({ items }: { items: PrescribedItem[] }) {
   if (items.length === 0) return null;
   return (
     <SectionCard
-      accent="border-l-violet-400"
+      accent=""
       label={t("sectionPrescribed")}
       sublabel={t("sectionPrescribedDesc")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M14.5 3a3.5 3.5 0 00-2.475 5.975L7.025 13.475a3.5 3.5 0 104.95 4.95l5-5a3.5 3.5 0 00-2.475-5.975h-.025L18.5 6.5A3.5 3.5 0 0014.5 3zm-1.768 5.732l-4 4 1.768 1.768 4-4-1.768-1.768z" clipRule="evenodd" />
         </svg>
       }
@@ -555,7 +555,7 @@ function PrescribedSection({ items }: { items: PrescribedItem[] }) {
         {items.map((p, i) => (
           <li
             key={i}
-            className="rounded-xl border border-violet-100 dark:border-violet-900/40 bg-white dark:bg-slate-900 px-4 py-3.5"
+            className="rounded-xl border border-surface-border bg-white dark:bg-slate-900 px-4 py-3.5"
           >
             <p className="text-sm font-bold text-ink leading-snug">{p.item}</p>
             {p.what && (
@@ -563,7 +563,7 @@ function PrescribedSection({ items }: { items: PrescribedItem[] }) {
             )}
             {p.why && (
               <p className="mt-1.5 text-xs text-ink-secondary leading-relaxed">
-                <span className="font-semibold text-violet-600 dark:text-violet-400">
+                <span className="font-semibold text-brand-blue">
                   {t("labelWhy")}:
                 </span>{" "}
                 {p.why}
@@ -571,7 +571,7 @@ function PrescribedSection({ items }: { items: PrescribedItem[] }) {
             )}
             {p.goal && (
               <p className="mt-1 text-xs text-ink-secondary leading-relaxed">
-                <span className="font-semibold text-violet-600 dark:text-violet-400">
+                <span className="font-semibold text-brand-blue">
                   {t("labelGoal")}:
                 </span>{" "}
                 {p.goal}
@@ -588,11 +588,11 @@ function FollowUpSection({ items }: { items: FollowUpItem[] }) {
   const t = useTranslations("Visit");
   if (items.length === 0) return null;
   return (
-    <div className="rounded-2xl bg-white dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-700/60 shadow-lg shadow-amber-500/5 overflow-hidden">
-      <div className="px-6 pt-5 pb-4 bg-gradient-to-r from-amber-50/80 via-amber-50/40 to-transparent dark:from-amber-950/30 dark:via-amber-950/15 border-b border-amber-200/60 dark:border-amber-800/50">
+    <div className="rounded-2xl bg-white dark:bg-slate-800 border-2 border-brand-blue/30 shadow-lg shadow-brand-blue/5 overflow-hidden">
+      <div className="px-6 pt-5 pb-4 bg-brand-blue/5 border-b border-brand-blue/10">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-600 dark:text-amber-400">
+          <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">
               <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
             </svg>
           </div>
@@ -609,7 +609,7 @@ function FollowUpSection({ items }: { items: FollowUpItem[] }) {
               className={`mt-0.5 flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
                 f.urgent
                   ? "bg-red-500 text-white"
-                  : "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400"
+                  : "bg-brand-blue/10 text-brand-blue"
               }`}
             >
               {i + 1}
@@ -626,7 +626,7 @@ function FollowUpSection({ items }: { items: FollowUpItem[] }) {
               </div>
               {f.when && (
                 <p className="mt-1 text-xs text-ink-secondary leading-relaxed">
-                  <span className="font-semibold text-amber-700 dark:text-amber-400">
+                  <span className="font-semibold text-brand-blue">
                     {t("labelWhen")}:
                   </span>{" "}
                   {f.when}
@@ -648,7 +648,7 @@ function WarningSignsSection({ items }: { items: string[] }) {
   if (items.length === 0) return null;
   return (
     <div className="rounded-2xl bg-white dark:bg-slate-800 border-2 border-red-300 dark:border-red-800/60 shadow-lg shadow-red-500/5 overflow-hidden">
-      <div className="px-6 pt-5 pb-4 bg-gradient-to-r from-red-50/80 via-red-50/40 to-transparent dark:from-red-950/30 dark:via-red-950/15 border-b border-red-200/60 dark:border-red-800/50">
+      <div className="px-6 pt-5 pb-4 bg-red-50/60 dark:bg-red-950/20 border-b border-red-200/60 dark:border-red-800/50">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center flex-shrink-0">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-600 dark:text-red-400">
@@ -678,11 +678,11 @@ function JargonDecoderSection({ items }: { items: JargonItem[] }) {
   if (items.length === 0) return null;
   return (
     <SectionCard
-      accent="border-l-sky-400"
+      accent=""
       label={t("sectionJargon")}
       sublabel={t("sectionJargonDesc")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-sky-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.669 0-3.218.51-4.5 1.385V15" clipRule="evenodd" />
         </svg>
       }
@@ -691,7 +691,7 @@ function JargonDecoderSection({ items }: { items: JargonItem[] }) {
         {items.map((j, i) => (
           <div key={i} className="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-y-1 gap-x-4 py-3 first:pt-0 last:pb-0">
             <dt>
-              <span className="inline-block px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-900/30 border border-sky-100 dark:border-sky-800/60 text-xs font-mono-data text-sky-700 dark:text-sky-300">
+              <span className="inline-block px-2 py-0.5 rounded-md bg-surface-raised border border-surface-border text-xs font-mono-data text-ink">
                 {j.term}
               </span>
             </dt>
@@ -711,11 +711,11 @@ function RemainingQuestionsSection({ items }: { items: string[] }) {
   if (items.length === 0) return null;
   return (
     <SectionCard
-      accent="border-l-pink-400"
+      accent=""
       label={t("sectionRemainingQuestions")}
       sublabel={t("sectionRemainingQuestionsDesc")}
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-pink-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
         </svg>
       }
@@ -727,8 +727,8 @@ function RemainingQuestionsSection({ items }: { items: string[] }) {
               onClick={() => toggle(i)}
               className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-all duration-150 ${
                 checked[i]
-                  ? "bg-pink-500 border-pink-500"
-                  : "border-surface-border dark:border-slate-600 hover:border-pink-400"
+                  ? "bg-brand-blue border-brand-blue"
+                  : "border-surface-border dark:border-slate-600 hover:border-brand-blue"
               }`}
               aria-label={`Mark question ${i + 1} as asked`}
             >
@@ -781,7 +781,7 @@ const TIER_CONFIG: Record<Tier, { label: string; aud: string; active: string }> 
   simple: {
     label: "tierSimple",
     aud: "tierSimpleLabel",
-    active: "text-emerald-700 dark:text-emerald-400 border-b-2 border-emerald-500 bg-emerald-500/5",
+    active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
   },
   medium: {
     label: "tierMedium",
@@ -791,7 +791,7 @@ const TIER_CONFIG: Record<Tier, { label: string; aud: string; active: string }> 
   expert: {
     label: "tierExpert",
     aud: "tierExpertLabel",
-    active: "text-purple-700 dark:text-purple-400 border-b-2 border-purple-500 bg-purple-500/5",
+    active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
   },
 };
 
@@ -873,7 +873,7 @@ function ModeTabs({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void 
             <div
               className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
                 isActive
-                  ? "bg-gradient-to-br from-brand-blue to-brand-indigo text-white"
+                  ? "bg-brand-blue text-white"
                   : "bg-white dark:bg-slate-900 text-ink-tertiary border border-surface-border"
               }`}
             >
@@ -1174,19 +1174,14 @@ export default function VisitPage() {
   const hasResult = stage === "result";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-[#0B1424] dark:to-[#070B16]">
+    <div className="min-h-screen bg-surface">
       {/* Hero */}
-      <section className="relative isolate overflow-hidden grain pt-32 pb-10 px-4 sm:px-6">
-        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
-          <div className="aurora-blob animate-aurora" style={{ top: "-20%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(99,102,241,0.36), transparent 62%)" }} />
-          <div className="aurora-blob animate-aurora" style={{ top: "-10%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(74,133,239,0.3), transparent 64%)", animationDelay: "-7s" }} />
-        </div>
-        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+      <section className="relative isolate overflow-hidden pt-32 pb-10 px-4 sm:px-6">
         <div className="relative z-10 max-w-2xl mx-auto text-center">
-          <div className="chip text-brand-indigo mb-6">
-            <span className="kicker-mono text-brand-indigo">{t("badge")}</span>
+          <div className="chip text-ink-secondary mb-6">
+            <span className="kicker-mono">{t("badge")}</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-brand-indigo dark:text-indigo-400 tracking-tightest leading-[1.03] mb-3">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
             <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed text-pretty">{t("subtitle")}</p>

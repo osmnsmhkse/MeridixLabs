@@ -36,21 +36,21 @@ export function ArticleShell(props: ArticleShellProps) {
   } = props;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-rose-50/30 via-violet-50/20 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 pt-24 pb-24">
+    <main className="min-h-screen bg-surface pt-24 pb-24">
       {/* Breadcrumb */}
       <nav className="max-w-3xl mx-auto px-4 sm:px-6 mb-6 text-xs text-ink-tertiary flex items-center gap-2" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-violet-600">Home</Link>
+        <Link href="/" className="hover:text-brand-blue">Home</Link>
         <span>/</span>
-        <Link href="/womens-health" className="hover:text-violet-600">Women&apos;s Health</Link>
+        <Link href="/womens-health" className="hover:text-brand-blue">Women&apos;s Health</Link>
         <span>/</span>
-        <Link href="/womens-health/learn" className="hover:text-violet-600">Learn</Link>
+        <Link href="/womens-health/learn" className="hover:text-brand-blue">Learn</Link>
         <span>/</span>
         <span className="text-ink-secondary truncate">{eyebrow}</span>
       </nav>
 
       {/* Hero */}
       <header className="max-w-3xl mx-auto px-4 sm:px-6 mb-10">
-        <div className="chip text-violet-700 dark:text-violet-300 mb-5">
+        <div className="chip text-ink-secondary mb-5">
           {eyebrow}
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight leading-tight mb-4">
@@ -61,8 +61,8 @@ export function ArticleShell(props: ArticleShellProps) {
 
       {/* TL;DR */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 mb-10">
-        <div className="rounded-2xl border border-violet-200 dark:border-violet-800/60 bg-gradient-to-r from-rose-50/60 to-violet-50/60 dark:from-rose-950/20 dark:to-violet-950/20 p-5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-300 mb-2">In short</p>
+        <div className="rounded-2xl border border-surface-border bg-surface-raised p-5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ink-tertiary mb-2">In short</p>
           <p className="text-sm sm:text-base text-ink leading-relaxed">{tldr}</p>
         </div>
       </section>
@@ -79,16 +79,16 @@ export function ArticleShell(props: ArticleShellProps) {
         ))}
 
         {/* Often missed */}
-        <section className="rounded-2xl border-2 border-violet-300 dark:border-violet-700/60 bg-gradient-to-br from-rose-50/40 via-violet-50/40 to-white dark:from-rose-950/20 dark:via-violet-950/20 dark:to-slate-900 shadow-lg shadow-violet-500/5 overflow-hidden">
-          <div className="px-5 py-4 border-b border-violet-200/60 dark:border-violet-800/40 bg-gradient-to-r from-rose-500/8 via-violet-500/8 to-transparent">
+        <section className="rounded-2xl border border-surface-border bg-surface-raised overflow-hidden">
+          <div className="px-5 py-4 border-b border-surface-border">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-md shadow-violet-500/20">
+              <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4 text-white">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75z" />
                 </svg>
               </div>
               <div className="min-w-0">
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase text-violet-700 dark:text-violet-300 px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/40">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase text-ink-secondary">
                   What doctors often miss
                 </span>
                 <p className="text-[11px] text-ink-tertiary mt-1.5 leading-snug">The dismissal patterns worth knowing about.</p>
@@ -106,7 +106,7 @@ export function ArticleShell(props: ArticleShellProps) {
           <ol className="space-y-3">
             {questions.map((q, i) => (
               <li key={i} className="flex items-start gap-3 text-sm sm:text-base text-ink-secondary leading-relaxed">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-xs font-bold text-violet-700 dark:text-violet-300 mt-0.5">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-surface-raised border border-surface-border flex items-center justify-center text-xs font-bold text-ink mt-0.5">
                   {i + 1}
                 </span>
                 <span className="font-medium text-ink">{q}</span>
@@ -136,14 +136,14 @@ export function ArticleShell(props: ArticleShellProps) {
         )}
 
         {/* CTA back to tool */}
-        <section className="rounded-3xl border border-violet-300/60 dark:border-violet-800/60 bg-gradient-to-br from-rose-50 via-violet-50 to-white dark:from-rose-950/30 dark:via-violet-950/30 dark:to-slate-900 p-6 sm:p-8 text-center">
+        <section className="rounded-3xl border border-surface-border bg-surface-raised p-6 sm:p-8 text-center">
           <h3 className="text-lg sm:text-xl font-extrabold text-ink mb-2">Want a personalized read on your situation?</h3>
           <p className="text-sm text-ink-secondary leading-relaxed max-w-lg mx-auto mb-5">
             The Women&apos;s Health Companion gives you a cycle-day-aware interpretation of your hormone labs, symptom-pattern guidance, or trimester-aware pregnancy support — calibrated, not dismissive.
           </p>
           <Link
             href="/womens-health"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-br from-rose-600 to-violet-600 hover:from-rose-700 hover:to-violet-700 text-white font-bold text-sm transition-all shadow-md shadow-violet-500/20 hover:shadow-lg hover:shadow-violet-500/30"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-sm transition-all"
           >
             Open the companion
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
@@ -159,7 +159,7 @@ export function ArticleShell(props: ArticleShellProps) {
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {related.map((r) => (
                 <li key={r.href}>
-                  <Link href={r.href} className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-surface-border bg-white dark:bg-slate-900 hover:border-violet-400/40 hover:bg-violet-50/30 dark:hover:bg-violet-950/20 transition-all">
+                  <Link href={r.href} className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-surface-border bg-surface-raised hover:border-ink/25 transition-all">
                     <span className="text-sm font-semibold text-ink">{r.label}</span>
                     <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary">
                       <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />

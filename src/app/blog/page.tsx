@@ -56,7 +56,7 @@ export default async function BlogIndexPage() {
                   className="group flex flex-col rounded-2xl border border-surface-border bg-surface-raised hover:border-brand-blue/30 hover:shadow-lg hover:shadow-brand-blue/5 transition-all duration-300 overflow-hidden"
                 >
                   {/* Coloured top accent */}
-                  <div className="h-1.5 w-full bg-gradient-to-r from-brand-blue to-blue-400" />
+                  <div className="h-1.5 w-full bg-brand-blue" />
 
                   <div className="p-6 flex flex-col flex-1">
                     {/* Meta */}

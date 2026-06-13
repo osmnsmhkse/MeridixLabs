@@ -110,7 +110,7 @@ const DECISION_CONFIG: Record<
     labelKey: "decisionErNow",
     bg: "bg-red-50 dark:bg-red-950/30",
     border: "border-red-300 dark:border-red-800",
-    headerBg: "bg-gradient-to-r from-red-100/80 via-red-50/60 to-transparent dark:from-red-900/40 dark:via-red-950/30",
+    headerBg: "bg-red-100/70 dark:bg-red-900/40",
     accent: "text-red-700 dark:text-red-300",
     iconBg: "bg-red-500/10 dark:bg-red-500/20",
     dot: "bg-red-500",
@@ -124,7 +124,7 @@ const DECISION_CONFIG: Record<
     labelKey: "decisionErToday",
     bg: "bg-orange-50 dark:bg-orange-950/30",
     border: "border-orange-300 dark:border-orange-800",
-    headerBg: "bg-gradient-to-r from-orange-100/80 via-orange-50/60 to-transparent dark:from-orange-900/40 dark:via-orange-950/30",
+    headerBg: "bg-orange-100/70 dark:bg-orange-900/40",
     accent: "text-orange-700 dark:text-orange-300",
     iconBg: "bg-orange-500/10 dark:bg-orange-500/20",
     dot: "bg-orange-500",
@@ -138,7 +138,7 @@ const DECISION_CONFIG: Record<
     labelKey: "decisionCallPed",
     bg: "bg-amber-50 dark:bg-amber-950/30",
     border: "border-amber-300 dark:border-amber-800",
-    headerBg: "bg-gradient-to-r from-amber-100/80 via-amber-50/60 to-transparent dark:from-amber-900/40 dark:via-amber-950/30",
+    headerBg: "bg-amber-100/70 dark:bg-amber-900/40",
     accent: "text-amber-700 dark:text-amber-300",
     iconBg: "bg-amber-500/10 dark:bg-amber-500/20",
     dot: "bg-amber-500",
@@ -152,7 +152,7 @@ const DECISION_CONFIG: Record<
     labelKey: "decisionWatchHome",
     bg: "bg-emerald-50 dark:bg-emerald-950/30",
     border: "border-emerald-300 dark:border-emerald-800",
-    headerBg: "bg-gradient-to-r from-emerald-100/80 via-emerald-50/60 to-transparent dark:from-emerald-900/40 dark:via-emerald-950/30",
+    headerBg: "bg-emerald-100/70 dark:bg-emerald-900/40",
     accent: "text-emerald-700 dark:text-emerald-300",
     iconBg: "bg-emerald-500/10 dark:bg-emerald-500/20",
     dot: "bg-emerald-500",
@@ -206,9 +206,9 @@ const TEMP_METHODS = [
 function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => void }) {
   const t = useTranslations("Pediatric");
   const OPTIONS: { key: Tier; labelKey: "tierSimple" | "tierMedium" | "tierExpert"; activeClass: string }[] = [
-    { key: "simple", labelKey: "tierSimple", activeClass: "text-emerald-700 dark:text-emerald-400 border-emerald-400 bg-emerald-500/5" },
-    { key: "medium", labelKey: "tierMedium", activeClass: "text-rose-700 dark:text-rose-300 border-rose-400 bg-rose-500/5" },
-    { key: "expert", labelKey: "tierExpert", activeClass: "text-purple-700 dark:text-purple-400 border-purple-400 bg-purple-500/5" },
+    { key: "simple", labelKey: "tierSimple", activeClass: "text-brand-blue border-brand-blue bg-brand-blue/5" },
+    { key: "medium", labelKey: "tierMedium", activeClass: "text-brand-blue border-brand-blue bg-brand-blue/5" },
+    { key: "expert", labelKey: "tierExpert", activeClass: "text-brand-blue border-brand-blue bg-brand-blue/5" },
   ];
   return (
     <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden">
@@ -284,9 +284,9 @@ function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       <div className="relative mb-6">
-        <div className="w-16 h-16 rounded-full border-2 border-rose-500/20 animate-ping absolute inset-0" style={{ animationDuration: "2s" }} />
-        <div className="w-16 h-16 rounded-full border-2 border-rose-500/30 flex items-center justify-center relative">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7 text-rose-500">
+        <div className="w-16 h-16 rounded-full border-2 border-brand-blue/20 animate-ping absolute inset-0" style={{ animationDuration: "2s" }} />
+        <div className="w-16 h-16 rounded-full border-2 border-brand-blue/30 flex items-center justify-center relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7 text-brand-blue">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
           </svg>
         </div>
@@ -439,17 +439,12 @@ export default function PediatricPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
       {/* Hero */}
-      <section className="relative isolate overflow-hidden grain pt-10 pb-6 text-center">
-        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
-          <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(244,63,94,0.3), transparent 62%)" }} />
-          <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.26), transparent 64%)", animationDelay: "-7s" }} />
-        </div>
-        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+      <section className="relative isolate overflow-hidden pt-10 pb-6 text-center">
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="chip text-rose-700 dark:text-rose-300 mb-5">
+          <div className="chip text-ink-secondary mb-5">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-rose-600 dark:text-rose-400 tracking-tightest leading-[1.03] mb-3">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
             <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
@@ -480,7 +475,7 @@ export default function PediatricPage() {
             {/* Age (REQUIRED) */}
             <div>
               <label className="block text-sm font-bold text-ink mb-2">
-                {t("ageLabel")} <span className="text-rose-500">*</span>
+                {t("ageLabel")} <span className="text-red-500">*</span>
               </label>
               <p className="text-xs text-ink-tertiary mb-3">{t("ageHint")}</p>
               <div className="flex flex-wrap items-center gap-3">
@@ -504,7 +499,7 @@ export default function PediatricPage() {
                     value={ageInput}
                     onChange={(e) => setAgeInput(e.target.value)}
                     placeholder={ageMode === "months" ? t("agePlaceholderMonths") : t("agePlaceholderYears")}
-                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink text-base placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-rose-400/40 focus:border-rose-400 transition"
+                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink text-base placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
                   />
                 </div>
               </div>
@@ -532,7 +527,7 @@ export default function PediatricPage() {
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
                     placeholder={t("weightPlaceholder")}
-                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink text-base placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-rose-400/40 focus:border-rose-400 transition"
+                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink text-base placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
                   />
                 </div>
               </div>
@@ -541,7 +536,7 @@ export default function PediatricPage() {
             {/* Concerns (REQUIRED) */}
             <div>
               <label className="block text-sm font-bold text-ink mb-2">
-                {t("concernsLabel")} <span className="text-rose-500">*</span>
+                {t("concernsLabel")} <span className="text-red-500">*</span>
               </label>
               <p className="text-xs text-ink-tertiary mb-3">{t("concernsHint")}</p>
               <div className="flex flex-wrap gap-2">
@@ -554,8 +549,8 @@ export default function PediatricPage() {
                       onClick={() => toggleConcern(opt.id)}
                       className={`min-h-[44px] px-4 py-2 rounded-full border text-sm font-medium transition-all duration-150 ${
                         isActive
-                          ? "bg-rose-500 border-rose-500 text-white shadow-sm shadow-rose-500/20"
-                          : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-rose-300 dark:hover:border-rose-700 hover:text-ink"
+                          ? "bg-brand-blue border-brand-blue text-white"
+                          : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-ink"
                       }`}
                     >
                       {t(opt.labelKey)}
@@ -568,13 +563,13 @@ export default function PediatricPage() {
                 onChange={(e) => setConcernDescription(e.target.value)}
                 rows={2}
                 placeholder={t("concernDescriptionPlaceholder")}
-                className="mt-3 w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-rose-400/40 focus:border-rose-400 transition"
+                className="mt-3 w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
               />
             </div>
 
             {/* Temperature (conditional — fever selected) */}
             {showTempField && (
-              <div className="rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/40 dark:bg-rose-950/20 p-4 sm:p-5">
+              <div className="rounded-2xl border border-surface-border bg-surface-raised p-4 sm:p-5">
                 <label className="block text-sm font-bold text-ink mb-2">
                   {t("tempLabel")}
                 </label>
@@ -596,7 +591,7 @@ export default function PediatricPage() {
                       value={tempValue}
                       onChange={(e) => setTempValue(e.target.value)}
                       placeholder={tempUnit === "F" ? "101.4" : "38.6"}
-                      className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white dark:bg-slate-800 text-ink text-base placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-rose-400/40 focus:border-rose-400 transition"
+                      className="w-full px-4 py-3 rounded-xl border border-surface-border bg-white dark:bg-slate-800 text-ink text-base placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
                     />
                   </div>
                 </div>
@@ -606,7 +601,7 @@ export default function PediatricPage() {
                 <select
                   value={tempMethod}
                   onChange={(e) => setTempMethod(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg border border-surface-border bg-white dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-rose-400/40 focus:border-rose-400 transition"
+                  className="w-full px-3 py-2.5 rounded-lg border border-surface-border bg-white dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
                 >
                   <option value="">{t("tempMethodSelect")}</option>
                   {TEMP_METHODS.map((m) => (
@@ -633,8 +628,8 @@ export default function PediatricPage() {
                       onClick={() => setDuration(isActive ? "" : opt.id)}
                       className={`min-h-[44px] px-4 py-2 rounded-full border text-sm font-medium transition-all duration-150 ${
                         isActive
-                          ? "bg-rose-500 border-rose-500 text-white shadow-sm shadow-rose-500/20"
-                          : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-rose-300 dark:hover:border-rose-700 hover:text-ink"
+                          ? "bg-brand-blue border-brand-blue text-white"
+                          : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-ink"
                       }`}
                     >
                       {t(opt.labelKey)}
@@ -654,7 +649,7 @@ export default function PediatricPage() {
                 onChange={(e) => setOtherContext(e.target.value)}
                 rows={3}
                 placeholder={t("otherContextPlaceholder")}
-                className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-rose-400/40 focus:border-rose-400 transition"
+                className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
               />
             </div>
 
@@ -663,7 +658,7 @@ export default function PediatricPage() {
               type="button"
               onClick={submit}
               disabled={!canSubmit}
-              className="w-full min-h-[52px] py-4 bg-rose-600 hover:bg-rose-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-md shadow-rose-500/20 hover:shadow-lg hover:shadow-rose-500/30 disabled:shadow-none flex items-center justify-center gap-2"
+              className="w-full min-h-[52px] py-4 bg-brand-blue hover:bg-brand-blue-hover disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold rounded-2xl text-base transition-all duration-200 flex items-center justify-center gap-2"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                 <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
@@ -740,7 +735,7 @@ export default function PediatricPage() {
                 <button
                   type="button"
                   onClick={reset}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-rose-300 dark:hover:border-rose-700 text-ink-secondary hover:text-ink text-sm font-semibold transition-all duration-150"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-brand-blue/50 text-ink-secondary hover:text-ink text-sm font-semibold transition-all duration-150"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                     <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z" clipRule="evenodd" />
@@ -828,10 +823,10 @@ function WhatToDoSection({ items }: { items: string[] }) {
   const t = useTranslations("Pediatric");
   if (items.length === 0) return null;
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-teal-200 dark:border-teal-800/60 shadow-sm overflow-hidden">
-      <div className="px-5 py-3.5 border-b border-teal-100 dark:border-teal-900/40 bg-teal-50/60 dark:bg-teal-950/20 flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-teal-600 dark:text-teal-400">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
           </svg>
         </div>
@@ -840,8 +835,8 @@ function WhatToDoSection({ items }: { items: string[] }) {
       <ul className="px-5 py-4 space-y-3">
         {items.map((item, i) => (
           <li key={i} className="flex items-start gap-3 text-sm text-ink-secondary leading-relaxed">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mt-0.5">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-teal-600 dark:text-teal-400">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-blue/10 flex items-center justify-center mt-0.5">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-brand-blue">
                 <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
               </svg>
             </span>
@@ -858,7 +853,7 @@ function WarningSignsSection({ items }: { items: string[] }) {
   if (items.length === 0) return null;
   return (
     <div className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-red-300 dark:border-red-800/60 shadow-lg shadow-red-500/5 overflow-hidden">
-      <div className="px-5 py-4 bg-gradient-to-r from-red-50/80 via-red-50/40 to-transparent dark:from-red-950/30 dark:via-red-950/15 border-b border-red-200/60 dark:border-red-800/50 flex items-center gap-2.5">
+      <div className="px-5 py-4 bg-red-50/60 dark:bg-red-950/20 border-b border-red-200/60 dark:border-red-800/50 flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center flex-shrink-0">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-600 dark:text-red-400">
             <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />

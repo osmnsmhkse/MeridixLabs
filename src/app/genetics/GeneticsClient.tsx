@@ -156,7 +156,7 @@ const FAQ_ENTRIES: { q: string; a: string }[] = [
   },
 ];
 
-// ── Tier toggle (fuchsia accent) ────────────────────────────────────────────
+// ── Tier toggle ─────────────────────────────────────────────────────────────
 
 function TierTabs({ active, onChange }: { active: Tier; onChange: (t: Tier) => void }) {
   const tiers: { id: Tier; label: string; sub: string }[] = [
@@ -174,7 +174,7 @@ function TierTabs({ active, onChange }: { active: Tier; onChange: (t: Tier) => v
             onClick={() => onChange(t.id)}
             className={`flex-1 px-3 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-150 ${
               isActive
-                ? "text-fuchsia-700 dark:text-fuchsia-300 border-b-2 border-fuchsia-500 bg-fuchsia-500/5"
+                ? "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5"
                 : "text-ink-tertiary hover:text-ink-secondary border-b-2 border-transparent"
             }`}
           >
@@ -280,7 +280,7 @@ function CounselorCard({ rec }: { rec: GeneticsResult["counselor_recommendation"
                 href="https://findageneticcounselor.nsgc.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-fuchsia-700 dark:text-fuchsia-400 hover:underline"
+                className="font-semibold text-brand-blue hover:underline"
               >
                 findageneticcounselor.nsgc.org
               </a>
@@ -305,8 +305,8 @@ function QuestionsSection({ questions }: { questions: string[] }) {
   return (
     <section className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
       <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
-        <div className="w-6 h-6 rounded-lg bg-fuchsia-100 dark:bg-fuchsia-900/30 flex items-center justify-center flex-shrink-0">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-fuchsia-600 dark:text-fuchsia-400">
+        <div className="w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
             <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
           </svg>
         </div>
@@ -316,7 +316,7 @@ function QuestionsSection({ questions }: { questions: string[] }) {
         <ol className="space-y-3">
           {questions.map((q, i) => (
             <li key={i} className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/40 text-fuchsia-700 dark:text-fuchsia-300 text-xs font-bold flex items-center justify-center mt-0.5">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-bold flex items-center justify-center mt-0.5">
                 {i + 1}
               </span>
               <p className="text-sm text-ink-secondary leading-relaxed flex-1">{q}</p>
@@ -328,7 +328,7 @@ function QuestionsSection({ questions }: { questions: string[] }) {
           className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
             copied
               ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-              : "border-surface-border bg-surface-raised hover:border-fuchsia-300 hover:bg-fuchsia-50 dark:hover:bg-fuchsia-900/10 text-ink-secondary hover:text-fuchsia-700"
+              : "border-surface-border bg-surface-raised hover:border-brand-blue/50 text-ink-secondary hover:text-brand-blue"
           }`}
         >
           {copied ? "Copied all questions ✓" : "Copy all questions"}
@@ -373,7 +373,7 @@ function StatusBanner({ result }: { result: GeneticsResult }) {
 function LoadingAnimation() {
   return (
     <div className="py-12 flex flex-col items-center gap-5">
-      <div className="w-12 h-12 rounded-full border-2 border-fuchsia-200 dark:border-fuchsia-900 border-t-fuchsia-500 animate-spin" />
+      <div className="w-12 h-12 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin" />
       <p className="text-sm text-ink-secondary font-medium">Analyzing your genetic data…</p>
       <p className="text-xs text-ink-tertiary text-center max-w-xs">
         Your original file is analyzed in memory and discarded once the response is built. Only the AI interpretation is saved to your account.
@@ -521,14 +521,14 @@ export default function GeneticsClient() {
   const showInput = stage === "idle" || stage === "error";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-fuchsia-50/60 to-white dark:from-[#0B1424] dark:to-[#070B16] pt-24 pb-20">
+    <div className="min-h-screen bg-surface pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Hero ──────────────────────────────────────────────────── */}
         <div className="text-center mb-8">
-          <span className="chip text-fuchsia-700 dark:text-fuchsia-300 mb-5">
+          <span className="chip text-ink-secondary mb-5">
             <span className="kicker-mono">Got DNA results?</span>
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold text-fuchsia-600 dark:text-fuchsia-400 tracking-tightest leading-[1.03]">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tightest leading-[1.03]">
             <WordReveal text="Genetic Test Explainer" base={0.05} />
           </h1>
           <p className="mt-3 text-base text-ink-secondary max-w-xl mx-auto leading-relaxed">
@@ -541,7 +541,7 @@ export default function GeneticsClient() {
               "Original file discarded after analysis",
             ].map((t) => (
               <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border text-xs text-ink-secondary font-medium shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" />
                 {t}
               </span>
             ))}
@@ -565,7 +565,7 @@ export default function GeneticsClient() {
                     onClick={() => { setMode(t.id); setErrorCode(null); }}
                     className={`flex-1 px-3 sm:px-4 py-3.5 text-sm font-semibold transition-all duration-150 ${
                       isActive
-                        ? "text-fuchsia-700 dark:text-fuchsia-300 border-b-2 border-fuchsia-500 bg-fuchsia-500/5"
+                        ? "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5"
                         : "text-ink-tertiary hover:text-ink-secondary border-b-2 border-transparent hover:bg-surface-raised"
                     }`}
                   >
@@ -589,7 +589,7 @@ export default function GeneticsClient() {
                     onChange={(e) => setText(e.target.value)}
                     rows={5}
                     placeholder="e.g. MTHFR C677T heterozygous, or rs1801133 (C;T), or BRCA1 c.5266dupC pathogenic"
-                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-900 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-fuchsia-400 transition"
+                    className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-900 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                   />
                 </div>
               )}
@@ -611,9 +611,9 @@ export default function GeneticsClient() {
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) handleReportFile(f); }}
                   />
                   {file ? (
-                    <div className="flex items-center gap-3 p-4 rounded-xl border border-fuchsia-200 dark:border-fuchsia-800 bg-fuchsia-50/60 dark:bg-fuchsia-900/15">
-                      <div className="w-10 h-10 rounded-lg bg-fuchsia-100 dark:bg-fuchsia-900/40 flex items-center justify-center flex-shrink-0">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400">
+                    <div className="flex items-center gap-3 p-4 rounded-xl border border-surface-border bg-surface-raised">
+                      <div className="w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-brand-blue">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
                       </div>
@@ -630,7 +630,7 @@ export default function GeneticsClient() {
                   ) : (
                     <button
                       onClick={() => reportInputRef.current?.click()}
-                      className="w-full py-8 px-6 rounded-xl border-2 border-dashed border-surface-border hover:border-fuchsia-400/50 hover:bg-fuchsia-50/30 dark:hover:bg-fuchsia-900/10 transition-colors flex flex-col items-center gap-2"
+                      className="w-full py-8 px-6 rounded-xl border-2 border-dashed border-surface-border hover:border-brand-blue/50 transition-colors flex flex-col items-center gap-2"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8 text-ink-tertiary">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -659,9 +659,9 @@ export default function GeneticsClient() {
                     onChange={(e) => { const f = e.target.files?.[0]; if (f) handleRawFile(f); }}
                   />
                   {file ? (
-                    <div className="flex items-center gap-3 p-4 rounded-xl border border-fuchsia-200 dark:border-fuchsia-800 bg-fuchsia-50/60 dark:bg-fuchsia-900/15">
-                      <div className="w-10 h-10 rounded-lg bg-fuchsia-100 dark:bg-fuchsia-900/40 flex items-center justify-center flex-shrink-0">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400">
+                    <div className="flex items-center gap-3 p-4 rounded-xl border border-surface-border bg-surface-raised">
+                      <div className="w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-brand-blue">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
                       </div>
@@ -678,7 +678,7 @@ export default function GeneticsClient() {
                   ) : (
                     <button
                       onClick={() => rawInputRef.current?.click()}
-                      className="w-full py-8 px-6 rounded-xl border-2 border-dashed border-surface-border hover:border-fuchsia-400/50 hover:bg-fuchsia-50/30 dark:hover:bg-fuchsia-900/10 transition-colors flex flex-col items-center gap-2"
+                      className="w-full py-8 px-6 rounded-xl border-2 border-dashed border-surface-border hover:border-brand-blue/50 transition-colors flex flex-col items-center gap-2"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-8 h-8 text-ink-tertiary">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -707,7 +707,7 @@ export default function GeneticsClient() {
                     onChange={(e) => setContext(e.target.value)}
                     rows={2}
                     placeholder="e.g. My mother had breast cancer, or I'm trying to understand my caffeine sensitivity"
-                    className="mt-2 w-full px-4 py-2.5 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-900 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-fuchsia-400 transition"
+                    className="mt-2 w-full px-4 py-2.5 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-900 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                   />
                 )}
               </div>
@@ -729,7 +729,7 @@ export default function GeneticsClient() {
               {stage !== "error" && (
                 <button
                   onClick={submit}
-                  className="w-full py-3.5 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-fuchsia-600/20 hover:shadow-fuchsia-600/40 hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  className="w-full py-3.5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-base transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                   disabled={(mode === "paste" && !text.trim()) || (mode !== "paste" && !file)}
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -830,8 +830,8 @@ export default function GeneticsClient() {
             {result.common_misconceptions && (
               <section className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
                 <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-lg bg-fuchsia-100 dark:bg-fuchsia-900/30 flex items-center justify-center flex-shrink-0">
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-fuchsia-600 dark:text-fuchsia-400">
+                  <div className="w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -866,7 +866,7 @@ export default function GeneticsClient() {
             {/* New analysis */}
             <button
               onClick={reset}
-              className="w-full py-3 rounded-xl border border-surface-border bg-white dark:bg-slate-800 text-ink-secondary hover:text-fuchsia-700 hover:border-fuchsia-300 text-sm font-semibold transition-colors"
+              className="w-full py-3 rounded-xl border border-surface-border bg-white dark:bg-slate-800 text-ink-secondary hover:text-brand-blue hover:border-brand-blue/50 text-sm font-semibold transition-colors"
             >
               Explain another variant or report
             </button>
@@ -888,7 +888,7 @@ export default function GeneticsClient() {
         {/* ── Static FAQ section (SEO) ──────────────────────────────── */}
         <section className="mt-16">
           <div className="text-center mb-8">
-            <span className="chip text-fuchsia-700 dark:text-fuchsia-400 mb-3">
+            <span className="chip text-ink-secondary mb-3">
               FAQ
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">

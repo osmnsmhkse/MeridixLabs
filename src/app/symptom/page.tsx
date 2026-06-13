@@ -356,17 +356,12 @@ export default function SymptomPage() {
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
       {/* Hero */}
-      <section className="relative isolate overflow-hidden grain pt-12 pb-8 text-center">
-        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
-          <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "20%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(139,92,246,0.4), transparent 62%)" }} />
-          <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "18%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(74,133,239,0.3), transparent 64%)", animationDelay: "-7s" }} />
-        </div>
-        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+      <section className="relative isolate overflow-hidden pt-12 pb-8 text-center">
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="chip text-emerald-700 dark:text-emerald-300 mb-6">
+          <div className="chip text-ink-secondary mb-6">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-emerald-600 dark:text-emerald-400 tracking-tightest leading-[1.03] mb-4">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-4">
             <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
@@ -390,7 +385,7 @@ export default function SymptomPage() {
             }}
             rows={3}
             placeholder={t("placeholder")}
-            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
           />
 
           {/* Photo upload (optional) */}
@@ -434,8 +429,8 @@ export default function SymptomPage() {
                 }}
                 className={`cursor-pointer rounded-xl border-2 border-dashed px-4 py-5 text-center transition-colors ${
                   isDragging
-                    ? "border-violet-500 bg-violet-50 dark:bg-violet-950/30"
-                    : "border-surface-border bg-slate-50/60 dark:bg-slate-800/40 hover:border-violet-300 dark:hover:border-violet-700 hover:bg-violet-50/40 dark:hover:bg-violet-950/20"
+                    ? "border-brand-blue bg-brand-blue/5"
+                    : "border-surface-border bg-slate-50/60 dark:bg-slate-800/40 hover:border-brand-blue/50"
                 }`}
               >
                 <div className="flex flex-col items-center gap-1.5">
@@ -465,7 +460,7 @@ export default function SymptomPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline"
+                    className="text-xs font-medium text-brand-blue hover:underline"
                   >
                     {t("photoReplace")}
                   </button>
@@ -509,7 +504,7 @@ export default function SymptomPage() {
                 <select
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                 >
                   <option value="">{t("preferNot")}</option>
                   <option value="Under 18">{t("under18")}</option>
@@ -524,7 +519,7 @@ export default function SymptomPage() {
                 <select
                   value={sex}
                   onChange={(e) => setSex(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                 >
                   <option value="">{t("preferNot")}</option>
                   <option value="Male">{t("male")}</option>
@@ -536,7 +531,7 @@ export default function SymptomPage() {
                 <select
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                 >
                   <option value="">{t("notSure")}</option>
                   <option value="Less than 24 hours">{t("lessThan24")}</option>
@@ -555,7 +550,7 @@ export default function SymptomPage() {
                   onChange={(e) => setHistory(e.target.value)}
                   rows={2}
                   placeholder={t("historyPlaceholder")}
-                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+                  className="w-full px-3 py-2 rounded-lg border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                 />
               </div>
             </div>
@@ -565,7 +560,7 @@ export default function SymptomPage() {
           <button
             onClick={() => submit()}
             disabled={(!symptom.trim() && !image) || stage === "loading"}
-            className="mt-5 w-full flex items-center justify-center gap-2 px-6 py-3 bg-violet-600 hover:bg-violet-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-semibold rounded-xl text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-violet-500/20"
+            className="mt-5 w-full flex items-center justify-center gap-2 px-6 py-3 bg-brand-blue hover:bg-brand-blue-hover disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-semibold rounded-xl text-sm transition-all duration-200"
           >
             {stage === "loading" ? (
               <>
@@ -600,7 +595,7 @@ export default function SymptomPage() {
                 <button
                   key={ex}
                   onClick={() => { setSymptom(ex); submit(ex); }}
-                  className="px-3 py-1.5 rounded-full border border-surface-border bg-white dark:bg-slate-900 text-ink-secondary hover:text-ink hover:border-violet-300 dark:hover:border-violet-700 text-xs transition-colors"
+                  className="px-3 py-1.5 rounded-full border border-surface-border bg-white dark:bg-slate-900 text-ink-secondary hover:text-ink hover:border-brand-blue/50 text-xs transition-colors"
                 >
                   {ex}
                 </button>
@@ -681,7 +676,7 @@ export default function SymptomPage() {
               {t("resultsFor")} <span className="font-semibold text-ink">{queriedSymptom}</span>
             </p>
             {resultHadImage && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-[11px] font-semibold">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-brand-blue/10 text-brand-blue text-[11px] font-semibold">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
                   <path fillRule="evenodd" d="M1 8a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 018.07 3h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0016.07 6H17a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8zm13.5 3a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-1.5 0a3 3 0 11-6 0 3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
@@ -700,8 +695,8 @@ export default function SymptomPage() {
               <div className="divide-y divide-surface-border">
                 {result.mostLikely.map((cause, i) => (
                   <div key={i} className="px-5 py-4 flex gap-4">
-                    <div className="flex-shrink-0 w-9 h-9 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-                      <span className="text-base font-black text-violet-600 dark:text-violet-400">{i + 1}</span>
+                    <div className="flex-shrink-0 w-9 h-9 rounded-full bg-brand-blue/10 flex items-center justify-center">
+                      <span className="text-base font-black text-brand-blue">{i + 1}</span>
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1.5">
@@ -789,11 +784,11 @@ export default function SymptomPage() {
 
           {/* HOME_CARE */}
           {result.homeCare.length > 0 && (
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-teal-200 dark:border-teal-800 shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-teal-100 dark:border-teal-800/60 bg-teal-50/50 dark:bg-teal-950/20">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-surface-border bg-surface-raised">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0">
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4.5 h-4.5 text-teal-600 dark:text-teal-400">
+                  <div className="w-8 h-8 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-4.5 h-4.5 text-brand-blue">
                       <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                     </svg>
                   </div>
@@ -807,8 +802,8 @@ export default function SymptomPage() {
                 <ul className="space-y-3">
                   {result.homeCare.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-ink-secondary leading-relaxed">
-                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mt-0.5">
-                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-teal-600 dark:text-teal-400">
+                      <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-blue/10 flex items-center justify-center mt-0.5">
+                        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-brand-blue">
                           <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                         </svg>
                       </span>

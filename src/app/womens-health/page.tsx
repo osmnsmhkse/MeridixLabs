@@ -143,9 +143,9 @@ function parseModeC(raw: string): ModeCResult {
 function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => void }) {
   const t = useTranslations("WomensHealth");
   const OPTIONS: { key: Tier; labelKey: "tierSimple" | "tierMedium" | "tierExpert"; activeClass: string }[] = [
-    { key: "simple", labelKey: "tierSimple", activeClass: "text-emerald-700 dark:text-emerald-400 border-emerald-400 bg-emerald-500/5" },
-    { key: "medium", labelKey: "tierMedium", activeClass: "text-violet-700 dark:text-violet-300 border-violet-400 bg-violet-500/5" },
-    { key: "expert", labelKey: "tierExpert", activeClass: "text-purple-700 dark:text-purple-400 border-purple-400 bg-purple-500/5" },
+    { key: "simple", labelKey: "tierSimple", activeClass: "text-brand-blue border-brand-blue bg-brand-blue/5" },
+    { key: "medium", labelKey: "tierMedium", activeClass: "text-brand-blue border-brand-blue bg-brand-blue/5" },
+    { key: "expert", labelKey: "tierExpert", activeClass: "text-brand-blue border-brand-blue bg-brand-blue/5" },
   ];
   return (
     <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden">
@@ -173,7 +173,7 @@ function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => voi
   );
 }
 
-// ── Mode picker (the rose+violet hero) ──────────────────────────────────────
+// ── Mode picker ─────────────────────────────────────────────────────────────
 
 function ModePickerCard({
   mode,
@@ -196,7 +196,7 @@ function ModePickerCard({
     <button
       type="button"
       onClick={() => onPick(mode)}
-      className="group text-left flex flex-col gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-surface-border hover:border-violet-400/50 hover:shadow-lg hover:shadow-violet-500/10 hover:-translate-y-0.5 transition-all duration-300"
+      className="group text-left flex flex-col gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-surface-border hover:border-ink/25 hover:-translate-y-0.5 transition-all duration-300"
     >
       <div className={`w-12 h-12 rounded-2xl ${iconBg} ${iconColor} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
         {icon}
@@ -205,9 +205,9 @@ function ModePickerCard({
         <h3 className="text-base font-extrabold text-ink leading-snug mb-2">{title}</h3>
         <p className="text-sm text-ink-secondary leading-relaxed">{desc}</p>
       </div>
-      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-violet-600 dark:text-violet-300 group-hover:gap-2.5 transition-all">
+      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue group-hover:gap-2.5 transition-all">
         <span>Choose this</span>
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-500 group-hover:translate-x-0.5 transition-transform">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform">
           <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
         </svg>
       </span>
@@ -230,8 +230,8 @@ function ModePicker({ onPick }: { onPick: (m: Mode) => void }) {
           mode="a"
           title={t("modeATitle")}
           desc={t("modeADesc")}
-          iconBg="bg-rose-100 dark:bg-rose-900/30"
-          iconColor="text-rose-600 dark:text-rose-300"
+          iconBg="bg-brand-blue/10"
+          iconColor="text-brand-blue"
           icon={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 2.25h6m-3 0v2.25M8.25 4.5h7.5l-1.5 3.75v9.75A2.25 2.25 0 0112 20.25a2.25 2.25 0 01-2.25-2.25V8.25l-1.5-3.75zM7 13.5h10" />
@@ -243,8 +243,8 @@ function ModePicker({ onPick }: { onPick: (m: Mode) => void }) {
           mode="b"
           title={t("modeBTitle")}
           desc={t("modeBDesc")}
-          iconBg="bg-violet-100 dark:bg-violet-900/30"
-          iconColor="text-violet-600 dark:text-violet-300"
+          iconBg="bg-brand-blue/10"
+          iconColor="text-brand-blue"
           icon={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0-12v3l2 1.5" />
@@ -257,8 +257,8 @@ function ModePicker({ onPick }: { onPick: (m: Mode) => void }) {
           mode="c"
           title={t("modeCTitle")}
           desc={t("modeCDesc")}
-          iconBg="bg-gradient-to-br from-rose-100 to-violet-100 dark:from-rose-900/30 dark:to-violet-900/30"
-          iconColor="text-rose-700 dark:text-rose-300"
+          iconBg="bg-brand-blue/10"
+          iconColor="text-brand-blue"
           icon={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 3.75a4.5 4.5 0 00-4.5 4.5v3a4.5 4.5 0 003.75 4.434V19.5a.75.75 0 001.5 0v-3.816A4.501 4.501 0 0016.5 11.25v-3a4.5 4.5 0 00-4.5-4.5z" />
@@ -287,12 +287,12 @@ function ChipMulti<TId extends string>({
 }) {
   const activeClass =
     accent === "rose"
-      ? "bg-rose-500 border-rose-500 text-white shadow-sm shadow-rose-500/20"
-      : "bg-violet-500 border-violet-500 text-white shadow-sm shadow-violet-500/20";
+      ? "bg-brand-blue border-brand-blue text-white"
+      : "bg-brand-blue border-brand-blue text-white";
   const hoverClass =
     accent === "rose"
-      ? "hover:border-rose-300 dark:hover:border-rose-700"
-      : "hover:border-violet-300 dark:hover:border-violet-700";
+      ? "hover:border-brand-blue/50"
+      : "hover:border-brand-blue/50";
   return (
     <div className="flex flex-wrap gap-2">
       {options.map((opt) => {
@@ -329,12 +329,12 @@ function ChipSingle<TId extends string>({
 }) {
   const activeClass =
     accent === "rose"
-      ? "bg-rose-500 border-rose-500 text-white shadow-sm shadow-rose-500/20"
-      : "bg-violet-500 border-violet-500 text-white shadow-sm shadow-violet-500/20";
+      ? "bg-brand-blue border-brand-blue text-white"
+      : "bg-brand-blue border-brand-blue text-white";
   const hoverClass =
     accent === "rose"
-      ? "hover:border-rose-300 dark:hover:border-rose-700"
-      : "hover:border-violet-300 dark:hover:border-violet-700";
+      ? "hover:border-brand-blue/50"
+      : "hover:border-brand-blue/50";
   return (
     <div className="flex flex-wrap gap-2">
       {options.map((opt) => {
@@ -393,9 +393,9 @@ function FileUploader({
 
   if (file) {
     return (
-      <div className="rounded-xl border border-violet-400/40 bg-violet-50/60 dark:bg-violet-950/20 px-4 py-3 flex items-center gap-3">
+      <div className="rounded-xl border border-surface-border bg-surface-raised px-4 py-3 flex items-center gap-3">
         <div className="w-9 h-9 rounded-lg bg-white dark:bg-slate-900 border border-surface-border flex items-center justify-center flex-shrink-0">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-600">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
             <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
           </svg>
         </div>
@@ -432,8 +432,8 @@ function FileUploader({
       }}
       className={`flex items-center justify-center gap-3 px-4 py-5 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
         dragging
-          ? "border-violet-500 bg-violet-50 dark:bg-violet-950/30"
-          : "border-surface-border hover:border-violet-400/40 hover:bg-violet-50/30 dark:hover:bg-violet-950/10"
+          ? "border-brand-blue bg-brand-blue/5"
+          : "border-surface-border hover:border-brand-blue/40"
       }`}
     >
       <input
@@ -466,9 +466,9 @@ function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       <div className="relative mb-6">
-        <div className="w-16 h-16 rounded-full border-2 border-violet-500/20 animate-ping absolute inset-0" style={{ animationDuration: "2s" }} />
-        <div className="w-16 h-16 rounded-full border-2 border-violet-500/30 flex items-center justify-center relative bg-gradient-to-br from-rose-100 to-violet-100 dark:from-rose-900/20 dark:to-violet-900/20">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7 text-violet-600 dark:text-violet-300">
+        <div className="w-16 h-16 rounded-full border-2 border-brand-blue/20 animate-ping absolute inset-0" style={{ animationDuration: "2s" }} />
+        <div className="w-16 h-16 rounded-full border-2 border-brand-blue/30 flex items-center justify-center relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-7 h-7 text-brand-blue">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
           </svg>
         </div>
@@ -509,7 +509,7 @@ function SectionShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden border-l-4 ${accent}`}>
+    <div className={`bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden ${accent}`}>
       <div className="px-5 py-3.5 border-b border-surface-border flex items-start gap-2.5">
         <span className="flex-shrink-0 mt-0.5">{icon}</span>
         <div className="min-w-0">
@@ -527,16 +527,16 @@ function OftenMissedSection({ text }: { text: string }) {
   const t = useTranslations("WomensHealth");
   if (!text) return null;
   return (
-    <div className="rounded-2xl border-2 border-violet-300 dark:border-violet-700/60 bg-gradient-to-br from-rose-50/40 via-violet-50/40 to-white dark:from-rose-950/20 dark:via-violet-950/20 dark:to-slate-900 shadow-lg shadow-violet-500/5 overflow-hidden">
-      <div className="px-5 py-4 border-b border-violet-200/60 dark:border-violet-800/40 bg-gradient-to-r from-rose-500/8 via-violet-500/8 to-transparent">
+    <div className="rounded-2xl border border-surface-border bg-surface-raised overflow-hidden">
+      <div className="px-5 py-4 border-b border-surface-border">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-md shadow-violet-500/20">
+          <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className="w-4 h-4 text-white">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
             </svg>
           </div>
           <div className="min-w-0">
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase text-violet-700 dark:text-violet-300 px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/40">
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase text-ink-secondary">
               {t("sectionOftenMissed")}
             </span>
             <p className="text-[11px] text-ink-tertiary mt-1.5 leading-snug">{t("sectionOftenMissedDesc")}</p>
@@ -569,8 +569,8 @@ function BulletSection({
       <ul className="space-y-3">
         {items.map((item, i) => (
           <li key={i} className="flex items-start gap-3 text-sm text-ink-secondary leading-relaxed">
-            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mt-0.5">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-violet-600 dark:text-violet-400">
+            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-blue/10 flex items-center justify-center mt-0.5">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-brand-blue">
                 <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
               </svg>
             </span>
@@ -586,7 +586,7 @@ function RedFlagSection({ items, title, desc }: { items: string[]; title: string
   if (items.length === 0) return null;
   return (
     <div className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-red-300 dark:border-red-800/60 shadow-lg shadow-red-500/5 overflow-hidden">
-      <div className="px-5 py-4 bg-gradient-to-r from-red-50/80 via-red-50/40 to-transparent dark:from-red-950/30 dark:via-red-950/15 border-b border-red-200/60 dark:border-red-800/50 flex items-center gap-2.5">
+      <div className="px-5 py-4 bg-red-50/60 dark:bg-red-950/20 border-b border-red-200/60 dark:border-red-800/50 flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center flex-shrink-0">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-red-600 dark:text-red-400">
             <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
@@ -670,9 +670,9 @@ function ValuesSection({ values }: { values: LabValue[] }) {
     <SectionShell
       title={t("sectionValues")}
       desc={t("sectionValuesDesc")}
-      accent="border-l-rose-400"
+      accent=""
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-rose-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
           <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clipRule="evenodd" />
         </svg>
@@ -727,9 +727,9 @@ function CopyableQuestionsSection({ items, title, desc }: { items: string[]; tit
     <SectionShell
       title={title}
       desc={desc}
-      accent="border-l-violet-400"
+      accent=""
       icon={
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
         </svg>
       }
@@ -737,7 +737,7 @@ function CopyableQuestionsSection({ items, title, desc }: { items: string[]; tit
       <ol className="space-y-3 mb-4">
         {items.map((q, i) => (
           <li key={i} className="flex items-start gap-3 text-sm text-ink-secondary leading-relaxed">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-xs font-bold text-violet-700 dark:text-violet-300 mt-0.5">
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue/10 flex items-center justify-center text-xs font-bold text-brand-blue mt-0.5">
               {i + 1}
             </span>
             <span className="font-medium text-ink">{q}</span>
@@ -746,7 +746,7 @@ function CopyableQuestionsSection({ items, title, desc }: { items: string[]; tit
       </ol>
       <button
         onClick={copy}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-xs font-semibold text-ink-secondary hover:text-ink hover:border-violet-400/40 hover:bg-violet-50/50 dark:hover:bg-violet-950/20 transition-all"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-xs font-semibold text-ink-secondary hover:text-ink hover:border-ink/25 transition-all"
       >
         {copied ? (
           <>
@@ -1158,19 +1158,14 @@ export default function WomensHealthPage() {
   const hasResult = stage === "result";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50/30 via-violet-50/20 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 pt-20 pb-24">
+    <div className="min-h-screen bg-surface pt-20 pb-24">
       {/* Hero */}
-      <section className="relative isolate overflow-hidden grain pt-10 pb-6 text-center">
-        <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
-          <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "20%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(244,63,94,0.3), transparent 62%)" }} />
-          <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "18%", width: "28vw", height: "28vw", background: "radial-gradient(circle at 60% 50%, rgba(139,92,246,0.3), transparent 64%)", animationDelay: "-7s" }} />
-        </div>
-        <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+      <section className="relative isolate overflow-hidden pt-10 pb-6 text-center">
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="chip text-violet-700 dark:text-violet-300 mb-5">
+          <div className="chip text-ink-secondary mb-5">
             <span className="kicker-mono">{t("badge")}</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-violet-600 dark:text-violet-400 tracking-tightest leading-[1.03] mb-3">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-3">
             <WordReveal text={t("title")} base={0.05} />
           </h1>
           <p className="text-base sm:text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
@@ -1195,7 +1190,7 @@ export default function WomensHealthPage() {
                   setErrorMsg("");
                   resetAllInputs();
                 }}
-                className="self-start inline-flex items-center gap-1.5 text-xs font-semibold text-violet-600 hover:text-violet-700 dark:text-violet-300 dark:hover:text-violet-200 transition-colors"
+                className="self-start inline-flex items-center gap-1.5 text-xs font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
                   <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -1335,7 +1330,7 @@ export default function WomensHealthPage() {
                 <button
                   type="button"
                   onClick={reset}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 text-ink-secondary hover:text-ink text-sm font-semibold transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-brand-blue/50 text-ink-secondary hover:text-ink text-sm font-semibold transition-all"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                     <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z" clipRule="evenodd" />
@@ -1349,7 +1344,7 @@ export default function WomensHealthPage() {
                     setStage("idle");
                     resetAllInputs();
                   }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-violet-300 dark:hover:border-violet-700 text-ink-secondary hover:text-ink text-sm font-semibold transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-surface-border hover:border-brand-blue/50 text-ink-secondary hover:text-ink text-sm font-semibold transition-all"
                 >
                   {t("switchMode")}
                 </button>
@@ -1428,7 +1423,7 @@ function ModeAForm({
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-bold text-ink mb-2">
-          {t("ageLabel")} <span className="text-rose-500">*</span>
+          {t("ageLabel")} <span className="text-red-500">*</span>
         </label>
         <input
           type="number"
@@ -1438,13 +1433,13 @@ function ModeAForm({
           value={age}
           onChange={(e) => setAge(e.target.value)}
           placeholder={t("agePlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
       <div>
         <label className="block text-sm font-bold text-ink mb-2">
-          {t("cycleDayLabel")} <span className="text-rose-500">*</span>
+          {t("cycleDayLabel")} <span className="text-red-500">*</span>
         </label>
         <p className="text-xs text-ink-tertiary mb-3">{t("cycleDayHint")}</p>
         <div className="space-y-2">
@@ -1454,8 +1449,8 @@ function ModeAForm({
               onClick={() => setCycleDayMeta(cycleDayMeta === "value" ? "" : "value")}
               className={`min-h-[40px] px-4 py-2 rounded-full border text-sm font-medium transition-all duration-150 ${
                 cycleDayMeta === "value"
-                  ? "bg-violet-500 border-violet-500 text-white shadow-sm shadow-violet-500/20"
-                  : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-violet-300 dark:hover:border-violet-700 hover:text-ink"
+                  ? "bg-brand-blue border-brand-blue text-white"
+                  : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-ink"
               }`}
             >
               Day:
@@ -1471,7 +1466,7 @@ function ModeAForm({
                 setCycleDayMeta("value");
               }}
               placeholder={t("cycleDayPlaceholder")}
-              className="flex-1 min-w-[150px] px-4 py-2 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+              className="flex-1 min-w-[150px] px-4 py-2 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
             />
           </div>
           <ChipSingle<CycleDayMeta>
@@ -1514,7 +1509,7 @@ function ModeAForm({
           onChange={(e) => setPasted(e.target.value)}
           rows={4}
           placeholder={t("pastePlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1528,7 +1523,7 @@ function ModeAForm({
           onChange={(e) => setContext(e.target.value)}
           rows={3}
           placeholder={t("contextPlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1573,7 +1568,7 @@ function ModeBForm({
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-bold text-ink mb-2">
-          {t("ageLabel")} <span className="text-rose-500">*</span>
+          {t("ageLabel")} <span className="text-red-500">*</span>
         </label>
         <input
           type="number"
@@ -1583,7 +1578,7 @@ function ModeBForm({
           value={age}
           onChange={(e) => setAge(e.target.value)}
           placeholder={t("agePlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1611,7 +1606,7 @@ function ModeBForm({
 
       <div>
         <label className="block text-sm font-bold text-ink mb-2">
-          {t("symptomLabel")} <span className="text-rose-500">*</span>
+          {t("symptomLabel")} <span className="text-red-500">*</span>
         </label>
         <p className="text-xs text-ink-tertiary mb-3">{t("symptomHint")}</p>
         <textarea
@@ -1619,7 +1614,7 @@ function ModeBForm({
           onChange={(e) => setSymptom(e.target.value)}
           rows={5}
           placeholder={t("symptomPlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1633,7 +1628,7 @@ function ModeBForm({
           onChange={(e) => setCycleHistory(e.target.value)}
           rows={3}
           placeholder={t("cycleHistoryPlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1646,7 +1641,7 @@ function ModeBForm({
           onChange={(e) => setContext(e.target.value)}
           rows={3}
           placeholder={t("contextPlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1712,7 +1707,7 @@ function ModeCForm({
             value={weeks}
             onChange={(e) => setWeeks(e.target.value)}
             placeholder={t("weeksPlaceholder")}
-            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
           />
         </div>
         <div>
@@ -1721,7 +1716,7 @@ function ModeCForm({
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
           />
         </div>
       </div>
@@ -1742,11 +1737,11 @@ function ModeCForm({
                 onClick={() => setInputType(opt.id)}
                 className={`text-left p-4 rounded-xl border-2 transition-all ${
                   active
-                    ? "border-violet-500 bg-violet-50/60 dark:bg-violet-950/30"
-                    : "border-surface-border bg-white dark:bg-slate-800 hover:border-violet-300 dark:hover:border-violet-700"
+                    ? "border-brand-blue bg-brand-blue/5"
+                    : "border-surface-border bg-white dark:bg-slate-800 hover:border-brand-blue/50"
                 }`}
               >
-                <p className={`text-sm font-bold ${active ? "text-violet-700 dark:text-violet-300" : "text-ink"}`}>{opt.title}</p>
+                <p className={`text-sm font-bold ${active ? "text-brand-blue" : "text-ink"}`}>{opt.title}</p>
                 <p className="text-xs text-ink-tertiary mt-0.5 leading-relaxed">{opt.desc}</p>
               </button>
             );
@@ -1768,7 +1763,7 @@ function ModeCForm({
               onChange={(e) => setPasted(e.target.value)}
               rows={4}
               placeholder={t("pastePlaceholder")}
-              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
             />
           </div>
         </>
@@ -1777,21 +1772,21 @@ function ModeCForm({
       {inputType === "symptom" && (
         <div>
           <label className="block text-sm font-bold text-ink mb-2">
-            {t("pregnancySymptomLabel")} <span className="text-rose-500">*</span>
+            {t("pregnancySymptomLabel")} <span className="text-red-500">*</span>
           </label>
           <textarea
             value={symptom}
             onChange={(e) => setSymptom(e.target.value)}
             rows={5}
             placeholder={t("pregnancySymptomPlaceholder")}
-            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+            className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
           />
         </div>
       )}
 
       <div>
         <label className="block text-sm font-bold text-ink mb-2">
-          {t("firstPregnancyLabel")} <span className="text-rose-500">*</span>
+          {t("firstPregnancyLabel")} <span className="text-red-500">*</span>
         </label>
         <div className="flex gap-2">
           {(["yes", "no"] as const).map((v) => {
@@ -1803,8 +1798,8 @@ function ModeCForm({
                 onClick={() => setFirstPregnancy(isActive ? "" : v)}
                 className={`flex-1 min-h-[44px] px-4 py-2 rounded-xl border text-sm font-semibold transition-all ${
                   isActive
-                    ? "bg-violet-500 border-violet-500 text-white"
-                    : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-violet-300 dark:hover:border-violet-700 hover:text-ink"
+                    ? "bg-brand-blue border-brand-blue text-white"
+                    : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-ink"
                 }`}
               >
                 {v === "yes" ? t("firstPregnancyYes") : t("firstPregnancyNo")}
@@ -1824,7 +1819,7 @@ function ModeCForm({
           onChange={(e) => setContext(e.target.value)}
           rows={3}
           placeholder={t("pregnancyContextPlaceholder")}
-          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:border-violet-400 transition"
+          className="w-full px-4 py-3 rounded-xl border border-surface-border bg-surface-raised dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition"
         />
       </div>
 
@@ -1847,7 +1842,7 @@ function SubmitButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full min-h-[52px] py-4 bg-gradient-to-br from-rose-600 to-violet-600 hover:from-rose-700 hover:to-violet-700 disabled:from-slate-200 disabled:to-slate-200 dark:disabled:from-slate-800 dark:disabled:to-slate-800 disabled:text-slate-400 text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-md shadow-violet-500/20 hover:shadow-lg hover:shadow-violet-500/30 disabled:shadow-none flex items-center justify-center gap-2"
+      className="w-full min-h-[52px] py-4 bg-brand-blue hover:bg-brand-blue-hover disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold rounded-2xl text-base transition-all duration-200 flex items-center justify-center gap-2"
     >
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
         <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
@@ -1864,7 +1859,7 @@ function ModeAResultBlock({ result }: { result: ModeAResult }) {
   return (
     <>
       {result.summary_headline && (
-        <div className="rounded-2xl border border-violet-200 dark:border-violet-800/60 bg-gradient-to-r from-rose-50/60 to-violet-50/60 dark:from-rose-950/20 dark:to-violet-950/20 p-5">
+        <div className="rounded-2xl border border-surface-border bg-surface-raised p-5">
           <p className="text-base font-bold text-ink leading-snug">{result.summary_headline}</p>
         </div>
       )}
@@ -1881,9 +1876,9 @@ function ModeAResultBlock({ result }: { result: ModeAResult }) {
         <SectionShell
           title={t("sectionPattern")}
           desc={t("sectionPatternDesc")}
-          accent="border-l-violet-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
             </svg>
           }
@@ -1902,9 +1897,9 @@ function ModeAResultBlock({ result }: { result: ModeAResult }) {
       {result.next_steps && (
         <SectionShell
           title={t("sectionNextSteps")}
-          accent="border-l-emerald-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           }
@@ -1924,9 +1919,9 @@ function ModeBResultBlock({ result }: { result: ModeBResult }) {
         <SectionShell
           title={t("sectionLikely")}
           desc={t("sectionLikelyDesc")}
-          accent="border-l-violet-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.922-.755 1.688-1.54 1.118l-3.37-2.447a1 1 0 00-1.175 0l-3.37 2.447c-.784.57-1.838-.196-1.539-1.118L5.94 12.95a1 1 0 00-.364-1.118L2.205 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
             </svg>
           }
@@ -1939,9 +1934,9 @@ function ModeBResultBlock({ result }: { result: ModeBResult }) {
           title={t("sectionWorkup")}
           desc={t("sectionWorkupDesc")}
           items={result.workup}
-          accent="border-l-sky-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-sky-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
               <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clipRule="evenodd" />
             </svg>
@@ -1954,9 +1949,9 @@ function ModeBResultBlock({ result }: { result: ModeBResult }) {
           title={t("sectionDoNow")}
           desc={t("sectionDoNowDesc")}
           items={result.whatYouCanDo}
-          accent="border-l-emerald-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
             </svg>
           }
@@ -1980,9 +1975,9 @@ function ModeCResultBlock({ result }: { result: ModeCResult }) {
         <SectionShell
           title={t("sectionTestExplainer")}
           desc={t("sectionTestExplainerDesc")}
-          accent="border-l-violet-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
               <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clipRule="evenodd" />
             </svg>
@@ -1995,9 +1990,9 @@ function ModeCResultBlock({ result }: { result: ModeCResult }) {
         <SectionShell
           title={t("sectionSymptomContext")}
           desc={t("sectionSymptomContextDesc")}
-          accent="border-l-rose-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-rose-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
             </svg>
           }
@@ -2013,9 +2008,9 @@ function ModeCResultBlock({ result }: { result: ModeCResult }) {
           title={t("sectionPregnancyKnow")}
           desc={t("sectionPregnancyKnowDesc")}
           items={result.whatToKnow}
-          accent="border-l-emerald-400"
+          accent=""
           icon={
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-500">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
               <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
             </svg>
           }

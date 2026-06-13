@@ -280,7 +280,7 @@ export default async function BlogPostPage({
           <div className="mt-14 pt-10 border-t border-surface-border" />
 
           {/* End CTA card */}
-          <div className="rounded-2xl bg-gradient-to-br from-brand-blue to-blue-500 p-7 text-white">
+          <div className="rounded-2xl bg-brand-blue p-7 text-white">
             <p className="text-xs font-bold uppercase tracking-widest text-white/70 mb-2">Meridix Labs</p>
             <h3 className="text-xl font-extrabold mb-2 leading-snug">
               Want to understand your own lab results?

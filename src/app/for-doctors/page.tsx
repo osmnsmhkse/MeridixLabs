@@ -124,11 +124,7 @@ export default function ForDoctorsPage() {
     <div className="min-h-screen">
 
       {/* ─── HERO ──────────────────────────────────────────────────── */}
-      <section className="relative pt-36 pb-24 overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800">
-        {/* Background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-brand-blue/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-20 right-1/4 w-64 h-64 bg-violet-500/8 rounded-full blur-3xl pointer-events-none" />
-
+      <section className="relative pt-36 pb-24 overflow-hidden bg-navy">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <span className="chip text-brand-blue mb-8">
@@ -217,11 +213,11 @@ export default function ForDoctorsPage() {
       </section>
 
       {/* ─── BENEFITS ──────────────────────────────────────────────── */}
-      <section className="py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-900">
+      <section className="py-20 bg-duck">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold mb-5">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-brand-blue/10 text-brand-blue text-sm font-semibold mb-5">
                 {t("benefitsTitle")}
               </span>
               <h2 className="text-4xl font-extrabold text-ink tracking-tight mb-6">
@@ -233,7 +229,7 @@ export default function ForDoctorsPage() {
               <ul className="space-y-3">
                 {benefits.map((b) => (
                   <li key={b} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-brand-blue/10 text-brand-blue flex items-center justify-center">
                       <CheckIcon />
                     </span>
                     <span className="text-ink-secondary">{b}</span>
@@ -375,7 +371,7 @@ export default function ForDoctorsPage() {
       </section>
 
       {/* ─── WAITLIST FORM ─────────────────────────────────────────── */}
-      <section id="waitlist" className="py-24 bg-gradient-to-b from-slate-950 to-slate-900">
+      <section id="waitlist" className="py-24 bg-navy">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1.5 rounded-full bg-brand-blue/20 border border-brand-blue/30 text-brand-blue text-sm font-semibold mb-4">

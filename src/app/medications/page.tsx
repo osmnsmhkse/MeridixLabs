@@ -167,17 +167,12 @@ export default function MedicationsPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
       {/* ── Hero ────────────────────────────────────────────────────── */}
       {(showInput || stage === "loading") && (
-        <section className="relative isolate overflow-hidden grain pt-12 pb-8 text-center">
-          <div className="aurora-field" aria-hidden="true" data-parallax="0.16">
-            <div className="aurora-blob animate-aurora" style={{ top: "-30%", left: "22%", width: "30vw", height: "30vw", background: "radial-gradient(circle at 40% 40%, rgba(20,184,166,0.34), transparent 62%)" }} />
-            <div className="aurora-blob animate-aurora" style={{ top: "-15%", right: "20%", width: "26vw", height: "26vw", background: "radial-gradient(circle at 60% 50%, rgba(74,133,239,0.28), transparent 64%)", animationDelay: "-7s" }} />
-          </div>
-          <div className="absolute inset-0 dot-grid opacity-50 pointer-events-none" />
+        <section className="relative isolate overflow-hidden pt-12 pb-8 text-center">
           <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
-            <div className="chip text-teal-700 dark:text-teal-300 mb-6">
+            <div className="chip text-ink-secondary mb-6">
               <span className="kicker-mono">{t("badge")}</span>
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-teal-600 dark:text-teal-400 tracking-tightest leading-[1.03] mb-4">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.03] mb-4">
               <WordReveal text={t("title")} base={0.05} />
             </h1>
             <p className="text-lg text-ink-secondary leading-relaxed max-w-xl mx-auto text-pretty">
@@ -215,7 +210,7 @@ export default function MedicationsPage() {
               onChange={(e) => setText(e.target.value)}
               rows={5}
               placeholder={t("placeholderType")}
-              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+              className="w-full px-4 py-3 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
             />
 
             {/* "Or" divider */}
@@ -240,9 +235,9 @@ export default function MedicationsPage() {
               }}
             />
             {file ? (
-              <div className="flex items-center gap-3 p-4 rounded-xl border border-teal-200 dark:border-teal-800 bg-teal-50/60 dark:bg-teal-900/15">
-                <div className="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-teal-600 dark:text-teal-400">
+              <div className="flex items-center gap-3 p-4 rounded-xl border border-surface-border bg-surface-raised">
+                <div className="w-10 h-10 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-brand-blue">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
                 </div>
@@ -272,7 +267,7 @@ export default function MedicationsPage() {
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-dashed border-surface-border hover:border-teal-400 hover:bg-teal-50/40 dark:hover:bg-teal-900/10 transition text-sm text-ink-secondary"
+                className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-dashed border-surface-border hover:border-brand-blue/50 transition text-sm text-ink-secondary"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5 text-ink-tertiary">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -320,7 +315,7 @@ export default function MedicationsPage() {
                   onChange={(e) => setContext(e.target.value)}
                   rows={3}
                   placeholder={t("contextPlaceholder")}
-                  className="w-full px-3 py-2.5 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                  className="w-full px-3 py-2.5 rounded-xl border border-surface-border bg-slate-50 dark:bg-slate-800 text-ink placeholder-ink-tertiary text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue/40 transition"
                 />
               </div>
             )}
@@ -328,7 +323,7 @@ export default function MedicationsPage() {
             {/* Submit */}
             <button
               onClick={submit}
-              className="mt-5 w-full flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-teal-500/20"
+              className="mt-5 w-full flex items-center justify-center gap-2 px-6 py-3 bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold rounded-xl text-sm transition-all duration-200"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
@@ -351,12 +346,12 @@ export default function MedicationsPage() {
       {/* ── Loading skeleton ─────────────────────────────────────────── */}
       {stage === "loading" && (
         <div className="max-w-2xl mx-auto px-4 sm:px-6 mt-10 space-y-5">
-          <div className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-teal-50 dark:bg-teal-900/15 border border-teal-200 dark:border-teal-800">
-            <svg className="animate-spin w-5 h-5 text-teal-600 dark:text-teal-400" viewBox="0 0 24 24" fill="none">
+          <div className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-surface-raised border border-surface-border">
+            <svg className="animate-spin w-5 h-5 text-brand-blue" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
               <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="opacity-75" />
             </svg>
-            <p className="text-sm font-semibold text-teal-800 dark:text-teal-300">{t("loadingMessage")}</p>
+            <p className="text-sm font-semibold text-ink">{t("loadingMessage")}</p>
           </div>
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border p-5 animate-pulse">
@@ -504,11 +499,11 @@ function ParsedMedicationsCard({
             {parsed.map((m, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 text-sm"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-raised border border-surface-border text-sm"
               >
-                <span className="font-semibold text-teal-800 dark:text-teal-300">{m.name}</span>
-                {m.dose && <span className="text-teal-700 dark:text-teal-400">· {m.dose}</span>}
-                {m.frequency && <span className="text-teal-600 dark:text-teal-500 text-xs">· {m.frequency}</span>}
+                <span className="font-semibold text-ink">{m.name}</span>
+                {m.dose && <span className="text-ink-secondary">· {m.dose}</span>}
+                {m.frequency && <span className="text-ink-tertiary text-xs">· {m.frequency}</span>}
               </span>
             ))}
           </div>
@@ -531,7 +526,7 @@ function DepthToggle({ activeTier, onChange }: { activeTier: Tier; onChange: (t:
   const tiers: { key: Tier; label: string; active: string }[] = [
     { key: "simple", label: t("tierSimple"), active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5" },
     { key: "medium", label: t("tierMedium"), active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5" },
-    { key: "expert", label: t("tierExpert"), active: "text-purple-700 dark:text-purple-300 border-b-2 border-purple-500 bg-purple-500/5" },
+    { key: "expert", label: t("tierExpert"), active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5" },
   ];
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
@@ -626,7 +621,7 @@ function MedicationsSection({
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-surface-border">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400 mb-0.5">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-0.5">
           {t("sectionAKicker")}
         </p>
         <h2 className="font-bold text-ink text-base">{t("sectionATitle")}</h2>
@@ -636,8 +631,8 @@ function MedicationsSection({
         {meds.map((m, i) => (
           <div key={i} className="px-5 py-5">
             <div className="flex items-start gap-3 mb-3">
-              <div className="w-9 h-9 rounded-xl bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-sm font-extrabold text-teal-700 dark:text-teal-400">{i + 1}</span>
+              <div className="w-9 h-9 rounded-xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-sm font-extrabold text-brand-blue">{i + 1}</span>
               </div>
               <div className="min-w-0">
                 <h3 className="text-base font-bold text-ink leading-tight">{m.name}</h3>
@@ -740,7 +735,7 @@ function InteractionsSection({
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-surface-border">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-0.5">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-0.5">
           {t("sectionBKicker")}
         </p>
         <h2 className="font-bold text-ink text-base">{t("sectionBTitle")}</h2>
@@ -808,7 +803,7 @@ function QuestionsCard({ questions }: { questions: string[] }) {
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-surface-border flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:text-violet-400 mb-0.5">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-0.5">
             {t("sectionDKicker")}
           </p>
           <h2 className="font-bold text-ink text-base">{t("sectionDTitle")}</h2>
@@ -816,7 +811,7 @@ function QuestionsCard({ questions }: { questions: string[] }) {
         </div>
         <button
           onClick={copy}
-          className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-xs font-semibold text-ink-secondary hover:text-ink hover:border-violet-400/60 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all"
+          className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-xs font-semibold text-ink-secondary hover:text-ink hover:border-ink/25 transition-all"
         >
           {copied ? (
             <>
@@ -844,8 +839,8 @@ function QuestionsCard({ questions }: { questions: string[] }) {
                 onClick={() => toggle(i)}
                 className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 border transition-all duration-150 ${
                   checked[i]
-                    ? "bg-violet-500 border-violet-500"
-                    : "border-surface-border hover:border-violet-400"
+                    ? "bg-brand-blue border-brand-blue"
+                    : "border-surface-border hover:border-brand-blue"
                 }`}
                 aria-label={`Mark question ${i + 1} as asked`}
               >

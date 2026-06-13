@@ -320,12 +320,12 @@ export default function LearnPage() {
 
   // ── RENDER ─────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gradient-to-b from-violet-50/80 to-white dark:from-slate-900 dark:to-slate-900 pt-24 pb-20">
+    <div className="min-h-screen bg-surface pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── HEADER ── */}
         <div className="text-center mb-8">
-          <div className="chip text-violet-600 dark:text-violet-400 mb-5">
+          <div className="chip text-ink-secondary mb-5">
             Clinical Practice Mode
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold headline-accent tracking-tight">
@@ -382,11 +382,11 @@ export default function LearnPage() {
                     onClick={() => setSpecialty(key)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-150 ${
                       specialty === key
-                        ? `bg-${cfg.color}-100 dark:bg-${cfg.color}-900/30 border-${cfg.color}-300 dark:border-${cfg.color}-700 text-${cfg.color}-700 dark:text-${cfg.color}-400`
+                        ? "bg-brand-blue/10 border-brand-blue/40 text-brand-blue"
                         : "bg-surface-raised border-surface-border text-ink-secondary hover:border-surface-border/60 hover:text-ink"
                     }`}
                   >
-                    <span className={specialty === key ? `text-${cfg.color}-600 dark:text-${cfg.color}-400` : "text-ink-tertiary"}>{cfg.icon}</span>
+                    <span className={specialty === key ? "text-brand-blue" : "text-ink-tertiary"}>{cfg.icon}</span>
                     {cfg.label}
                   </button>
                 ))}
@@ -436,7 +436,7 @@ export default function LearnPage() {
                         onClick={() => setMode(opt.key)}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 text-center transition-all ${
                           mode === opt.key
-                            ? "bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-400"
+                            ? "bg-brand-blue/5 border-brand-blue/40 text-brand-blue"
                             : "border-surface-border bg-surface-raised text-ink-tertiary hover:border-surface-border/80 hover:text-ink"
                         }`}
                       >
@@ -459,8 +459,8 @@ export default function LearnPage() {
                           onClick={() => setTimerDuration(sec)}
                           className={`flex-1 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                             timerDuration === sec
-                              ? "bg-violet-600 text-white border-violet-600"
-                              : "bg-surface-raised border-surface-border text-ink-secondary hover:border-violet-300"
+                              ? "bg-brand-blue text-white border-brand-blue"
+                              : "bg-surface-raised border-surface-border text-ink-secondary hover:border-brand-blue/50"
                           }`}
                         >
                           {sec / 60} min
@@ -476,7 +476,7 @@ export default function LearnPage() {
             <button
               onClick={generateCase}
               disabled={pageState === "generating"}
-              className="w-full py-4 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm transition-all duration-200 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hover:-translate-y-0.5 flex items-center justify-center gap-2.5"
+              className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-sm transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2.5"
             >
               {pageState === "generating" ? (
                 <>
@@ -529,7 +529,7 @@ export default function LearnPage() {
             {/* Top bar: difficulty + specialty + timer */}
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400`}>
+                <span className={"text-xs font-bold px-2.5 py-1 rounded-full bg-brand-blue/10 text-brand-blue"}>
                   {DIFFICULTY_CONFIG[difficulty].label}
                 </span>
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-surface-raised border border-surface-border text-ink-secondary">
@@ -556,14 +556,14 @@ export default function LearnPage() {
 
             {/* Patient case card */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-surface-border bg-violet-50/50 dark:bg-violet-900/10 flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-violet-600 dark:text-violet-400">
+              <div className="px-5 py-4 border-b border-surface-border bg-surface-raised flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className="text-[11px] font-bold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-1">Patient Presentation</p>
+                  <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-1">Patient Presentation</p>
                   <p className="text-sm font-semibold text-ink leading-snug">{practiceCase.patient.complaint}</p>
                   {practiceCase.patient.clinical_context && (
                     <p className="text-xs text-ink-secondary mt-1.5 leading-relaxed">{practiceCase.patient.clinical_context}</p>
@@ -684,7 +684,7 @@ export default function LearnPage() {
                 disabled={pageState === "evaluating"}
                 placeholder="e.g. The elevated glucose and HbA1c together suggest Type 2 Diabetes. The low sodium may reflect SIADH or dilutional hyponatremia…"
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 transition-all resize-none disabled:opacity-50 leading-relaxed"
+                className="w-full px-4 py-3 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all resize-none disabled:opacity-50 leading-relaxed"
               />
 
               <div>
@@ -697,7 +697,7 @@ export default function LearnPage() {
                   onChange={(e) => setStudentNextStep(e.target.value)}
                   disabled={pageState === "evaluating"}
                   placeholder="e.g. Order HbA1c, repeat fasting glucose, check TSH"
-                  className="w-full px-4 py-2.5 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 transition-all disabled:opacity-50"
+                  className="w-full px-4 py-2.5 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all disabled:opacity-50"
                 />
               </div>
 
@@ -709,7 +709,7 @@ export default function LearnPage() {
                 <button
                   onClick={submitInterpretation}
                   disabled={pageState === "evaluating" || !studentDiagnosis.trim()}
-                  className="py-3 px-6 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-sm transition-all duration-200 flex items-center gap-2 shadow-md shadow-violet-500/20"
+                  className="py-3 px-6 bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-sm transition-all duration-200 flex items-center gap-2"
                 >
                   {pageState === "evaluating" ? (
                     <>
@@ -854,13 +854,13 @@ export default function LearnPage() {
                   </div>
                 </div>
                 <div className="p-4 flex gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center flex-shrink-0">
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-500">
+                  <div className="w-7 h-7 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
                       <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
                     </svg>
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold text-violet-700 dark:text-violet-400 uppercase tracking-wide mb-1">AI interpretation</p>
+                    <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-wide mb-1">AI interpretation</p>
                     <p className="text-sm text-ink-secondary leading-relaxed">{evaluation.ai_interpretation}</p>
                   </div>
                 </div>
@@ -881,15 +881,15 @@ export default function LearnPage() {
             </div>
 
             {/* Teaching point */}
-            <div className="bg-violet-50 dark:bg-violet-900/10 border border-violet-200 dark:border-violet-800 rounded-2xl p-5">
+            <div className="bg-surface-raised border border-surface-border rounded-2xl p-5">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-violet-600 dark:text-violet-400">
+                <div className="w-8 h-8 rounded-xl bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-brand-blue">
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
                   </svg>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-violet-700 dark:text-violet-400 uppercase tracking-widest mb-1.5">Teaching Point</p>
+                  <p className="text-xs font-bold text-ink-tertiary uppercase tracking-widest mb-1.5">Teaching Point</p>
                   <p className="text-sm text-ink-secondary leading-relaxed">{evaluation.educational_notes}</p>
                 </div>
               </div>
@@ -904,7 +904,7 @@ export default function LearnPage() {
                 <div className="p-4 space-y-3">
                   {evaluation.next_steps.map((step, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+                      <div className="w-6 h-6 rounded-full bg-brand-blue/10 flex items-center justify-center flex-shrink-0 text-[11px] font-bold text-brand-blue">
                         {i + 1}
                       </div>
                       <p className="text-sm text-ink-secondary leading-relaxed">{step}</p>
@@ -919,7 +919,7 @@ export default function LearnPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-bold text-ink-tertiary uppercase tracking-widest">Concepts:</span>
                 {practiceCase.learning_tags.map((tag) => (
-                  <span key={tag} className="px-2.5 py-1 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800 text-violet-700 dark:text-violet-400 text-xs font-semibold rounded-full">
+                  <span key={tag} className="px-2.5 py-1 bg-surface-raised border border-surface-border text-ink-secondary text-xs font-semibold rounded-full">
                     {tag}
                   </span>
                 ))}
@@ -930,7 +930,7 @@ export default function LearnPage() {
             <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => nextCase()}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl text-sm transition-all"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-sm transition-all"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                   <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd"/>

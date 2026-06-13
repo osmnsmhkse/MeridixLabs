@@ -114,10 +114,10 @@ function clearAnon() {
   }
 }
 
-// ── Tier config (sky accent for Imaging) ────────────────────────────────────
+// ── Tier config ─────────────────────────────────────────────────────────────
 const TIER_CONFIG: Record<Tier, { activeClass: string; icon: ReactNode }> = {
   simple: {
-    activeClass: "text-sky-700 border-b-2 border-sky-500 bg-sky-500/5",
+    activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
@@ -125,7 +125,7 @@ const TIER_CONFIG: Record<Tier, { activeClass: string; icon: ReactNode }> = {
     ),
   },
   medium: {
-    activeClass: "text-sky-700 border-b-2 border-sky-500 bg-sky-500/5",
+    activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
         <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
@@ -133,7 +133,7 @@ const TIER_CONFIG: Record<Tier, { activeClass: string; icon: ReactNode }> = {
     ),
   },
   expert: {
-    activeClass: "text-sky-700 border-b-2 border-sky-500 bg-sky-500/5",
+    activeClass: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
     icon: (
       <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 flex-shrink-0">
         <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -220,7 +220,7 @@ function LoadingAnimation() {
                     </svg>
                   </div>
                 ) : (
-                  <div className="w-5 h-5 rounded-full border-2 border-sky-500/25 border-t-sky-500 animate-spin" />
+                  <div className="w-5 h-5 rounded-full border-2 border-brand-blue/25 border-t-brand-blue animate-spin" />
                 )}
               </div>
               <span className={`text-sm leading-snug ${done ? "text-ink-secondary" : "text-ink font-semibold"}`}>
@@ -392,16 +392,16 @@ function FilePreview({
   const t = useTranslations("Imaging");
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-4 p-4 rounded-2xl border border-sky-300/50 bg-sky-50/60 dark:bg-sky-900/10">
-        <div className="w-12 h-12 bg-sky-100 dark:bg-sky-900/40 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-sky-600 dark:text-sky-400" stroke="currentColor" strokeWidth={1.5}>
+      <div className="flex items-center gap-4 p-4 rounded-2xl border border-brand-blue/30 bg-surface-raised">
+        <div className="w-12 h-12 bg-brand-blue/10 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-brand-blue" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
           </svg>
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-ink truncate">{preview.name}</p>
           <p className="text-xs text-ink-tertiary mt-0.5">{preview.size}</p>
-          <p className="text-xs text-sky-600 dark:text-sky-400 mt-1 font-medium">{t("readyToAnalyze")}</p>
+          <p className="text-xs text-brand-blue mt-1 font-medium">{t("readyToAnalyze")}</p>
         </div>
         <button onClick={onClear} className="text-ink-tertiary hover:text-ink-secondary p-2 rounded-lg hover:bg-surface-raised flex-shrink-0">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -411,7 +411,7 @@ function FilePreview({
       </div>
       <button
         onClick={onAnalyze}
-        className="w-full py-4 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+        className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/20 hover:-translate-y-0.5 flex items-center justify-center gap-2"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
           <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
@@ -451,7 +451,7 @@ function MobileUploadZone({ onFileSelect }: { onFileSelect: (f: File) => void })
         onChange={(e) => { const f = e.target.files?.[0]; if (f) handle(f); }} />
       <button
         onClick={() => cameraRef.current?.click()}
-        className="w-full py-5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-lg shadow-sky-600/25 flex items-center justify-center gap-3"
+        className="w-full py-5 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/20 flex items-center justify-center gap-3"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -461,7 +461,7 @@ function MobileUploadZone({ onFileSelect }: { onFileSelect: (f: File) => void })
       </button>
       <button
         onClick={() => filesRef.current?.click()}
-        className="w-full py-3.5 bg-white dark:bg-slate-800 hover:bg-surface-raised border border-surface-border hover:border-sky-400/40 text-ink-secondary hover:text-ink font-semibold rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2.5"
+        className="w-full py-3.5 bg-white dark:bg-slate-800 hover:bg-surface-raised border border-surface-border hover:border-brand-blue/40 text-ink-secondary hover:text-ink font-semibold rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2.5"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -506,10 +506,10 @@ function DesktopUploadZone({ onFileSelect }: { onFileSelect: (f: File) => void }
         onClick={() => !preview && inputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer ${
           dragging
-            ? "border-sky-500 bg-sky-50 dark:bg-sky-900/20 scale-[1.01]"
+            ? "border-brand-blue bg-brand-blue/5 scale-[1.01]"
             : preview
-            ? "border-sky-400/40 bg-sky-50/60 dark:bg-sky-900/10 cursor-default"
-            : "border-surface-border hover:border-sky-400/50 hover:bg-sky-50/30 dark:hover:bg-sky-900/10"
+            ? "border-brand-blue/40 bg-surface-raised cursor-default"
+            : "border-surface-border hover:border-brand-blue/50 hover:bg-brand-blue/5"
         }`}
       >
         <input
@@ -521,15 +521,15 @@ function DesktopUploadZone({ onFileSelect }: { onFileSelect: (f: File) => void }
         />
         {preview ? (
           <div className="p-8 flex items-center gap-5">
-            <div className="w-14 h-14 bg-sky-100 dark:bg-sky-900/40 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 text-sky-600 dark:text-sky-400" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-14 h-14 bg-brand-blue/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 text-brand-blue" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
               </svg>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-ink truncate">{preview.name}</p>
               <p className="text-xs text-ink-tertiary mt-0.5">{preview.size}</p>
-              <p className="text-xs text-sky-600 dark:text-sky-400 mt-1">{t("readyToAnalyze")}</p>
+              <p className="text-xs text-brand-blue mt-1">{t("readyToAnalyze")}</p>
             </div>
             <button onClick={(e) => { e.stopPropagation(); clear(); }} className="text-ink-tertiary hover:text-ink-secondary p-2 rounded-lg hover:bg-surface-raised">
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -558,7 +558,7 @@ function DesktopUploadZone({ onFileSelect }: { onFileSelect: (f: File) => void }
       {preview && selectedFile && (
         <button
           onClick={() => onFileSelect(selectedFile)}
-          className="w-full py-4 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+          className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/20 hover:-translate-y-0.5 flex items-center justify-center gap-2"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
             <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
@@ -657,8 +657,8 @@ function QuestionsSection({ questions }: { questions: string[] }) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
       <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
-        <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center flex-shrink-0">
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400">
+        <div className="w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
             <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
           </svg>
         </div>
@@ -671,7 +671,7 @@ function QuestionsSection({ questions }: { questions: string[] }) {
         <ol className="space-y-3">
           {questions.map((q, i) => (
             <li key={i} className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-400 text-xs font-bold flex items-center justify-center mt-0.5">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-bold flex items-center justify-center mt-0.5">
                 {i + 1}
               </span>
               <p className="text-sm text-ink-secondary leading-relaxed flex-1">{q}</p>
@@ -683,7 +683,7 @@ function QuestionsSection({ questions }: { questions: string[] }) {
           className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
             copied
               ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-              : "border-surface-border bg-surface-raised hover:border-sky-300 hover:bg-sky-50 dark:hover:bg-sky-900/10 text-ink-secondary hover:text-sky-700"
+              : "border-surface-border bg-surface-raised hover:border-brand-blue/40 hover:bg-brand-blue/5 text-ink-secondary hover:text-brand-blue"
           }`}
         >
           {copied ? (
@@ -720,7 +720,7 @@ function DeepDive({ result }: { result: AnalysisResult }) {
           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
         </svg>
       ),
-      color: "text-amber-600 bg-amber-50 dark:bg-amber-900/20",
+      color: "text-brand-blue bg-brand-blue/10",
       label: t("causesTitle"),
       sublabel: t("causesSubLabel"),
       content: result.etiology,
@@ -731,7 +731,7 @@ function DeepDive({ result }: { result: AnalysisResult }) {
           <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
         </svg>
       ),
-      color: "text-sky-600 bg-sky-50 dark:bg-sky-900/20",
+      color: "text-brand-blue bg-brand-blue/10",
       label: t("mechanismTitle"),
       sublabel: t("mechanismSubLabel"),
       content: result.mechanism,
@@ -742,7 +742,7 @@ function DeepDive({ result }: { result: AnalysisResult }) {
           <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
         </svg>
       ),
-      color: "text-purple-600 bg-purple-50 dark:bg-purple-900/20",
+      color: "text-brand-blue bg-brand-blue/10",
       label: t("diagnosesTitle"),
       sublabel: t("diagnosesSubLabel"),
       content: result.diseases,
@@ -769,15 +769,15 @@ function DeepDive({ result }: { result: AnalysisResult }) {
             const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(specialist + " near me")}`;
             const zocdocUrl = `https://www.zocdoc.com/search?dr_specialty=${encodeURIComponent(specialist)}`;
             return (
-              <div className="p-5 bg-sky-50/60 dark:bg-sky-900/10">
+              <div className="p-5 bg-surface-raised">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-sky-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-brand-blue flex items-center justify-center flex-shrink-0">
                     <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-white">
                       <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-1">{t("specialistTitle")}</p>
+                    <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1">{t("specialistTitle")}</p>
                     <p className="text-sm text-ink-secondary leading-relaxed mb-3">{result.specialist}</p>
                     <div className="flex flex-wrap gap-2">
                       <a
@@ -785,7 +785,7 @@ function DeepDive({ result }: { result: AnalysisResult }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => track("imaging_specialist_link", { specialist, destination: "maps" })}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-sky-400/40 text-sky-700 dark:text-sky-400 hover:bg-sky-600 hover:text-white hover:border-sky-600 text-xs font-semibold transition-all duration-150"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-blue/40 text-brand-blue hover:bg-brand-blue hover:text-white hover:border-brand-blue text-xs font-semibold transition-all duration-150"
                       >
                         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                           <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -797,7 +797,7 @@ function DeepDive({ result }: { result: AnalysisResult }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => track("imaging_specialist_link", { specialist, destination: "zocdoc" })}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-ink-secondary hover:border-sky-400/40 hover:text-sky-700 hover:bg-sky-50 dark:hover:bg-sky-900/10 text-xs font-semibold transition-all duration-150"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-border text-ink-secondary hover:border-brand-blue/40 hover:text-brand-blue hover:bg-brand-blue/5 text-xs font-semibold transition-all duration-150"
                       >
                         <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
                           <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
@@ -872,7 +872,7 @@ function ShareSection({ simple }: { simple: string }) {
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
               copied
                 ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                : "border-surface-border bg-white dark:bg-slate-800 hover:border-sky-400/40 hover:bg-sky-50 dark:hover:bg-sky-900/10 text-ink-secondary hover:text-sky-700"
+                : "border-surface-border bg-white dark:bg-slate-800 hover:border-brand-blue/40 hover:bg-brand-blue/5 text-ink-secondary hover:text-brand-blue"
             }`}
           >
             {copied ? (
@@ -939,7 +939,7 @@ function EmailSection({ result }: { result: AnalysisResult }) {
     <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-800 overflow-hidden shadow-sm print:hidden">
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between px-5 py-4 hover:bg-surface-raised/60 transition-colors">
         <div className="flex items-center gap-2.5">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-sky-600 flex-shrink-0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-brand-blue flex-shrink-0">
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7" />
           </svg>
@@ -974,12 +974,12 @@ function EmailSection({ result }: { result: AnalysisResult }) {
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && send()}
                   disabled={status === "sending"}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition-all text-sm disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-900 text-ink placeholder:text-ink-tertiary focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue transition-all text-sm disabled:opacity-50"
                 />
                 <button
                   onClick={send}
                   disabled={status === "sending" || !email.trim()}
-                  className="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm transition-all duration-200 flex items-center gap-2 flex-shrink-0"
+                  className="px-5 py-2.5 bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl text-sm transition-all duration-200 flex items-center gap-2 flex-shrink-0"
                 >
                   {status === "sending" ? t("emailSendingBtn") : t("emailSendBtn")}
                 </button>
@@ -1070,8 +1070,8 @@ function ResultsPanel({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-sky-100 dark:bg-sky-900/30 flex-shrink-0">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-sky-600 dark:text-sky-400">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-brand-blue/10 flex-shrink-0">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
               <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
               <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
             </svg>
@@ -1083,7 +1083,7 @@ function ResultsPanel({
         </div>
         <button
           onClick={onReset}
-          className="flex items-center gap-1.5 text-sm font-medium text-sky-700 dark:text-sky-400 border border-sky-300/40 bg-sky-50 dark:bg-sky-900/20 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-all px-3 py-1.5 rounded-lg"
+          className="flex items-center gap-1.5 text-sm font-medium text-brand-blue border border-brand-blue/30 bg-brand-blue/5 hover:bg-brand-blue/10 transition-all px-3 py-1.5 rounded-lg"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
             <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
@@ -1096,14 +1096,14 @@ function ResultsPanel({
       {(result.modality || result.body_part) && (
         <div className="flex flex-wrap gap-2">
           {result.modality && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 text-xs font-semibold text-sky-700 dark:text-sky-400">
-              <span className="text-[10px] uppercase tracking-wider text-sky-500/70">{t("modalityLabel")}</span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-blue/5 border border-brand-blue/20 text-xs font-semibold text-brand-blue">
+              <span className="text-[10px] uppercase tracking-wider text-ink-tertiary">{t("modalityLabel")}</span>
               {result.modality}
             </span>
           )}
           {result.body_part && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 text-xs font-semibold text-purple-700 dark:text-purple-400">
-              <span className="text-[10px] uppercase tracking-wider text-purple-500/70">{t("bodyPartLabel")}</span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-blue/5 border border-brand-blue/20 text-xs font-semibold text-brand-blue">
+              <span className="text-[10px] uppercase tracking-wider text-ink-tertiary">{t("bodyPartLabel")}</span>
               {result.body_part}
             </span>
           )}
@@ -1200,7 +1200,7 @@ function ResultsPanel({
               key={tab.id}
               onClick={() => setMobileTab(tab.id)}
               className={`flex-1 flex items-center justify-center gap-1.5 py-3.5 text-xs font-bold transition-colors border-b-2 ${
-                mobileTab === tab.id ? "text-sky-600 border-sky-500" : "text-ink-tertiary border-transparent hover:text-ink-secondary"
+                mobileTab === tab.id ? "text-brand-blue border-brand-blue" : "text-ink-tertiary border-transparent hover:text-ink-secondary"
               }`}
             >
               {tab.icon}
@@ -1278,15 +1278,15 @@ function ResultsPanel({
               </div>
 
               {/* Action */}
-              <div className="border-t border-sky-200/40 bg-sky-50/60 dark:bg-sky-900/10 p-5">
+              <div className="border-t border-brand-blue/20 bg-surface-raised p-5">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 bg-sky-600/15 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-sky-600">
+                  <div className="w-9 h-9 bg-brand-blue/15 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-sky-700 dark:text-sky-400 uppercase tracking-widest mb-1.5">{t("whatShouldYouDo")}</p>
+                    <p className="text-xs font-bold text-brand-blue uppercase tracking-widest mb-1.5">{t("whatShouldYouDo")}</p>
                     <p className="text-sm text-ink-secondary leading-relaxed">{result.action}</p>
                   </div>
                 </div>
@@ -1304,8 +1304,8 @@ function ResultsPanel({
                   {result.medication_context && (
                     <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
                       <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
-                        <div className="w-6 h-6 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center flex-shrink-0">
-                          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400">
+                        <div className="w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+                          <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
                             <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                           </svg>
                         </div>
@@ -1339,7 +1339,7 @@ function ResultsPanel({
                   className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border text-sm font-semibold transition-all duration-200 ${
                     copied
                       ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                      : "border-surface-border bg-white dark:bg-slate-800 hover:border-sky-400/40 hover:bg-sky-50 dark:hover:bg-sky-900/10 text-ink-secondary hover:text-sky-700"
+                      : "border-surface-border bg-white dark:bg-slate-800 hover:border-brand-blue/40 hover:bg-brand-blue/5 text-ink-secondary hover:text-brand-blue"
                   }`}
                 >
                   {copied ? (
@@ -1361,7 +1361,7 @@ function ResultsPanel({
                 </button>
                 <button
                   onClick={handlePrint}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border bg-white dark:bg-slate-800 hover:border-sky-400/40 hover:bg-sky-50 dark:hover:bg-sky-900/10 text-ink-secondary hover:text-sky-700 text-sm font-semibold transition-all duration-200"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-surface-border bg-white dark:bg-slate-800 hover:border-brand-blue/40 hover:bg-brand-blue/5 text-ink-secondary hover:text-brand-blue text-sm font-semibold transition-all duration-200"
                 >
                   <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                     <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h6a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9a1 1 0 112 0 1 1 0 01-2 0zm2 1v2h4v-2H8z" clipRule="evenodd" />
@@ -1483,7 +1483,7 @@ function ScanLoadingAnimation() {
                     </svg>
                   </div>
                 ) : (
-                  <div className="w-5 h-5 rounded-full border-2 border-sky-500/25 border-t-sky-500 animate-spin" />
+                  <div className="w-5 h-5 rounded-full border-2 border-brand-blue/25 border-t-brand-blue animate-spin" />
                 )}
               </div>
               <span className={`text-sm leading-snug ${done ? "text-ink-secondary" : "text-ink font-semibold"}`}>
@@ -1657,7 +1657,7 @@ function ScanResultsPanel({
         </div>
         <button
           onClick={onReset}
-          className="flex items-center gap-1.5 text-sm font-medium text-sky-700 dark:text-sky-400 border border-sky-300/40 bg-sky-50 dark:bg-sky-900/20 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-all px-3 py-1.5 rounded-lg flex-shrink-0"
+          className="flex items-center gap-1.5 text-sm font-medium text-brand-blue border border-brand-blue/30 bg-brand-blue/5 hover:bg-brand-blue/10 transition-all px-3 py-1.5 rounded-lg flex-shrink-0"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
             <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
@@ -1668,12 +1668,12 @@ function ScanResultsPanel({
 
       {/* Metadata pills */}
       <div className="flex flex-wrap gap-2">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-800 text-xs font-semibold text-sky-700 dark:text-sky-400">
-          <span className="text-[10px] uppercase tracking-wider text-sky-500/70">Scan</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-blue/5 border border-brand-blue/20 text-xs font-semibold text-brand-blue">
+          <span className="text-[10px] uppercase tracking-wider text-ink-tertiary">Scan</span>
           {result.scan_type}
         </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 text-xs font-semibold text-purple-700 dark:text-purple-400">
-          <span className="text-[10px] uppercase tracking-wider text-purple-500/70">Region</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-blue/5 border border-brand-blue/20 text-xs font-semibold text-brand-blue">
+          <span className="text-[10px] uppercase tracking-wider text-ink-tertiary">Region</span>
           {result.body_region}
         </span>
         <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full ${uc.bg} ${uc.border} border text-xs font-semibold ${uc.text}`}>
@@ -1695,7 +1695,7 @@ function ScanResultsPanel({
           <ul className="p-5 space-y-2.5">
             {result.key_findings.map((f, i) => (
               <li key={i} className="flex gap-3 text-sm text-ink-secondary leading-relaxed">
-                <span className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500" />
+                <span className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-blue" />
                 <span>{f}</span>
               </li>
             ))}
@@ -1797,8 +1797,8 @@ function ScanResultsPanel({
       {result.questions_to_ask_doctor && result.questions_to_ask_doctor.length > 0 && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
           <div className="px-5 py-3.5 border-b border-surface-border bg-surface-raised flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400">
+            <div className="w-6 h-6 rounded-lg bg-brand-blue/10 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue">
                 <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
               </svg>
             </div>
@@ -1807,7 +1807,7 @@ function ScanResultsPanel({
           <ol className="p-5 space-y-3">
             {result.questions_to_ask_doctor.map((q, i) => (
               <li key={i} className="flex gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-400 text-xs font-bold flex items-center justify-center mt-0.5">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-bold flex items-center justify-center mt-0.5">
                   {i + 1}
                 </span>
                 <p className="text-sm text-ink-secondary leading-relaxed flex-1">{q}</p>
@@ -1944,12 +1944,12 @@ function ScanImageTab() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800">
-        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-500 mt-px flex-shrink-0">
+      <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-brand-blue/5 border border-brand-blue/20">
+        <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue mt-px flex-shrink-0">
           <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
           <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
         </svg>
-        <p className="text-xs text-sky-700 dark:text-sky-300 leading-relaxed">
+        <p className="text-xs text-brand-blue leading-relaxed">
           Upload the actual scan image (X-ray, CT, MRI, ultrasound, mammogram). We&apos;ll interpret what&apos;s visible in the image itself.
         </p>
       </div>
@@ -1967,10 +1967,10 @@ function ScanImageTab() {
         onClick={() => !file && inputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-2xl transition-all duration-200 ${
           file
-            ? "border-sky-400/40 bg-sky-50/60 dark:bg-sky-900/10 cursor-default"
+            ? "border-brand-blue/40 bg-surface-raised cursor-default"
             : dragging
-            ? "border-sky-500 bg-sky-50 dark:bg-sky-900/20 scale-[1.01] cursor-pointer"
-            : "border-surface-border hover:border-sky-400/50 hover:bg-sky-50/30 dark:hover:bg-sky-900/10 cursor-pointer"
+            ? "border-brand-blue bg-brand-blue/5 scale-[1.01] cursor-pointer"
+            : "border-surface-border hover:border-brand-blue/50 hover:bg-brand-blue/5 cursor-pointer"
         }`}
       >
         <input
@@ -1989,7 +1989,7 @@ function ScanImageTab() {
             <div className="flex-1 min-w-0 w-full">
               <p className="text-sm font-semibold text-ink truncate">{file.name}</p>
               <p className="text-xs text-ink-tertiary mt-0.5">{formatSize(file.size)}</p>
-              <p className="text-xs text-sky-600 dark:text-sky-400 mt-1 font-medium">Ready to analyze</p>
+              <p className="text-xs text-brand-blue mt-1 font-medium">Ready to analyze</p>
             </div>
             <button
               onClick={(e) => { e.stopPropagation(); handleReset(); }}
@@ -2032,8 +2032,8 @@ function ScanImageTab() {
                 onClick={() => setScanType(s.key)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 border ${
                   active
-                    ? "bg-sky-600 border-sky-600 text-white shadow-sm shadow-sky-600/20"
-                    : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-sky-400/50 hover:text-sky-700 dark:hover:text-sky-400"
+                    ? "bg-brand-blue border-brand-blue text-white shadow-sm shadow-brand-blue/20"
+                    : "bg-white dark:bg-slate-800 border-surface-border text-ink-secondary hover:border-brand-blue/50 hover:text-brand-blue"
                 }`}
               >
                 {s.label}
@@ -2060,8 +2060,8 @@ function ScanImageTab() {
                 onClick={() => setDepth(d)}
                 className={`flex flex-col items-center justify-center gap-0.5 px-2 py-3 rounded-xl border text-xs font-semibold transition-all duration-150 ${
                   active
-                    ? "border-sky-500 bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-400"
-                    : "border-surface-border bg-white dark:bg-slate-800 text-ink-secondary hover:border-sky-400/40 hover:text-sky-700"
+                    ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
+                    : "border-surface-border bg-white dark:bg-slate-800 text-ink-secondary hover:border-brand-blue/40 hover:text-brand-blue"
                 }`}
               >
                 <span>{labels[d].label}</span>
@@ -2076,7 +2076,7 @@ function ScanImageTab() {
       <button
         onClick={handleAnalyze}
         disabled={!file}
-        className="w-full py-4 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-sky-600/20 flex items-center justify-center gap-2"
+        className="w-full py-4 bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-base transition-all duration-200 shadow-lg shadow-brand-blue/20 hover:shadow-brand-blue/20 hover:-translate-y-0.5 disabled:hover:translate-y-0 disabled:hover:shadow-brand-blue/20 flex items-center justify-center gap-2"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
           <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
@@ -2230,7 +2230,7 @@ export default function ImagingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white dark:from-slate-900 dark:to-slate-900 pt-24 pb-20">
+    <div className="min-h-screen bg-surface pt-24 pb-20">
       {AUTH_ENABLED && (
         <ClerkAuthBridge
           onChange={(loaded, signedIn) => { setClerkLoaded(loaded); setClerkSignedIn(signedIn); }}
@@ -2240,10 +2240,10 @@ export default function ImagingPage() {
       <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${result && state !== "loading" ? "max-w-3xl xl:max-w-6xl" : "max-w-3xl"}`}>
         {/* Page header */}
         <div className="text-center mb-8">
-          <span className="chip text-sky-700 dark:text-sky-300 mb-5">
+          <span className="chip text-ink-secondary mb-5">
             <span className="kicker-mono">{t("heroBadge")}</span>
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-sky-600 dark:text-sky-400 tracking-tightest leading-[1.02]">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-ink tracking-tightest leading-[1.02]">
             <WordReveal text={t("heroTitle")} base={0.05} />{" "}
             <WordReveal text={t("heroHighlight")} startIndex={t("heroTitle").split(" ").length} base={0.05} />
           </h1>
@@ -2252,10 +2252,10 @@ export default function ImagingPage() {
           {/* Trust badges */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             {[
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-emerald-500"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>, label: t("trustReportNeverStored") },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-500"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>, label: t("trustFreeToTry") },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-amber-500"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, label: t("trustResultsInSeconds") },
-              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-violet-500"><path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16A8 8 0 0010 2zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd" /></svg>, label: t("trust10Languages") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>, label: t("trustReportNeverStored") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" /></svg>, label: t("trustFreeToTry") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>, label: t("trustResultsInSeconds") },
+              { icon: <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-ink-tertiary"><path fillRule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16A8 8 0 0010 2zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clipRule="evenodd" /></svg>, label: t("trust10Languages") },
             ].map((b) => (
               <span key={b.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-surface-border text-xs text-ink-secondary font-medium shadow-sm">
                 {b.icon}
@@ -2265,7 +2265,7 @@ export default function ImagingPage() {
           </div>
 
           {lang !== "en" && (
-            <div className="mt-3 inline-flex items-center gap-1.5 text-xs text-sky-700 bg-sky-50 dark:bg-sky-900/20 px-3 py-1.5 rounded-full border border-sky-200 dark:border-sky-800">
+            <div className="mt-3 inline-flex items-center gap-1.5 text-xs text-brand-blue bg-brand-blue/5 px-3 py-1.5 rounded-full border border-brand-blue/20">
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-3.5 h-3.5">
                 <circle cx="10" cy="10" r="8" /><path d="M10 2c-2 3-2 13 0 16M10 2c2 3 2 13 0 16M2 10h16" strokeLinecap="round" />
               </svg>
@@ -2310,14 +2310,14 @@ export default function ImagingPage() {
                     onClick={() => setMainTab(tab.id)}
                     className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 sm:py-3 rounded-xl text-sm font-semibold transition-all duration-150 ${
                       active
-                        ? "bg-white dark:bg-slate-700 text-sky-700 dark:text-sky-400 shadow-sm border border-sky-200/60 dark:border-sky-800/60"
+                        ? "bg-white dark:bg-slate-700 text-brand-blue shadow-sm border border-brand-blue/20"
                         : "text-ink-tertiary hover:text-ink-secondary"
                     }`}
                   >
                     {tab.icon}
                     <span className="flex flex-col items-start leading-tight">
                       <span>{tab.label}</span>
-                      <span className={`text-[10px] font-normal ${active ? "text-sky-500/70 dark:text-sky-400/60" : "text-ink-tertiary/70"}`}>
+                      <span className={`text-[10px] font-normal ${active ? "text-ink-tertiary" : "text-ink-tertiary/70"}`}>
                         {tab.sub}
                       </span>
                     </span>
@@ -2332,12 +2332,12 @@ export default function ImagingPage() {
               <ErrorCard code={errorCode} fileSizeMB={fileSizeMB} onReset={handleReset} />
             ) : state === "idle" ? (
               <div className="space-y-4">
-                <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-sky-50 dark:bg-sky-900/20 border border-sky-100 dark:border-sky-800">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-sky-500 mt-px flex-shrink-0">
+                <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-brand-blue/5 border border-brand-blue/20">
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue mt-px flex-shrink-0">
                     <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                     <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
                   </svg>
-                  <p className="text-xs text-sky-700 dark:text-sky-300 leading-relaxed">{t("modeHint")}</p>
+                  <p className="text-xs text-brand-blue leading-relaxed">{t("modeHint")}</p>
                 </div>
                 <UploadZone onFileSelect={handleFileSelect} />
               </div>
@@ -2371,7 +2371,7 @@ export default function ImagingPage() {
                 <p className="text-xs text-ink-secondary mt-0.5">This imaging report is in your dashboard.</p>
               </div>
             </div>
-            <Link href="/dashboard" className="text-xs font-semibold text-sky-700 dark:text-sky-400 hover:underline flex-shrink-0 whitespace-nowrap">
+            <Link href="/dashboard" className="text-xs font-semibold text-brand-blue hover:underline flex-shrink-0 whitespace-nowrap">
               View dashboard →
             </Link>
           </div>
