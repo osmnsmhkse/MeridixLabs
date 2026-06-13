@@ -47,7 +47,8 @@ export default function LandingPage() {
       <section className="relative -mt-16 gradient-hero overflow-hidden">
         <div className="relative max-w-[1440px] mx-auto px-5 lg:px-10 pt-36 lg:pt-44 pb-16 lg:pb-24">
 
-          {/* The Scan — living sculpture behind the headline */}
+          {/* The Scan — living sculpture, the dominant right-side motif
+              on desktop (mobile gets its own dedicated stage below). */}
           <ScanSculpture className="scan-enter hidden lg:block absolute right-2 xl:right-10 top-10 w-[min(40vw,560px)] h-[520px] z-0" />
 
           <div className="relative z-10 chip text-ink-secondary reveal">
@@ -80,8 +81,15 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* The Scan — dedicated mobile stage (desktop shows it behind
+              the headline instead). A clean centered motif, not a backdrop
+              fighting the text. */}
+          <div className="lg:hidden mt-14 -mx-5 reveal reveal-delay-2">
+            <ScanSculpture className="scan-enter relative w-full h-[300px]" />
+          </div>
+
           {/* The product, centered — performs its own entrance */}
-          <div className="mt-16 lg:mt-20 max-w-3xl mx-auto">
+          <div className="mt-14 lg:mt-20 max-w-3xl mx-auto">
             <LabInterpretationDemo />
           </div>
 
