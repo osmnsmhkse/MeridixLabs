@@ -2230,7 +2230,7 @@ export default function ImagingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface pt-24 pb-20">
+    <div className="glass-tool min-h-screen pt-24 pb-20">
       {AUTH_ENABLED && (
         <ClerkAuthBridge
           onChange={(loaded, signedIn) => { setClerkLoaded(loaded); setClerkSignedIn(signedIn); }}

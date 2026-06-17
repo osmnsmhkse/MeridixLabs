@@ -636,7 +636,7 @@ export default function TrendsPage() {
   const hasResults = analyzedReports.length >= 2;
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="glass-tool min-h-screen">
       <div className={`mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 ${hasResults ? "max-w-7xl" : "max-w-3xl"}`}>
 
         {/* Header */}

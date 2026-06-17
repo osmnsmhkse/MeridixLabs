@@ -1158,7 +1158,7 @@ export default function WomensHealthPage() {
   const hasResult = stage === "result";
 
   return (
-    <div className="min-h-screen bg-surface pt-20 pb-24">
+    <div className="glass-tool min-h-screen pt-20 pb-24">
       {/* Hero */}
       <section className="relative isolate overflow-hidden pt-10 pb-6 text-center">
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">

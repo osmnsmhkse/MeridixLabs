@@ -1174,7 +1174,7 @@ export default function VisitPage() {
   const hasResult = stage === "result";
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="glass-tool min-h-screen">
       {/* Hero */}
       <section className="relative isolate overflow-hidden pt-32 pb-10 px-4 sm:px-6">
         <div className="relative z-10 max-w-2xl mx-auto text-center">

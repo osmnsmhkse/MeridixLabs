@@ -521,7 +521,7 @@ export default function GeneticsClient() {
   const showInput = stage === "idle" || stage === "error";
 
   return (
-    <div className="min-h-screen bg-surface pt-24 pb-20">
+    <div className="glass-tool min-h-screen pt-24 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Hero ──────────────────────────────────────────────────── */}
         <div className="text-center mb-8">

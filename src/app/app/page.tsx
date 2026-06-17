@@ -2817,7 +2817,7 @@ export default function AppPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-brand-blue-light to-white dark:from-slate-900 dark:to-slate-900 pt-24 pb-20">
+    <div className="glass-tool min-h-screen pt-24 pb-20">
       {AUTH_ENABLED && (
         <ClerkAuthBridge
           onChange={(loaded, signedIn) => { setClerkLoaded(loaded); setClerkSignedIn(signedIn); }}

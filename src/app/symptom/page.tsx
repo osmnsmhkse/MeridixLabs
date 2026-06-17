@@ -354,7 +354,7 @@ export default function SymptomPage() {
   }, [stage]);
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
+    <main className="glass-tool min-h-screen pt-20 pb-24">
       {/* Hero */}
       <section className="relative isolate overflow-hidden pt-12 pb-8 text-center">
         <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">

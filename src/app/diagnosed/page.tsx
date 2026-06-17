@@ -454,7 +454,7 @@ export default function DiagnosedPage() {
   const showInput = state === "idle" || state === "error";
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="glass-tool min-h-screen">
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
       {(showInput || state === "loading") && (

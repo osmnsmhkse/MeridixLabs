@@ -639,3 +639,199 @@ body {
 .rec-pulse {
   animation: recPulse 1.2s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MERIDIX TOOL GLASS SYSTEM  ·  scope: .glass-tool
+   ───────────────────────────────────────────────────────────────
+   A Liquid-Glass surface language for the interactive tools
+   (/app, /symptom, /diagnosed, /imaging, /trends, /medications,
+   /visit, /genetics, /pediatric, /womens-health).
+
+   It re-skins the existing card vocabulary in place — no per-page
+   markup churn. A vivid, medical/AI ambient canvas sits fixed
+   behind the page; the familiar cards become frosted glass that
+   refract it. The editorial homepage & marketing pages are left
+   untouched (they never carry .glass-tool).
+
+   Tokens are defined per mode so light and dark each get a true
+   glass treatment rather than a single washed compromise.
+   ═══════════════════════════════════════════════════════════════ */
+
+.glass-tool {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;            /* keep the ambient layer above <body> */
+  background: var(--glass-base);
+  --glass-base:      #EAF0FA;
+  --glass-panel:     rgba(255, 255, 255, 0.60);
+  --glass-panel-2:   rgba(255, 255, 255, 0.74);   /* raised / hovered */
+  --glass-well:      rgba(255, 255, 255, 0.42);    /* recessed inputs */
+  --glass-edge:      rgba(15, 23, 42, 0.08);
+  --glass-edge-lit:  rgba(255, 255, 255, 0.85);    /* top rim highlight */
+  --glass-shadow:    0 24px 60px -34px rgba(20, 34, 64, 0.40);
+  --glass-blur:      blur(22px) saturate(165%);
+}
+.dark .glass-tool {
+  --glass-base:      #05070D;
+  --glass-panel:     rgba(18, 26, 43, 0.55);
+  --glass-panel-2:   rgba(26, 36, 56, 0.66);
+  --glass-well:      rgba(10, 16, 28, 0.50);
+  --glass-edge:      rgba(255, 255, 255, 0.10);
+  --glass-edge-lit:  rgba(255, 255, 255, 0.10);
+  --glass-shadow:    0 28px 64px -30px rgba(0, 0, 0, 0.75);
+  --glass-blur:      blur(24px) saturate(150%);
+}
+
+/* ── Ambient canvas — fixed colour pools behind everything ──────
+   Cool clinical blue → scan-cyan → a whisper of violet/indigo.
+   Reads as a calm, luminous lab atmosphere; cards refract it. */
+.glass-tool::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 40% at 12% 6%,  rgba(74, 133, 239, 0.20), transparent 70%),
+    radial-gradient(40% 38% at 88% 14%, rgba(34, 211, 238, 0.16), transparent 72%),
+    radial-gradient(48% 46% at 78% 92%, rgba(124, 58, 237, 0.14), transparent 72%),
+    radial-gradient(44% 42% at 18% 84%, rgba(99, 102, 241, 0.12), transparent 74%);
+  background-color: var(--glass-base);
+  animation: glassDrift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.dark .glass-tool::before {
+  background:
+    radial-gradient(48% 42% at 10% 4%,  rgba(47, 107, 224, 0.30), transparent 68%),
+    radial-gradient(42% 40% at 90% 12%, rgba(34, 211, 238, 0.22), transparent 70%),
+    radial-gradient(52% 48% at 80% 94%, rgba(124, 58, 237, 0.22), transparent 70%),
+    radial-gradient(46% 44% at 16% 86%, rgba(99, 102, 241, 0.18), transparent 72%);
+  background-color: var(--glass-base);
+}
+
+/* ── Faint imaging grid — the "scan" texture, barely there ───── */
+.glass-tool::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, currentColor 1px, transparent 1px),
+    linear-gradient(to bottom, currentColor 1px, transparent 1px);
+  background-size: 64px 64px;
+  color: rgb(15 23 42);
+  opacity: 0.025;
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
+          mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
+}
+.dark .glass-tool::after { color: rgb(180 205 255); opacity: 0.05; }
+
+@keyframes glassDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-2.5%, 1.5%, 0) scale(1.06); }
+}
+
+/* ── Primary glass panel ────────────────────────────────────────
+   The dominant card: bg-white / dark:bg-slate-900, plus the
+   token-driven bg-surface. Becomes frosted glass with a lit rim
+   and a soft floating shadow. */
+.glass-tool .bg-white,
+.glass-tool .bg-surface,
+.dark .glass-tool [class*="dark:bg-slate-900"],
+.dark .glass-tool [class*="dark:bg-slate-950"],
+.dark .glass-tool .bg-surface {
+  background-color: var(--glass-panel) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+          backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-edge-lit),
+    var(--glass-shadow);
+}
+
+/* Raised / surface-raised panels read a touch more solid */
+.glass-tool .bg-surface-raised,
+.dark .glass-tool .bg-surface-raised {
+  background-color: var(--glass-panel-2) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+          backdrop-filter: var(--glass-blur);
+}
+
+/* ── Recessed wells — inputs, inset rows, soft sub-panels ──────
+   bg-slate-50/100 (light) and dark:bg-slate-800. Translucent with
+   an inset depth shadow instead of a lift. */
+.glass-tool .bg-slate-50,
+.glass-tool .bg-slate-100,
+.dark .glass-tool [class*="dark:bg-slate-800"] {
+  background-color: var(--glass-well) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+          backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+.dark .glass-tool [class*="dark:bg-slate-800"] {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Glass hairline edges ──────────────────────────────────────
+   The ubiquitous border-surface-border becomes a luminous rim. */
+.glass-tool .border-surface-border,
+.glass-tool .border-slate-200,
+.glass-tool .border-slate-100 {
+  border-color: var(--glass-edge) !important;
+}
+.dark .glass-tool .border-surface-border,
+.dark .glass-tool [class*="dark:border-slate-8"],
+.dark .glass-tool [class*="dark:border-slate-7"] {
+  border-color: var(--glass-edge) !important;
+}
+
+/* ── Frost the divider rules so they survive on glass ──────────*/
+.glass-tool .gradient-line { background: var(--glass-edge); }
+
+/* ── Accent tint cards — keep the semantic colour, gain the glass
+   refraction so red/amber/sky/emerald panels float with the rest.
+   Light blur only; their own translucent fills carry the colour. */
+.glass-tool [class*="bg-red-50"],
+.glass-tool [class*="bg-amber-50"],
+.glass-tool [class*="bg-orange-50"],
+.glass-tool [class*="bg-sky-50"],
+.glass-tool [class*="bg-blue-50"],
+.glass-tool [class*="bg-emerald-50"],
+.glass-tool [class*="bg-green-50"],
+.glass-tool [class*="bg-violet-50"],
+.glass-tool [class*="bg-indigo-50"],
+.glass-tool [class*="bg-amber-100"],
+.dark .glass-tool [class*="dark:bg-red-9"],
+.dark .glass-tool [class*="dark:bg-amber-9"],
+.dark .glass-tool [class*="dark:bg-orange-9"],
+.dark .glass-tool [class*="dark:bg-sky-9"],
+.dark .glass-tool [class*="dark:bg-blue-9"],
+.dark .glass-tool [class*="dark:bg-emerald-9"],
+.dark .glass-tool [class*="dark:bg-green-9"],
+.dark .glass-tool [class*="dark:bg-violet-9"],
+.dark .glass-tool [class*="dark:bg-indigo-9"] {
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+          backdrop-filter: blur(14px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-edge-lit),
+    0 18px 44px -30px rgba(20, 34, 64, 0.30);
+}
+
+/* ── Primary action — the brand-blue button, lifted to glass ──── */
+.glass-tool .bg-brand-blue {
+  background-image: linear-gradient(135deg, #5A91F2 0%, #2F6BE0 100%);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
+    0 14px 30px -14px rgba(47, 107, 224, 0.65);
+}
+.glass-tool .bg-brand-blue:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
+    0 18px 38px -14px rgba(47, 107, 224, 0.8);
+}
+
+/* ── Headless Chrome can't paint backdrop-filter; real browsers
+   do. Nothing else depends on it, so degradation is graceful. ── */
+@media (prefers-reduced-motion: reduce) {
+  .glass-tool::before { animation: none; }
+}

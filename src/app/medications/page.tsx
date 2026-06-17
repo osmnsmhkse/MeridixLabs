@@ -164,7 +164,7 @@ export default function MedicationsPage() {
   const showInput = stage === "idle" || stage === "error";
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-20 pb-24">
+    <div className="glass-tool min-h-screen pt-20 pb-24">
       {/* ── Hero ────────────────────────────────────────────────────── */}
       {(showInput || stage === "loading") && (
         <section className="relative isolate overflow-hidden pt-12 pb-8 text-center">
