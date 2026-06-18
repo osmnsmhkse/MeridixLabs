@@ -121,7 +121,7 @@ export default function ForDoctorsPage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="glass-site min-h-screen">
 
       {/* ─── HERO ──────────────────────────────────────────────────── */}
       <section className="relative pt-36 pb-24 overflow-hidden bg-navy">

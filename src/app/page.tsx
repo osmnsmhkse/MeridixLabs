@@ -41,7 +41,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="glass-site min-h-screen">
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="relative -mt-16 gradient-hero overflow-hidden">

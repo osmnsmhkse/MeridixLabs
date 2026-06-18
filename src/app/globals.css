@@ -657,7 +657,8 @@ body {
    glass treatment rather than a single washed compromise.
    ═══════════════════════════════════════════════════════════════ */
 
-.glass-tool {
+.glass-tool,
+.glass-site {
   position: relative;
   z-index: 0;
   isolation: isolate;            /* keep the ambient layer above <body> */
@@ -671,7 +672,8 @@ body {
   --glass-shadow:    0 24px 60px -34px rgba(20, 34, 64, 0.40);
   --glass-blur:      blur(22px) saturate(165%);
 }
-.dark .glass-tool {
+.dark .glass-tool,
+.dark .glass-site {
   --glass-base:      #05070D;
   --glass-panel:     rgba(18, 26, 43, 0.55);
   --glass-panel-2:   rgba(26, 36, 56, 0.66);
@@ -685,7 +687,8 @@ body {
 /* ── Ambient canvas — fixed colour pools behind everything ──────
    Cool clinical blue → scan-cyan → a whisper of violet/indigo.
    Reads as a calm, luminous lab atmosphere; cards refract it. */
-.glass-tool::before {
+.glass-tool::before,
+.glass-site::before {
   content: "";
   position: fixed;
   inset: 0;
@@ -700,7 +703,8 @@ body {
   animation: glassDrift 26s ease-in-out infinite alternate;
   will-change: transform;
 }
-.dark .glass-tool::before {
+.dark .glass-tool::before,
+.dark .glass-site::before {
   background:
     radial-gradient(48% 42% at 10% 4%,  rgba(47, 107, 224, 0.30), transparent 68%),
     radial-gradient(42% 40% at 90% 12%, rgba(34, 211, 238, 0.22), transparent 70%),
@@ -710,7 +714,8 @@ body {
 }
 
 /* ── Faint imaging grid — the "scan" texture, barely there ───── */
-.glass-tool::after {
+.glass-tool::after,
+.glass-site::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -725,7 +730,8 @@ body {
   -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
           mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
 }
-.dark .glass-tool::after { color: rgb(180 205 255); opacity: 0.05; }
+.dark .glass-tool::after,
+.dark .glass-site::after { color: rgb(180 205 255); opacity: 0.05; }
 
 @keyframes glassDrift {
   0%   { transform: translate3d(0, 0, 0) scale(1); }
@@ -833,5 +839,95 @@ body {
 /* ── Headless Chrome can't paint backdrop-filter; real browsers
    do. Nothing else depends on it, so degradation is graceful. ── */
 @media (prefers-reduced-motion: reduce) {
-  .glass-tool::before { animation: none; }
+  .glass-tool::before,
+  .glass-site::before { animation: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MARKETING GLASS  ·  scope: .glass-site
+   ───────────────────────────────────────────────────────────────
+   The homepage & marketing pages are built from FULL-WIDTH section
+   bands (gradient-hero, bg-surface, bg-duck, bg-paper, bg-navy) with
+   a few real cards (.bento, rounded surface cards). So unlike the
+   tools, we must NOT panel-ise the bands — instead they dissolve
+   into the shared ambient canvas, and only the cards become glass.
+   Cards are distinguished by carrying a `rounded-*` utility; bands
+   never do. The editorial type, kickers, numerals & drawn rules all
+   ride on top unchanged.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Section bands dissolve into the ambient ──────────────────── */
+.glass-site .gradient-hero,
+.glass-site .bg-surface:not([class*="rounded-"]),
+.glass-site .bg-surface-raised:not([class*="rounded-"]) {
+  background: transparent !important;
+}
+
+/* Keep a whisper of editorial rhythm: duck/paper bands tint the
+   ambient rather than paint over it. */
+.glass-site .bg-duck:not([class*="rounded-"]),
+.glass-site .bg-paper:not([class*="rounded-"]) {
+  background: rgba(74, 133, 239, 0.035) !important;
+}
+.dark .glass-site .bg-duck:not([class*="rounded-"]),
+.dark .glass-site .bg-paper:not([class*="rounded-"]) {
+  background: rgba(80, 130, 230, 0.05) !important;
+}
+
+/* ── Navy CTA band → deep glass slab (white text keeps contrast) ─ */
+.glass-site .bg-navy {
+  background: rgba(9, 14, 26, 0.62) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+          backdrop-filter: blur(22px) saturate(150%);
+}
+.dark .glass-site .bg-navy {
+  background: rgba(6, 10, 20, 0.66) !important;
+}
+
+/* ── Cards → frosted glass panels ─────────────────────────────
+   .bento, and any rounded element carrying a surface/white fill. */
+.glass-site .bento,
+.glass-site [class*="rounded-"][class*="bg-white"],
+.glass-site [class*="rounded-"][class*="bg-surface"] {
+  background-color: var(--glass-panel) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+          backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-edge-lit),
+    var(--glass-shadow) !important;
+  border-color: var(--glass-edge) !important;
+}
+
+/* Hover-raise on the editorial index rows reads as a faint frost */
+.glass-site .hover\:bg-surface-raised:hover {
+  background-color: var(--glass-well) !important;
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+}
+
+/* ── Glass hairline edges & dividers ──────────────────────────── */
+.glass-site .border-surface-border,
+.dark .glass-site .border-surface-border {
+  border-color: var(--glass-edge) !important;
+}
+.glass-site .divide-surface-border > * {
+  border-color: var(--glass-edge) !important;
+}
+.glass-site .gradient-line { background: var(--glass-edge); }
+
+/* ── The Scan over glass ───────────────────────────────────────
+   In LIGHT mode the stacked white slices bloomed bright over the
+   ambient (the cyan pool sits right under the sculpture) and washed
+   out the ultra-light hero headline where they overlap. Re-tint the
+   slices to a faint blue wireframe so the volume still reads but the
+   bloom no longer competes with the type. Dark mode is untouched —
+   there the sculpture is the star. */
+.glass-site .scan-slice {
+  background-color: rgba(47, 107, 224, 0.05) !important;
+  border-color: rgba(27, 30, 36, 0.14) !important;
+}
+.dark .glass-site .scan-slice {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  border-color: rgba(255, 255, 255, 0.13) !important;
+}
+

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
   const t = await getTranslations("About");
   return (
-    <div className="min-h-screen">
+    <div className="glass-site min-h-screen">
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="gradient-hero grain -mt-16 pt-52 pb-20 relative overflow-hidden">
         <div className="aurora-field" aria-hidden="true" data-parallax="0.16">

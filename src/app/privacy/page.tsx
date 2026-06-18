@@ -14,7 +14,7 @@ const CONTACT_EMAIL = "contact@meridixlabs.com";
 export default async function PrivacyPolicyPage() {
   const t = await getTranslations("Privacy");
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="glass-site min-h-screen">
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section className="gradient-hero -mt-16 pt-52 pb-14 relative overflow-hidden">
         <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-brand-blue/8 rounded-full blur-3xl pointer-events-none" />
