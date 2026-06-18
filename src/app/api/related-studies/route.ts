@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import { searchArticles, type PubMedArticle, type ArticleType } from "@/lib/pubmed";
 import { resolveSearchTerms, type Direction } from "@/lib/markerSearchTerms";
 import { supabaseServer, isAccountsEnabled } from "@/lib/supabase";
@@ -123,6 +124,7 @@ ${blocks}`;
     const response = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 700,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],
     });
     const raw = response.content[0].type === "text" ? response.content[0].text : "{}";

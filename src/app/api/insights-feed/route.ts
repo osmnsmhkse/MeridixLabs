@@ -9,6 +9,7 @@ import { errorResponse } from "@/lib/apiError";
 import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import { supabaseServer } from "@/lib/supabase";
 import { normalizeAnalyses, biggestMovers, groupBySystem, Analysis } from "@/lib/dashboardData";
 import { detectMedications, relevantInteractions } from "@/lib/medInteractions";
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
     const resp = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 700,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{
         role: "user",
         content: `Generate exactly 3 short health insights for this user based on the evidence below. Each insight is a specific, actionable observation grounded in their actual data — no generic wellness platitudes.

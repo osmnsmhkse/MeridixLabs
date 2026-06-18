@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -56,6 +57,7 @@ Rules:
     const response = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 800,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],
     });
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import type { LabValue, PracticeCase } from "@/types/learn";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -73,6 +74,7 @@ Rules:
     const response = await client.messages.create({
       model: "claude-sonnet-4-0",
       max_tokens: 2000,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],
     });
 

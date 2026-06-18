@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -93,7 +94,7 @@ ${notableFlags.length === 0 && allFlags.length > 0 ? "All values are within norm
     const response = await client.messages.create({
       model: "claude-sonnet-4-0",
       max_tokens: 800,
-      system: systemPrompt,
+      system: systemPrompt + IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: userPrompt }],
     });
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -194,7 +195,7 @@ export async function POST(request: NextRequest) {
         durationClean,
         historyClean,
         languageClean
-      ),
+      ) + IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: userContent }],
     });
 

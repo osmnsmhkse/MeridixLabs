@@ -5,6 +5,7 @@ import { escapeHtml } from "@/lib/escapeHtml";
 import { MAX_FREETEXT_CHARS } from "@/lib/inputLimits";
 import { Resend } from "resend";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -57,7 +58,7 @@ async function generateQuestions(body: SendEmailBody): Promise<string[]> {
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-0",
     max_tokens: 800,
-    system: systemPrompt,
+    system: systemPrompt + IDENTITY_CONFIDENTIALITY,
     messages: [{
       role: "user",
       content: `Generate 5 patient questions. Language: ${lang}.\n\n${context}`,

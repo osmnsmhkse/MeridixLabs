@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import { supabaseServer } from "@/lib/supabase";
 import { normalizeAnalyses, groupBySystem, biggestMovers, Analysis } from "@/lib/dashboardData";
 
@@ -63,6 +64,7 @@ export async function POST(request: NextRequest) {
       const resp = await client.messages.create({
         model: "claude-sonnet-4-6",
         max_tokens: 300,
+        system: IDENTITY_CONFIDENTIALITY,
         messages: [{ role: "user", content: `Write one short plain-English sentence (max 30 words) summarizing the key findings from this person's first lab report. Use specific marker names and values from the data. No disclaimers.\n\nData: ${JSON.stringify(flagContext)}\n\nReturn ONLY the sentence.` }],
       });
       const insight = resp.content[0].type === "text" ? resp.content[0].text.trim() : `Your first report flagged ${flagCount} marker${flagCount === 1 ? "" : "s"}. Upload your next lab to see how things change.`;
@@ -89,6 +91,7 @@ export async function POST(request: NextRequest) {
     const resp = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 400,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{
         role: "user",
         content: `You write one short, plain-English paragraph (~50 words max) summarizing what changed in this person's labs since their first report. Lead with the most important shift — positive or concerning. Use specific numbers from the data. No medical advice, no disclaimers, no bullet points. Data:\n\n${JSON.stringify(context)}\n\nReturn ONLY the paragraph text, nothing else.`,

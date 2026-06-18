@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -457,7 +458,7 @@ async function handleModeB(request: NextRequest): Promise<NextResponse> {
   const response = await client.messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 3500,
-    system: buildModeBPrompt(tier, language),
+    system: buildModeBPrompt(tier, language) + IDENTITY_CONFIDENTIALITY,
     messages: [
       {
         role: "user",
@@ -575,7 +576,7 @@ async function handleModeC(request: NextRequest): Promise<NextResponse> {
   const response = await client.messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 3500,
-    system: buildModeCPrompt(tier, language, inputType),
+    system: buildModeCPrompt(tier, language, inputType) + IDENTITY_CONFIDENTIALITY,
     messages: [{ role: "user", content }],
   });
 

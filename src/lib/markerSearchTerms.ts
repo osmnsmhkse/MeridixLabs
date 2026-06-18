@@ -9,6 +9,7 @@
 // article shown to the user comes from the live PubMed query these terms drive.
 
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "./toolChatConfig";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -78,6 +79,7 @@ Return ONLY a JSON array of strings, no markdown. Example: ["phrase one", "phras
     const response = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 200,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],
     });
     const raw = response.content[0].type === "text" ? response.content[0].text : "[]";

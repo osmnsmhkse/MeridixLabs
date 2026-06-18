@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import { supabaseServer } from "@/lib/supabase";
 import { bySlug } from "@/lib/biomarkers";
 import { normalizeAnalyses, Analysis } from "@/lib/dashboardData";
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
     const context = {
       marker: {
         name: def.canonical,
-        system: def.system,
+        system: def.system + IDENTITY_CONFIDENTIALITY,
         unit: def.unit,
         optimal: def.optimal,
         normal: def.normal,

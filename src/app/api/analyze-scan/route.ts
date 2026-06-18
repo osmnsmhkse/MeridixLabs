@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest) {
     const response = await client.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4000,
-      system: SCAN_SYSTEM_PROMPT,
+      system: SCAN_SYSTEM_PROMPT + IDENTITY_CONFIDENTIALITY,
       messages: [
         {
           role: "user",

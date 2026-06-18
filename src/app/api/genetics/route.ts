@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import {
   VARIANT_CATALOG,
   SIGNIFICANCE_LABEL,
@@ -302,7 +303,7 @@ async function callClaude(
   const response = await client.messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 4000,
-    system: systemPrompt,
+    system: systemPrompt + IDENTITY_CONFIDENTIALITY,
     messages: [{ role: "user", content }],
   });
 

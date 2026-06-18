@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -46,6 +47,7 @@ Write a 2–3 sentence trend summary in plain, warm language. Note whether the t
     const response = await client.messages.create({
       model: "claude-sonnet-4-0",
       max_tokens: 300,
+      system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],
     });
 
