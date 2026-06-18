@@ -11,6 +11,7 @@ import { errorResponse } from "@/lib/apiError";
 import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import { supabaseServer } from "@/lib/supabase";
 import { normalizeAnalyses, groupBySystem, biggestMovers, Analysis } from "@/lib/dashboardData";
 
@@ -126,7 +127,7 @@ export async function POST(request: NextRequest) {
     const stream = client.messages.stream({
       model: "claude-sonnet-4-6",
       max_tokens: 1024,
-      system: sys,
+      system: sys + IDENTITY_CONFIDENTIALITY,
       messages: messages as Anthropic.MessageParam[],
     });
 

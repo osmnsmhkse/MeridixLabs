@@ -18,6 +18,7 @@ import { NextRequest } from "next/server";
 import { rateLimit } from "@/lib/ratelimit";
 import { currentUser } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { IDENTITY_CONFIDENTIALITY } from "@/lib/toolChatConfig";
 import { supabaseServer } from "@/lib/supabase";
 import { getProfileForCurrentUser } from "@/lib/userProfile";
 
@@ -234,7 +235,7 @@ export async function POST(request: NextRequest) {
         const stream = await client.messages.stream({
           model: "claude-sonnet-4-6",
           max_tokens: 1024,
-          system: systemPrompt,
+          system: systemPrompt + IDENTITY_CONFIDENTIALITY,
           messages: messages.map((m) => ({ role: m.role, content: m.content })) as Anthropic.MessageParam[],
         });
 
