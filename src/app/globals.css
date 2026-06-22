@@ -418,6 +418,31 @@ body {
 }
 .status-in { animation: statusIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
+/* ── Demo layout — responds to the PANEL's own width ─────
+   The surface appears both full-width in the hero and inside a
+   half-width grid column in Features, so the body switches to a
+   two-column "console" via a container query (viewport breakpoints
+   would mis-fire in the narrow column). */
+.demo-stage { container-type: inline-size; }
+
+/* Faint tint so the source/meta strip reads as a distinct band on the
+   frosted panel (the token bg-surface-raised is dissolved by glass-site). */
+.demo-meta { background: rgba(15, 23, 42, 0.025); }
+.dark .demo-meta { background: rgba(255, 255, 255, 0.035); }
+
+.demo-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+@container (min-width: 680px) {
+  .demo-cols {
+    grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: stretch;
+  }
+}
+
 /* ── Nav entrance — one quiet slide on load ────────────── */
 @keyframes navIn {
   from { opacity: 0; transform: translateY(-10px); }

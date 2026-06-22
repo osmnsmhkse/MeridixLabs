@@ -89,7 +89,7 @@ export default function LandingPage() {
           </div>
 
           {/* The product, centered — performs its own entrance */}
-          <div className="mt-14 lg:mt-20 max-w-3xl mx-auto">
+          <div className="mt-14 lg:mt-20 max-w-5xl mx-auto">
             <LabInterpretationDemo />
           </div>
 

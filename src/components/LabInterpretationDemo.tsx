@@ -208,6 +208,8 @@ function RollingValue({
 }
 
 // ── One biomarker, rendered as the signature range track ────────────────────
+//  A flat readout row (hairline-separated), so the range track is the hero
+//  and we avoid stacking a frosted card inside the frosted panel.
 function BiomarkerTrack({
   m,
   row,
@@ -225,22 +227,20 @@ function BiomarkerTrack({
   const base = row * ROW_DELAY;
   return (
     <div
-      className={`relative rounded-2xl border border-surface-border bg-surface px-4 py-3 transition-opacity duration-300 ${
-        dim ? "opacity-55" : ""
-      }`}
+      className={`relative py-3.5 transition-opacity duration-300 ${dim ? "opacity-55" : ""}`}
     >
       {/* status spine */}
-      <div className={`absolute left-0 top-2 bottom-2 w-1 rounded-full ${a.spine}`} />
+      <span className={`absolute left-0 top-4 bottom-4 w-[2px] rounded-full ${a.spine}`} />
 
-      <div className="flex items-center justify-between gap-3 pl-2">
+      <div className="flex items-center justify-between gap-3 pl-3.5">
         <span className="text-[13px] font-semibold text-ink">{m.name}</span>
-        <div className="flex items-center gap-2">
-          <span className="font-mono-data text-sm font-bold text-ink tabular-nums">
+        <div className="flex items-baseline gap-1.5">
+          <span className="font-mono-data text-[15px] font-bold text-ink tabular-nums">
             <RollingValue value={m.value} live={live} reduce={reduce} delayMs={base * 1000} />
           </span>
           <span className="font-mono-data text-[11px] text-ink-tertiary">{m.unit}</span>
           <span
-            className={`demo-pill text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${a.pill}`}
+            className={`demo-pill ml-1 self-center text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${a.pill}`}
             style={{ ["--zd" as string]: `${base + 0.65}s` }}
           >
             {m.statusLabel}
@@ -249,7 +249,7 @@ function BiomarkerTrack({
       </div>
 
       {/* range track with zone bands + you-are-here caret */}
-      <div className="relative mt-2.5 pl-2">
+      <div className="relative mt-2.5 pl-3.5">
         <div className="flex h-2 rounded-full overflow-hidden">
           {m.zones.map((z, i) => (
             <div
@@ -261,7 +261,7 @@ function BiomarkerTrack({
         </div>
         <div
           className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `calc(${m.pct}% + 0.5rem)` }}
+          style={{ left: `calc(${m.pct}% + 0.875rem)` }}
         >
           <div className="demo-caret" style={{ ["--zd" as string]: `${base + 0.55}s` }}>
             <div className={`w-3 h-3 rounded-full ${a.caret} ring-2 ring-surface shadow-sm`} />
@@ -269,7 +269,7 @@ function BiomarkerTrack({
         </div>
       </div>
 
-      <p className="font-mono-data text-[10px] text-ink-tertiary mt-2 pl-2">ref · {m.ref}</p>
+      <p className="font-mono-data text-[10px] text-ink-tertiary mt-2 pl-3.5">ref · {m.ref}</p>
     </div>
   );
 }
@@ -317,17 +317,17 @@ export default function LabInterpretationDemo() {
     <div ref={rootRef} className={`demo-stage relative ${live ? "is-live" : ""}`}>
       <div className="bento">
         {/* Window header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-brand-blue flex items-center justify-center text-white">
+        <div className="flex items-center justify-between gap-3 px-5 sm:px-7 py-4 sm:py-5 border-b border-surface-border">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-brand-blue flex items-center justify-center text-white flex-shrink-0">
               <PulseMark className="w-5 h-5" />
             </div>
-            <div className="leading-tight">
-              <p className="text-sm font-bold text-ink">Lipid Panel — Cardiovascular</p>
+            <div className="leading-tight min-w-0">
+              <p className="text-[15px] font-bold text-ink truncate">Lipid Panel — Cardiovascular</p>
               <p className="text-[11px] text-ink-tertiary">Meridix · Report Interpretation</p>
             </div>
           </div>
-          <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider">
+          <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider flex-shrink-0">
             {analyzed ? (
               <span className="status-in inline-flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -345,88 +345,105 @@ export default function LabInterpretationDemo() {
         </div>
 
         {/* Uploaded source — step 1, made visible */}
-        <div className="flex items-center justify-between gap-3 px-5 py-2.5 bg-surface-raised border-b border-surface-border">
+        <div className="flex items-center justify-between gap-3 px-5 sm:px-7 py-2.5 border-b border-surface-border demo-meta">
           <span className="inline-flex items-center gap-2 text-[11px] text-ink-secondary min-w-0">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue flex-shrink-0">
               <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
             </svg>
             <span className="font-mono-data truncate">lipid-panel.pdf</span>
             <span className="text-ink-tertiary">·</span>
-            <span className="text-ink-tertiary">8 markers detected</span>
+            <span className="text-ink-tertiary whitespace-nowrap">8 markers detected</span>
           </span>
-          <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-ink-tertiary kicker-mono">
+          <span className="hidden sm:inline-flex items-center gap-1 text-[10px] text-ink-tertiary kicker-mono flex-shrink-0">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-emerald-500"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
             Encrypted
           </span>
         </div>
 
-        {/* Depth control — Simple / Medium / Expert */}
-        <div className="px-5 pt-4 flex items-center gap-2">
-          <span className="text-[10px] kicker-mono text-ink-tertiary mr-0.5">Reading level</span>
-          {(["Simple", "Medium", "Expert"] as Tier[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTier(t)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-all duration-200 ${
-                t === tier
-                  ? "bg-ink text-surface"
-                  : "text-ink-tertiary hover:text-ink-secondary bg-surface-raised"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-
         {/* Body */}
-        <div className="p-5 space-y-3">
-          <p className="text-[13px] text-ink-secondary leading-relaxed">{n.summary}</p>
-
-          {/* Biomarker range tracks — the flagged ones first */}
-          <div className="space-y-2">
-            {MARKERS.map((m, i) => (
-              <BiomarkerTrack
-                key={m.name}
-                m={m}
-                row={i}
-                live={live}
-                reduce={reduce}
-                dim={m.status === "normal"}
-              />
-            ))}
+        <div className="px-5 sm:px-7 py-5 sm:py-6">
+          {/* Toolbar — reading-level depth control */}
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-[10px] kicker-mono text-ink-tertiary">Reading level</span>
+            <div className="inline-flex items-center gap-0.5 rounded-lg p-0.5 bg-black/[0.04] dark:bg-white/[0.06]">
+              {(["Simple", "Medium", "Expert"] as Tier[]).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTier(t)}
+                  className={`px-3 py-1 rounded-md text-xs font-medium transition-all duration-200 ${
+                    t === tier
+                      ? "bg-ink text-surface shadow-sm"
+                      : "text-ink-tertiary hover:text-ink-secondary"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Signature interpretation annotation — focused on the flag */}
-          <div className="demo-verdict relative rounded-xl border border-brand-blue/25 bg-brand-blue/[0.06] p-4 overflow-hidden">
-            <div className="absolute left-0 top-3 bottom-3 w-1 rounded-full bg-brand-blue" />
-            <div className="flex items-center gap-2 mb-3 pl-2">
-              <span className="w-5 h-5 rounded-md bg-brand-blue text-white flex items-center justify-center">
-                <PulseMark className="w-3 h-3" />
-              </span>
-              <span className="kicker-mono text-brand-blue-dark dark:text-brand-blue">Meridix interpretation</span>
-              <span className="ml-auto text-[10px] text-ink-tertiary font-mono-data">↳ LDL Cholesterol</span>
-            </div>
+          {/* Lead summary */}
+          <p className="mt-3.5 text-sm sm:text-[15px] text-ink-secondary leading-relaxed text-pretty">
+            {n.summary}
+          </p>
 
-            <div className="pl-2 space-y-3">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-1">What this means</p>
-                <p className="text-[13px] text-ink-secondary leading-relaxed">{n.means}</p>
+          {/* Two-column console — collapses to one when the panel is narrow */}
+          <div className="demo-cols mt-5">
+            {/* Biomarker range tracks — the flagged ones first */}
+            <section className="min-w-0">
+              <div className="flex items-baseline justify-between mb-0.5">
+                <span className="kicker-mono text-ink-tertiary">Biomarkers</span>
+                <span className="font-mono-data text-[10px] text-ink-tertiary">4 of 8 shown</span>
               </div>
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-1">Recommended next step</p>
-                <p className="text-[13px] text-ink-secondary leading-relaxed flex items-start gap-1.5">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue mt-0.5 flex-shrink-0"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                  <span>{n.next}</span>
-                </p>
+              <div className="divide-y divide-surface-border">
+                {MARKERS.map((m, i) => (
+                  <BiomarkerTrack
+                    key={m.name}
+                    m={m}
+                    row={i}
+                    live={live}
+                    reduce={reduce}
+                    dim={m.status === "normal"}
+                  />
+                ))}
               </div>
-              <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary">Suggested specialist</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-[11px] font-semibold">
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" /></svg>
-                  Preventive Cardiology
-                </span>
+            </section>
+
+            {/* Signature interpretation annotation — focused on the flag */}
+            <aside className="demo-verdict-col flex min-w-0">
+              <div className="demo-verdict relative flex flex-col w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/[0.06] p-4 sm:p-5 overflow-hidden">
+                <div className="absolute left-0 top-4 bottom-4 w-1 rounded-full bg-brand-blue" />
+                <div className="flex items-center gap-2 mb-3.5 pl-2">
+                  <span className="w-5 h-5 rounded-md bg-brand-blue text-white flex items-center justify-center flex-shrink-0">
+                    <PulseMark className="w-3 h-3" />
+                  </span>
+                  <span className="kicker-mono text-brand-blue-dark dark:text-brand-blue">Meridix interpretation</span>
+                  <span className="ml-auto text-[10px] text-ink-tertiary font-mono-data whitespace-nowrap">↳ LDL Cholesterol</span>
+                </div>
+
+                <div className="pl-2 space-y-4 flex-1">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-1">What this means</p>
+                    <p className="text-[13px] text-ink-secondary leading-relaxed">{n.means}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary mb-1">Recommended next step</p>
+                    <p className="text-[13px] text-ink-secondary leading-relaxed flex items-start gap-1.5">
+                      <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 text-brand-blue mt-0.5 flex-shrink-0"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                      <span>{n.next}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 pt-4 mt-4 pl-2 border-t border-brand-blue/15">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-ink-tertiary">Suggested specialist</span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-[11px] font-semibold">
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" /></svg>
+                    Preventive Cardiology
+                  </span>
+                </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </div>
