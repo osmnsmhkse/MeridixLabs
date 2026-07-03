@@ -918,6 +918,19 @@ body {
   border-color: var(--glass-edge) !important;
 }
 
+/* Rounded gradient cards (dashboard overview / accent panels) frost too —
+   drop the gradient fill for glass but keep any intentional coloured border
+   (e.g. border-brand-blue/30). Marketing has no rounded bg-gradient cards. */
+.glass-site [class*="rounded-"][class*="bg-gradient-to"] {
+  background-image: none !important;
+  background-color: var(--glass-panel) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+          backdrop-filter: var(--glass-blur);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-edge-lit),
+    var(--glass-shadow) !important;
+}
+
 /* Hover-raise on the editorial index rows reads as a faint frost */
 .glass-site .hover\:bg-surface-raised:hover {
   background-color: var(--glass-well) !important;
