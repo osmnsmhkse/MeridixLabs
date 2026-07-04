@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { findBiomarker, BODY_SYSTEMS, type BiomarkerDef, type BodySystem } from "@/lib/biomarkers";
 import { useTranslations } from "next-intl";
+import { RangeTrack, StatusPill, ACCENT, buildTrack } from "./biomarkerVisuals";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -186,138 +187,62 @@ function SystemIcon({ system, className = "" }: { system: BodySystem; className?
   }
 }
 
-// ── Visual range bar ──────────────────────────────────────────────────────────
+// ── Visual range track (shared signature visual — matches the marketing hero) ──
 
 function RangeBar({ lab }: { lab: ParsedLab }) {
-  const t = useTranslations("LabPanel");
-  const { numValue, refLow, refHigh, status } = lab;
-  if (numValue == null || (refLow == null && refHigh == null)) return null;
-
-  // Determine bar window
-  let barMin: number, barMax: number;
-  if (refLow != null && refHigh != null) {
-    const span = Math.max(refHigh - refLow, 1);
-    const pad = span * 0.55;
-    barMin = Math.min(refLow - pad, numValue - span * 0.25);
-    barMax = Math.max(refHigh + pad, numValue + span * 0.25);
-  } else if (refHigh != null) {
-    barMin = 0;
-    barMax = Math.max(refHigh * 1.6, numValue * 1.25, refHigh + 1);
-  } else if (refLow != null) {
-    barMin = Math.max(0, refLow * 0.4);
-    barMax = Math.max(refLow * 1.8, numValue * 1.25, refLow + 1);
-  } else return null;
-
-  const range = Math.max(barMax - barMin, 0.0001);
-  const lowPct = refLow != null ? Math.max(0, ((refLow - barMin) / range) * 100) : 0;
-  const highPct = refHigh != null ? Math.min(100, ((refHigh - barMin) / range) * 100) : 100;
-  const youPct = Math.max(2, Math.min(98, ((numValue - barMin) / range) * 100));
-
-  const youColor = status === "high" || status === "low" ? "bg-red-500" : status === "normal" ? "bg-emerald-500" : "bg-slate-400";
-  const youRing = status === "high" || status === "low" ? "ring-red-200 dark:ring-red-900" : status === "normal" ? "ring-emerald-200 dark:ring-emerald-900" : "ring-slate-200";
-
+  const track = buildTrack(lab.numValue, lab.refLow, lab.refHigh, lab.def?.direction ?? "u-shape");
+  if (!track) return null;
   return (
-    <div className="mt-3">
-      <div className="relative">
-        {/* The bar itself */}
-        <div className="relative h-2 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800">
-          {/* Low zone */}
-          {refLow != null && (
-            <div className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-red-300/80 to-amber-200/70" style={{ width: `${lowPct}%` }} />
-          )}
-          {/* Normal zone */}
-          <div
-            className="absolute top-0 bottom-0 bg-gradient-to-r from-emerald-300 via-emerald-400 to-emerald-300"
-            style={{ left: `${lowPct}%`, width: `${highPct - lowPct}%` }}
-          />
-          {/* High zone */}
-          {refHigh != null && (
-            <div className="absolute right-0 top-0 bottom-0 bg-gradient-to-l from-red-300/80 to-amber-200/70" style={{ width: `${100 - highPct}%` }} />
-          )}
-        </div>
-
-        {/* Boundary tick marks */}
-        {refLow != null && (
-          <div className="absolute top-0 -translate-x-1/2 h-2 w-px bg-emerald-700/40" style={{ left: `${lowPct}%` }} />
-        )}
-        {refHigh != null && (
-          <div className="absolute top-0 -translate-x-1/2 h-2 w-px bg-emerald-700/40" style={{ left: `${highPct}%` }} />
-        )}
-
-        {/* "You" marker */}
-        <div className="absolute -top-1.5 -translate-x-1/2" style={{ left: `${youPct}%` }}>
-          <div className={`w-5 h-5 rounded-full ring-4 ${youRing} ${youColor} border-2 border-white dark:border-slate-900 shadow-sm`} />
-        </div>
-      </div>
-
-      {/* Threshold labels + zone hints */}
-      <div className="relative h-4 mt-1.5 text-[10px] font-medium text-ink-tertiary">
-        <span className="absolute left-0 text-red-500/80">{t("lowLabel")}</span>
-        {refLow != null && (
-          <span className="absolute -translate-x-1/2 font-mono-data text-emerald-700 dark:text-emerald-400" style={{ left: `${lowPct}%` }}>
-            {fmtNum(refLow)}
-          </span>
-        )}
-        {refHigh != null && (
-          <span className="absolute -translate-x-1/2 font-mono-data text-emerald-700 dark:text-emerald-400" style={{ left: `${highPct}%` }}>
-            {fmtNum(refHigh)}
-          </span>
-        )}
-        <span className="absolute right-0 text-red-500/80">{t("highLabel")}</span>
-      </div>
+    <div className="mt-2.5">
+      <RangeTrack zones={track.zones} pct={track.pct} status={lab.status} />
     </div>
   );
 }
 
-function fmtNum(n: number): string {
-  if (Number.isInteger(n)) return String(n);
-  return n.toFixed(n < 10 ? 2 : 1).replace(/\.?0+$/, "");
-}
+// ── Status label (feeds the shared StatusPill) ────────────────────────────────
 
-// ── Status badge ──────────────────────────────────────────────────────────────
-
-function StatusBadge({ status }: { status: ParsedLab["status"] }) {
+function useStatusLabel() {
   const t = useTranslations("LabPanel");
-  const cx =
-    status === "high" ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" :
-    status === "low" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" :
-    status === "normal" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" :
-    "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400";
-  const label = status === "high" ? t("highStatus") : status === "low" ? t("lowStatus") : status === "normal" ? t("normalStatus") : "—";
-  return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${cx}`}>{label}</span>;
+  return (status: ParsedLab["status"]) =>
+    status === "high" ? t("highStatus") :
+    status === "low" ? t("lowStatus") :
+    status === "normal" ? t("normalStatus") : "—";
 }
 
 // ── Flagged marker row ────────────────────────────────────────────────────────
 
 function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
-  const valueColor =
-    lab.status === "high" ? "text-red-600 dark:text-red-400" :
-    lab.status === "low" ? "text-amber-600 dark:text-amber-400" :
-    "text-emerald-600 dark:text-emerald-400";
+  const statusLabel = useStatusLabel();
+  const a = ACCENT[lab.status];
 
   return (
-    <div className="rounded-xl border border-surface-border bg-surface-raised/40 p-4">
-      <div className="flex items-start justify-between gap-3">
+    <div className="relative py-3.5">
+      {/* status spine */}
+      <span className={`absolute left-0 top-4 bottom-4 w-[2px] rounded-full ${a.spine}`} />
+
+      <div className="flex items-start justify-between gap-3 pl-3.5">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-bold text-ink">{lab.marker}</p>
-            <StatusBadge status={lab.status} />
+            <p className="text-[13px] font-semibold text-ink">{lab.marker}</p>
+            <StatusPill status={lab.status} label={statusLabel(lab.status)} />
           </div>
           {lab.blurb && (
-            <p className="text-[11px] text-ink-tertiary leading-snug mt-1">{lab.blurb}</p>
+            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5">{lab.blurb}</p>
           )}
         </div>
-        <div className="text-right shrink-0">
-          <p className={`text-xl font-extrabold tabular-nums leading-none ${valueColor}`}>
-            {lab.rawValue}
-            {lab.unit && <span className="text-[11px] font-semibold text-ink-tertiary ml-1">{lab.unit}</span>}
-          </p>
-          {lab.reference && (
-            <p className="text-[10px] text-ink-tertiary mt-1 font-mono-data">ref {lab.reference}</p>
-          )}
+        <div className="flex items-baseline gap-1.5 shrink-0">
+          <span className={`font-mono-data text-[15px] font-bold tabular-nums ${a.text}`}>{lab.rawValue}</span>
+          {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary">{lab.unit}</span>}
         </div>
       </div>
-      <RangeBar lab={lab} />
+
+      <div className="pl-3.5">
+        <RangeBar lab={lab} />
+      </div>
+
+      {lab.reference && (
+        <p className="font-mono-data text-[10px] text-ink-tertiary mt-2 pl-3.5">ref · {lab.reference}</p>
+      )}
     </div>
   );
 }
@@ -411,9 +336,9 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
         />
       </div>
 
-      {/* Flagged markers with sliders */}
+      {/* Flagged markers — signature range tracks, hairline-separated */}
       {group.flagged.length > 0 && (
-        <div className="p-5 space-y-3">
+        <div className="px-5 divide-y divide-surface-border">
           {group.flagged.map((lab, i) => (
             <FlaggedMarkerRow key={`flag-${i}-${lab.marker}`} lab={lab} />
           ))}
