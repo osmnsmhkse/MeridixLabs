@@ -121,7 +121,7 @@ WEARABLE / APPLE HEALTH DATA INCLUDED: The user has also provided an export from
 1. Cross-reference the wearable data with the lab results where clinically relevant. Look for patterns such as: elevated resting heart rate correlating with anemia or thyroid issues; poor sleep patterns that may explain elevated cortisol or blood sugar; low daily step counts that may relate to metabolic markers; HRV trends that may reflect autonomic or cardiovascular context.
 2. In the "health_insights" field (see below), write 2–4 sentences describing specific connections you found between the wearable data and the lab values. Be specific — mention actual metrics from both sources. Example: "Your Apple Health data shows an elevated resting heart rate of 88 bpm over the past 30 days, which may be consistent with your low hemoglobin level of 10.2 g/dL — anemia can cause the heart to work harder to compensate for reduced oxygen delivery."
 3. If no meaningful connections exist, say so briefly and explain why the data is still useful for their overall health picture.
-14. "health_insights" — ONLY include this field when wearable/Apple Health data was provided alongside the lab report. Write 2–4 sentences identifying specific patterns or connections between the wearable data and the lab values. Be concrete and reference actual values from both sources. If no clear connection exists, write a brief note explaining what the wearable data suggests about lifestyle factors relevant to these results.`;
+14. "health_insights" — Set this to null unless wearable/Apple Health data was provided alongside the lab report. When it was, write 2–4 sentences identifying specific patterns or connections between the wearable data and the lab values. Be concrete and reference actual values from both sources. If no clear connection exists, write a brief note explaining what the wearable data suggests about lifestyle factors relevant to these results.`;
 }
 
 function buildSystemPrompt(languageName: string, patientContext = "", hasHealthData = false): string {
@@ -129,6 +129,8 @@ function buildSystemPrompt(languageName: string, patientContext = "", hasHealthD
   return `You are a senior medical expert at Meridix Labs.${patientContext} You will receive an image or PDF of a medical lab result. Your job is to analyze the results thoroughly and return a JSON object with the following fields. All text content MUST be written in ${languageName}.
 
 Fields required:
+
+0. "is_medical_report" — a boolean. Set it to true when the document really is a medical lab report. Set it to FALSE when the document is anything else (a receipt, an ID card, a screenshot, a random photo, a text document with no lab values). When you set it to false, fill the remaining fields with a one-line note that the document is not a lab report and return empty "flags" and "labs" arrays — do not invent findings.
 
 1. "overall_status" — ONE of exactly three string values: "normal" (all values within reference range or clinically insignificant deviations), "amber" (one or two values mildly abnormal and worth discussing with a doctor), or "red" (multiple or significantly abnormal values that need medical attention). Choose based on clinical significance, not just raw flag count.
 
@@ -156,9 +158,9 @@ Fields required:
 
 12b. "labs" — REQUIRED. An array containing EVERY measured lab value found in the report (not just abnormal ones), in the order they appear. Same shape: { marker, value, unit, reference, status } where status is "high", "low", or "normal". Use the marker name EXACTLY as written in the report. Use the canonical English biomarker name when the report is in another language (e.g., "Hemoglobin" not "Hemoglobin/HGB", "Vitamin D" not "Vit D 25-OH"). Always include the reference range as a string like "70-99" or "<100" or ">40". For Turkish/non-English reports, translate marker names to English: HEMOGLOBIN→Hemoglobin, GLUKOZ→Glucose, KREATİNİN→Creatinine, KOLESTEROL→Total Cholesterol, HDL KOL→HDL Cholesterol, LDL KOL→LDL Cholesterol, TRİGLİSERİT→Triglycerides, ÜRİK ASİT→Uric Acid, AST→AST, ALT (SGPT)→ALT, GGT→GGT, ALKALEN FOSFATAZ→Alkaline Phosphatase, BİLİRUBİN→Bilirubin, ALBÜMİN→Albumin, DEMİR→Iron, FERRİTİN→Ferritin, FOLAT→Folate, B12→Vitamin B12, D VİTAMİNİ→Vitamin D, TSH→TSH, T3→Free T3, T4→Free T4, KALSİYUM→Calcium, MAGNEZYUM→Magnesium, SODYUM→Sodium, POTASYUM→Potassium, KLOR→Chloride, CRP→CRP, HBA1C→HbA1c, INSULIN→Insulin, TESTOSTERON→Testosterone, etc.
 
-13. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…"). If no medications were provided, omit this field entirely.
+13. "medication_context" — Set this to null unless the patient provided a medication list. When they did, write a plain-language paragraph explaining which of the patient's specific medications may be influencing which lab values in this report, and why. Be specific (e.g., "Your metformin may be affecting your B12 level…").
 
-14. "supplements" — ONLY include this field when one or more abnormal (high or low) values are present in the flags. Provide 3–5 specific, actionable supplement or lifestyle recommendations directly tied to the flagged biomarkers. Use this format for each: start with the supplement name and dose in double asterisks (e.g., **Vitamin D3 (2,000 IU/day)**), followed by a colon and a plain-English explanation of which biomarker it targets, why it helps, and a practical note. End each item with a reminder to consult a doctor. Separate recommendations with two newlines. If all values are normal, omit this field entirely. Never recommend supplements for radiology/pathology reports.
+14. "supplements" — Set this to null unless one or more abnormal (high or low) values are present in the flags. When there are, provide 3–5 specific, actionable supplement or lifestyle recommendations directly tied to the flagged biomarkers. Use this format for each: start with the supplement name and dose in double asterisks (e.g., **Vitamin D3 (2,000 IU/day)**), followed by a colon and a plain-English explanation of which biomarker it targets, why it helps, and a practical note. End each item with a reminder to consult a doctor. Separate recommendations with two newlines. If all values are normal, set this to null. Never recommend supplements for radiology/pathology reports.
 
 Always be accurate, warm, thorough, and never alarmist. Never make a definitive diagnosis — you are explaining possibilities, not diagnosing. Be educational and empowering.
 
@@ -197,6 +199,8 @@ function buildRadiologySystemPrompt(languageName: string, patientContext = ""): 
 
 Fields required:
 
+0. "is_medical_report" — a boolean. Set it to true when the document really is a radiology or pathology report. Set it to FALSE when it is anything else (a receipt, an ID card, a screenshot, a random photo, a document with no imaging or pathology findings). When you set it to false, fill the remaining fields with a one-line note that the document is not a medical report and return an empty "flags" array — do not invent findings.
+
 1. "overall_status" — ONE of exactly three string values: "normal" (report is entirely normal or findings are incidental/benign with no follow-up needed), "amber" (one or two findings that warrant a conversation with a physician but are not urgent), or "red" (findings that need prompt medical attention or specialist referral). Choose based on clinical significance.
 
 2. "summary_headline" — A single plain-language sentence (max 2 sentences) summarizing the most important finding. Write directly to the patient. IMPORTANT: This must be written in ${languageName} — not English. Never use alarming language. If the report is unremarkable, lead with the reassurance ("Your scan looks normal — no concerning findings.").
@@ -233,7 +237,7 @@ Fields required:
    - "status" is "high" (warrants attention/follow-up), "low" (incidental/benign, no action), or "normal" (expected finding)
    Only include findings explicitly mentioned in the report. If the report is entirely normal, return an empty array or a single { marker: "Overall Study", value: "normal", unit: "", reference: "no acute findings", status: "normal" } item.
 
-16. "medication_context" — ONLY include this field if the patient provided a medication list. If present, write a plain-language paragraph explaining which of the patient's specific medications may be relevant to the imaging findings (e.g., chronic steroid use and bone density, amiodarone and lung changes, immunosuppressants and infection risk). If no medications were provided, omit this field entirely.
+16. "medication_context" — Set this to null unless the patient provided a medication list. When they did, write a plain-language paragraph explaining which of the patient's specific medications may be relevant to the imaging findings (e.g., chronic steroid use and bone density, amiodarone and lung changes, immunosuppressants and infection risk).
 
 DEPTH TIER BEHAVIOR (applies to fields 6, 7, 8):
 - simple: plain language, no jargon, reassuring tone, focus on "what this means for you". Always identify the modality + body part first.
@@ -273,6 +277,96 @@ Return ONLY valid JSON, no markdown fences, no extra text. Example structure:
   "medication_context": "string (optional — only when medications were provided)"
 }`;
 }
+
+// ── Structured output ──────────────────────────────────────────────
+// Claude is constrained to these schemas via output_config.format. That
+// guarantees a parseable object instead of prose we have to fish JSON out
+// of, and it emits minified JSON — which costs roughly a quarter fewer
+// output tokens than the pretty-printed response the prompt alone produced.
+const MARKER_SCHEMA = {
+  type: "object",
+  properties: {
+    marker: { type: "string" },
+    value: { type: "string" },
+    unit: { type: "string" },
+    reference: { type: "string" },
+    status: { type: "string", enum: ["high", "low", "normal"] },
+  },
+  required: ["marker", "value", "unit", "reference", "status"],
+  additionalProperties: false,
+};
+
+// Every key is required — the schema has no way to express "omit this".
+// Fields the report doesn't warrant come back as null and are stripped
+// before the response leaves this route.
+const LAB_SCHEMA = {
+  type: "object",
+  properties: {
+    is_medical_report: { type: "boolean" },
+    report_date: { type: ["string", "null"] },
+    overall_status: { type: "string", enum: ["normal", "amber", "red"] },
+    summary_headline: { type: "string" },
+    urgency: { type: "string", enum: ["routine", "weeks", "soon"] },
+    simple: { type: "string" },
+    medium: { type: "string" },
+    expert: { type: "string" },
+    etiology: { type: "string" },
+    mechanism: { type: "string" },
+    diseases: { type: "string" },
+    specialist: { type: "string" },
+    action: { type: "string" },
+    flags: { type: "array", items: MARKER_SCHEMA },
+    labs: { type: "array", items: MARKER_SCHEMA },
+    medication_context: { type: ["string", "null"] },
+    health_insights: { type: ["string", "null"] },
+    supplements: { type: ["string", "null"] },
+  },
+  required: [
+    "is_medical_report", "report_date", "overall_status", "summary_headline",
+    "urgency", "simple", "medium", "expert", "etiology", "mechanism",
+    "diseases", "specialist", "action", "flags", "labs",
+    "medication_context", "health_insights", "supplements",
+  ],
+  additionalProperties: false,
+};
+
+const RADIOLOGY_SCHEMA = {
+  type: "object",
+  properties: {
+    is_medical_report: { type: "boolean" },
+    report_date: { type: ["string", "null"] },
+    overall_status: { type: "string", enum: ["normal", "amber", "red"] },
+    summary_headline: { type: "string" },
+    urgency: { type: "string", enum: ["routine", "weeks", "soon"] },
+    modality: { type: "string" },
+    body_part: { type: "string" },
+    simple: { type: "string" },
+    medium: { type: "string" },
+    expert: { type: "string" },
+    etiology: { type: "string" },
+    mechanism: { type: "string" },
+    diseases: { type: "string" },
+    specialist: { type: "string" },
+    action: { type: "string" },
+    questions_for_doctor: { type: "array", items: { type: "string" } },
+    flags: { type: "array", items: MARKER_SCHEMA },
+    medication_context: { type: ["string", "null"] },
+  },
+  required: [
+    "is_medical_report", "report_date", "overall_status", "summary_headline",
+    "urgency", "modality", "body_part", "simple", "medium", "expert",
+    "etiology", "mechanism", "diseases", "specialist", "action",
+    "questions_for_doctor", "flags", "medication_context",
+  ],
+  additionalProperties: false,
+};
+
+// The pinned SDK (0.54.x) predates the typings for structured outputs, but
+// the API accepts output_config today. Widen the param type here rather than
+// pulling an SDK upgrade across all 30 AI routes into a hotfix.
+type StructuredMessageParams = Anthropic.MessageCreateParamsNonStreaming & {
+  output_config: { format: { type: "json_schema"; schema: unknown } };
+};
 
 const SAMPLE_REPORT_TEXT = `
 BASIC METABOLIC PANEL
@@ -415,14 +509,34 @@ export async function POST(request: NextRequest) {
 
     const response = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 6000,
+      // Headroom, not a target. A long panel lands around 5k tokens of
+      // minified JSON; at the old 6k ceiling a large report was cut off
+      // mid-object, which used to surface in the UI as raw JSON text.
+      max_tokens: 16000,
       system: systemPrompt + IDENTITY_CONFIDENTIALITY,
+      output_config: {
+        format: {
+          type: "json_schema",
+          schema: mode === "radiology" ? RADIOLOGY_SCHEMA : LAB_SCHEMA,
+        },
+      },
       messages: [{ role: "user", content: messageContent }],
-    });
+    } as StructuredMessageParams);
 
-    const rawText = response.content[0].type === "text" ? response.content[0].text : "";
+    // A truncated response is never partially usable — the JSON is cut
+    // mid-string. Fail loudly rather than handing the fragment to the UI.
+    if (response.stop_reason === "max_tokens") {
+      console.error("Analysis truncated at max_tokens", { usage: response.usage, mode });
+      return NextResponse.json(
+        { error: "This report was too long to interpret in one pass.", errorCode: "SERVER_ERROR" },
+        { status: 502 }
+      );
+    }
+
+    const rawText = response.content[0]?.type === "text" ? response.content[0].text : "";
 
     let parsed: {
+      is_medical_report?: boolean;
       overall_status?: "normal" | "amber" | "red";
       summary_headline?: string;
       urgency?: "routine" | "soon" | "weeks";
@@ -439,43 +553,36 @@ export async function POST(request: NextRequest) {
       questions_for_doctor?: string[];
       flags: Array<{ marker: string; value: string; unit: string; reference: string; status: "high" | "low" | "normal" }>;
       labs?: Array<{ marker: string; value: string; unit?: string; reference?: string; status?: "high" | "low" | "normal" }>;
-      medication_context?: string;
-      health_insights?: string;
-      supplements?: string;
+      medication_context?: string | null;
+      health_insights?: string | null;
+      supplements?: string | null;
     };
 
     try {
-      const cleaned = rawText
-        .replace(/^```json\s*/i, "")
-        .replace(/^```\s*/i, "")
-        .replace(/\s*```$/i, "")
-        .trim();
-      parsed = JSON.parse(cleaned);
-    } catch {
-      parsed = {
-        simple: rawText,
-        medium: rawText,
-        expert: rawText,
-        action: "Please consult your doctor to discuss these results in more detail.",
-        flags: [],
-      };
+      parsed = JSON.parse(rawText.trim());
+    } catch (e) {
+      console.error("Structured analysis did not parse:", e, rawText.slice(0, 500));
+      return NextResponse.json(
+        { error: "Could not read the analysis.", errorCode: "SERVER_ERROR" },
+        { status: 502 }
+      );
     }
 
-    if (!parsed.simple || !parsed.medium || !parsed.expert || !parsed.action) {
-      // Try to distinguish "not a medical doc at all" from "medical but values unreadable"
-      const lowerRaw = rawText.toLowerCase();
-      const nonMedicalPhrases = [
-        "not a medical", "not a lab", "not a radiology", "not a pathology",
-        "doesn't appear to be", "does not appear to be", "doesn't contain",
-        "cannot identify any", "no medical", "not appear to contain",
-        "unable to identify any medical", "this is not",
-      ];
-      const isNonMedical = nonMedicalPhrases.some((p) => lowerRaw.includes(p));
+    // The schema forces a well-formed object even for a photo of a receipt,
+    // so the model reports document type in-band via is_medical_report
+    // rather than us pattern-matching refusal prose out of the response.
+    if (parsed.is_medical_report === false) {
       return NextResponse.json(
-        {
-          error: "Could not parse document.",
-          errorCode: isNonMedical ? "NON_MEDICAL" : "NO_LAB_VALUES",
-        },
+        { error: "Could not parse document.", errorCode: "NON_MEDICAL" },
+        { status: 422 }
+      );
+    }
+
+    // A lab report we could read but pulled no values from is unusable.
+    // Radiology reports legitimately carry no measurements, so skip this there.
+    if (mode !== "radiology" && (parsed.labs?.length ?? 0) === 0 && parsed.flags.length === 0) {
+      return NextResponse.json(
+        { error: "Could not parse document.", errorCode: "NO_LAB_VALUES" },
         { status: 422 }
       );
     }
@@ -487,7 +594,15 @@ export async function POST(request: NextRequest) {
       new RegExp(`\\[(?:\\d+,\\s*)*${c.n}(?:\\s*,\\s*\\d+)*\\]`).test(JSON.stringify(parsed))
     );
 
-    return NextResponse.json({ success: true, data: { ...parsed, citations: usedCitations } });
+    // The schema requires every key, so fields that don't apply arrive as
+    // null. The UI branches on truthiness, so drop them — the payload then
+    // looks exactly as it did when the model simply omitted the key.
+    const { is_medical_report: _isMedical, ...fields } = parsed;
+    const data = Object.fromEntries(
+      Object.entries(fields).filter(([, value]) => value !== null)
+    );
+
+    return NextResponse.json({ success: true, data: { ...data, citations: usedCitations } });
 
   } catch (error) {
     console.error("API route error:", error);
