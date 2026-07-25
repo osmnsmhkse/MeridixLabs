@@ -107,7 +107,7 @@ Return ONLY valid JSON:
 }`;
 
     const response = await client.messages.create({
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-6",
       max_tokens: 1800,
       system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],

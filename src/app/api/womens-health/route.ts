@@ -391,7 +391,7 @@ async function handleModeA(request: NextRequest): Promise<NextResponse> {
   });
 
   const response = await client.messages.create({
-    model: "claude-sonnet-4-0",
+    model: "claude-sonnet-4-6",
     max_tokens: 6000,
     system,
     messages: [{ role: "user", content }],

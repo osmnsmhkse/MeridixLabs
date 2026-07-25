@@ -92,7 +92,7 @@ ${contextLines.join("\n\n")}
 ${notableFlags.length === 0 && allFlags.length > 0 ? "All values are within normal range — focus questions on understanding results, confirming normalcy, and general follow-up." : ""}`;
 
     const response = await client.messages.create({
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-6",
       max_tokens: 800,
       system: systemPrompt + IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: userPrompt }],

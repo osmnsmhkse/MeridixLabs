@@ -72,7 +72,7 @@ Rules:
 - Return ONLY the JSON object, no markdown fences, no extra text`;
 
     const response = await client.messages.create({
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-6",
       max_tokens: 2000,
       system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],

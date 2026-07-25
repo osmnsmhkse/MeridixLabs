@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
     });
 
     const response = await client.messages.create({
-      model: hasFile ? "claude-sonnet-4-0" : "claude-sonnet-4-6",
+      model: hasFile ? "claude-sonnet-4-6" : "claude-sonnet-4-6",
       max_tokens: 4000,
       system: buildSystemPrompt(tier, language) + IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: userContent }],

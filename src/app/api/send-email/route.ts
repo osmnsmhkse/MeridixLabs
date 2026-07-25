@@ -56,7 +56,7 @@ async function generateQuestions(body: SendEmailBody): Promise<string[]> {
     : `You are a patient advocate at Meridix Labs. Generate exactly 5 specific questions a patient should ask their doctor about their lab results. Each question must reference specific lab values and markers, be written in first person, and not be alarmist. Return ONLY a JSON array of 5 strings.`;
 
   const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-0",
+    model: "claude-sonnet-4-6",
     max_tokens: 800,
     system: systemPrompt + IDENTITY_CONFIDENTIALITY,
     messages: [{

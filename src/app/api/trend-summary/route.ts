@@ -45,7 +45,7 @@ Overall change: ${dir} by ${Math.abs(Number(pct))}% from first to last reading.
 Write a 2–3 sentence trend summary in plain, warm language. Note whether the trend is improving, worsening, or stable. If improving, acknowledge the effort. If worsening, be calm and suggest next steps. Never diagnose. Be encouraging and educational.`;
 
     const response = await client.messages.create({
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-6",
       max_tokens: 300,
       system: IDENTITY_CONFIDENTIALITY,
       messages: [{ role: "user", content: prompt }],
