@@ -215,41 +215,54 @@ function useStatusLabel() {
 function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
   const statusLabel = useStatusLabel();
   const a = ACCENT[lab.status];
-  // Qualitative readings read as prose below lg rather than as a tabular
-  // numeral. Restored to the tabular size at lg so desktop is untouched.
-  // (Group 3 restacks this row; this is the typography half only.)
-  const valueSize = isTabularValue(lab.rawValue)
-    ? "text-[15px]"
-    : "text-[13px] leading-snug lg:text-[15px] lg:leading-normal";
+
+  // Compact readings keep the tabular-numeral treatment. Clinical prose reads as
+  // a sentence and drops `font-mono-data` — that class is declared outside
+  // Tailwind's layers, so its `font-weight: 500` silently beat the `font-bold`
+  // sitting next to it. `font-medium` restates the weight that actually rendered,
+  // which keeps desktop byte-identical while dropping the numeric font features.
+  const tabular = isTabularValue(lab.rawValue);
+  const valueClass = tabular
+    ? `font-mono-data text-[15px] font-bold tabular-nums ${a.text}`
+    : `text-[15px] font-medium leading-snug lg:leading-normal ${a.text}`;
 
   return (
     <div className="relative py-3.5">
       {/* status spine */}
-      <span className={`absolute left-0 top-4 bottom-4 w-[2px] rounded-full ${a.spine}`} />
+      <span className={`absolute start-0 top-4 bottom-4 w-[2px] rounded-full ${a.spine}`} />
 
-      <div className="flex items-start justify-between gap-3 pl-3.5">
+      {/* Below sm the row stacks — label on its own line at label weight, value
+          beneath it — rather than compressing into two columns. At sm and up it
+          is the two-column row it has always been. */}
+      <div className="flex flex-col gap-1 ps-3.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-[13px] font-semibold text-ink min-w-0 [overflow-wrap:anywhere]">{lab.marker}</p>
-            <StatusPill status={lab.status} label={statusLabel(lab.status)} />
+            <StatusPill status={lab.status} label={statusLabel(lab.status)} className="hidden sm:inline-block" />
           </div>
           {lab.blurb && (
             <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5 [overflow-wrap:anywhere]">{lab.blurb}</p>
           )}
         </div>
-        <div className="flex items-baseline gap-1.5 min-w-0 max-w-[55%] lg:max-w-none">
-          <span className={`font-mono-data ${valueSize} font-bold tabular-nums [overflow-wrap:anywhere] ${a.text}`}>{lab.rawValue}</span>
+        <div className="flex items-baseline gap-1.5 min-w-0 sm:max-w-[55%] lg:max-w-none">
+          <span className={`${valueClass} [overflow-wrap:anywhere]`}>{lab.rawValue}</span>
           {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary shrink-0">{lab.unit}</span>}
         </div>
       </div>
 
-      <div className="pl-3.5">
+      <div className="ps-3.5">
         <RangeBar lab={lab} />
       </div>
 
-      {lab.reference && (
-        <p className="font-mono-data text-[10px] text-ink-tertiary mt-2 pl-3.5">ref · {lab.reference}</p>
-      )}
+      {/* Muted meta line. Below sm it carries the status chip beside the reference
+          range; `sm:contents` dissolves the wrapper at sm, restoring the plain
+          reference line — including rendering nothing when there is no reference. */}
+      <div className="flex items-center gap-2 flex-wrap mt-2 ps-3.5 sm:contents">
+        <StatusPill status={lab.status} label={statusLabel(lab.status)} className="sm:hidden" />
+        {lab.reference && (
+          <p className="font-mono-data text-[10px] text-ink-tertiary sm:mt-2 sm:ps-3.5">ref · {lab.reference}</p>
+        )}
+      </div>
     </div>
   );
 }

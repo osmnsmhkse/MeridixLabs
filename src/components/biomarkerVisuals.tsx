@@ -95,9 +95,9 @@ export function RangeTrack({
 }
 
 // ── Status pill — matches the accent system ─────────────────────────────────
-export function StatusPill({ status, label }: { status: Status; label: string }) {
+export function StatusPill({ status, label, className = "" }: { status: Status; label: string; className?: string }) {
   return (
-    <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${ACCENT[status].pill}`}>
+    <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md border ${ACCENT[status].pill} ${className}`}>
       {label}
     </span>
   );
