@@ -70,6 +70,9 @@ export const metadata: Metadata = {
 // letterboxed inside the safe area. It only works paired with the
 // env(safe-area-inset-*) padding on every pinned surface (globals.css) —
 // on its own it would slide content under the Island and home indicator.
+/** Locales written right-to-left. Only Arabic today; Hebrew/Farsi would join here. */
+const RTL_LOCALES = new Set(["ar"]);
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -86,8 +89,13 @@ export default async function RootLayout({
   // Per-request CSP nonce set by middleware (src/middleware.ts).
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
+  // Arabic is one of the nine supported locales but `dir` was never set, so it
+  // rendered inside an LTR document: the browser reordered each Arabic run but
+  // every layout, alignment and mirrored affordance stayed left-to-right.
+  const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
+
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <StructuredData nonce={nonce} />
         <script nonce={nonce} dangerouslySetInnerHTML={{__html: `

@@ -81,7 +81,11 @@ export function RangeTrack({
 }) {
   const left = Math.max(2, Math.min(98, pct));
   return (
-    <div className="relative">
+    // Pinned to LTR: the zone bands are flex children and would mirror under an
+    // RTL document, while the caret is positioned with an inline percentage and
+    // would not — leaving the marker pointing at the wrong zone. A numeric scale
+    // reading low-to-high left-to-right is also the usual convention in RTL UIs.
+    <div className="relative" dir="ltr">
       <div className="flex h-2 rounded-full overflow-hidden bg-surface-raised">
         {zones.map((z, i) => (
           <div key={i} className={ZONE[z.tone]} style={{ width: `${z.w}%` }} />

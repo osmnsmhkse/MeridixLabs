@@ -688,7 +688,9 @@ function RangeGauge({
   }[color];
 
   return (
-    <div className="select-none pt-1">
+    // Pinned to LTR for the same reason as RangeTrack: absolutely-positioned
+    // percentages and the min/max label row must agree on which end is which.
+    <div className="select-none pt-1" dir="ltr">
       {/* Track */}
       <div className="relative h-2 rounded-full bg-black/8 dark:bg-white/10">
         {/* Normal zone highlight */}
@@ -802,7 +804,7 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
           <span className={`${valueClass} ${cfg.valueColor}`}>
             {flag.value}
           </span>
-          <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>
+          <span className={`text-xs font-semibold ms-1.5 ${cfg.valueColor} opacity-80`}>
             {flag.unit}
           </span>
         </div>
@@ -1974,7 +1976,7 @@ function ResultsPanel({
 
           {/* Lab panel by body system — merged into the results card (lab reports only) */}
           {mode === "lab" && (((result.labs?.length ?? 0) > 0) || ((result.flags?.length ?? 0) > 0)) && (
-            <div className="border-t border-surface-border bg-surface-raised/30 px-5 py-5">
+            <div className="border-t border-surface-border bg-surface-raised/30 px-3 sm:px-5 py-5">
               <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">
                 {t("groupedBySystem")}
               </p>

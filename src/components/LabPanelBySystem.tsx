@@ -290,7 +290,7 @@ function InRangeTable({ labs }: { labs: ParsedLab[] }) {
               </td>
               <td className="px-4 py-2.5 text-right font-mono-data text-sm font-semibold text-ink tabular-nums">
                 {l.rawValue}
-                {l.unit && <span className="text-[10px] text-ink-tertiary ml-1">{l.unit}</span>}
+                {l.unit && <span className="text-[10px] text-ink-tertiary ms-1">{l.unit}</span>}
               </td>
               <td className="px-4 py-2.5 text-right text-xs text-ink-tertiary font-mono-data hidden sm:table-cell">
                 {l.reference || "—"}
@@ -337,7 +337,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
   return (
     <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden shadow-sm">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-surface-border bg-gradient-to-r from-surface-raised/60 to-transparent flex items-center justify-between gap-3 flex-wrap">
+      <div className="px-3.5 sm:px-5 py-4 border-b border-surface-border bg-gradient-to-r from-surface-raised/60 to-transparent flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3 min-w-0">
           <span className={`flex items-center justify-center w-9 h-9 rounded-xl bg-surface-raised ${headerColor} flex-shrink-0`}>
             <SystemIcon system={group.system} className="w-5 h-5" />
@@ -388,7 +388,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
 
       {/* Flagged markers — signature range tracks, hairline-separated */}
       {group.flagged.length > 0 && (
-        <div className="px-5 divide-y divide-surface-border">
+        <div className="px-3.5 sm:px-5 divide-y divide-surface-border">
           {group.flagged.map((lab, i) => (
             <FlaggedMarkerRow key={`flag-${i}-${lab.marker}`} lab={lab} />
           ))}
@@ -401,7 +401,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
           <button
             type="button"
             onClick={() => setShowInRange((v) => !v)}
-            className="w-full px-5 py-3 flex items-center justify-between hover:bg-surface-raised/40 transition-colors"
+            className="w-full px-3.5 sm:px-5 py-3 flex items-center justify-between hover:bg-surface-raised/40 transition-colors"
           >
             <span className="text-xs font-semibold text-ink-secondary">
               {group.inRange.length} {t("inRangeMarkersLabel")}
@@ -409,7 +409,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
             <span className={`text-ink-tertiary transition-transform text-sm ${showInRange ? "rotate-180" : ""}`}>▾</span>
           </button>
           {showInRange && (
-            <div className="px-5 pb-5 -mt-1">
+            <div className="px-3.5 sm:px-5 pb-5 -mt-1">
               <InRangeTable labs={group.inRange} />
             </div>
           )}
@@ -500,7 +500,7 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
             <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("labPanelHeader")}</p>
             <p className="text-2xl font-extrabold text-ink tabular-nums leading-tight mt-1">
               {totalMarkers}
-              <span className="text-base font-semibold text-ink-tertiary ml-1.5">{t("markersUnit")} · {groups.length} {t("systemsUnit")}</span>
+              <span className="text-base font-semibold text-ink-tertiary ms-1.5">{t("markersUnit")} · {groups.length} {t("systemsUnit")}</span>
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">

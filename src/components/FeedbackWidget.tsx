@@ -186,7 +186,7 @@ export default function FeedbackWidget() {
                 type="button"
                 onClick={close}
                 aria-label="Close"
-                className="-mr-2 -mt-2 rounded-full p-2 text-ink-tertiary hover:bg-surface-raised hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
+                className="-me-2 -mt-2 rounded-full p-2 text-ink-tertiary hover:bg-surface-raised hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
               >
                 <X className="h-5 w-5" />
               </button>

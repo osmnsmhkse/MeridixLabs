@@ -94,7 +94,7 @@ function ReferralCard({ referral }: { referral: Referral }) {
   return (
     <Link
       href={tool.href}
-      className="ml-11 block rounded-2xl border border-brand-blue/20 bg-gradient-to-br from-brand-blue/5 to-brand-indigo/5 hover:from-brand-blue/10 hover:to-brand-indigo/10 transition-colors p-4 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+      className="ms-11 block rounded-2xl border border-brand-blue/20 bg-gradient-to-br from-brand-blue/5 to-brand-indigo/5 hover:from-brand-blue/10 hover:to-brand-indigo/10 transition-colors p-4 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -276,7 +276,7 @@ export default function LandingChatWidget() {
             className={[
               "relative w-full sm:w-[400px]",
               "h-[94vh] sm:h-[calc(100vh-3rem)] sm:max-h-[900px]",
-              "sm:mb-6 sm:mr-6",
+              "sm:mb-6 sm:me-6",
               "bg-surface text-ink",
               "border border-surface-border",
               "rounded-t-2xl sm:rounded-2xl",

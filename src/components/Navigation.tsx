@@ -193,7 +193,7 @@ export default function Navigation() {
         </nav>
 
         {/* Right side */}
-        <div className="hidden lg:flex items-center gap-3 ml-auto">
+        <div className="hidden lg:flex items-center gap-3 ms-auto">
           <ThemeToggle />
           <LanguageSwitcher compact />
 
@@ -231,7 +231,7 @@ export default function Navigation() {
 
         {/* Mobile hamburger */}
         <button
-          className="lg:hidden ml-auto text-ink p-2 transition-colors"
+          className="lg:hidden ms-auto text-ink p-2 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={t("toggleMenu")}
         >

@@ -641,7 +641,7 @@ function FindingBadge({ flag }: { flag: AnalysisFlag }) {
         <div className="min-w-0 lg:min-w-[auto]">
           <span className={`${valueClass} ${cfg.valueColor}`}>{flag.value}</span>
           {flag.unit && (
-            <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>{flag.unit}</span>
+            <span className={`text-xs font-semibold ms-1.5 ${cfg.valueColor} opacity-80`}>{flag.unit}</span>
           )}
         </div>
         <div className="flex items-center gap-2 flex-wrap lg:contents">
