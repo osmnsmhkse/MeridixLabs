@@ -167,6 +167,8 @@ export default function FeedbackWidget() {
               "rounded-t-2xl sm:rounded-2xl",
               "shadow-float",
               "p-6 sm:p-7",
+              // Bottom sheet below sm — pad the sheet clear of the home indicator.
+              "pb-[calc(1.5rem+var(--safe-bottom))] sm:pb-7",
               "animate-slide-up",
               "max-h-[92vh] overflow-y-auto",
             ].join(" ")}

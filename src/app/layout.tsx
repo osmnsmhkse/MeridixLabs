@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -66,6 +66,16 @@ export const metadata: Metadata = {
   },
 };
 
+// viewport-fit=cover lets the page use the full display instead of being
+// letterboxed inside the safe area. It only works paired with the
+// env(safe-area-inset-*) padding on every pinned surface (globals.css) —
+// on its own it would slide content under the Island and home indicator.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -102,7 +112,7 @@ export default async function RootLayout({
             <MotionEffects />
             <Navigation />
             <ToolChatProvider>
-              <main className="pt-16">{children}</main>
+              <main className="pt-[calc(4rem+var(--safe-top))]">{children}</main>
               <Footer />
             </ToolChatProvider>
             <FloatingDockProvider>

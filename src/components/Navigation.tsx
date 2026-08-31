@@ -246,7 +246,7 @@ export default function Navigation() {
 
     {/* Mobile menu — flat sheet */}
     {mobileOpen && (
-      <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 z-40 bg-surface overflow-y-auto">
+      <div data-mobile-menu className="lg:hidden fixed left-0 right-0 bottom-0 z-40 bg-surface overflow-y-auto">
         <div className="px-5 py-4">
           {/* Tools section */}
           <button

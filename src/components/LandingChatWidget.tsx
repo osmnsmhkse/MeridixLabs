@@ -369,7 +369,7 @@ export default function LandingChatWidget() {
             </div>
 
             {/* Composer */}
-            <div className="border-t border-surface-border/70 bg-gradient-to-b from-transparent to-surface-raised/30 px-3 py-3">
+            <div className="border-t border-surface-border/70 bg-gradient-to-b from-transparent to-surface-raised/30 px-3 py-3 pb-[calc(0.75rem+var(--safe-bottom))] sm:pb-3">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
