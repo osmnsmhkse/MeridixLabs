@@ -307,11 +307,29 @@ function InRangeTable({ labs }: { labs: ParsedLab[] }) {
 
 function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: boolean }) {
   const t = useTranslations("LabPanel");
+  const tAnalyzer = useTranslations("LabAnalyzer");
   const [showInRange, setShowInRange] = useState(defaultOpen);
   const meta = BODY_SYSTEMS[group.system];
-  const flaggedCount = group.flagged.length;
-  const total = group.total;
-  const optimalPct = total > 0 ? Math.round(((total - flaggedCount) / total) * 100) : 100;
+
+  // An "in range" ratio only means something for markers that can actually be
+  // placed against a reference range — the same test buildTrack uses to decide
+  // whether a range track can be drawn. A cardiac panel of findings like
+  // "Global hypokinesis" has no numeric position, so "IN RANGE 0/7 · 0%" under
+  // a red bar was measuring nothing.
+  const quantifiable = group.flagged.concat(group.inRange)
+    .filter((l) => l.numValue != null && (l.refLow != null || l.refHigh != null));
+  const hasRatio = quantifiable.length > 0;
+  const quantifiableAbnormal = quantifiable.filter((l) => l.status === "high" || l.status === "low").length;
+  const optimalPct = hasRatio
+    ? Math.round(((quantifiable.length - quantifiableAbnormal) / quantifiable.length) * 100)
+    : 100;
+
+  // The pill still reports the report's own judgement. A finding the analysis
+  // marked high or low stays flagged even when it carries no number —
+  // neutralising it would quietly downgrade a real clinical signal. Only
+  // findings nothing has judged at all ("unknown") get the neutral treatment.
+  const unknownCount = group.flagged.filter((l) => l.status === "unknown").length;
+  const abnormalCount = group.flagged.length - unknownCount;
 
   // Pick a color tint from the system meta (system meta has a Tailwind text-color class)
   const headerColor = meta.color;
@@ -330,15 +348,25 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
           </div>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
-          <div className="flex flex-col items-end">
-            <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("inRangeLabel")}</span>
-            <span className={`text-xs font-bold tabular-nums ${optimalPct === 100 ? "text-emerald-600" : optimalPct >= 70 ? "text-amber-600" : "text-red-600"}`}>
-              {total - flaggedCount}/{total} · {optimalPct}%
-            </span>
-          </div>
-          {flaggedCount > 0 ? (
+          {/* An in-range ratio is only meaningful where something could be placed
+              against a reference range. Qualitative panels show no ratio at all
+              rather than a misleading 0%. */}
+          {hasRatio && (
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("inRangeLabel")}</span>
+              <span className={`text-xs font-bold tabular-nums ${optimalPct === 100 ? "text-emerald-600" : optimalPct >= 70 ? "text-amber-600" : "text-red-600"}`}>
+                {quantifiable.length - quantifiableAbnormal}/{quantifiable.length} · {optimalPct}%
+              </span>
+            </div>
+          )}
+          {abnormalCount > 0 ? (
             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
-              {flaggedCount} {t("flagged")}
+              {abnormalCount} {t("flagged")}
+            </span>
+          ) : unknownCount > 0 ? (
+            /* Findings nobody has judged abnormal: neutral, not alarming. */
+            <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-surface-raised text-ink-secondary border border-surface-border uppercase tracking-wider">
+              {unknownCount} {tAnalyzer("keyFindings")}
             </span>
           ) : (
             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 uppercase tracking-wider">
@@ -348,13 +376,15 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
         </div>
       </div>
 
-      {/* In-range progress bar (visual reinforcement) */}
-      <div className="h-1 bg-surface-border">
-        <div
-          className={`h-full transition-all duration-700 ${optimalPct === 100 ? "bg-emerald-500" : optimalPct >= 70 ? "bg-amber-400" : "bg-red-500"}`}
-          style={{ width: `${optimalPct}%` }}
-        />
-      </div>
+      {/* In-range progress bar — suppressed when there is no ratio to reinforce. */}
+      {hasRatio && (
+        <div className="h-1 bg-surface-border">
+          <div
+            className={`h-full transition-all duration-700 ${optimalPct === 100 ? "bg-emerald-500" : optimalPct >= 70 ? "bg-amber-400" : "bg-red-500"}`}
+            style={{ width: `${optimalPct}%` }}
+          />
+        </div>
+      )}
 
       {/* Flagged markers — signature range tracks, hairline-separated */}
       {group.flagged.length > 0 && (
@@ -389,10 +419,17 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
   );
 }
 
+// Markers actually measured outside their reference range, as distinct from
+// findings `classifyZone` could not place ("unknown").
+function gAbnormal(g: SystemGroup): number {
+  return g.flagged.filter((l) => l.status !== "unknown").length;
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | null; flags?: RawLab[] | null }) {
   const t = useTranslations("LabPanel");
+  const tAnalyzer = useTranslations("LabAnalyzer");
   const groups = useMemo<SystemGroup[]>(() => {
     // Prefer labs (full panel); fall back to flags only
     const source: RawLab[] = (labs && labs.length > 0) ? labs : (flags ?? []);
@@ -438,8 +475,18 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
   }, [labs, flags]);
 
   const totalMarkers = groups.reduce((acc, g) => acc + g.total, 0);
-  const totalFlagged = groups.reduce((acc, g) => acc + g.flagged.length, 0);
-  const inRangePct = totalMarkers > 0 ? Math.round(((totalMarkers - totalFlagged) / totalMarkers) * 100) : 100;
+  // Same split as SystemPanel: findings we could not place against a reference
+  // range are not "flagged", and they do not belong in an in-range ratio.
+  const totalUnknown = groups.reduce(
+    (acc, g) => acc + g.flagged.filter((l) => l.status === "unknown").length, 0);
+  const totalAbnormal = groups.reduce((acc, g) => acc + g.flagged.length, 0) - totalUnknown;
+  const allQuantifiable = groups.flatMap((g) => g.flagged.concat(g.inRange))
+    .filter((l) => l.numValue != null && (l.refLow != null || l.refHigh != null));
+  const totalQuantified = allQuantifiable.length;
+  const quantifiedAbnormal = allQuantifiable.filter((l) => l.status === "high" || l.status === "low").length;
+  const inRangePct = totalQuantified > 0
+    ? Math.round(((totalQuantified - quantifiedAbnormal) / totalQuantified) * 100)
+    : 100;
 
   if (groups.length === 0) return null;
 
@@ -457,14 +504,22 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
-              {totalMarkers - totalFlagged} {t("inRangeUnit")} · {inRangePct}%
-            </span>
-            {totalFlagged > 0 && (
+            {totalQuantified > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
+                {totalQuantified - quantifiedAbnormal} {t("inRangeUnit")} · {inRangePct}%
+              </span>
+            )}
+            {totalAbnormal > 0 && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500" aria-hidden />
-                {totalFlagged} {t("flagged")}
+                {totalAbnormal} {t("flagged")}
+              </span>
+            )}
+            {totalUnknown > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-raised text-ink-secondary border border-surface-border">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" aria-hidden />
+                {totalUnknown} {tAnalyzer("keyFindings")}
               </span>
             )}
           </div>
@@ -475,6 +530,8 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
           {groups.map((g) => {
             const meta = BODY_SYSTEMS[g.system];
             const allClear = g.flagged.length === 0;
+            // A tile only turns red for markers actually out of range.
+            const isAlarming = gAbnormal(g) > 0;
             return (
               <a
                 key={g.system}
@@ -482,23 +539,29 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border transition-colors ${
                   allClear
                     ? "border-emerald-200/70 bg-emerald-50/50 hover:bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 dark:hover:bg-emerald-950/40"
-                    : "border-red-200/70 bg-red-50/50 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20 dark:hover:bg-red-950/40"
+                    : isAlarming
+                      ? "border-red-200/70 bg-red-50/50 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20 dark:hover:bg-red-950/40"
+                      : "border-surface-border bg-surface-raised/60 hover:bg-surface-raised"
                 }`}
               >
                 <SystemIcon
                   system={g.system}
                   className={`w-4 h-4 flex-shrink-0 ${
-                    allClear ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                    allClear ? "text-emerald-600 dark:text-emerald-400"
+                      : isAlarming ? "text-red-600 dark:text-red-400" : "text-ink-secondary"
                   }`}
                 />
                 <div className="min-w-0 flex-1">
                   <p className={`text-[11px] font-semibold leading-tight break-words ${
-                    allClear ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"
+                    allClear ? "text-emerald-800 dark:text-emerald-300"
+                      : isAlarming ? "text-red-800 dark:text-red-300" : "text-ink"
                   }`}>{t(g.system as Parameters<typeof t>[0])}</p>
                   <p className="text-[10px] tabular-nums text-ink-tertiary mt-0.5">
                     {allClear
                       ? `${g.total}/${g.total} ${t("clearStatus")}`
-                      : `${g.flagged.length} ${t("ofConnector")} ${g.total} ${t("flagged")}`}
+                      : gAbnormal(g) > 0
+                        ? `${gAbnormal(g)} ${t("ofConnector")} ${g.total} ${t("flagged")}`
+                        : `${g.flagged.length} ${tAnalyzer("keyFindings")}`}
                   </p>
                 </div>
               </a>
