@@ -1007,3 +1007,37 @@ body {
     box-shadow: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOATING WIDGET DOCK  ·  one anchored stack
+   ───────────────────────────────────────────────────────────────
+   The Feedback pill and the assistant FAB each positioned themselves
+   independently (`bottom-24 right-6` / `bottom-6 right-6`). Their
+   16px of separation was a coincidence of two hardcoded offsets, and
+   neither accounted for iOS safe-area insets.
+
+   Slot 2 is now COMPUTED from slot 1's size plus the gap, so the two
+   can never overlap regardless of what changes. The gap is 1rem so
+   slot 2 resolves to exactly 6rem — identical to the old bottom-24.
+   `inset-inline-end` replaces `right` so the stack mirrors under RTL.
+
+   env() is 0 until viewport-fit=cover lands (group 6), so today these
+   evaluate to exactly the previous offsets; once it does, the stack
+   lifts clear of the home indicator on its own.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --dock-inset-inline: calc(1.5rem + env(safe-area-inset-right, 0px));
+  --dock-inset-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  --dock-fab: 3.5rem;
+  --dock-gap: 1rem;
+}
+[dir="rtl"] :root,
+[dir="rtl"] {
+  --dock-inset-inline: calc(1.5rem + env(safe-area-inset-left, 0px));
+}
+.dock-slot {
+  position: fixed;
+  inset-inline-end: var(--dock-inset-inline);
+}
+.dock-slot-1 { bottom: var(--dock-inset-bottom); }
+.dock-slot-2 { bottom: calc(var(--dock-inset-bottom) + var(--dock-fab) + var(--dock-gap)); }

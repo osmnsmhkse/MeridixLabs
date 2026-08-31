@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { MessageSquare, Star, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Star, X } from "lucide-react";
+import { useFloatingDock } from "@/components/FloatingDock";
 
 type FeedbackCategory =
   | "General"
@@ -39,7 +40,15 @@ function categoryFromPath(pathname: string): FeedbackCategory {
 }
 
 export default function FeedbackWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  // Open state lives in the dock so the launcher and this panel can sit in
+  // different components. Shaped as [isOpen, setIsOpen] so every call site below
+  // is unchanged.
+  const { panel, setPanel, triggerRef } = useFloatingDock();
+  const isOpen = panel === "feedback";
+  const setIsOpen = useCallback(
+    (v: boolean) => setPanel(v ? "feedback" : null),
+    [setPanel],
+  );
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [category, setCategory] = useState<FeedbackCategory>("General");
@@ -48,19 +57,8 @@ export default function FeedbackWidget() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pulse, setPulse] = useState(true);
-
-  // Floating Meridix chat button occupies bottom-6 right-6 globally — stack above it.
-  const triggerPosition = "bottom-24 right-6";
 
   const dialogRef = useRef<HTMLDivElement | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-
-  // Stop attention pulse after 3s
-  useEffect(() => {
-    const t = setTimeout(() => setPulse(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
 
   // Auto-select category from pathname when the panel opens
   useEffect(() => {
@@ -141,29 +139,7 @@ export default function FeedbackWidget() {
 
   return (
     <>
-      {/* Floating trigger */}
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={() => setIsOpen(true)}
-        aria-label="Open feedback form"
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
-        className={[
-          `fixed ${triggerPosition} z-50`,
-          "inline-flex items-center gap-2 rounded-full",
-          "bg-gradient-brand text-white",
-          "px-4 py-3 text-sm font-semibold",
-          "shadow-glow-blue hover:shadow-card-hover",
-          "transition-all duration-200 hover:-translate-y-0.5 hover:brightness-105",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2",
-          "focus-visible:ring-offset-surface",
-          pulse ? "animate-pulse-glow" : "",
-        ].join(" ")}
-      >
-        <MessageSquare className="h-4 w-4" aria-hidden="true" />
-        <span>Feedback</span>
-      </button>
+      {/* Trigger lives in FloatingDock; this component owns the panel only. */}
 
       {/* Modal / Bottom sheet */}
       {isOpen && (

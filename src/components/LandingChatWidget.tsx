@@ -26,6 +26,7 @@ import {
   ThinkingBubble,
   type Msg,
 } from "@/components/ChatComponents";
+import { useFloatingDock } from "@/components/FloatingDock";
 
 // ── Referral parsing ─────────────────────────────────────────────────────────
 // The system prompt asks the model to append a <referral>{json}</referral>
@@ -119,8 +120,15 @@ function ReferralCard({ referral }: { referral: Referral }) {
 }
 
 export default function LandingChatWidget() {
-  const [open, setOpen] = useState(false);
-  const [pulse, setPulse] = useState(true);
+  // Open state lives in the dock so the launcher and this panel can sit in
+  // different components. Shaped as [open, setOpen] so every call site below
+  // is unchanged.
+  const { panel, setPanel, triggerRef } = useFloatingDock();
+  const open = panel === "chat";
+  const setOpen = useCallback(
+    (v: boolean) => setPanel(v ? "chat" : null),
+    [setPanel],
+  );
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -130,13 +138,6 @@ export default function LandingChatWidget() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-
-  // Stop attention pulse after 3s
-  useEffect(() => {
-    const t = setTimeout(() => setPulse(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
 
   // Close on Escape
   useEffect(() => {
@@ -167,7 +168,7 @@ export default function LandingChatWidget() {
   const close = useCallback(() => {
     setOpen(false);
     triggerRef.current?.focus();
-  }, []);
+  }, [setOpen, triggerRef]);
 
   const send = useCallback(
     async (textOverride?: string) => {
@@ -252,28 +253,7 @@ export default function LandingChatWidget() {
 
   return (
     <>
-      {/* Floating round trigger */}
-      {!open && (
-        <button
-          ref={triggerRef}
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open Meridix Assistant"
-          aria-haspopup="dialog"
-          className={[
-            "fixed bottom-6 right-6 z-50",
-            "w-14 h-14 rounded-full",
-            "bg-gradient-brand text-white",
-            "shadow-glow-blue hover:shadow-card-hover",
-            "flex items-center justify-center",
-            "transition-all duration-200 hover:-translate-y-0.5 hover:brightness-105 active:scale-95",
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
-            pulse ? "animate-pulse-glow" : "",
-          ].join(" ")}
-        >
-          <MeridixMark className="w-6 h-6" />
-        </button>
-      )}
+      {/* Trigger lives in FloatingDock; this component owns the drawer only. */}
 
       {/* Drawer */}
       {open && (

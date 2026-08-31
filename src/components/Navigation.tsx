@@ -169,7 +169,7 @@ export default function Navigation() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-6">
           <ToolsDropdown pathname={pathname} />
           {FLAT_LINKS.map((link) => (
             <Link
@@ -193,7 +193,7 @@ export default function Navigation() {
         </nav>
 
         {/* Right side */}
-        <div className="hidden md:flex items-center gap-3 ml-auto">
+        <div className="hidden lg:flex items-center gap-3 ml-auto">
           <ThemeToggle />
           <LanguageSwitcher compact />
 
@@ -231,7 +231,7 @@ export default function Navigation() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden ml-auto text-ink p-2 transition-colors"
+          className="lg:hidden ml-auto text-ink p-2 transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={t("toggleMenu")}
         >
@@ -246,7 +246,7 @@ export default function Navigation() {
 
     {/* Mobile menu — flat sheet */}
     {mobileOpen && (
-      <div className="md:hidden fixed top-16 left-0 right-0 bottom-0 z-40 bg-surface overflow-y-auto">
+      <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 z-40 bg-surface overflow-y-auto">
         <div className="px-5 py-4">
           {/* Tools section */}
           <button
