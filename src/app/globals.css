@@ -964,3 +964,46 @@ body {
   border-color: rgba(255, 255, 255, 0.13) !important;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE CHROME  ·  one pinned surface at a time
+   ───────────────────────────────────────────────────────────────
+   /app and /imaging pin a section tab bar (Your Results · Report ·
+   Ask the AI) while the site nav is also fixed, so ~119px of a
+   390px-tall screen was permanently spent on chrome — and the two
+   surfaces did not even meet: the bar sits at top:72px beneath a
+   66px nav, leaving a 6px channel of raw page content scrolling
+   between them.
+
+   Below lg, a page that pins its own tab bar releases the site nav
+   back into normal flow, and the tab bar becomes the single pinned
+   surface at top:0. `main` drops the padding that was reserving
+   space for the fixed nav, since the nav now occupies that space
+   itself.
+
+   At lg and up none of this applies — desktop keeps the stacked
+   arrangement it has always had.
+
+   `:has()` degrades safely: where it is unsupported the rules are
+   dropped and the previous stacked behaviour returns.
+
+   This block lives at the end of the file, after the glass system,
+   because the bar carries `dark:bg-slate-800/95` and so is caught by
+   `.dark .glass-tool [class*="dark:bg-slate-800"]`, which forces a
+   translucent well with `!important`. Matching that specificity and
+   coming later is what makes the bar genuinely opaque in dark mode.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1023.98px) {
+  body:has(.section-tabbar) [data-site-nav] { position: static; }
+  body:has(.section-tabbar) main { padding-top: 0; }
+
+  /* Fully opaque. backdrop-filter is not a usable substitute here: it stacks
+     with .glass-tool's own blur layers, and the previous 95% alpha still let
+     text ghost through while scrolling. */
+  .section-tabbar.section-tabbar.section-tabbar {
+    top: 0;
+    background-color: rgb(var(--color-surface)) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+}

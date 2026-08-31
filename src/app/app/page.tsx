@@ -1844,7 +1844,7 @@ function ResultsPanel({
       })()}
 
       {/* ─── MOBILE TAB STRIP (hidden on xl where the sidebar layout takes over) ── */}
-      <div className="xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
+      <div className="section-tabbar xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
         <div className="flex">
           {([
             {
