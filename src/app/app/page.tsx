@@ -9,6 +9,7 @@ import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
+import { isTabularValue } from "@/lib/valueDisplay";
 import LabChatPanel from "@/components/LabChatPanel";
 import RelatedStudies from "@/components/RelatedStudies";
 import { useToolContext } from "@/components/ToolChatProvider";
@@ -621,24 +622,24 @@ function computeConfidence(flag: AnalysisFlag, interpretationText: string): Conf
 
 // ── Confidence pill ───────────────────────────────────────────────────────────
 
-function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"] }) {
+function ConfidencePill({ confidence, status, className = "" }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"]; className?: string }) {
   const t = useTranslations("LabAnalyzer");
   if (confidence === "borderline") {
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold leading-none whitespace-nowrap">
+      <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold leading-none whitespace-nowrap ${className}`}>
         ⚠ {t("pillBorderline")}
       </span>
     );
   }
   if (confidence === "abnormal") {
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-[10px] font-bold leading-none whitespace-nowrap">
+      <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-[10px] font-bold leading-none whitespace-nowrap ${className}`}>
         {status === "high" ? "↑" : "↓"} {t("pillAbnormal")}
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-[10px] font-bold leading-none whitespace-nowrap">
+    <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-[10px] font-bold leading-none whitespace-nowrap ${className}`}>
       ✓ {t("pillNormal")}
     </span>
   );
@@ -769,35 +770,49 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
     !isNaN(numValue) &&
     bounds.hi > bounds.lo;
 
+  // Compact readings ("31", "1.28") keep the numeric display treatment; clinical
+  // prose ("Hypoperfusion (fixed, delta extent <5%)") drops to body size with
+  // normal line-height and full wrapping. Restored to the display size at lg so
+  // desktop is untouched.
+  const tabular = isTabularValue(flag.value);
+  const valueClass = tabular
+    ? "text-2xl font-extrabold tracking-tight leading-none"
+    : "text-[15px] font-semibold leading-snug [overflow-wrap:anywhere] lg:text-2xl lg:font-extrabold lg:tracking-tight lg:leading-none lg:[overflow-wrap:normal]";
+
   return (
     <div className={`flex flex-col gap-3 p-4 rounded-xl ${cfg.bg} border ${cfg.border}`}>
 
       {/* Row 1: status icon + marker name — full width, no truncation */}
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ${cfg.iconColor}`}>
             {cfg.icon}
           </span>
-          <span className="text-sm font-bold text-ink leading-tight">{flag.marker}</span>
+          <span className="text-sm font-bold text-ink leading-tight [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{flag.marker}</span>
         </div>
-        <ConfidencePill confidence={confidence} status={flag.status} />
+        <ConfidencePill confidence={confidence} status={flag.status} className="hidden lg:inline-flex" />
       </div>
 
-      {/* Row 2: large value + ref range */}
-      <div className="flex items-end justify-between gap-2">
-        <div>
-          <span className={`text-2xl font-extrabold tracking-tight leading-none [overflow-wrap:anywhere] lg:[overflow-wrap:normal] ${cfg.valueColor}`}>
+      {/* Row 2: value. Below lg the status chip and ref range drop to their own
+          meta line beneath it; `lg:contents` dissolves that wrapper at lg so the
+          desktop box tree is exactly the two-item row it has always been. */}
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between lg:gap-2">
+        <div className="min-w-0 lg:min-w-[auto]">
+          <span className={`${valueClass} ${cfg.valueColor}`}>
             {flag.value}
           </span>
           <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>
             {flag.unit}
           </span>
         </div>
-        {flag.reference && (
-          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
-            ref {flag.reference}
-          </span>
-        )}
+        <div className="flex items-center gap-2 flex-wrap lg:contents">
+          <ConfidencePill confidence={confidence} status={flag.status} className="lg:hidden" />
+          {flag.reference && (
+            <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
+              ref {flag.reference}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Row 3: gauge bar — no floating label, clean lines */}

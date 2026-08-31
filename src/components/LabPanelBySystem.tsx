@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { findBiomarker, BODY_SYSTEMS, type BiomarkerDef, type BodySystem } from "@/lib/biomarkers";
 import { useTranslations } from "next-intl";
 import { RangeTrack, StatusPill, ACCENT, buildTrack } from "./biomarkerVisuals";
+import { isTabularValue } from "@/lib/valueDisplay";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -214,6 +215,12 @@ function useStatusLabel() {
 function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
   const statusLabel = useStatusLabel();
   const a = ACCENT[lab.status];
+  // Qualitative readings read as prose below lg rather than as a tabular
+  // numeral. Restored to the tabular size at lg so desktop is untouched.
+  // (Group 3 restacks this row; this is the typography half only.)
+  const valueSize = isTabularValue(lab.rawValue)
+    ? "text-[15px]"
+    : "text-[13px] leading-snug lg:text-[15px] lg:leading-normal";
 
   return (
     <div className="relative py-3.5">
@@ -231,7 +238,7 @@ function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
           )}
         </div>
         <div className="flex items-baseline gap-1.5 min-w-0 max-w-[55%] lg:max-w-none">
-          <span className={`font-mono-data text-[15px] font-bold tabular-nums [overflow-wrap:anywhere] ${a.text}`}>{lab.rawValue}</span>
+          <span className={`font-mono-data ${valueSize} font-bold tabular-nums [overflow-wrap:anywhere] ${a.text}`}>{lab.rawValue}</span>
           {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary shrink-0">{lab.unit}</span>}
         </div>
       </div>

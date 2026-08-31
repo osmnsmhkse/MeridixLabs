@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import WordReveal from "@/components/WordReveal";
 import { useTranslations } from "next-intl";
+import { isTabularValue } from "@/lib/valueDisplay";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import LabChatPanel from "@/components/LabChatPanel";
@@ -617,26 +618,38 @@ function FindingBadge({ flag }: { flag: AnalysisFlag }) {
     },
   }[flag.status];
 
+  // Radiology findings are qualitative by nature, so this branch fires on almost
+  // every card here: prose drops to body size below lg, compact readings keep the
+  // numeric display treatment. Restored at lg — desktop is untouched.
+  const tabular = isTabularValue(flag.value);
+  const valueClass = tabular
+    ? "text-xl font-extrabold tracking-tight leading-none"
+    : "text-[15px] font-semibold leading-snug [overflow-wrap:anywhere] lg:text-xl lg:font-extrabold lg:tracking-tight lg:leading-none lg:[overflow-wrap:normal]";
+
   return (
     <div className={`flex flex-col gap-3 p-4 rounded-xl ${cfg.bg} border ${cfg.border}`}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-0">
         <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ${cfg.iconColor}`}>
           {cfg.icon}
         </span>
-        <span className="text-sm font-bold text-ink leading-tight">{flag.marker}</span>
+        <span className="text-sm font-bold text-ink leading-tight [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{flag.marker}</span>
       </div>
-      <div className="flex items-end justify-between gap-2">
-        <div>
-          <span className={`text-xl font-extrabold tracking-tight leading-none [overflow-wrap:anywhere] lg:[overflow-wrap:normal] ${cfg.valueColor}`}>{flag.value}</span>
+      {/* Below lg the ref range drops to its own line beneath the value;
+          `lg:contents` dissolves the wrapper at lg to keep the desktop row shape. */}
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between lg:gap-2">
+        <div className="min-w-0 lg:min-w-[auto]">
+          <span className={`${valueClass} ${cfg.valueColor}`}>{flag.value}</span>
           {flag.unit && (
             <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>{flag.unit}</span>
           )}
         </div>
-        {flag.reference && (
-          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
-            {flag.reference}
-          </span>
-        )}
+        <div className="flex items-center gap-2 flex-wrap lg:contents">
+          {flag.reference && (
+            <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
+              {flag.reference}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
