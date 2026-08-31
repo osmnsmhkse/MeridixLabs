@@ -223,16 +223,16 @@ function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
       <div className="flex items-start justify-between gap-3 pl-3.5">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-[13px] font-semibold text-ink">{lab.marker}</p>
+            <p className="text-[13px] font-semibold text-ink min-w-0 [overflow-wrap:anywhere]">{lab.marker}</p>
             <StatusPill status={lab.status} label={statusLabel(lab.status)} />
           </div>
           {lab.blurb && (
-            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5">{lab.blurb}</p>
+            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5 [overflow-wrap:anywhere]">{lab.blurb}</p>
           )}
         </div>
-        <div className="flex items-baseline gap-1.5 shrink-0">
-          <span className={`font-mono-data text-[15px] font-bold tabular-nums ${a.text}`}>{lab.rawValue}</span>
-          {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary">{lab.unit}</span>}
+        <div className="flex items-baseline gap-1.5 min-w-0 max-w-[55%] lg:max-w-none">
+          <span className={`font-mono-data text-[15px] font-bold tabular-nums [overflow-wrap:anywhere] ${a.text}`}>{lab.rawValue}</span>
+          {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary shrink-0">{lab.unit}</span>}
         </div>
       </div>
 

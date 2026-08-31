@@ -786,7 +786,7 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
       {/* Row 2: large value + ref range */}
       <div className="flex items-end justify-between gap-2">
         <div>
-          <span className={`text-2xl font-extrabold tracking-tight leading-none ${cfg.valueColor}`}>
+          <span className={`text-2xl font-extrabold tracking-tight leading-none [overflow-wrap:anywhere] lg:[overflow-wrap:normal] ${cfg.valueColor}`}>
             {flag.value}
           </span>
           <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>
@@ -794,7 +794,7 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
           </span>
         </div>
         {flag.reference && (
-          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 flex-shrink-0">
+          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
             ref {flag.reference}
           </span>
         )}
@@ -1719,9 +1719,9 @@ function ResultsPanel({
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${mode === "radiology" ? "bg-purple-50" : "bg-brand-blue/10"}`}>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${mode === "radiology" ? "bg-purple-50" : "bg-brand-blue/10"}`}>
             {mode === "radiology" ? (
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-purple-600">
                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" />
@@ -1733,8 +1733,8 @@ function ResultsPanel({
               </svg>
             )}
           </div>
-          <div>
-            <p className="text-sm font-semibold text-ink truncate max-w-[200px] sm:max-w-sm">{fileName}</p>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-ink truncate sm:max-w-sm">{fileName}</p>
             <p className="text-xs text-ink-tertiary">
               {mode === "radiology" ? t("analysisCompleteRadiology") : t("analysisComplete")}
             </p>
@@ -1936,12 +1936,12 @@ function ResultsPanel({
                   <button
                     key={tier}
                     onClick={() => setActiveTier(tier)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                    className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
                       isActive ? cfg.activeClass : `text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40 ${cfg.inactiveIconClass}`
                     }`}
                   >
                     {cfg.icon}
-                    <span>{t(cfg.labelKey)}</span>
+                    <span className="truncate">{t(cfg.labelKey)}</span>
                     {isActive && (
                       <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">— {t(cfg.audienceKey)}</span>
                     )}

@@ -627,13 +627,13 @@ function FindingBadge({ flag }: { flag: AnalysisFlag }) {
       </div>
       <div className="flex items-end justify-between gap-2">
         <div>
-          <span className={`text-xl font-extrabold tracking-tight leading-none ${cfg.valueColor}`}>{flag.value}</span>
+          <span className={`text-xl font-extrabold tracking-tight leading-none [overflow-wrap:anywhere] lg:[overflow-wrap:normal] ${cfg.valueColor}`}>{flag.value}</span>
           {flag.unit && (
             <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>{flag.unit}</span>
           )}
         </div>
         {flag.reference && (
-          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 flex-shrink-0">
+          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
             {flag.reference}
           </span>
         )}
@@ -1068,8 +1068,8 @@ function ResultsPanel({
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-brand-blue/10 flex-shrink-0">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
               <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -1077,7 +1077,7 @@ function ResultsPanel({
             </svg>
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-ink truncate max-w-[200px] sm:max-w-sm">{fileName}</p>
+            <p className="text-sm font-semibold text-ink truncate sm:max-w-sm">{fileName}</p>
             <p className="text-xs text-ink-tertiary">{t("analysisComplete")}</p>
           </div>
         </div>
