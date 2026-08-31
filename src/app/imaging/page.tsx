@@ -18,6 +18,8 @@ import {
 import Link from "next/link";
 import WordReveal from "@/components/WordReveal";
 import { useTranslations } from "next-intl";
+import { isTabularValue } from "@/lib/valueDisplay";
+import { DepthToggle } from "@/components/DepthToggle";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import LabChatPanel from "@/components/LabChatPanel";
@@ -617,26 +619,38 @@ function FindingBadge({ flag }: { flag: AnalysisFlag }) {
     },
   }[flag.status];
 
+  // Radiology findings are qualitative by nature, so this branch fires on almost
+  // every card here: prose drops to body size below lg, compact readings keep the
+  // numeric display treatment. Restored at lg — desktop is untouched.
+  const tabular = isTabularValue(flag.value);
+  const valueClass = tabular
+    ? "text-xl font-extrabold tracking-tight leading-none"
+    : "text-[15px] font-semibold leading-snug [overflow-wrap:anywhere] lg:text-xl lg:font-extrabold lg:tracking-tight lg:leading-none lg:[overflow-wrap:normal]";
+
   return (
     <div className={`flex flex-col gap-3 p-4 rounded-xl ${cfg.bg} border ${cfg.border}`}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 min-w-0">
         <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ${cfg.iconColor}`}>
           {cfg.icon}
         </span>
-        <span className="text-sm font-bold text-ink leading-tight">{flag.marker}</span>
+        <span className="text-sm font-bold text-ink leading-tight [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{flag.marker}</span>
       </div>
-      <div className="flex items-end justify-between gap-2">
-        <div>
-          <span className={`text-xl font-extrabold tracking-tight leading-none ${cfg.valueColor}`}>{flag.value}</span>
+      {/* Below lg the ref range drops to its own line beneath the value;
+          `lg:contents` dissolves the wrapper at lg to keep the desktop row shape. */}
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between lg:gap-2">
+        <div className="min-w-0 lg:min-w-[auto]">
+          <span className={`${valueClass} ${cfg.valueColor}`}>{flag.value}</span>
           {flag.unit && (
-            <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>{flag.unit}</span>
+            <span className={`text-xs font-semibold ms-1.5 ${cfg.valueColor} opacity-80`}>{flag.unit}</span>
           )}
         </div>
-        {flag.reference && (
-          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 flex-shrink-0">
-            {flag.reference}
-          </span>
-        )}
+        <div className="flex items-center gap-2 flex-wrap lg:contents">
+          {flag.reference && (
+            <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
+              {flag.reference}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -1068,8 +1082,8 @@ function ResultsPanel({
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-brand-blue/10 flex-shrink-0">
             <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-brand-blue">
               <path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -1077,7 +1091,7 @@ function ResultsPanel({
             </svg>
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-ink truncate max-w-[200px] sm:max-w-sm">{fileName}</p>
+            <p className="text-sm font-semibold text-ink truncate sm:max-w-sm">{fileName}</p>
             <p className="text-xs text-ink-tertiary">{t("analysisComplete")}</p>
           </div>
         </div>
@@ -1180,7 +1194,7 @@ function ResultsPanel({
       })()}
 
       {/* Mobile tab strip */}
-      <div className="xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
+      <div className="section-tabbar xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
         <div className="flex">
           {([
             {
@@ -1243,29 +1257,22 @@ function ResultsPanel({
 
               {/* Tier tabs */}
               <div className={`border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
-                <div className="flex">
-                  {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
-                    const cfg = TIER_CONFIG[tier];
-                    const isActive = tier === activeTier;
-                    return (
-                      <button
-                        key={tier}
-                        onClick={() => setActiveTier(tier)}
-                        className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                          isActive ? cfg.activeClass : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
-                        }`}
-                      >
-                        {cfg.icon}
-                        <span className="capitalize">{t(`tier${tier.charAt(0).toUpperCase() + tier.slice(1)}` as "tierSimple" | "tierMedium" | "tierExpert")}</span>
-                        {isActive && (
-                          <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">
-                            — {t(`tier${tier.charAt(0).toUpperCase() + tier.slice(1)}Label` as "tierSimpleLabel" | "tierMediumLabel" | "tierExpertLabel")}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                <DepthToggle
+                  ariaLabel={t("tierTitle")}
+                  value={activeTier}
+                  onChange={setActiveTier}
+                  options={(["simple", "medium", "expert"] as Tier[]).map((tier) => ({
+                    key: tier,
+                    label: t(`tier${tier.charAt(0).toUpperCase() + tier.slice(1)}` as "tierSimple" | "tierMedium" | "tierExpert"),
+                    icon: TIER_CONFIG[tier].icon,
+                    activeClass: TIER_CONFIG[tier].activeClass,
+                  }))}
+                  chrome={{
+                    button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 capitalize",
+                    active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+                    inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+                  }}
+                />
               </div>
 
               {/* Interpretation prose */}
@@ -1397,7 +1404,7 @@ function ResultsPanel({
       </div>
 
       {copied && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-sm font-medium rounded-xl shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-[calc(1.5rem+var(--safe-bottom))] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-sm font-medium rounded-xl shadow-xl animate-fade-in pointer-events-none">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-400">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
@@ -1766,25 +1773,25 @@ function ScanResultsPanel({
       {/* Summary with depth toggle */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
         <div className="border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised">
-          <div className="flex">
-            {(["simple", "medium", "expert"] as ScanDepth[]).map((tier) => {
-              const cfg = TIER_CONFIG[tier];
-              const isActive = tier === depth;
-              const tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
-              return (
-                <button
-                  key={tier}
-                  onClick={() => setDepth(tier)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                    isActive ? cfg.activeClass : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
-                  }`}
-                >
-                  {cfg.icon}
-                  {tierLabel}
-                </button>
-              );
-            })}
-          </div>
+          <DepthToggle
+            // ScanResultsPanel carries no translations hook — its labels have always
+            // been derived in English. Left as-is so desktop text is unchanged;
+            // translating this panel is a separate i18n job.
+            ariaLabel="Explanation depth"
+            value={depth}
+            onChange={setDepth}
+            options={(["simple", "medium", "expert"] as ScanDepth[]).map((tier) => ({
+              key: tier,
+              label: tier.charAt(0).toUpperCase() + tier.slice(1),
+              icon: TIER_CONFIG[tier].icon,
+              activeClass: TIER_CONFIG[tier].activeClass,
+            }))}
+            chrome={{
+              button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 capitalize",
+              active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+              inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+            }}
+          />
         </div>
         <div className="p-6">
           {summary.split(/\n+/).filter(Boolean).map((para, i) => (

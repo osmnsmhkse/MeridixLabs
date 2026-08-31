@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { DepthToggle as SharedDepthToggle } from "@/components/DepthToggle";
 import type { MedicationAnalysis } from "@/components/MedicationChatPanel";
 import { useToolContext } from "@/components/ToolChatProvider";
 
@@ -531,22 +532,17 @@ function DepthToggle({ activeTier, onChange }: { activeTier: Tier; onChange: (t:
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-surface-border shadow-sm overflow-hidden">
       <div className="border-b border-surface-border px-2 sm:px-5 pt-2 bg-surface-raised">
-        <div className="flex">
-          {tiers.map((tier) => {
-            const isActive = tier.key === activeTier;
-            return (
-              <button
-                key={tier.key}
-                onClick={() => onChange(tier.key)}
-                className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                  isActive ? tier.active : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
-                }`}
-              >
-                {tier.label}
-              </button>
-            );
-          })}
-        </div>
+        <SharedDepthToggle
+          ariaLabel={t("tierTitle")}
+          value={activeTier}
+          onChange={onChange}
+          options={tiers.map((tier) => ({ key: tier.key, label: tier.label }))}
+          chrome={{
+            button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200",
+            active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+            inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+          }}
+        />
       </div>
       <div className="px-5 py-3 text-xs text-ink-tertiary">
         {t("depthHint")}

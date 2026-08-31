@@ -1,5 +1,7 @@
 "use client";
 
+import { DepthToggle } from "@/components/DepthToggle";
+
 // Genetic Test Explainer — three input modes (paste / report upload / raw
 // DNA data upload), depth toggle, calibrated AI explanation with prominent
 // elevation of pathogenic findings, copy-able questions for a genetic
@@ -165,25 +167,21 @@ function TierTabs({ active, onChange }: { active: Tier; onChange: (t: Tier) => v
     { id: "expert",  label: "Expert",  sub: "Full notation"      },
   ];
   return (
-    <div className="flex border-b border-surface-border bg-surface-raised">
-      {tiers.map((t) => {
-        const isActive = active === t.id;
-        return (
-          <button
-            key={t.id}
-            onClick={() => onChange(t.id)}
-            className={`flex-1 px-3 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-150 ${
-              isActive
-                ? "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5"
-                : "text-ink-tertiary hover:text-ink-secondary border-b-2 border-transparent"
-            }`}
-          >
-            <div>{t.label}</div>
-            <div className="text-[10px] font-normal opacity-70 mt-0.5 hidden sm:block">{t.sub}</div>
-          </button>
-        );
-      })}
-    </div>
+    <DepthToggle
+      // This component is hardcoded English today (no Genetics tier keys exist);
+      // left as-is so desktop text is unchanged.
+      ariaLabel="Explanation depth"
+      value={active}
+      onChange={onChange}
+      hintStyle="block"
+      options={tiers.map((t) => ({ key: t.id, label: t.label, hint: t.sub }))}
+      chrome={{
+        row: "border-b border-surface-border bg-surface-raised",
+        button: "flex-1 px-3 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-150 flex flex-col items-center justify-center",
+        active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+        inactive: "text-ink-tertiary hover:text-ink-secondary border-b-2 border-transparent",
+      }}
+    />
   );
 }
 

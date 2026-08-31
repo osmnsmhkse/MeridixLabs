@@ -9,6 +9,8 @@ import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
+import { isTabularValue } from "@/lib/valueDisplay";
+import { DepthToggle } from "@/components/DepthToggle";
 import LabChatPanel from "@/components/LabChatPanel";
 import RelatedStudies from "@/components/RelatedStudies";
 import { useToolContext } from "@/components/ToolChatProvider";
@@ -621,24 +623,24 @@ function computeConfidence(flag: AnalysisFlag, interpretationText: string): Conf
 
 // ── Confidence pill ───────────────────────────────────────────────────────────
 
-function ConfidencePill({ confidence, status }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"] }) {
+function ConfidencePill({ confidence, status, className = "" }: { confidence: ConfidenceLevel; status: AnalysisFlag["status"]; className?: string }) {
   const t = useTranslations("LabAnalyzer");
   if (confidence === "borderline") {
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold leading-none whitespace-nowrap">
+      <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 text-[10px] font-bold leading-none whitespace-nowrap ${className}`}>
         ⚠ {t("pillBorderline")}
       </span>
     );
   }
   if (confidence === "abnormal") {
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-[10px] font-bold leading-none whitespace-nowrap">
+      <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-[10px] font-bold leading-none whitespace-nowrap ${className}`}>
         {status === "high" ? "↑" : "↓"} {t("pillAbnormal")}
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-[10px] font-bold leading-none whitespace-nowrap">
+    <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-[10px] font-bold leading-none whitespace-nowrap ${className}`}>
       ✓ {t("pillNormal")}
     </span>
   );
@@ -686,7 +688,9 @@ function RangeGauge({
   }[color];
 
   return (
-    <div className="select-none pt-1">
+    // Pinned to LTR for the same reason as RangeTrack: absolutely-positioned
+    // percentages and the min/max label row must agree on which end is which.
+    <div className="select-none pt-1" dir="ltr">
       {/* Track */}
       <div className="relative h-2 rounded-full bg-black/8 dark:bg-white/10">
         {/* Normal zone highlight */}
@@ -769,35 +773,49 @@ function FlagBadge({ flag, confidence }: { flag: AnalysisFlag; confidence: Confi
     !isNaN(numValue) &&
     bounds.hi > bounds.lo;
 
+  // Compact readings ("31", "1.28") keep the numeric display treatment; clinical
+  // prose ("Hypoperfusion (fixed, delta extent <5%)") drops to body size with
+  // normal line-height and full wrapping. Restored to the display size at lg so
+  // desktop is untouched.
+  const tabular = isTabularValue(flag.value);
+  const valueClass = tabular
+    ? "text-2xl font-extrabold tracking-tight leading-none"
+    : "text-[15px] font-semibold leading-snug [overflow-wrap:anywhere] lg:text-2xl lg:font-extrabold lg:tracking-tight lg:leading-none lg:[overflow-wrap:normal]";
+
   return (
     <div className={`flex flex-col gap-3 p-4 rounded-xl ${cfg.bg} border ${cfg.border}`}>
 
       {/* Row 1: status icon + marker name — full width, no truncation */}
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${cfg.iconBg} ${cfg.iconColor}`}>
             {cfg.icon}
           </span>
-          <span className="text-sm font-bold text-ink leading-tight">{flag.marker}</span>
+          <span className="text-sm font-bold text-ink leading-tight [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{flag.marker}</span>
         </div>
-        <ConfidencePill confidence={confidence} status={flag.status} />
+        <ConfidencePill confidence={confidence} status={flag.status} className="hidden lg:inline-flex" />
       </div>
 
-      {/* Row 2: large value + ref range */}
-      <div className="flex items-end justify-between gap-2">
-        <div>
-          <span className={`text-2xl font-extrabold tracking-tight leading-none ${cfg.valueColor}`}>
+      {/* Row 2: value. Below lg the status chip and ref range drop to their own
+          meta line beneath it; `lg:contents` dissolves that wrapper at lg so the
+          desktop box tree is exactly the two-item row it has always been. */}
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between lg:gap-2">
+        <div className="min-w-0 lg:min-w-[auto]">
+          <span className={`${valueClass} ${cfg.valueColor}`}>
             {flag.value}
           </span>
-          <span className={`text-xs font-semibold ml-1.5 ${cfg.valueColor} opacity-80`}>
+          <span className={`text-xs font-semibold ms-1.5 ${cfg.valueColor} opacity-80`}>
             {flag.unit}
           </span>
         </div>
-        {flag.reference && (
-          <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 flex-shrink-0">
-            ref {flag.reference}
-          </span>
-        )}
+        <div className="flex items-center gap-2 flex-wrap lg:contents">
+          <ConfidencePill confidence={confidence} status={flag.status} className="lg:hidden" />
+          {flag.reference && (
+            <span className="text-[11px] text-ink-tertiary bg-white/60 dark:bg-slate-700/60 px-2 py-0.5 rounded-md border border-surface-border/50 min-w-0 [overflow-wrap:anywhere] lg:flex-shrink-0 lg:[overflow-wrap:normal]">
+              ref {flag.reference}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Row 3: gauge bar — no floating label, clean lines */}
@@ -1719,9 +1737,9 @@ function ResultsPanel({
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${mode === "radiology" ? "bg-purple-50" : "bg-brand-blue/10"}`}>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${mode === "radiology" ? "bg-purple-50" : "bg-brand-blue/10"}`}>
             {mode === "radiology" ? (
               <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-purple-600">
                 <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5H4v2h1V5zM4 9H3v2h1V9zm0 4H3v2h1v-2z" clipRule="evenodd" />
@@ -1733,8 +1751,8 @@ function ResultsPanel({
               </svg>
             )}
           </div>
-          <div>
-            <p className="text-sm font-semibold text-ink truncate max-w-[200px] sm:max-w-sm">{fileName}</p>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-ink truncate sm:max-w-sm">{fileName}</p>
             <p className="text-xs text-ink-tertiary">
               {mode === "radiology" ? t("analysisCompleteRadiology") : t("analysisComplete")}
             </p>
@@ -1829,7 +1847,7 @@ function ResultsPanel({
       })()}
 
       {/* ─── MOBILE TAB STRIP (hidden on xl where the sidebar layout takes over) ── */}
-      <div className="xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
+      <div className="section-tabbar xl:hidden sticky top-[72px] z-30 -mx-6 sm:-mx-8 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border-b border-surface-border print:hidden">
         <div className="flex">
           {([
             {
@@ -1928,27 +1946,23 @@ function ResultsPanel({
 
           {/* Tier tabs */}
           <div className={`border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
-            <div className="flex">
-              {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
-                const cfg = TIER_CONFIG[tier];
-                const isActive = tier === activeTier;
-                return (
-                  <button
-                    key={tier}
-                    onClick={() => setActiveTier(tier)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                      isActive ? cfg.activeClass : `text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40 ${cfg.inactiveIconClass}`
-                    }`}
-                  >
-                    {cfg.icon}
-                    <span>{t(cfg.labelKey)}</span>
-                    {isActive && (
-                      <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">— {t(cfg.audienceKey)}</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+            <DepthToggle
+              ariaLabel={t("tierTitle")}
+              value={activeTier}
+              onChange={setActiveTier}
+              options={(["simple", "medium", "expert"] as Tier[]).map((tier) => ({
+                key: tier,
+                label: t(TIER_CONFIG[tier].labelKey),
+                hint: t(TIER_CONFIG[tier].audienceKey),
+                icon: TIER_CONFIG[tier].icon,
+                activeClass: TIER_CONFIG[tier].activeClass,
+              }))}
+              chrome={{
+                button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200",
+                active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+                inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+              }}
+            />
           </div>
 
           {/* Interpretation text */}
@@ -1962,7 +1976,7 @@ function ResultsPanel({
 
           {/* Lab panel by body system — merged into the results card (lab reports only) */}
           {mode === "lab" && (((result.labs?.length ?? 0) > 0) || ((result.flags?.length ?? 0) > 0)) && (
-            <div className="border-t border-surface-border bg-surface-raised/30 px-5 py-5">
+            <div className="border-t border-surface-border bg-surface-raised/30 px-3 sm:px-5 py-5">
               <p className="text-[11px] font-bold text-ink-tertiary uppercase tracking-widest mb-3">
                 {t("groupedBySystem")}
               </p>
@@ -2150,7 +2164,7 @@ function ResultsPanel({
 
       {/* Toast notification */}
       {copied && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-sm font-medium rounded-xl shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-[calc(1.5rem+var(--safe-bottom))] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-sm font-medium rounded-xl shadow-xl animate-fade-in pointer-events-none">
           <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-emerald-400">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>

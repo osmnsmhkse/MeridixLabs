@@ -26,6 +26,7 @@ import {
   ThinkingBubble,
   type Msg,
 } from "@/components/ChatComponents";
+import { useFloatingDock } from "@/components/FloatingDock";
 
 // ── Referral parsing ─────────────────────────────────────────────────────────
 // The system prompt asks the model to append a <referral>{json}</referral>
@@ -93,7 +94,7 @@ function ReferralCard({ referral }: { referral: Referral }) {
   return (
     <Link
       href={tool.href}
-      className="ml-11 block rounded-2xl border border-brand-blue/20 bg-gradient-to-br from-brand-blue/5 to-brand-indigo/5 hover:from-brand-blue/10 hover:to-brand-indigo/10 transition-colors p-4 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+      className="ms-11 block rounded-2xl border border-brand-blue/20 bg-gradient-to-br from-brand-blue/5 to-brand-indigo/5 hover:from-brand-blue/10 hover:to-brand-indigo/10 transition-colors p-4 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-blue to-brand-indigo flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -119,8 +120,15 @@ function ReferralCard({ referral }: { referral: Referral }) {
 }
 
 export default function LandingChatWidget() {
-  const [open, setOpen] = useState(false);
-  const [pulse, setPulse] = useState(true);
+  // Open state lives in the dock so the launcher and this panel can sit in
+  // different components. Shaped as [open, setOpen] so every call site below
+  // is unchanged.
+  const { panel, setPanel, triggerRef } = useFloatingDock();
+  const open = panel === "chat";
+  const setOpen = useCallback(
+    (v: boolean) => setPanel(v ? "chat" : null),
+    [setPanel],
+  );
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -130,13 +138,6 @@ export default function LandingChatWidget() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-
-  // Stop attention pulse after 3s
-  useEffect(() => {
-    const t = setTimeout(() => setPulse(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
 
   // Close on Escape
   useEffect(() => {
@@ -167,7 +168,7 @@ export default function LandingChatWidget() {
   const close = useCallback(() => {
     setOpen(false);
     triggerRef.current?.focus();
-  }, []);
+  }, [setOpen, triggerRef]);
 
   const send = useCallback(
     async (textOverride?: string) => {
@@ -252,28 +253,7 @@ export default function LandingChatWidget() {
 
   return (
     <>
-      {/* Floating round trigger */}
-      {!open && (
-        <button
-          ref={triggerRef}
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open Meridix Assistant"
-          aria-haspopup="dialog"
-          className={[
-            "fixed bottom-6 right-6 z-50",
-            "w-14 h-14 rounded-full",
-            "bg-gradient-brand text-white",
-            "shadow-glow-blue hover:shadow-card-hover",
-            "flex items-center justify-center",
-            "transition-all duration-200 hover:-translate-y-0.5 hover:brightness-105 active:scale-95",
-            "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
-            pulse ? "animate-pulse-glow" : "",
-          ].join(" ")}
-        >
-          <MeridixMark className="w-6 h-6" />
-        </button>
-      )}
+      {/* Trigger lives in FloatingDock; this component owns the drawer only. */}
 
       {/* Drawer */}
       {open && (
@@ -296,7 +276,7 @@ export default function LandingChatWidget() {
             className={[
               "relative w-full sm:w-[400px]",
               "h-[94vh] sm:h-[calc(100vh-3rem)] sm:max-h-[900px]",
-              "sm:mb-6 sm:mr-6",
+              "sm:mb-6 sm:me-6",
               "bg-surface text-ink",
               "border border-surface-border",
               "rounded-t-2xl sm:rounded-2xl",
@@ -389,7 +369,7 @@ export default function LandingChatWidget() {
             </div>
 
             {/* Composer */}
-            <div className="border-t border-surface-border/70 bg-gradient-to-b from-transparent to-surface-raised/30 px-3 py-3">
+            <div className="border-t border-surface-border/70 bg-gradient-to-b from-transparent to-surface-raised/30 px-3 py-3 pb-[calc(0.75rem+var(--safe-bottom))] sm:pb-3">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();

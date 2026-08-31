@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { findBiomarker, BODY_SYSTEMS, type BiomarkerDef, type BodySystem } from "@/lib/biomarkers";
 import { useTranslations } from "next-intl";
 import { RangeTrack, StatusPill, ACCENT, buildTrack } from "./biomarkerVisuals";
+import { isTabularValue } from "@/lib/valueDisplay";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -215,34 +216,53 @@ function FlaggedMarkerRow({ lab }: { lab: ParsedLab }) {
   const statusLabel = useStatusLabel();
   const a = ACCENT[lab.status];
 
+  // Compact readings keep the tabular-numeral treatment. Clinical prose reads as
+  // a sentence and drops `font-mono-data` — that class is declared outside
+  // Tailwind's layers, so its `font-weight: 500` silently beat the `font-bold`
+  // sitting next to it. `font-medium` restates the weight that actually rendered,
+  // which keeps desktop byte-identical while dropping the numeric font features.
+  const tabular = isTabularValue(lab.rawValue);
+  const valueClass = tabular
+    ? `font-mono-data text-[15px] font-bold tabular-nums ${a.text}`
+    : `text-[15px] font-medium leading-snug lg:leading-normal ${a.text}`;
+
   return (
     <div className="relative py-3.5">
       {/* status spine */}
-      <span className={`absolute left-0 top-4 bottom-4 w-[2px] rounded-full ${a.spine}`} />
+      <span className={`absolute start-0 top-4 bottom-4 w-[2px] rounded-full ${a.spine}`} />
 
-      <div className="flex items-start justify-between gap-3 pl-3.5">
+      {/* Below sm the row stacks — label on its own line at label weight, value
+          beneath it — rather than compressing into two columns. At sm and up it
+          is the two-column row it has always been. */}
+      <div className="flex flex-col gap-1 ps-3.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-[13px] font-semibold text-ink">{lab.marker}</p>
-            <StatusPill status={lab.status} label={statusLabel(lab.status)} />
+            <p className="text-[13px] font-semibold text-ink min-w-0 [overflow-wrap:anywhere]">{lab.marker}</p>
+            <StatusPill status={lab.status} label={statusLabel(lab.status)} className="hidden sm:inline-block" />
           </div>
           {lab.blurb && (
-            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5">{lab.blurb}</p>
+            <p className="text-[11px] text-ink-tertiary leading-snug mt-0.5 [overflow-wrap:anywhere]">{lab.blurb}</p>
           )}
         </div>
-        <div className="flex items-baseline gap-1.5 shrink-0">
-          <span className={`font-mono-data text-[15px] font-bold tabular-nums ${a.text}`}>{lab.rawValue}</span>
-          {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary">{lab.unit}</span>}
+        <div className="flex items-baseline gap-1.5 min-w-0 sm:max-w-[55%] lg:max-w-none">
+          <span className={`${valueClass} [overflow-wrap:anywhere]`}>{lab.rawValue}</span>
+          {lab.unit && <span className="font-mono-data text-[11px] text-ink-tertiary shrink-0">{lab.unit}</span>}
         </div>
       </div>
 
-      <div className="pl-3.5">
+      <div className="ps-3.5">
         <RangeBar lab={lab} />
       </div>
 
-      {lab.reference && (
-        <p className="font-mono-data text-[10px] text-ink-tertiary mt-2 pl-3.5">ref · {lab.reference}</p>
-      )}
+      {/* Muted meta line. Below sm it carries the status chip beside the reference
+          range; `sm:contents` dissolves the wrapper at sm, restoring the plain
+          reference line — including rendering nothing when there is no reference. */}
+      <div className="flex items-center gap-2 flex-wrap mt-2 ps-3.5 sm:contents">
+        <StatusPill status={lab.status} label={statusLabel(lab.status)} className="sm:hidden" />
+        {lab.reference && (
+          <p className="font-mono-data text-[10px] text-ink-tertiary sm:mt-2 sm:ps-3.5">ref · {lab.reference}</p>
+        )}
+      </div>
     </div>
   );
 }
@@ -270,7 +290,7 @@ function InRangeTable({ labs }: { labs: ParsedLab[] }) {
               </td>
               <td className="px-4 py-2.5 text-right font-mono-data text-sm font-semibold text-ink tabular-nums">
                 {l.rawValue}
-                {l.unit && <span className="text-[10px] text-ink-tertiary ml-1">{l.unit}</span>}
+                {l.unit && <span className="text-[10px] text-ink-tertiary ms-1">{l.unit}</span>}
               </td>
               <td className="px-4 py-2.5 text-right text-xs text-ink-tertiary font-mono-data hidden sm:table-cell">
                 {l.reference || "—"}
@@ -287,11 +307,29 @@ function InRangeTable({ labs }: { labs: ParsedLab[] }) {
 
 function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: boolean }) {
   const t = useTranslations("LabPanel");
+  const tAnalyzer = useTranslations("LabAnalyzer");
   const [showInRange, setShowInRange] = useState(defaultOpen);
   const meta = BODY_SYSTEMS[group.system];
-  const flaggedCount = group.flagged.length;
-  const total = group.total;
-  const optimalPct = total > 0 ? Math.round(((total - flaggedCount) / total) * 100) : 100;
+
+  // An "in range" ratio only means something for markers that can actually be
+  // placed against a reference range — the same test buildTrack uses to decide
+  // whether a range track can be drawn. A cardiac panel of findings like
+  // "Global hypokinesis" has no numeric position, so "IN RANGE 0/7 · 0%" under
+  // a red bar was measuring nothing.
+  const quantifiable = group.flagged.concat(group.inRange)
+    .filter((l) => l.numValue != null && (l.refLow != null || l.refHigh != null));
+  const hasRatio = quantifiable.length > 0;
+  const quantifiableAbnormal = quantifiable.filter((l) => l.status === "high" || l.status === "low").length;
+  const optimalPct = hasRatio
+    ? Math.round(((quantifiable.length - quantifiableAbnormal) / quantifiable.length) * 100)
+    : 100;
+
+  // The pill still reports the report's own judgement. A finding the analysis
+  // marked high or low stays flagged even when it carries no number —
+  // neutralising it would quietly downgrade a real clinical signal. Only
+  // findings nothing has judged at all ("unknown") get the neutral treatment.
+  const unknownCount = group.flagged.filter((l) => l.status === "unknown").length;
+  const abnormalCount = group.flagged.length - unknownCount;
 
   // Pick a color tint from the system meta (system meta has a Tailwind text-color class)
   const headerColor = meta.color;
@@ -299,7 +337,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
   return (
     <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden shadow-sm">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-surface-border bg-gradient-to-r from-surface-raised/60 to-transparent flex items-center justify-between gap-3 flex-wrap">
+      <div className="px-3.5 sm:px-5 py-4 border-b border-surface-border bg-gradient-to-r from-surface-raised/60 to-transparent flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3 min-w-0">
           <span className={`flex items-center justify-center w-9 h-9 rounded-xl bg-surface-raised ${headerColor} flex-shrink-0`}>
             <SystemIcon system={group.system} className="w-5 h-5" />
@@ -310,15 +348,25 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
           </div>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
-          <div className="flex flex-col items-end">
-            <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("inRangeLabel")}</span>
-            <span className={`text-xs font-bold tabular-nums ${optimalPct === 100 ? "text-emerald-600" : optimalPct >= 70 ? "text-amber-600" : "text-red-600"}`}>
-              {total - flaggedCount}/{total} · {optimalPct}%
-            </span>
-          </div>
-          {flaggedCount > 0 ? (
+          {/* An in-range ratio is only meaningful where something could be placed
+              against a reference range. Qualitative panels show no ratio at all
+              rather than a misleading 0%. */}
+          {hasRatio && (
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("inRangeLabel")}</span>
+              <span className={`text-xs font-bold tabular-nums ${optimalPct === 100 ? "text-emerald-600" : optimalPct >= 70 ? "text-amber-600" : "text-red-600"}`}>
+                {quantifiable.length - quantifiableAbnormal}/{quantifiable.length} · {optimalPct}%
+              </span>
+            </div>
+          )}
+          {abnormalCount > 0 ? (
             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 uppercase tracking-wider">
-              {flaggedCount} {t("flagged")}
+              {abnormalCount} {t("flagged")}
+            </span>
+          ) : unknownCount > 0 ? (
+            /* Findings nobody has judged abnormal: neutral, not alarming. */
+            <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-surface-raised text-ink-secondary border border-surface-border uppercase tracking-wider">
+              {unknownCount} {tAnalyzer("keyFindings")}
             </span>
           ) : (
             <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 uppercase tracking-wider">
@@ -328,17 +376,19 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
         </div>
       </div>
 
-      {/* In-range progress bar (visual reinforcement) */}
-      <div className="h-1 bg-surface-border">
-        <div
-          className={`h-full transition-all duration-700 ${optimalPct === 100 ? "bg-emerald-500" : optimalPct >= 70 ? "bg-amber-400" : "bg-red-500"}`}
-          style={{ width: `${optimalPct}%` }}
-        />
-      </div>
+      {/* In-range progress bar — suppressed when there is no ratio to reinforce. */}
+      {hasRatio && (
+        <div className="h-1 bg-surface-border">
+          <div
+            className={`h-full transition-all duration-700 ${optimalPct === 100 ? "bg-emerald-500" : optimalPct >= 70 ? "bg-amber-400" : "bg-red-500"}`}
+            style={{ width: `${optimalPct}%` }}
+          />
+        </div>
+      )}
 
       {/* Flagged markers — signature range tracks, hairline-separated */}
       {group.flagged.length > 0 && (
-        <div className="px-5 divide-y divide-surface-border">
+        <div className="px-3.5 sm:px-5 divide-y divide-surface-border">
           {group.flagged.map((lab, i) => (
             <FlaggedMarkerRow key={`flag-${i}-${lab.marker}`} lab={lab} />
           ))}
@@ -351,7 +401,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
           <button
             type="button"
             onClick={() => setShowInRange((v) => !v)}
-            className="w-full px-5 py-3 flex items-center justify-between hover:bg-surface-raised/40 transition-colors"
+            className="w-full px-3.5 sm:px-5 py-3 flex items-center justify-between hover:bg-surface-raised/40 transition-colors"
           >
             <span className="text-xs font-semibold text-ink-secondary">
               {group.inRange.length} {t("inRangeMarkersLabel")}
@@ -359,7 +409,7 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
             <span className={`text-ink-tertiary transition-transform text-sm ${showInRange ? "rotate-180" : ""}`}>▾</span>
           </button>
           {showInRange && (
-            <div className="px-5 pb-5 -mt-1">
+            <div className="px-3.5 sm:px-5 pb-5 -mt-1">
               <InRangeTable labs={group.inRange} />
             </div>
           )}
@@ -369,10 +419,17 @@ function SystemPanel({ group, defaultOpen }: { group: SystemGroup; defaultOpen: 
   );
 }
 
+// Markers actually measured outside their reference range, as distinct from
+// findings `classifyZone` could not place ("unknown").
+function gAbnormal(g: SystemGroup): number {
+  return g.flagged.filter((l) => l.status !== "unknown").length;
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | null; flags?: RawLab[] | null }) {
   const t = useTranslations("LabPanel");
+  const tAnalyzer = useTranslations("LabAnalyzer");
   const groups = useMemo<SystemGroup[]>(() => {
     // Prefer labs (full panel); fall back to flags only
     const source: RawLab[] = (labs && labs.length > 0) ? labs : (flags ?? []);
@@ -418,8 +475,18 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
   }, [labs, flags]);
 
   const totalMarkers = groups.reduce((acc, g) => acc + g.total, 0);
-  const totalFlagged = groups.reduce((acc, g) => acc + g.flagged.length, 0);
-  const inRangePct = totalMarkers > 0 ? Math.round(((totalMarkers - totalFlagged) / totalMarkers) * 100) : 100;
+  // Same split as SystemPanel: findings we could not place against a reference
+  // range are not "flagged", and they do not belong in an in-range ratio.
+  const totalUnknown = groups.reduce(
+    (acc, g) => acc + g.flagged.filter((l) => l.status === "unknown").length, 0);
+  const totalAbnormal = groups.reduce((acc, g) => acc + g.flagged.length, 0) - totalUnknown;
+  const allQuantifiable = groups.flatMap((g) => g.flagged.concat(g.inRange))
+    .filter((l) => l.numValue != null && (l.refLow != null || l.refHigh != null));
+  const totalQuantified = allQuantifiable.length;
+  const quantifiedAbnormal = allQuantifiable.filter((l) => l.status === "high" || l.status === "low").length;
+  const inRangePct = totalQuantified > 0
+    ? Math.round(((totalQuantified - quantifiedAbnormal) / totalQuantified) * 100)
+    : 100;
 
   if (groups.length === 0) return null;
 
@@ -433,18 +500,26 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
             <p className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider">{t("labPanelHeader")}</p>
             <p className="text-2xl font-extrabold text-ink tabular-nums leading-tight mt-1">
               {totalMarkers}
-              <span className="text-base font-semibold text-ink-tertiary ml-1.5">{t("markersUnit")} · {groups.length} {t("systemsUnit")}</span>
+              <span className="text-base font-semibold text-ink-tertiary ms-1.5">{t("markersUnit")} · {groups.length} {t("systemsUnit")}</span>
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
-              {totalMarkers - totalFlagged} {t("inRangeUnit")} · {inRangePct}%
-            </span>
-            {totalFlagged > 0 && (
+            {totalQuantified > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden />
+                {totalQuantified - quantifiedAbnormal} {t("inRangeUnit")} · {inRangePct}%
+              </span>
+            )}
+            {totalAbnormal > 0 && (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500" aria-hidden />
-                {totalFlagged} {t("flagged")}
+                {totalAbnormal} {t("flagged")}
+              </span>
+            )}
+            {totalUnknown > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-surface-raised text-ink-secondary border border-surface-border">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" aria-hidden />
+                {totalUnknown} {tAnalyzer("keyFindings")}
               </span>
             )}
           </div>
@@ -455,6 +530,8 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
           {groups.map((g) => {
             const meta = BODY_SYSTEMS[g.system];
             const allClear = g.flagged.length === 0;
+            // A tile only turns red for markers actually out of range.
+            const isAlarming = gAbnormal(g) > 0;
             return (
               <a
                 key={g.system}
@@ -462,23 +539,29 @@ export default function LabPanelBySystem({ labs, flags }: { labs?: RawLab[] | nu
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border transition-colors ${
                   allClear
                     ? "border-emerald-200/70 bg-emerald-50/50 hover:bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/20 dark:hover:bg-emerald-950/40"
-                    : "border-red-200/70 bg-red-50/50 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20 dark:hover:bg-red-950/40"
+                    : isAlarming
+                      ? "border-red-200/70 bg-red-50/50 hover:bg-red-50 dark:border-red-900/50 dark:bg-red-950/20 dark:hover:bg-red-950/40"
+                      : "border-surface-border bg-surface-raised/60 hover:bg-surface-raised"
                 }`}
               >
                 <SystemIcon
                   system={g.system}
                   className={`w-4 h-4 flex-shrink-0 ${
-                    allClear ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+                    allClear ? "text-emerald-600 dark:text-emerald-400"
+                      : isAlarming ? "text-red-600 dark:text-red-400" : "text-ink-secondary"
                   }`}
                 />
                 <div className="min-w-0 flex-1">
                   <p className={`text-[11px] font-semibold leading-tight break-words ${
-                    allClear ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"
+                    allClear ? "text-emerald-800 dark:text-emerald-300"
+                      : isAlarming ? "text-red-800 dark:text-red-300" : "text-ink"
                   }`}>{t(g.system as Parameters<typeof t>[0])}</p>
                   <p className="text-[10px] tabular-nums text-ink-tertiary mt-0.5">
                     {allClear
                       ? `${g.total}/${g.total} ${t("clearStatus")}`
-                      : `${g.flagged.length} ${t("ofConnector")} ${g.total} ${t("flagged")}`}
+                      : gAbnormal(g) > 0
+                        ? `${gAbnormal(g)} ${t("ofConnector")} ${g.total} ${t("flagged")}`
+                        : `${g.flagged.length} ${tAnalyzer("keyFindings")}`}
                   </p>
                 </div>
               </a>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -8,6 +8,7 @@ import MotionEffects from "@/components/MotionEffects";
 import SmoothScroll from "@/components/SmoothScroll";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import LandingChatWidget from "@/components/LandingChatWidget";
+import { FloatingDock, FloatingDockProvider } from "@/components/FloatingDock";
 import { ToolChatProvider } from "@/components/ToolChatProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getLocale } from "next-intl/server";
@@ -65,6 +66,19 @@ export const metadata: Metadata = {
   },
 };
 
+// viewport-fit=cover lets the page use the full display instead of being
+// letterboxed inside the safe area. It only works paired with the
+// env(safe-area-inset-*) padding on every pinned surface (globals.css) —
+// on its own it would slide content under the Island and home indicator.
+/** Locales written right-to-left. Only Arabic today; Hebrew/Farsi would join here. */
+const RTL_LOCALES = new Set(["ar"]);
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -75,8 +89,13 @@ export default async function RootLayout({
   // Per-request CSP nonce set by middleware (src/middleware.ts).
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
+  // Arabic is one of the nine supported locales but `dir` was never set, so it
+  // rendered inside an LTR document: the browser reordered each Arabic run but
+  // every layout, alignment and mirrored affordance stayed left-to-right.
+  const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
+
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <StructuredData nonce={nonce} />
         <script nonce={nonce} dangerouslySetInnerHTML={{__html: `
@@ -101,11 +120,14 @@ export default async function RootLayout({
             <MotionEffects />
             <Navigation />
             <ToolChatProvider>
-              <main className="pt-16">{children}</main>
+              <main className="pt-[calc(4rem+var(--safe-top))]">{children}</main>
               <Footer />
             </ToolChatProvider>
-            <FeedbackWidget />
-            <LandingChatWidget />
+            <FloatingDockProvider>
+              <FloatingDock />
+              <FeedbackWidget />
+              <LandingChatWidget />
+            </FloatingDockProvider>
           </Providers>
         </NextIntlClientProvider>
       </body>

@@ -1,5 +1,7 @@
 "use client";
 
+import { DepthToggle } from "@/components/DepthToggle";
+
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -143,25 +145,20 @@ export default function ReportDetailPage() {
         {(result?.simple || result?.medium || result?.expert || data.summary) && (
           <div className="rounded-2xl border border-surface-border bg-white dark:bg-slate-900 overflow-hidden mb-5 shadow-sm">
             <div className="border-b border-surface-border px-5 pt-4 bg-surface-raised">
-              <div className="flex gap-0.5">
-                {(["simple", "medium", "expert"] as Tier[]).map((t) => {
-                  const hasContent = !!result?.[t];
-                  if (!hasContent) return null;
-                  const labels = { simple: "Simple", medium: "Medium", expert: "Expert" };
-                  const active = t === tier;
-                  return (
-                    <button
-                      key={t}
-                      onClick={() => setTier(t)}
-                      className={`px-4 py-2 rounded-t-lg text-sm font-semibold transition-all duration-200 ${
-                        active ? "bg-white dark:bg-slate-900 text-brand-blue border-b-2 border-brand-blue -mb-px" : "text-ink-tertiary hover:text-ink-secondary"
-                      }`}
-                    >
-                      {labels[t]}
-                    </button>
-                  );
-                })}
-              </div>
+              <DepthToggle
+                ariaLabel="Explanation depth"
+                value={tier}
+                onChange={setTier}
+                options={(["simple", "medium", "expert"] as Tier[])
+                  .filter((t) => !!result?.[t])
+                  .map((t) => ({ key: t, label: { simple: "Simple", medium: "Medium", expert: "Expert" }[t] }))}
+                chrome={{
+                  row: "gap-0.5",
+                  button: "px-4 py-2 rounded-t-lg text-sm font-semibold transition-all duration-200",
+                  active: "bg-white dark:bg-slate-900 text-brand-blue border-b-2 border-brand-blue -mb-px",
+                  inactive: "text-ink-tertiary hover:text-ink-secondary",
+                }}
+              />
             </div>
             <div className="p-6">
               {tierText ? (

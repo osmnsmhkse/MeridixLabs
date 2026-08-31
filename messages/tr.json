@@ -893,7 +893,8 @@
     "demoResultDiseases": "Prediyabet / erken tip 2 diyabet mellitus (glikoz yüksekliği), Metabolik sendrom (glikoz + lipid örüntüsü), Ailesel hiperkolesterolemi (LDL yüksekliği kalıcıysa ve aile geçmişi varsa), Hipotiroidizm (hem glikoz hem de LDL'yi yükseltebilir — TSH ile dışlanmaya değer), D vitamini eksikliğiyle ilişkili yorgunluk, bağışıklık disfonksiyonu ve uzun vadeli kemik sağlığı riski. Not: Bunlar eğitim amaçlı olasılıklardır, tanı değildir.",
     "demoResultSpecialist": "Birinci basamak hekim veya iç hastalıkları uzmanı ideal ilk temas noktasıdır — takip testleri (HbA1c, TSH, tekrar açlık lipid paneli) isteyebilir ve yönlendirmeleri koordine edebilirler. Prediyabet doğrulanırsa bir Endokrinolog veya Sertifikalı Diyabet Eğitmeni yararlı olabilir. LDL yaşam tarzı değişikliklerinden sonra yüksek kalmaya devam ederse bir Kardiyolog veya lipid uzmanına danışılabilir.",
     "demoResultAction": "Önümüzdeki birkaç hafta içinde doktorunuzla takip randevusu alın. Şunları sorun: (1) 3 aylık ortalama kan şekerini değerlendirmek için HbA1c, (2) Açlık lipid paneli tekrarı, (3) Tiroid katılımını dışlamak için TSH, (4) D vitamini takviye dozu. Bu arada: rafine şekerleri azaltın, diyet lifini artırın, günde 20–30 dakika orta düzeyde egzersiz yapın ve doktorunuzun rehberliğinde D3 vitamini takviyesi değerlendirin.",
-    "demoResultSupplements": "**D3 Vitamini (günde 2.000 IU, yağlı bir yemekle):** 18 ng/mL olan düşük D vitamininizi doğrudan ele alır. Kolekalsiferol (D3) en biyoyararlanılır formdur. Daha iyi emilim için öğle veya akşam yemeğiyle alın. 3 ayda kan seviyelerini kontrol ettirin.\n\n**Omega-3 Yağ Asitleri (günde 1.000–2.000 mg EPA+DHA):** Sınır düzeydeki LDL'yi hedefler ve kardiyovasküler sağlığı destekler. Balık yağı veya alg bazlı omega-3'ler trigliseritleri düşürme ve kardiyovasküler riski azaltma konusunda güçlü klinik kanıtlara sahiptir.\n\n**Berberin (öğünlerle günde iki kez 500 mg):** İnsülin duyarlılığını iyileştirme ve açlık glikozunu düşürme konusunda güçlü klinik kanıtlara sahiptir — birçok çalışmada düşük doz metformin ile karşılaştırılabilir düzeyde. Başlamadan önce doktorunuzla konuşun.\n\n**Yaşam tarzı (en etkili):** Haftada 150 dakika orta düzeyde aerobik egzersiz. Yemekten sonra 10 dakikalık bir yürüyüş bile postprandiyal glikoz artışlarını ölçülebilir şekilde azaltır. Rafine karbonhidratları azaltmak ve diyet lifini artırmak 8–12 hafta içinde işaretlenen üç değeri de iyileştirebilir."
+    "demoResultSupplements": "**D3 Vitamini (günde 2.000 IU, yağlı bir yemekle):** 18 ng/mL olan düşük D vitamininizi doğrudan ele alır. Kolekalsiferol (D3) en biyoyararlanılır formdur. Daha iyi emilim için öğle veya akşam yemeğiyle alın. 3 ayda kan seviyelerini kontrol ettirin.\n\n**Omega-3 Yağ Asitleri (günde 1.000–2.000 mg EPA+DHA):** Sınır düzeydeki LDL'yi hedefler ve kardiyovasküler sağlığı destekler. Balık yağı veya alg bazlı omega-3'ler trigliseritleri düşürme ve kardiyovasküler riski azaltma konusunda güçlü klinik kanıtlara sahiptir.\n\n**Berberin (öğünlerle günde iki kez 500 mg):** İnsülin duyarlılığını iyileştirme ve açlık glikozunu düşürme konusunda güçlü klinik kanıtlara sahiptir — birçok çalışmada düşük doz metformin ile karşılaştırılabilir düzeyde. Başlamadan önce doktorunuzla konuşun.\n\n**Yaşam tarzı (en etkili):** Haftada 150 dakika orta düzeyde aerobik egzersiz. Yemekten sonra 10 dakikalık bir yürüyüş bile postprandiyal glikoz artışlarını ölçülebilir şekilde azaltır. Rafine karbonhidratları azaltmak ve diyet lifini artırmak 8–12 hafta içinde işaretlenen üç değeri de iyileştirebilir.",
+    "tierTitle": "Ne kadar ayrıntı istiyorsunuz?"
   },
   "LabChat": {
     "panelTitle": "Takip soruları sor",
@@ -1130,7 +1131,8 @@
     "errorWrongFileType": "Desteklenmeyen dosya türü. JPG, PNG, WebP veya PDF kullanın.",
     "errorFileTooLarge": "Dosya çok büyük ({size}MB). En fazla 10MB.",
     "errorServer": "Bizim tarafımızda bir şeyler ters gitti. Lütfen birazdan tekrar deneyin.",
-    "errorNetwork": "Ağ hatası. Bağlantınızı kontrol edip tekrar deneyin."
+    "errorNetwork": "Ağ hatası. Bağlantınızı kontrol edip tekrar deneyin.",
+    "tierTitle": "Ne kadar ayrıntı istiyorsunuz?"
   },
   "MedicationChat": {
     "panelTitle": "Takip soruları sorun",
@@ -1245,7 +1247,8 @@
     "emailSendingBtn": "Gönderiliyor…",
     "emailSentBadge": "Gönderildi!",
     "emailSentTitle": "Gönderildi! Gelen kutunuzu kontrol edin.",
-    "disclaimerShort": "Meridix Labs eğitim amaçlı bir araçtır. Tıbbi tavsiye değildir. Mutlaka kalifiye bir hekime — önce isteyen doktorunuza — danışın."
+    "disclaimerShort": "Meridix Labs eğitim amaçlı bir araçtır. Tıbbi tavsiye değildir. Mutlaka kalifiye bir hekime — önce isteyen doktorunuza — danışın.",
+    "tierTitle": "Ne kadar ayrıntı istiyorsunuz?"
   },
   "Visit": {
     "chatTitle": "Meridix AI'ye sor",

@@ -964,3 +964,182 @@ body {
   border-color: rgba(255, 255, 255, 0.13) !important;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE CHROME  ·  one pinned surface at a time
+   ───────────────────────────────────────────────────────────────
+   /app and /imaging pin a section tab bar (Your Results · Report ·
+   Ask the AI) while the site nav is also fixed, so ~119px of a
+   390px-tall screen was permanently spent on chrome — and the two
+   surfaces did not even meet: the bar sits at top:72px beneath a
+   66px nav, leaving a 6px channel of raw page content scrolling
+   between them.
+
+   Below lg, a page that pins its own tab bar releases the site nav
+   back into normal flow, and the tab bar becomes the single pinned
+   surface at top:0. `main` drops the padding that was reserving
+   space for the fixed nav, since the nav now occupies that space
+   itself.
+
+   At lg and up none of this applies — desktop keeps the stacked
+   arrangement it has always had.
+
+   `:has()` degrades safely: where it is unsupported the rules are
+   dropped and the previous stacked behaviour returns.
+
+   This block lives at the end of the file, after the glass system,
+   because the bar carries `dark:bg-slate-800/95` and so is caught by
+   `.dark .glass-tool [class*="dark:bg-slate-800"]`, which forces a
+   translucent well with `!important`. Matching that specificity and
+   coming later is what makes the bar genuinely opaque in dark mode.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1023.98px) {
+  body:has(.section-tabbar) [data-site-nav] { position: static; }
+  body:has(.section-tabbar) main { padding-top: 0; }
+
+  /* Fully opaque. backdrop-filter is not a usable substitute here: it stacks
+     with .glass-tool's own blur layers, and the previous 95% alpha still let
+     text ghost through while scrolling. */
+  .section-tabbar.section-tabbar.section-tabbar {
+    top: 0;
+    background-color: rgb(var(--color-surface)) !important;
+    -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOATING WIDGET DOCK  ·  one anchored stack
+   ───────────────────────────────────────────────────────────────
+   The Feedback pill and the assistant FAB each positioned themselves
+   independently (`bottom-24 right-6` / `bottom-6 right-6`). Their
+   16px of separation was a coincidence of two hardcoded offsets, and
+   neither accounted for iOS safe-area insets.
+
+   Slot 2 is now COMPUTED from slot 1's size plus the gap, so the two
+   can never overlap regardless of what changes. The gap is 1rem so
+   slot 2 resolves to exactly 6rem — identical to the old bottom-24.
+   `inset-inline-end` replaces `right` so the stack mirrors under RTL.
+
+   env() is 0 until viewport-fit=cover lands (group 6), so today these
+   evaluate to exactly the previous offsets; once it does, the stack
+   lifts clear of the home indicator on its own.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --dock-inset-inline: calc(1.5rem + var(--safe-right));
+  --dock-inset-bottom: calc(1.5rem + var(--safe-bottom));
+  --dock-fab: 3.5rem;
+  --dock-gap: 1rem;
+}
+[dir="rtl"] {
+  --dock-inset-inline: calc(1.5rem + var(--safe-left));
+}
+.dock-slot {
+  position: fixed;
+  inset-inline-end: var(--dock-inset-inline);
+}
+.dock-slot-1 { bottom: var(--dock-inset-bottom); }
+.dock-slot-2 { bottom: calc(var(--dock-inset-bottom) + var(--dock-fab) + var(--dock-gap)); }
+
+/* ═══════════════════════════════════════════════════════════════
+   SAFE AREAS  ·  iOS notch, Dynamic Island, home indicator
+   ───────────────────────────────────────────────────────────────
+   Nothing in the app accounted for the insets, and without
+   viewport-fit=cover iOS simply letterboxed the page inside the
+   safe area — which is why the pinned chrome measured ~119px but
+   ate ~180px of an iPhone screen.
+
+   viewport-fit=cover (layout.tsx) lets the page use the full
+   display, so from here every pinned surface must inset itself.
+   These two changes only make sense together: cover on its own
+   would slide content under the Island and the home indicator.
+
+   env() is read exactly once, into these tokens. Everything else
+   reads the tokens — so the insets can be simulated in a desktop
+   browser by overriding them, and there is a single place to look
+   when something is mispositioned. All four resolve to 0px off
+   iOS, so every calc() below reduces to the value it had before.
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+}
+
+/* The fixed site nav paints up behind the status bar / Island and pads its
+   contents clear of it. Horizontal insets matter in landscape on notched
+   devices, where the notch intrudes on one side. */
+[data-site-nav] {
+  padding-top: var(--safe-top);
+  padding-inline-start: var(--safe-left);
+  padding-inline-end: var(--safe-right);
+}
+
+/* Full-screen mobile menu: starts below the nav, clears the home indicator. */
+[data-mobile-menu] {
+  top: calc(4rem + var(--safe-top));
+  padding-bottom: var(--safe-bottom);
+}
+
+@media (max-width: 1023.98px) {
+  /* Where the nav is released, the tab bar is the pinned surface: it parks
+     just below the Island rather than under it. */
+  .section-tabbar.section-tabbar.section-tabbar { top: var(--safe-top); }
+
+  /* ...and an opaque scrim fills the strip above it, so page content is not
+     seen scrolling behind the Island. Only needed here — everywhere else the
+     fixed nav already paints that strip itself. */
+  body:has(.section-tabbar)::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--safe-top);
+    background: rgb(var(--color-surface));
+    z-index: 30;
+    pointer-events: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DEPTH TOGGLE  ·  Simple / Medium / Expert
+   ───────────────────────────────────────────────────────────────
+   Below sm every route collapses to the same segmented control:
+   full width, equal thirds, >=44pt tall. The nine hand-rolled
+   copies this replaced were 32px, 36px or 44px tall depending on
+   which route you were on.
+
+   These rules live here rather than in the component's class
+   string because the callers pass their own Tailwind utilities
+   (text-xs, py-2, gap-1.5) for the sm+ look. Two utilities of
+   equal specificity are resolved by stylesheet order, not by the
+   order they appear in a className — so a later, media-scoped
+   block is the only way to win predictably below sm.
+
+   Icons and audience hints are hidden here: they eat the width
+   that long labels need. "Expert" is 6 characters in English and
+   10 in Russian ("Экспертный").
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 639.98px) {
+  .depth-toggle {
+    width: 100%;
+    gap: 0.25rem;
+  }
+  .depth-toggle .depth-toggle__opt {
+    flex: 1 1 0%;
+    min-width: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding-inline: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .depth-toggle .depth-toggle__opt > svg { display: none; }
+  .depth-toggle .depth-toggle__label { overflow-wrap: anywhere; }
+}
