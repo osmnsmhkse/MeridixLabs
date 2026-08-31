@@ -19,6 +19,7 @@ import Link from "next/link";
 import WordReveal from "@/components/WordReveal";
 import { useTranslations } from "next-intl";
 import { isTabularValue } from "@/lib/valueDisplay";
+import { DepthToggle } from "@/components/DepthToggle";
 import { useUser } from "@clerk/nextjs";
 import { useLanguage, LANGUAGES } from "@/contexts/LanguageContext";
 import LabChatPanel from "@/components/LabChatPanel";
@@ -1256,29 +1257,22 @@ function ResultsPanel({
 
               {/* Tier tabs */}
               <div className={`border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
-                <div className="flex">
-                  {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
-                    const cfg = TIER_CONFIG[tier];
-                    const isActive = tier === activeTier;
-                    return (
-                      <button
-                        key={tier}
-                        onClick={() => setActiveTier(tier)}
-                        className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                          isActive ? cfg.activeClass : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
-                        }`}
-                      >
-                        {cfg.icon}
-                        <span className="capitalize">{t(`tier${tier.charAt(0).toUpperCase() + tier.slice(1)}` as "tierSimple" | "tierMedium" | "tierExpert")}</span>
-                        {isActive && (
-                          <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">
-                            — {t(`tier${tier.charAt(0).toUpperCase() + tier.slice(1)}Label` as "tierSimpleLabel" | "tierMediumLabel" | "tierExpertLabel")}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                <DepthToggle
+                  ariaLabel={t("tierTitle")}
+                  value={activeTier}
+                  onChange={setActiveTier}
+                  options={(["simple", "medium", "expert"] as Tier[]).map((tier) => ({
+                    key: tier,
+                    label: t(`tier${tier.charAt(0).toUpperCase() + tier.slice(1)}` as "tierSimple" | "tierMedium" | "tierExpert"),
+                    icon: TIER_CONFIG[tier].icon,
+                    activeClass: TIER_CONFIG[tier].activeClass,
+                  }))}
+                  chrome={{
+                    button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 capitalize",
+                    active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+                    inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+                  }}
+                />
               </div>
 
               {/* Interpretation prose */}
@@ -1779,25 +1773,25 @@ function ScanResultsPanel({
       {/* Summary with depth toggle */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-surface-border overflow-hidden shadow-sm">
         <div className="border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised">
-          <div className="flex">
-            {(["simple", "medium", "expert"] as ScanDepth[]).map((tier) => {
-              const cfg = TIER_CONFIG[tier];
-              const isActive = tier === depth;
-              const tierLabel = tier.charAt(0).toUpperCase() + tier.slice(1);
-              return (
-                <button
-                  key={tier}
-                  onClick={() => setDepth(tier)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                    isActive ? cfg.activeClass : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40"
-                  }`}
-                >
-                  {cfg.icon}
-                  {tierLabel}
-                </button>
-              );
-            })}
-          </div>
+          <DepthToggle
+            // ScanResultsPanel carries no translations hook — its labels have always
+            // been derived in English. Left as-is so desktop text is unchanged;
+            // translating this panel is a separate i18n job.
+            ariaLabel="Explanation depth"
+            value={depth}
+            onChange={setDepth}
+            options={(["simple", "medium", "expert"] as ScanDepth[]).map((tier) => ({
+              key: tier,
+              label: tier.charAt(0).toUpperCase() + tier.slice(1),
+              icon: TIER_CONFIG[tier].icon,
+              activeClass: TIER_CONFIG[tier].activeClass,
+            }))}
+            chrome={{
+              button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 capitalize",
+              active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+              inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+            }}
+          />
         </div>
         <div className="p-6">
           {summary.split(/\n+/).filter(Boolean).map((para, i) => (

@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { DepthToggle } from "@/components/DepthToggle";
 import { useToolContext } from "@/components/ToolChatProvider";
 
 const VisitChatPanel = dynamic(() => import("@/components/VisitChatPanel"), {
@@ -802,30 +803,21 @@ function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => voi
       <p className="px-5 py-2.5 text-xs font-bold text-ink-tertiary uppercase tracking-wider border-b border-surface-border bg-surface-raised">
         {t("tierTitle")}
       </p>
-      <div className="flex">
-        {(Object.keys(TIER_CONFIG) as Tier[]).map((key) => {
-          const cfg = TIER_CONFIG[key];
-          const isActive = key === tier;
-          return (
-            <button
-              key={key}
-              onClick={() => onChange(key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                isActive
-                  ? cfg.active
-                  : "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-raised"
-              }`}
-            >
-              <span>{t(cfg.label)}</span>
-              {isActive && (
-                <span className="hidden sm:inline-block text-xs font-normal opacity-60">
-                  — {t(cfg.aud)}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <DepthToggle
+        ariaLabel={t("tierTitle")}
+        value={tier}
+        onChange={onChange}
+        options={(Object.keys(TIER_CONFIG) as Tier[]).map((key) => ({
+          key,
+          label: t(TIER_CONFIG[key].label as Parameters<typeof t>[0]),
+          hint: t(TIER_CONFIG[key].aud as Parameters<typeof t>[0]),
+        }))}
+        chrome={{
+          button: "flex-1 flex items-center justify-center gap-1.5 px-3 py-3 text-xs sm:text-sm font-semibold transition-all duration-200",
+          active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+          inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-raised",
+        }}
+      />
     </div>
   );
 }

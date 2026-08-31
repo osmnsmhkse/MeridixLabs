@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import WordReveal from "@/components/WordReveal";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslations } from "next-intl";
+import { DepthToggle } from "@/components/DepthToggle";
 import { useToolContext } from "@/components/ToolChatProvider";
 
 const PediatricChatPanel = dynamic(() => import("@/components/PediatricChatPanel"), {
@@ -215,23 +216,17 @@ function TierToggle({ tier, onChange }: { tier: Tier; onChange: (t: Tier) => voi
       <p className="px-4 py-2.5 text-[11px] font-bold text-ink-tertiary uppercase tracking-wider border-b border-surface-border bg-surface-raised">
         {t("tierTitle")}
       </p>
-      <div className="flex">
-        {OPTIONS.map((opt) => {
-          const isActive = opt.key === tier;
-          return (
-            <button
-              key={opt.key}
-              type="button"
-              onClick={() => onChange(opt.key)}
-              className={`flex-1 px-3 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${
-                isActive ? opt.activeClass : "text-ink-tertiary border-transparent hover:text-ink-secondary hover:bg-surface-raised"
-              }`}
-            >
-              {t(opt.labelKey)}
-            </button>
-          );
-        })}
-      </div>
+      <DepthToggle
+        ariaLabel={t("tierTitle")}
+        value={tier}
+        onChange={onChange}
+        options={OPTIONS.map((opt) => ({ key: opt.key, label: t(opt.labelKey) }))}
+        chrome={{
+          button: "flex-1 px-3 py-3 text-sm font-semibold border-b-2 transition-all duration-200",
+          active: "text-brand-blue border-brand-blue bg-brand-blue/5",
+          inactive: "text-ink-tertiary border-transparent hover:text-ink-secondary hover:bg-surface-raised",
+        }}
+      />
     </div>
   );
 }

@@ -1102,3 +1102,44 @@ body {
     pointer-events: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DEPTH TOGGLE  ·  Simple / Medium / Expert
+   ───────────────────────────────────────────────────────────────
+   Below sm every route collapses to the same segmented control:
+   full width, equal thirds, >=44pt tall. The nine hand-rolled
+   copies this replaced were 32px, 36px or 44px tall depending on
+   which route you were on.
+
+   These rules live here rather than in the component's class
+   string because the callers pass their own Tailwind utilities
+   (text-xs, py-2, gap-1.5) for the sm+ look. Two utilities of
+   equal specificity are resolved by stylesheet order, not by the
+   order they appear in a className — so a later, media-scoped
+   block is the only way to win predictably below sm.
+
+   Icons and audience hints are hidden here: they eat the width
+   that long labels need. "Expert" is 6 characters in English and
+   10 in Russian ("Экспертный").
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 639.98px) {
+  .depth-toggle {
+    width: 100%;
+    gap: 0.25rem;
+  }
+  .depth-toggle .depth-toggle__opt {
+    flex: 1 1 0%;
+    min-width: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding-inline: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .depth-toggle .depth-toggle__opt > svg { display: none; }
+  .depth-toggle .depth-toggle__label { overflow-wrap: anywhere; }
+}

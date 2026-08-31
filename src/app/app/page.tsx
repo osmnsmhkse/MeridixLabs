@@ -10,6 +10,7 @@ import AppleHealthSection from "@/components/AppleHealthSection";
 import NextStepBar from "@/components/NextStepBar";
 import LabPanelBySystem from "@/components/LabPanelBySystem";
 import { isTabularValue } from "@/lib/valueDisplay";
+import { DepthToggle } from "@/components/DepthToggle";
 import LabChatPanel from "@/components/LabChatPanel";
 import RelatedStudies from "@/components/RelatedStudies";
 import { useToolContext } from "@/components/ToolChatProvider";
@@ -1943,27 +1944,23 @@ function ResultsPanel({
 
           {/* Tier tabs */}
           <div className={`border-b border-surface-border px-2 sm:px-5 pt-4 bg-surface-raised ${result.flags && result.flags.length > 0 ? "border-t" : ""}`}>
-            <div className="flex">
-              {(["simple", "medium", "expert"] as Tier[]).map((tier) => {
-                const cfg = TIER_CONFIG[tier];
-                const isActive = tier === activeTier;
-                return (
-                  <button
-                    key={tier}
-                    onClick={() => setActiveTier(tier)}
-                    className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                      isActive ? cfg.activeClass : `text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40 ${cfg.inactiveIconClass}`
-                    }`}
-                  >
-                    {cfg.icon}
-                    <span className="truncate">{t(cfg.labelKey)}</span>
-                    {isActive && (
-                      <span className="hidden sm:inline-block text-xs font-normal opacity-50 ml-0.5">— {t(cfg.audienceKey)}</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+            <DepthToggle
+              ariaLabel={t("tierTitle")}
+              value={activeTier}
+              onChange={setActiveTier}
+              options={(["simple", "medium", "expert"] as Tier[]).map((tier) => ({
+                key: tier,
+                label: t(TIER_CONFIG[tier].labelKey),
+                hint: t(TIER_CONFIG[tier].audienceKey),
+                icon: TIER_CONFIG[tier].icon,
+                activeClass: TIER_CONFIG[tier].activeClass,
+              }))}
+              chrome={{
+                button: "flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-2.5 rounded-t-lg text-xs sm:text-sm font-semibold transition-all duration-200",
+                active: "text-brand-blue border-b-2 border-brand-blue bg-brand-blue/5",
+                inactive: "text-ink-tertiary hover:text-ink-secondary hover:bg-surface-border/40",
+              }}
+            />
           </div>
 
           {/* Interpretation text */}

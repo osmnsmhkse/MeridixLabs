@@ -893,7 +893,8 @@
     "demoResultDiseases": "Prediabetes / early type 2 diabetes mellitus (glucose elevation), Metabolic syndrome (glucose + lipid pattern), Familial hypercholesterolemia (if LDL elevation is persistent and family history is positive), Hypothyroidism (can raise both glucose and LDL — worth ruling out with TSH), Vitamin D deficiency-related fatigue, immune dysfunction, and long-term bone health risk. Note: These are educational possibilities, not diagnoses.",
     "demoResultSpecialist": "A Primary Care Physician or Internal Medicine specialist is the ideal first contact — they can order follow-up tests (HbA1c, TSH, repeat fasting lipid panel) and coordinate referrals. If prediabetes is confirmed, an Endocrinologist or Certified Diabetes Educator may be helpful. If LDL remains elevated after lifestyle changes, a Cardiologist or lipid specialist may be consulted.",
     "demoResultAction": "Schedule a follow-up with your doctor in the next few weeks. Ask about: (1) HbA1c to assess your 3-month average blood sugar, (2) Fasting lipid panel repeat, (3) TSH to rule out thyroid involvement, (4) Vitamin D supplementation dosing. In the meantime: reduce refined sugars, increase dietary fiber, get 20–30 minutes of moderate daily exercise, and consider a Vitamin D3 supplement with your doctor's guidance.",
-    "demoResultSupplements": "**Vitamin D3 (2,000 IU/day with a fatty meal):** Directly addresses your low Vitamin D of 18 ng/mL. Cholecalciferol (D3) is the most bioavailable form. Take with lunch or dinner for better absorption. Recheck blood levels in 3 months.\n\n**Omega-3 Fatty Acids (1,000–2,000 mg EPA+DHA/day):** Targets your borderline LDL and supports cardiovascular health. Fish oil or algae-based omega-3s have strong clinical evidence for lowering triglycerides and reducing cardiovascular risk.\n\n**Berberine (500 mg twice daily with meals):** Has strong clinical evidence for improving insulin sensitivity and lowering fasting glucose — comparable to low-dose metformin in several studies. Discuss with your doctor before starting.\n\n**Lifestyle (most impactful):** 150 minutes/week of moderate aerobic exercise. Even a 10-minute walk after meals measurably reduces postprandial glucose spikes. Reducing refined carbohydrates and increasing dietary fiber can improve all three flagged values within 8–12 weeks."
+    "demoResultSupplements": "**Vitamin D3 (2,000 IU/day with a fatty meal):** Directly addresses your low Vitamin D of 18 ng/mL. Cholecalciferol (D3) is the most bioavailable form. Take with lunch or dinner for better absorption. Recheck blood levels in 3 months.\n\n**Omega-3 Fatty Acids (1,000–2,000 mg EPA+DHA/day):** Targets your borderline LDL and supports cardiovascular health. Fish oil or algae-based omega-3s have strong clinical evidence for lowering triglycerides and reducing cardiovascular risk.\n\n**Berberine (500 mg twice daily with meals):** Has strong clinical evidence for improving insulin sensitivity and lowering fasting glucose — comparable to low-dose metformin in several studies. Discuss with your doctor before starting.\n\n**Lifestyle (most impactful):** 150 minutes/week of moderate aerobic exercise. Even a 10-minute walk after meals measurably reduces postprandial glucose spikes. Reducing refined carbohydrates and increasing dietary fiber can improve all three flagged values within 8–12 weeks.",
+    "tierTitle": "Wie viel Detail möchten Sie?"
   },
   "LabChat": {
     "panelTitle": "Nachfragen stellen",
@@ -1130,7 +1131,8 @@
     "errorWrongFileType": "Nicht unterstützter Dateityp. Verwenden Sie JPG, PNG, WebP oder PDF.",
     "errorFileTooLarge": "Datei zu groß ({size} MB). Maximum 10 MB.",
     "errorServer": "Auf unserer Seite ist etwas schiefgelaufen. Bitte versuchen Sie es gleich noch einmal.",
-    "errorNetwork": "Netzwerkfehler. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+    "errorNetwork": "Netzwerkfehler. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "tierTitle": "Wie viel Detail möchten Sie?"
   },
   "MedicationChat": {
     "panelTitle": "Stellen Sie Folgefragen",
@@ -1245,7 +1247,8 @@
     "emailSendingBtn": "Wird gesendet…",
     "emailSentBadge": "Gesendet!",
     "emailSentTitle": "Gesendet! Schauen Sie in Ihr Postfach.",
-    "disclaimerShort": "Meridix Labs ist ein Bildungstool. Dies ist kein medizinischer Rat. Konsultieren Sie immer eine qualifizierte Ärztin oder einen qualifizierten Arzt — zuerst die behandelnde Person."
+    "disclaimerShort": "Meridix Labs ist ein Bildungstool. Dies ist kein medizinischer Rat. Konsultieren Sie immer eine qualifizierte Ärztin oder einen qualifizierten Arzt — zuerst die behandelnde Person.",
+    "tierTitle": "Wie viel Detail möchten Sie?"
   },
   "Visit": {
     "chatTitle": "Fragen Sie Meridix AI",
